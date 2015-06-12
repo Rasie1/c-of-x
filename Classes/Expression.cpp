@@ -1,0 +1,46 @@
+#include "Expression.h"
+#include <stdexcept>
+#include "TypeError.h"
+#include "Pattern.h"
+#include "Application.h"
+
+namespace Language
+{
+
+Expression::Expression()
+{
+
+}
+
+Expression::~Expression()
+{
+
+}
+
+Expression* Expression::eval(Environment* env)
+{
+    return this;
+}
+
+Expression* Expression::evalModifyEnv(Environment*& env)
+{
+    return eval(env);
+}
+
+Expression* Expression::apply(Expression* e, Environment* env)
+{
+    return new Application(this, e);
+}
+
+Pattern* Expression::pattern()
+{
+    throw std::logic_error("Unknown pattern");
+    return new Pattern();
+}
+
+std::string Expression::toString() const
+{
+    return "expr";
+}
+
+}

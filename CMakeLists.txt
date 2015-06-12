@@ -1,0 +1,7 @@
+project(Language)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+cmake_minimum_required(VERSION 3.0)
+file(GLOB_RECURSE SRC . Classes/*.cpp)
+file(GLOB_RECURSE INC . Classes/*.h)
+add_executable (Language ${SRC})
+include_directories(${INC})

@@ -1,0 +1,61 @@
+#include "Application.h"
+#include <string>
+#include "Integer.h"
+#include "Environment.h"
+#include "Variable.h"
+#include "Assignment.h"
+#include "Pattern.h"
+
+namespace Language
+{
+
+Application::Application(Expression* function, Expression* argument)
+    : function(function),
+      argument(argument)
+{
+}
+
+Application::~Application()
+{
+    delete function;
+    delete argument;
+}
+
+Expression* Application::eval(Environment* env)
+{
+    Expression* function = this->function->evalModifyEnv(env);
+
+    //Expression* argument = this->argument->evalModifyEnv(env);
+
+    return function->apply(argument, env);
+}
+
+Expression* Application::evalModifyEnv(Environment*& env)
+{
+    Expression* function = this->function->evalModifyEnv(env);
+
+    auto assignment = dynamic_cast<AssignmentOfValue*>(function);
+    if (assignment != nullptr)
+        env = env->add(argument->pattern(),
+                       assignment->value);
+
+    //Expression* argument = this->argument->evalModifyEnv(env);
+
+    return function->apply(argument, env);
+}
+
+Pattern* Application::pattern()
+{
+    return new PatternApplication(function->pattern(), argument->pattern());
+}
+
+std::string Application::toString() const
+{
+    return "(" +
+            function->toString() +
+            " " +
+            argument->toString() +
+            ")";
+}
+
+}
