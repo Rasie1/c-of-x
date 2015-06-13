@@ -1,13 +1,13 @@
 #pragma once
-#include "Function.h"
+#include "Expression.h"
 
 namespace Language
 {
 
-class Assignment : public Expression
+class Mutation : public Expression
 {
 public:
-    Assignment();
+    Mutation();
 
     Expression* apply(Expression* e, Environment* env);
     std::string toString() const;
@@ -15,16 +15,14 @@ public:
 private:
 };
 
-class AssignmentOfValue : public Expression
+class MutationWithValue : public Expression
 {
 public:
-    AssignmentOfValue(Expression* e);
-    ~AssignmentOfValue();
+    MutationWithValue(Expression* e);
+    ~MutationWithValue();
 
     Expression* apply(Expression* e, Environment* env);
     std::string toString() const;
-
-    friend class Application;
 
 private:
     Expression* value;

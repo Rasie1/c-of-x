@@ -41,6 +41,7 @@ public:
     Expression* eval(Environment* env) override;
     Expression* apply(Expression* e, Environment* env) override;
     std::string toString() const override;
+    static const std::string defaultName;
 };
 
 }

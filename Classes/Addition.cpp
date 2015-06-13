@@ -33,8 +33,10 @@ Expression* Addition::apply(Expression* e, Environment* env)
 
 std::string Addition::toString() const
 {
-    return "+";
+    return defaultName;
 }
+
+const std::string Addition::defaultName = "add";
 
 
 }

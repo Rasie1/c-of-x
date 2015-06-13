@@ -40,15 +40,17 @@ std::string Function::toString() const
 
 Expression* PrintPattern::apply(Expression* e, Environment* env)
 {
-    std::cout << "<" + e->pattern()->toString() + ">";
+    std::cout << e->pattern()->toString();
 
     return e->eval(env);
 }
 
 std::string PrintPattern::toString() const
 {
-    return "ppat";
+    return defaultName;
 }
+
+const std::string PrintPattern::defaultName = "printPattern";
 
 Expression* Preprocess::apply(Expression* e, Environment* env)
 {

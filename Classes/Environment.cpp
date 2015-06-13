@@ -13,6 +13,8 @@
 #include "Function.h"
 #include "Lambda.h"
 #include "Include.h"
+#include "List.h"
+#include "Mutation.h"
 
 namespace Language
 {
@@ -71,21 +73,25 @@ Environment* Environment::add(Pattern* p, Expression* e)
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(new Language::PatternAbstraction("+"), new Addition())
-         ->add(new Language::PatternAbstraction("-"), new Subtraction())
-         ->add(new Language::PatternAbstraction("*"), new Multiplication())
-         ->add(new Language::PatternAbstraction("="), new Assignment())
-         ->add(new Language::PatternAbstraction("#"), new Preprocess())
-         ->add(new Language::PatternAbstraction("pair"), new PairConstructor())
-         ->add(new Language::PatternAbstraction("ppat"), new PrintPattern())
-         ->add(new Language::PatternAbstraction("include"), new Include())
-         ->add(new Language::PatternAbstraction("\\"), new Lambda());
+    return add(new Language::PatternAbstraction(Addition::defaultName),        new Addition())
+         ->add(new Language::PatternAbstraction(Subtraction::defaultName),     new Subtraction())
+         ->add(new Language::PatternAbstraction(Multiplication::defaultName),  new Multiplication())
+         ->add(new Language::PatternAbstraction(Mutation::defaultName),        new Mutation())
+         ->add(new Language::PatternAbstraction(Assignment::defaultName),      new Assignment())
+         ->add(new Language::PatternAbstraction(EvalForce::defaultName),       new EvalForce())
+         ->add(new Language::PatternAbstraction(EvalDelay::defaultName),       new EvalDelay())
+         ->add(new Language::PatternAbstraction(PairConstructor::defaultName), new PairConstructor())
+         ->add(new Language::PatternAbstraction(Print::defaultName),           new Print())
+         ->add(new Language::PatternAbstraction(PrintPattern::defaultName),    new PrintPattern())
+         ->add(new Language::PatternAbstraction(Include::defaultName),         new Include())
+         ->add(new Language::PatternAbstraction("list"), new MakeList())
+         ->add(new Language::PatternAbstraction(Lambda::defaultName),          new Lambda());
 }
 
 Environment* Environment::create()
 {
     auto firstVariable = new EnvironmentalVariable(
-                new Language::PatternAbstraction("void"), new Void());
+                new Language::PatternAbstraction(Void::defaultName), new Void());
     auto environment = new Environment(firstVariable, nullptr);
     return environment->loadDefaultVariables();
 }

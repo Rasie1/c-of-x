@@ -6,7 +6,7 @@ namespace Language
 
 std::string MultiplicationOfValue::toString() const
 {
-    return std::to_string(value) + " +";
+    return std::to_string(value) + " *";
 }
 
 Expression* MultiplicationOfValue::apply(Expression* e, Environment* env)
@@ -33,8 +33,11 @@ Expression* Multiplication::apply(Expression* e, Environment* env)
 
 std::string Multiplication::toString() const
 {
-    return "*";
+    return defaultName;
 }
+
+const std::string Multiplication::defaultName = "multiply";
+
 
 
 }

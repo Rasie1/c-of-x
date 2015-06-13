@@ -23,16 +23,14 @@ Application::~Application()
 
 Expression* Application::eval(Environment* env)
 {
-    Expression* function = this->function->evalModifyEnv(env);
-
-    //Expression* argument = this->argument->evalModifyEnv(env);
-
-    return function->apply(argument, env);
+    return evalModifyEnv(env);
 }
 
 Expression* Application::evalModifyEnv(Environment*& env)
 {
+    DEBUG_PRINT_FUN(function);
     Expression* function = this->function->evalModifyEnv(env);
+    DEBUG_PRINT_EVT(function);
 
     auto assignment = dynamic_cast<AssignmentOfValue*>(function);
     if (assignment != nullptr)
@@ -40,8 +38,10 @@ Expression* Application::evalModifyEnv(Environment*& env)
                        assignment->value);
 
     //Expression* argument = this->argument->evalModifyEnv(env);
-
-    return function->apply(argument, env);
+    DEBUG_PRINT_ARG(argument);
+    auto ret = function->apply(argument, env);
+    DEBUG_PRINT_RES(ret);
+    return ret;
 }
 
 Pattern* Application::pattern()

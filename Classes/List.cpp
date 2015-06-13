@@ -4,52 +4,49 @@
 namespace Language
 {
 
-List::List(const std::list<Expression*>& elements)
-    : elements(elements)
+List::List(Pair* pair)
+    : pair(pair)
 {
 
-}
-
-Expression* List::eval(Environment* env)
-{
-    std::list<Expression*> evaluated;
-    for (auto &x : elements)
-        evaluated.push_back(x->eval(env));
-    auto ret = new List(evaluated);
-    if (ret->elements.size() == 1)
-        return ret->elements.front();
-    return ret;
-}
-
-void List::pushBack(Expression* e)
-{
-    elements.push_back(e);
-}
-
-void List::pushFront(Expression* e)
-{
-    elements.push_front(e);
 }
 
 Expression* List::head()
 {
-    return elements.front();
+    return pair->l;
 }
 
 Expression* List::tail()
 {
-    auto ret = new List(this->elements); //super-slow
-    ret->elements.pop_front();
-    return ret;
+    return pair->r;
 }
 
 std::string List::toString() const
 {
-    std::string s = "(" + elements.front()->toString();
-    for (auto i = next(begin(elements)); i != end(elements); ++i)
-        s += ", " + (*i)->toString();
-    s += ")";
-    return s;
+    return "list " + pair->toString();
 }
+
+
+MakeList::MakeList()
+{
+
+}
+
+Expression* MakeList::apply(Expression* e, Environment* env)
+{
+    auto pair = dynamic_cast<Pair*>(e);
+    if (pair != nullptr)
+    {
+        return new List(pair);
+    }
+
+    return Expression::apply(e, env);
+}
+
+std::string MakeList::toString() const
+{
+    return "list";
+}
+
+
 
 }

@@ -1,7 +1,8 @@
 #pragma once
-#include "Function.h"
+#include "Expression.h"
 #include <list>
 #include <string>
+#include "Pair.h"
 
 namespace Language
 {
@@ -9,20 +10,23 @@ namespace Language
 class List : public Expression
 {
 public:
-    List(const std::list<Expression*>& elements);
-
-    virtual Expression* eval(Environment* env) override;
+    List(Pair* pair);
 
     std::string toString() const override;
-
-    void pushBack(Expression* e);
-    void pushFront(Expression* e);
 
     Expression* head();
     Expression* tail();
 
-private:
-    std::list<Expression*> elements;
+    Pair* pair;
+};
+
+class MakeList : public Expression
+{
+public:
+    MakeList();
+
+    Expression* apply(Expression *e, Environment *env) override;
+    std::string toString() const override;
 };
 
 }

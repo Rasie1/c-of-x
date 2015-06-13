@@ -18,14 +18,15 @@ Expression* Assignment::apply(Expression* e, Environment* env)
 
 std::string Assignment::toString() const
 {
-    return "=";
+    return defaultName;
 }
+
+const std::string Assignment::defaultName = "assign";
 
 
 AssignmentOfValue::AssignmentOfValue(Expression* e)
     : value(e)
 {
-
 }
 
 AssignmentOfValue::~AssignmentOfValue()

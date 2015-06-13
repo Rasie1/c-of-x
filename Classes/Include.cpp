@@ -41,7 +41,9 @@ Expression* Include::apply(Expression* e, Environment* env)
 
 std::string Include::toString() const
 {
-    return "include";
+    return defaultName;
 }
+
+const std::string Include::defaultName = "include";
 
 }

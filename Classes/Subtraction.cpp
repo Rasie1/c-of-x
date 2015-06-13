@@ -31,10 +31,14 @@ Expression* Subtraction::apply(Expression* e, Environment* env)
     return Expression::apply(e, env);
 }
 
+
 std::string Subtraction::toString() const
 {
-    return "-";
+    return defaultName;
 }
+
+const std::string Subtraction::defaultName = "subtract";
+
 
 
 }

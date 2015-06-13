@@ -10,6 +10,7 @@ public:
     Void() {}
 
     virtual std::string toString() const;
+    static const std::string defaultName;
 };
 
 }

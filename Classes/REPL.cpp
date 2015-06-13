@@ -39,10 +39,11 @@ void REPL::start()
                 continue;
             }
 
-            cout << expression->toString() << " =" << endl;
+            //cout << expression->toString() << " =" << endl;
+            DEBUG_LINEBREAK;
             auto evaluated = expression->evalModifyEnv(env);
-            cout << evaluated->toString() << endl;
-
+            //cout << evaluated->toString() << endl;
+            DEBUG_LINEBREAK;
             // Something is wrong and makes assigned variables to
             // be associated with themselves in environment
             // so, almost all the memory is leaked while this line

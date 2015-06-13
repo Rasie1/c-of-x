@@ -26,8 +26,11 @@ Expression* Lambda::apply(Expression* e, Environment* env)
 
 std::string Lambda::toString() const
 {
-    return "\\";
+    return defaultName;
 }
+
+const std::string Lambda::defaultName = "\\";
+
 
 LambdaArguments::LambdaArguments(Pattern* argument)
     : pattern(argument)

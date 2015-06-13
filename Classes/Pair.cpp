@@ -6,14 +6,15 @@ namespace Language
 
 Expression* Pair::eval(Environment* env)
 {
-    auto isNull = dynamic_cast<Void*>(r);
+    auto ret = l->evalModifyEnv(env);
+    auto null = dynamic_cast<Void*>(r);
 
-    if (isNull == nullptr)
-        l->evalModifyEnv(env);
+    if (null == nullptr)
+        return ret;
 
-    r->eval(env);
+    ret = r->eval(env);
 
-    return this;
+    return ret;
 }
 
 std::string Pair::toString() const
@@ -50,7 +51,9 @@ Expression* PairConstructor::apply(Expression* e, Environment* env)
 
 std::string PairConstructor::toString() const
 {
-    return "pair";
+    return defaultName;
 }
+
+const std::string PairConstructor::defaultName = "pair";
 
 }

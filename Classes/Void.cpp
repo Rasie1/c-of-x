@@ -3,10 +3,12 @@
 namespace Language
 {
 
-
 std::string Void::toString() const
 {
-    return "void";
+    return defaultName;
 }
+
+const std::string Void::defaultName = "void";
+
 
 }
