@@ -4,7 +4,7 @@
 #include "Environment.h"
 #include "Variable.h"
 #include "Assignment.h"
-#include "Pattern.h"
+#include "PatternApplication.h"
 
 namespace Language
 {

@@ -1,6 +1,6 @@
 #include "String.h"
 #include <string>
-#include "Pattern.h"
+#include "PatternAbstraction.h"
 
 namespace Language
 {

@@ -1,7 +1,7 @@
 #include "Variable.h"
 #include "Environment.h"
 #include "UnknownName.h"
-#include "Pattern.h"
+#include "PatternAbstraction.h"
 
 namespace Language
 {

@@ -2,7 +2,7 @@
 #include "Expression.h"
 #include "TypeError.h"
 #include "EnvironmentalVariable.h"
-#include "Pattern.h"
+#include "PatternAbstraction.h"
 
 #include "Addition.h"
 #include "Subtraction.h"
@@ -15,6 +15,10 @@
 #include "Include.h"
 #include "List.h"
 #include "Mutation.h"
+#include "Print.h"
+
+#include "EvalDelay.h"
+#include "EvalForce.h"
 
 namespace Language
 {

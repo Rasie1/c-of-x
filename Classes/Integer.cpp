@@ -1,7 +1,7 @@
 #include "Integer.h"
 #include <string>
 #include <algorithm>
-#include "Pattern.h"
+#include "PatternAbstraction.h"
 
 namespace Language
 {
@@ -20,6 +20,7 @@ std::string Integer::toString() const
 
 Pattern* Integer::pattern()
 {
+    // Wrong, I think it should return "(== value)?"
     return new PatternAbstraction(toString());
 }
 

@@ -1,5 +1,5 @@
 #include "UnknownName.h"
-#include "Pattern.h"
+#include "PatternAbstraction.h"
 
 namespace Language
 {
