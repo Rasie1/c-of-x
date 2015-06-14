@@ -6,8 +6,9 @@ namespace Language
 
 Expression* Print::apply(Expression* e, Environment* env)
 {
-    std::cout << e->eval(env)->toString() << std::endl;
-    return e;
+    auto evaluated = e->eval(env);
+    std::cout << evaluated->toString() << std::endl;
+    return evaluated;
 }
 
 std::string Print::toString() const

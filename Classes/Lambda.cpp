@@ -9,11 +9,6 @@
 namespace Language
 {
 
-Expression* Lambda::eval(Environment* env)
-{
-    return this;
-}
-
 Expression* Lambda::apply(Expression* e, Environment* env)
 {
     {
@@ -36,11 +31,6 @@ LambdaArguments::LambdaArguments(Pattern* argument)
     : pattern(argument)
 {
 
-}
-
-Expression* LambdaArguments::eval(Environment* env)
-{
-    return this;
 }
 
 Expression* LambdaArguments::apply(Expression* e, Environment* env)

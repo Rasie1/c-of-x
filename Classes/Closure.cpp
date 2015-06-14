@@ -19,11 +19,6 @@ Closure::~Closure()
     delete function;
 }
 
-Expression* Closure::eval(Environment* env)
-{
-    return this;
-}
-
 Expression* Closure::apply(Expression* e, Environment* env)
 {
     return function->apply(e, this->env);

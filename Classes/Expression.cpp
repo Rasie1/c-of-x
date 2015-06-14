@@ -19,12 +19,12 @@ Expression::~Expression()
 
 Expression* Expression::eval(Environment* env)
 {
-    return this;
+    return evalModifyEnv(env);
 }
 
 Expression* Expression::evalModifyEnv(Environment*& env)
 {
-    return eval(env);
+    return this;
 }
 
 Expression* Expression::apply(Expression* e, Environment* env)

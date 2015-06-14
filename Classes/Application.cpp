@@ -21,11 +21,6 @@ Application::~Application()
     delete argument;
 }
 
-Expression* Application::eval(Environment* env)
-{
-    return evalModifyEnv(env);
-}
-
 Expression* Application::evalModifyEnv(Environment*& env)
 {
     DEBUG_PRINT_FUN(function);

@@ -6,7 +6,7 @@
 namespace Language
 {
 
-Expression* Variable::eval(Environment* env)
+Expression* Variable::evalModifyEnv(Environment*& env)
 {
     auto ret = env->get(pattern());
     if (ret == nullptr)
