@@ -19,9 +19,9 @@ Closure::~Closure()
     delete function;
 }
 
-Expression* Closure::apply(Expression* e, Environment* env)
+Expression* Closure::applyConstEnv(Expression* e, Environment* env)
 {
-    return function->apply(e, this->env);
+    return function->applyConstEnv(e, this->env);
 }
 
 std::string Closure::toString() const

@@ -8,11 +8,11 @@
 namespace Language
 {
 
-Expression* Include::apply(Expression* e, Environment* env)
+Expression* Include::applyConstEnv(Expression* e, Environment* env)
 {
     auto str = dynamic_cast<String*>(e);
     if (str == nullptr)
-        return Expression::apply(e, env);
+        return Expression::applyConstEnv(e, env);
 
     auto filename = str->value;
 
@@ -21,7 +21,7 @@ Expression* Include::apply(Expression* e, Environment* env)
     std::string content((std::istreambuf_iterator<char>(ifs)),
                         (std::istreambuf_iterator<char>()   ));
 
-    return Parser::parse(content)->eval(env);
+    return Parser::parse(content)->evalConstEnv(env);
     /*std::ifstream file(filename, std::ios::binary);
 
     file.seekg(0,std::ios::end);

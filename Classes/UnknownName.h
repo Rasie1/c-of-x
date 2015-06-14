@@ -11,7 +11,7 @@ public:
     UnknownName(const std::string& name)
         : name(name) {}
 
-    Expression* eval(Environment* env) override;
+    Expression* evalConstEnv(Environment* env) override;
     Pattern* pattern() override;
 
     std::string toString() const override;

@@ -11,7 +11,7 @@ public:
     Variable(const std::string& name)
         : name(name) {}
 
-    Expression* evalModifyEnv(Environment*& env);
+    Expression* eval(Environment*& env);
     Pattern* pattern() override;
     std::string toString() const;
 

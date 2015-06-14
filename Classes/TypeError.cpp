@@ -3,7 +3,7 @@
 namespace Language
 {
 
-Expression* TypeError::eval(Environment* env)
+Expression* TypeError::evalConstEnv(Environment* env)
 {
     return this;
 }

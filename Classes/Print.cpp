@@ -4,9 +4,9 @@
 namespace Language
 {
 
-Expression* Print::apply(Expression* e, Environment* env)
+Expression* Print::applyConstEnv(Expression* e, Environment* env)
 {
-    auto evaluated = e->eval(env);
+    auto evaluated = e->evalConstEnv(env);
     std::cout << evaluated->toString() << std::endl;
     return evaluated;
 }

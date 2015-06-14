@@ -9,26 +9,26 @@ std::string SubtractionOfValue::toString() const
     return std::to_string(value) + " -";
 }
 
-Expression* SubtractionOfValue::apply(Expression* e, Environment* env)
+Expression* SubtractionOfValue::applyConstEnv(Expression* e, Environment* env)
 {
-    e = e->eval(env);
+    e = e->evalConstEnv(env);
     {
         auto i = dynamic_cast<Integer*>(e);
         if (i)
             return new Integer(i->value - value);
     }
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
-Expression* Subtraction::apply(Expression* e, Environment* env)
+Expression* Subtraction::applyConstEnv(Expression* e, Environment* env)
 {
-    e = e->eval(env);
+    e = e->evalConstEnv(env);
     {
         auto i = dynamic_cast<Integer*>(e);
         if (i)
             return new SubtractionOfValue(i->value);
     }
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
 

@@ -9,26 +9,26 @@ std::string MultiplicationOfValue::toString() const
     return std::to_string(value) + " *";
 }
 
-Expression* MultiplicationOfValue::apply(Expression* e, Environment* env)
+Expression* MultiplicationOfValue::applyConstEnv(Expression* e, Environment* env)
 {
-    e = e->eval(env);
+    e = e->evalConstEnv(env);
     {
         auto i = dynamic_cast<Integer*>(e);
         if (i)
             return new Integer(i->value * value);
     }
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
-Expression* Multiplication::apply(Expression* e, Environment* env)
+Expression* Multiplication::applyConstEnv(Expression* e, Environment* env)
 {
-    e = e->eval(env);
+    e = e->evalConstEnv(env);
     {
         auto i = dynamic_cast<Integer*>(e);
         if (i)
             return new MultiplicationOfValue(i->value);
     }
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
 std::string Multiplication::toString() const

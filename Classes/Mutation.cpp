@@ -11,7 +11,7 @@ Mutation::Mutation()
 
 }
 
-Expression* Mutation::apply(Expression* e, Environment* env)
+Expression* Mutation::applyConstEnv(Expression* e, Environment* env)
 {
     return new MutationWithValue(e);
 }
@@ -37,7 +37,7 @@ MutationWithValue::~MutationWithValue()
     delete value;
 }
 
-Expression* MutationWithValue::apply(Expression* e, Environment* env)
+Expression* MutationWithValue::applyConstEnv(Expression* e, Environment* env)
 {
     return value;
 }

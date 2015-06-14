@@ -31,7 +31,7 @@ MakeList::MakeList()
 
 }
 
-Expression* MakeList::apply(Expression* e, Environment* env)
+Expression* MakeList::applyConstEnv(Expression* e, Environment* env)
 {
     auto pair = dynamic_cast<Pair*>(e);
     if (pair != nullptr)
@@ -39,7 +39,7 @@ Expression* MakeList::apply(Expression* e, Environment* env)
         return new List(pair);
     }
 
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
 std::string MakeList::toString() const

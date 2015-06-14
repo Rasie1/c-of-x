@@ -4,7 +4,7 @@
 namespace Language
 {
 
-Expression* UnknownName::eval(Environment* env)
+Expression* UnknownName::evalConstEnv(Environment* env)
 {
     return this;
 }

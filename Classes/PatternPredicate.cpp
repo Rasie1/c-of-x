@@ -15,7 +15,7 @@ PatternPredicate::PatternPredicate(Expression* predicate)
 bool PatternPredicate::match(Pattern* other, Environment* env)
 {
     auto argument = env->get(other);
-    auto result  = predicate->apply(argument, env);
+    auto result  = predicate->applyConstEnv(argument, env);
     auto integer = dynamic_cast<Integer*>(result);
     if (integer)
         return integer->value != 0;

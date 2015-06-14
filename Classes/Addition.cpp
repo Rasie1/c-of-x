@@ -9,26 +9,26 @@ std::string AdditionOfValue::toString() const
     return std::to_string(value) + " +";
 }
 
-Expression* AdditionOfValue::apply(Expression* e, Environment* env)
+Expression* AdditionOfValue::applyConstEnv(Expression* e, Environment* env)
 {
-    e = e->eval(env);
+    e = e->evalConstEnv(env);
     {
         auto i = dynamic_cast<Integer*>(e);
         if (i)
             return new Integer(i->value + value);
     }
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
-Expression* Addition::apply(Expression* e, Environment* env)
+Expression* Addition::applyConstEnv(Expression* e, Environment* env)
 {
-    e = e->eval(env);
+    e = e->evalConstEnv(env);
     {
         auto i = dynamic_cast<Integer*>(e);
         if (i)
             return new AdditionOfValue(i->value);
     }
-    return Expression::apply(e, env);
+    return Expression::applyConstEnv(e, env);
 }
 
 std::string Addition::toString() const

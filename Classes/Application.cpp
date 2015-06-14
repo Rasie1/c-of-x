@@ -21,10 +21,10 @@ Application::~Application()
     delete argument;
 }
 
-Expression* Application::evalModifyEnv(Environment*& env)
+Expression* Application::eval(Environment*& env)
 {
     DEBUG_PRINT_FUN(function);
-    Expression* function = this->function->evalModifyEnv(env);
+    Expression* function = this->function->eval(env);
     DEBUG_PRINT_EVT(function);
 
     auto assignment = dynamic_cast<AssignmentOfValue*>(function);

@@ -17,19 +17,24 @@ Expression::~Expression()
 
 }
 
-Expression* Expression::eval(Environment* env)
+Expression* Expression::evalConstEnv(Environment* env)
 {
-    return evalModifyEnv(env);
+    return eval(env);
 }
 
-Expression* Expression::evalModifyEnv(Environment*& env)
+Expression* Expression::eval(Environment*& env)
 {
     return this;
 }
 
-Expression* Expression::apply(Expression* e, Environment* env)
+Expression* Expression::applyConstEnv(Expression* e, Environment* env)
 {
     return new Application(this, e);
+}
+
+Expression* Expression::apply(Expression* e, Environment*& env)
+{
+    return applyConstEnv(e, env);
 }
 
 Pattern* Expression::pattern()

@@ -14,9 +14,10 @@ public:
     Expression();
     virtual ~Expression();
 
-    virtual Expression* eval(Environment* env);
-    virtual Expression* apply(Expression* e, Environment* env);
-    virtual Expression* evalModifyEnv(Environment*& env);
+    virtual Expression* evalConstEnv(Environment* env);
+    virtual Expression* eval(Environment*& env);
+    virtual Expression* applyConstEnv(Expression* e, Environment* env);
+    virtual Expression* apply(Expression* e, Environment*& env);
     virtual Pattern* pattern();
     virtual std::string toString() const;
 };

@@ -11,7 +11,7 @@ Assignment::Assignment()
 
 }
 
-Expression* Assignment::apply(Expression* e, Environment* env)
+Expression* Assignment::applyConstEnv(Expression* e, Environment* env)
 {
     return new AssignmentOfValue(e);
 }
@@ -34,7 +34,7 @@ AssignmentOfValue::~AssignmentOfValue()
     delete value;
 }
 
-Expression* AssignmentOfValue::apply(Expression* e, Environment* env)
+Expression* AssignmentOfValue::applyConstEnv(Expression* e, Environment* env)
 {
     return value;
 }

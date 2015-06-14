@@ -11,7 +11,7 @@ public:
     MultiplicationOfValue(long long value = 0)
         : value(value) {}
 
-    Expression* apply(Expression* e, Environment* env) override;
+    Expression* applyConstEnv(Expression* e, Environment* env) override;
     std::string toString() const override;
 
 private:
@@ -23,7 +23,7 @@ class Multiplication : public Expression
 public:
     Multiplication() {}
 
-    Expression* apply(Expression* e, Environment* env) override;
+    Expression* applyConstEnv(Expression* e, Environment* env) override;
     std::string toString() const override;
     static const std::string defaultName;
 };

@@ -41,7 +41,7 @@ void REPL::start()
 
             //cout << expression->toString() << " =" << endl;
             DEBUG_LINEBREAK;
-            auto evaluated = expression->evalModifyEnv(env);
+            auto evaluated = expression->eval(env);
             //cout << evaluated->toString() << endl;
             DEBUG_LINEBREAK;
             // Something is wrong and makes assigned variables to

@@ -9,7 +9,7 @@ class Assignment : public Expression
 public:
     Assignment();
 
-    Expression* apply(Expression* e, Environment* env);
+    Expression* applyConstEnv(Expression* e, Environment* env);
     std::string toString() const;
     static const std::string defaultName;
 private:
@@ -21,7 +21,7 @@ public:
     AssignmentOfValue(Expression* e);
     ~AssignmentOfValue();
 
-    Expression* apply(Expression* e, Environment* env);
+    Expression* applyConstEnv(Expression* e, Environment* env);
     std::string toString() const;
 
     friend class Application;

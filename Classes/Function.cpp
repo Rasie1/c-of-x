@@ -20,14 +20,14 @@ Function::~Function()
     delete argument;
 }
 
-Expression* Function::apply(Expression* e, Environment* env)
+Expression* Function::applyConstEnv(Expression* e, Environment* env)
 {
     auto newEnv = env->add(argument,
-                           e->eval(env));
-    return body->eval(newEnv);
+                           e->evalConstEnv(env));
+    return body->evalConstEnv(newEnv);
 }
 
-Expression* Function::eval(Environment* env)
+Expression* Function::evalConstEnv(Environment* env)
 {
     return new Closure(this, env);
 }
@@ -38,11 +38,11 @@ std::string Function::toString() const
 }
 
 
-Expression* PrintPattern::apply(Expression* e, Environment* env)
+Expression* PrintPattern::applyConstEnv(Expression* e, Environment* env)
 {
     std::cout << e->pattern()->toString();
 
-    return e->eval(env);
+    return e->evalConstEnv(env);
 }
 
 std::string PrintPattern::toString() const
@@ -52,9 +52,9 @@ std::string PrintPattern::toString() const
 
 const std::string PrintPattern::defaultName = "printPattern";
 
-Expression* Preprocess::apply(Expression* e, Environment* env)
+Expression* Preprocess::applyConstEnv(Expression* e, Environment* env)
 {
-    return e->eval(env);
+    return e->evalConstEnv(env);
 }
 
 std::string Preprocess::toString() const

@@ -25,7 +25,7 @@ class MakeList : public Expression
 public:
     MakeList();
 
-    Expression* apply(Expression *e, Environment *env) override;
+    Expression* applyConstEnv(Expression *e, Environment *env) override;
     std::string toString() const override;
 };
 

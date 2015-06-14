@@ -6,13 +6,13 @@
 namespace Language
 {
 
-Expression* Variable::evalModifyEnv(Environment*& env)
+Expression* Variable::eval(Environment*& env)
 {
     auto ret = env->get(pattern());
     if (ret == nullptr)
         return new UnknownName(name);
 
-    return ret->eval(env);
+    return ret->evalConstEnv(env);
 }
 
 Pattern* Variable::pattern()

@@ -10,7 +10,7 @@ class TypeError : public Error
 public:
     TypeError() {}
 
-    Expression* eval(Environment* env);
+    Expression* evalConstEnv(Environment* env);
 
     std::string toString() const override;
 };
