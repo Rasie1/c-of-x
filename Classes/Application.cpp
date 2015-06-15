@@ -27,15 +27,10 @@ Expression* Application::eval(Environment*& env)
     Expression* function = this->function->eval(env);
     DEBUG_PRINT_EVT(function);
 
-    auto assignment = dynamic_cast<AssignmentOfValue*>(function);
-    if (assignment != nullptr)
-        env = env->add(argument->pattern(),
-                       assignment->value);
-
-    //Expression* argument = this->argument->evalModifyEnv(env);
     DEBUG_PRINT_ARG(argument);
     auto ret = function->apply(argument, env);
     DEBUG_PRINT_RES(ret);
+
     return ret;
 }
 

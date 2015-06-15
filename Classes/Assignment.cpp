@@ -36,6 +36,14 @@ AssignmentOfValue::~AssignmentOfValue()
 
 Expression* AssignmentOfValue::applyConstEnv(Expression* e, Environment* env)
 {
+    throw std::exception();
+    return value;
+}
+
+Expression* AssignmentOfValue::apply(Expression* e, Environment*& env)
+{
+    env = env->add(e->pattern(),
+                   value);
     return value;
 }
 
