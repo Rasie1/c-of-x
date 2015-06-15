@@ -4,7 +4,7 @@
 namespace Language
 {
 
-Expression* EvalForce::applyConstEnv(Expression* e, Environment* env)
+Expression* EvalForce::apply(Expression* e, Environment*& env)
 {
     return e->evalConstEnv(env)->evalConstEnv(env);
 }

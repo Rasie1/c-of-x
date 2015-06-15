@@ -19,7 +19,7 @@ Closure::~Closure()
     delete function;
 }
 
-Expression* Closure::applyConstEnv(Expression* e, Environment* env)
+Expression* Closure::apply(Expression* e, Environment*& env)
 {
     return function->applyConstEnv(e, this->env);
 }

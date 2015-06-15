@@ -11,7 +11,7 @@ Assignment::Assignment()
 
 }
 
-Expression* Assignment::applyConstEnv(Expression* e, Environment* env)
+Expression* Assignment::apply(Expression* e, Environment*& env)
 {
     return new AssignmentOfValue(e);
 }
@@ -32,12 +32,6 @@ AssignmentOfValue::AssignmentOfValue(Expression* e)
 AssignmentOfValue::~AssignmentOfValue()
 {
     delete value;
-}
-
-Expression* AssignmentOfValue::applyConstEnv(Expression* e, Environment* env)
-{
-    throw std::exception();
-    return value;
 }
 
 Expression* AssignmentOfValue::apply(Expression* e, Environment*& env)

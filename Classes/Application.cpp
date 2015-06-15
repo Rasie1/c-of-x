@@ -30,7 +30,6 @@ Expression* Application::eval(Environment*& env)
     DEBUG_PRINT_ARG(argument);
     auto ret = function->apply(argument, env);
     DEBUG_PRINT_RES(ret);
-
     return ret;
 }
 

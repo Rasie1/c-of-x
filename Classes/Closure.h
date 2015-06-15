@@ -12,7 +12,7 @@ public:
     Closure(Function* function, Environment* env);
     ~Closure();
 
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
+    Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
 
 private:

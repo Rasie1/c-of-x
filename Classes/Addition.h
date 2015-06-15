@@ -11,7 +11,7 @@ public:
     AdditionOfValue(long long value = 0)
         : value(value) {}
 
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
+    Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
 
 private:
@@ -23,7 +23,7 @@ class Addition : public Expression
 public:
     Addition() {}
 
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
+    Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
     static const std::string defaultName;
 };

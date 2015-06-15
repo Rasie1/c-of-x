@@ -29,12 +29,12 @@ Expression* Expression::eval(Environment*& env)
 
 Expression* Expression::applyConstEnv(Expression* e, Environment* env)
 {
-    return new Application(this, e);
+    return apply(e, env);
 }
 
 Expression* Expression::apply(Expression* e, Environment*& env)
 {
-    return applyConstEnv(e, env);
+    return new Application(this, e);
 }
 
 Pattern* Expression::pattern()

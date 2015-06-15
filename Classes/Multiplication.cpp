@@ -9,7 +9,7 @@ std::string MultiplicationOfValue::toString() const
     return std::to_string(value) + " *";
 }
 
-Expression* MultiplicationOfValue::applyConstEnv(Expression* e, Environment* env)
+Expression* MultiplicationOfValue::apply(Expression* e, Environment*& env)
 {
     e = e->evalConstEnv(env);
     {
@@ -20,7 +20,7 @@ Expression* MultiplicationOfValue::applyConstEnv(Expression* e, Environment* env
     return Expression::applyConstEnv(e, env);
 }
 
-Expression* Multiplication::applyConstEnv(Expression* e, Environment* env)
+Expression* Multiplication::apply(Expression* e, Environment*& env)
 {
     e = e->evalConstEnv(env);
     {

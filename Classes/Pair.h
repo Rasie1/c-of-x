@@ -26,7 +26,6 @@ public:
     PairConstructorWithValue(Expression* e)
         : value(e) {}
 
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
     Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
 
@@ -38,7 +37,7 @@ class PairConstructor : public Expression
 public:
     PairConstructor() {}
 
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
+    Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
     static const std::string defaultName;
 };

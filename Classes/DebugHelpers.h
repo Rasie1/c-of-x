@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#define DEBUG_EVAL
+#define DEBUG_EVAL_
 #ifdef DEBUG_EVAL
 #include <iostream>
 #define DEBUG_PRINT(s) std::cout << (s);
@@ -21,6 +21,6 @@ const  int _appIndent = 8;
 #define DEBUG_PRINT_FUN(s) true;
 #define DEBUG_PRINT_EVT(s) true;
 #define DEBUG_PRINT_ARG(s) true;
-#define DEBUG_PRINT_RET(s) true;
+#define DEBUG_PRINT_RES(s) true;
 #define DEBUG_LINEBREAK    true;
 #endif

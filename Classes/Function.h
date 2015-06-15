@@ -11,26 +11,11 @@ public:
     ~Function();
 
     Expression* evalConstEnv(Environment* env) override;
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
+    Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
 
     Expression* body;
     Pattern* argument;
-};
-
-class PrintPattern : public Expression
-{
-public:
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
-    std::string toString() const override;
-    static const std::string defaultName;
-};
-
-class Preprocess : public Expression
-{
-public:
-    Expression* applyConstEnv(Expression* e, Environment* env) override;
-    std::string toString() const override;
 };
 
 }

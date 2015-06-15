@@ -23,12 +23,6 @@ std::string Pair::toString() const
     return "(" + l->toString() + ":" + r->toString() + ")";
 }
 
-
-Expression* PairConstructorWithValue::applyConstEnv(Expression* e, Environment* env)
-{
-    return new Pair(value->eval(env), e->eval(env));
-}
-
 Expression* PairConstructorWithValue::apply(Expression* e, Environment*& env)
 {
     return new Pair(value->eval(env), e->eval(env));
@@ -39,7 +33,7 @@ std::string PairConstructorWithValue::toString() const
     return "pair{" + value->toString() + "}";
 }
 
-Expression* PairConstructor::applyConstEnv(Expression* e, Environment* env)
+Expression* PairConstructor::apply(Expression* e, Environment*& env)
 {
     return new PairConstructorWithValue(e);
 }

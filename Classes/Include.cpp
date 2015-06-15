@@ -8,7 +8,7 @@
 namespace Language
 {
 
-Expression* Include::applyConstEnv(Expression* e, Environment* env)
+Expression* Include::apply(Expression* e, Environment*& env)
 {
     auto str = dynamic_cast<String*>(e);
     if (str == nullptr)

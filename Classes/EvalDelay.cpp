@@ -4,7 +4,7 @@
 namespace Language
 {
 
-Expression* EvalDelay::applyConstEnv(Expression* e, Environment* env)
+Expression* EvalDelay::apply(Expression* e, Environment*& env)
 {
     return e;
 }

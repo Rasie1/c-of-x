@@ -9,7 +9,7 @@
 namespace Language
 {
 
-Expression* Lambda::applyConstEnv(Expression* e, Environment* env)
+Expression* Lambda::apply(Expression* e, Environment*& env)
 {
     {
         auto i = dynamic_cast<UnknownName*>(e);
@@ -33,7 +33,7 @@ LambdaArguments::LambdaArguments(Pattern* argument)
 
 }
 
-Expression* LambdaArguments::applyConstEnv(Expression* e, Environment* env)
+Expression* LambdaArguments::apply(Expression* e, Environment*& env)
 {
     auto ret = new Closure(new Function(e, pattern), env);
     return ret;
