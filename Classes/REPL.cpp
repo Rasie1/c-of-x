@@ -31,7 +31,7 @@ void REPL::start()
             Expression* expression;
             try
             {
-                expression = parser.parse(instruction);
+                expression = parser.parse(instruction, env);
             }
             catch(ExceptionParseError& e)
             {

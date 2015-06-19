@@ -3,6 +3,7 @@
 #include "TypeError.h"
 #include "Pattern.h"
 #include "Application.h"
+#include "Operation.h"
 
 namespace Language
 {
@@ -34,13 +35,18 @@ Expression* Expression::applyConstEnv(Expression* e, Environment* env)
 
 Expression* Expression::apply(Expression* e, Environment*& env)
 {
-    return new Application(this, e);
+    return new Operation(new Application(), this, e);
 }
 
 Pattern* Expression::pattern()
 {
     throw std::exception();
     return new Pattern();
+}
+
+bool Expression::isOperator(Environment* env)
+{
+    return false;
 }
 
 std::string Expression::toString() const

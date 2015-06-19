@@ -1,5 +1,5 @@
 #include "UnknownName.h"
-#include "PatternAbstraction.h"
+#include "PatternVariable.h"
 
 namespace Language
 {
@@ -11,12 +11,12 @@ Expression* UnknownName::evalConstEnv(Environment* env)
 
 Pattern* UnknownName::pattern()
 {
-    return new PatternAbstraction(name);
+    return new PatternVariable(name);
 }
 
 std::string UnknownName::toString() const
 {
-    return "Identifier not found: " + name;
+    return "UnknownName(" + name + ")";
 }
 
 }

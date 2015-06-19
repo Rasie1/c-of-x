@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <map>
+#include <unordered_map>
 
 namespace Language
 {
@@ -7,6 +9,9 @@ namespace Language
 class Expression;
 class EnvironmentalVariable;
 class Pattern;
+class PrecedenceTable;
+class PrecedenceInfo;
+class Operator;
 class Environment
 {
 public:
@@ -26,6 +31,21 @@ private:
 
     EnvironmentalVariable* data;
     Environment* next;
+    PrecedenceTable* precedenceTable;
+};
+
+
+class PrecedenceTable
+{
+public:
+    PrecedenceTable() {}
+    bool more(Operator* first, Operator* second);
+    void add(PrecedenceInfo* op);
+    void remove(PrecedenceInfo* op);
+
+private:
+    std::unordered_map<unsigned,
+                       std::map<double, double>> table;
 };
 
 }

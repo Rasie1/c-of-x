@@ -19,6 +19,7 @@ public:
     virtual Expression* applyConstEnv(Expression* e, Environment* env);
     virtual Expression* apply(Expression* e, Environment*& env);
     virtual Pattern* pattern();
+    virtual bool isOperator(Environment* env);
     virtual std::string toString() const;
 };
 

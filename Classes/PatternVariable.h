@@ -4,10 +4,10 @@
 namespace Language
 {
 
-class PatternAbstraction : public Pattern
+class PatternVariable : public Pattern
 {
 public:
-    PatternAbstraction(const std::string& name)
+    PatternVariable(const std::string& name)
         : name(name) {}
 
     bool match(Pattern* other, Environment* env) override;

@@ -1,7 +1,7 @@
 #include "Variable.h"
 #include "Environment.h"
 #include "UnknownName.h"
-#include "PatternAbstraction.h"
+#include "PatternVariable.h"
 
 namespace Language
 {
@@ -17,7 +17,7 @@ Expression* Variable::eval(Environment*& env)
 
 Pattern* Variable::pattern()
 {
-    return new PatternAbstraction(name);
+    return new PatternVariable(name);
 }
 
 std::string Variable::toString() const

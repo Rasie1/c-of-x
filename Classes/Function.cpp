@@ -29,6 +29,7 @@ Expression* Function::apply(Expression* e, Environment*& env)
 
 Expression* Function::evalConstEnv(Environment* env)
 {
+	// wtf is this?
     return new Closure(this, env);
 }
 

@@ -2,7 +2,8 @@
 #include "Expression.h"
 #include "TypeError.h"
 #include "EnvironmentalVariable.h"
-#include "PatternAbstraction.h"
+#include "PatternVariable.h"
+#include "PatternOperator.h"
 
 #include "Addition.h"
 #include "Subtraction.h"
@@ -16,6 +17,7 @@
 #include "List.h"
 #include "Mutation.h"
 #include "Print.h"
+//#include "Operator.h"
 
 #include "EvalDelay.h"
 #include "EvalForce.h"
@@ -77,27 +79,44 @@ Environment* Environment::add(Pattern* p, Expression* e)
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(new Language::PatternAbstraction(Addition::defaultName),        new Addition())
-         ->add(new Language::PatternAbstraction(Subtraction::defaultName),     new Subtraction())
-         ->add(new Language::PatternAbstraction(Multiplication::defaultName),  new Multiplication())
-         ->add(new Language::PatternAbstraction(Mutation::defaultName),        new Mutation())
-         ->add(new Language::PatternAbstraction(Assignment::defaultName),      new Assignment())
-         ->add(new Language::PatternAbstraction(EvalForce::defaultName),       new EvalForce())
-         ->add(new Language::PatternAbstraction(EvalDelay::defaultName),       new EvalDelay())
-         ->add(new Language::PatternAbstraction(PairConstructor::defaultName), new PairConstructor())
-         ->add(new Language::PatternAbstraction(Print::defaultName),           new Print())
-         ->add(new Language::PatternAbstraction(PrintPattern::defaultName),    new PrintPattern())
-         ->add(new Language::PatternAbstraction(Include::defaultName),         new Include())
-         ->add(new Language::PatternAbstraction("list"), new MakeList())
-         ->add(new Language::PatternAbstraction(Lambda::defaultName),          new Lambda());
+    return add(new Language::PatternVariable(Addition       ::defaultName), new Addition())
+         ->add(new Language::PatternVariable(Subtraction::    defaultName), new Subtraction())
+         ->add(new Language::PatternVariable(Multiplication:: defaultName), new Multiplication())
+         ->add(new Language::PatternVariable(Mutation::       defaultName), new Mutation())
+         ->add(new Language::PatternVariable(Assignment::     defaultName), new Assignment())
+         ->add(new Language::PatternVariable(EvalForce::      defaultName), new EvalForce())
+         ->add(new Language::PatternVariable(EvalDelay::      defaultName), new EvalDelay())
+         ->add(new Language::PatternVariable(PairConstructor::defaultName), new PairConstructor())
+         ->add(new Language::PatternVariable(Print::          defaultName), new Print())
+         ->add(new Language::PatternVariable(PrintPattern::   defaultName), new PrintPattern())
+         ->add(new Language::PatternVariable(Include::        defaultName), new Include())
+         ->add(new Language::PatternVariable("list"),                       new MakeList())
+         ->add(new Language::PatternVariable(Lambda::         defaultName), new Lambda())
+         ->add(new Language::PatternOperator(Plus::           defaultName, new Plus()), new Plus());
 }
 
 Environment* Environment::create()
 {
     auto firstVariable = new EnvironmentalVariable(
-                new Language::PatternAbstraction(Void::defaultName), new Void());
+                new Language::PatternVariable(Void::defaultName), new Void());
     auto environment = new Environment(firstVariable, nullptr);
     return environment->loadDefaultVariables();
+}
+
+
+bool PrecedenceTable::more(Operator* first, Operator* second)
+{
+    return false;
+}
+
+void PrecedenceTable::add(PrecedenceInfo* op)
+{
+
+}
+
+void PrecedenceTable::remove(PrecedenceInfo* op)
+{
+
 }
 
 }

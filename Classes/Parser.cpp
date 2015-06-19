@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <stack>
+#include <queue>
 #include "Integer.h"
 #include "Application.h"
 #include "ExceptionParseError.h"
@@ -9,15 +10,18 @@
 #include "ParseError.h"
 #include "Variable.h"
 #include "String.h"
+#include "Operation.h"
+#include "Environment.h"
+#include "PatternOperator.h"
 
 using namespace std;
 namespace Language
 {
 
-Expression* Parser::parse(const string& s)
+Expression* Parser::parse(const string& s, Environment* env)
 {
     size_t i = 0;
-    return parse(s, i, s.size());
+    return parse(s, i, s.size(), env);
 }
 
 inline bool notSpecialCharacter(char c)
@@ -64,7 +68,10 @@ inline bool shouldSkipCharacter(char c)
 }
 
 
-Expression* Parser::parseName(const std::string& s, size_t& i, size_t n)
+Expression* Parser::parseName(const std::string& s,
+                              size_t& i,
+                              size_t n,
+                              Environment* env)
 {
     if (s[i] == '\"')
     {
@@ -106,13 +113,21 @@ Expression* Parser::parseName(const std::string& s, size_t& i, size_t n)
 
         auto ss = s.substr(start, i - start);
 
+        //Operator* op = env->get(new PatternOperator(
+
         return new Variable(ss);
     }
 }
 
-Expression* Parser::parse(const std::string& s, size_t& i, size_t n)
+Expression* Parser::parse(const std::string& s,
+                          size_t& i,
+                          size_t n,
+                          Environment* env)
 {
     Expression* ret = nullptr;
+
+    std::stack<Expression*> operatorStack;
+
 
     while (i < n)
     {
@@ -129,18 +144,42 @@ Expression* Parser::parse(const std::string& s, size_t& i, size_t n)
         {
             Expression* e;
             if (notSpecialCharacter(currentCharacter))
-                e = parseName(s, i, n);
+                e = parseName(s, i, n, env);
             else if (currentCharacter == '(')
-                e = parse(s, ++i, n);
+                e = parse(s, ++i, n, env);
+            /*
+            if (ret != nullptr)
+            {
+                if (e->isOperator(env))
+                {
+                    while (operatorStack.top()->isOperator())
+                    {
+
+                    }
+
+                    ret = new Operation(new Application(),
+                                        ret,
+                                        e);
+                }
+                else
+                    operatorStack.push(e);
+            }
+            else
+                ret = e;
+            */
+
 
             if (ret != nullptr)
-                ret = new Application(ret, e);
+                ret = new Operation(new Application(),
+                                    ret,
+                                    e);
             else
                 ret = e;
         }
     }
     if (!ret)
         ret = new Void();
+
     return ret;
 }
 

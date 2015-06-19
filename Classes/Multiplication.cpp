@@ -36,7 +36,7 @@ std::string Multiplication::toString() const
     return defaultName;
 }
 
-const std::string Multiplication::defaultName = "multiply";
+const std::string Multiplication::defaultName = "mul";
 
 
 

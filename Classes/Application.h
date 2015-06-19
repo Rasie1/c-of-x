@@ -1,22 +1,19 @@
 #pragma once
-#include "Expression.h"
+#include "Operator.h"
 
 namespace Language
 {
 
-class Application : public Expression
+class Application : public Operator
 {
 public:
-    Application(Expression* function, Expression* argument);
-    ~Application();
+    Application();
 
-    Expression* eval(Environment*& env) override;
-    Pattern* pattern() override;
+    Expression* operate(Expression* first,
+                        Expression* second,
+                        Environment*& env) override;
     std::string toString() const override;
-
 private:
-    Expression* function;
-    Expression* argument;
 };
 
 }

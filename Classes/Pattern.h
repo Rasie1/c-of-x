@@ -10,7 +10,7 @@ public:
     Pattern();
 
     virtual bool match(Pattern* other, Environment* env);
-    std::string toString() const override;
+    virtual std::string toString() const override;
 };
 
 }

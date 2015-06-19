@@ -1,5 +1,6 @@
 #include "Addition.h"
 #include <string>
+#include "Operation.h"
 
 namespace Language
 {
@@ -38,5 +39,25 @@ std::string Addition::toString() const
 
 const std::string Addition::defaultName = "add";
 
+
+Expression* Plus::operate(Expression* first,
+                                      Expression* second,
+                                      Environment*& env)
+{
+    auto firstInteger = dynamic_cast<Integer*>(first);
+    auto secondInteger = dynamic_cast<Integer*>(second);
+
+    if (firstInteger && secondInteger)
+        return new Integer(firstInteger->value +
+                           secondInteger->value);
+    return new Operation(new Plus(), first, second);
+}
+
+std::string Plus::toString() const
+{
+    return Plus::name;
+}
+
+const std::string Plus::defaultName = "+";
 
 }

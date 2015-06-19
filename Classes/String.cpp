@@ -1,6 +1,6 @@
 #include "String.h"
 #include <string>
-#include "PatternAbstraction.h"
+#include "PatternVariable.h"
 
 namespace Language
 {
@@ -19,7 +19,7 @@ std::string String::toString() const
 
 Pattern* String::pattern()
 {
-    return new PatternAbstraction(toString());
+    return new PatternVariable(toString());
 }
 
 }

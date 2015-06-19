@@ -1,6 +1,7 @@
 #pragma once
 #include "Function.h"
 #include "Integer.h"
+#include "Operator.h"
 
 namespace Language
 {
@@ -25,6 +26,17 @@ public:
 
     Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
+    static const std::string defaultName;
+};
+
+class Plus : public Operator
+{
+public:
+    Expression* operate(Expression* first,
+                        Expression* second,
+                        Environment*& env) override;
+    std::string toString() const override;
+
     static const std::string defaultName;
 };
 
