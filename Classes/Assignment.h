@@ -6,30 +6,15 @@
 namespace Language
 {
 
-class Assignment : public Expression
+class Assignment : public Operator
 {
 public:
-    Assignment();
+    Expression* operate(Expression* first,
+                        Expression* second,
+                        Environment*& env) override;
+    std::string toString() const override;
 
-    Expression* apply(Expression* e, Environment*& env) override;
-    std::string toString() const;
     static const std::string defaultName;
-private:
-};
-
-class AssignmentOfValue : public Expression
-{
-public:
-    AssignmentOfValue(Expression* e);
-    ~AssignmentOfValue();
-
-    Expression* apply(Expression* e, Environment*& env) override;
-    std::string toString() const;
-
-    friend class Application;
-
-private:
-    Expression* value;
 };
 
 }

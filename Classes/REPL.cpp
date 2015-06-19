@@ -13,7 +13,7 @@ namespace Language
 void REPL::start()
 {
     env = Environment::create();
-    cout << "Welcome to Language REPL, type -h to get help" << endl;
+    cout << "Welcome to c(x), type -h to get help" << endl;
 
     while (true)
     {

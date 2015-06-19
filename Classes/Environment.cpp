@@ -91,7 +91,8 @@ Environment* Environment::loadDefaultVariables()
          ->add(new Language::PatternVariable(Lambda         ::defaultName), new Lambda())
          ->add(new Language::PatternOperator(Addition       ::defaultName, new Addition()), new Addition())
          ->add(new Language::PatternOperator(Subtraction    ::defaultName, new Subtraction()), new Subtraction())
-         ->add(new Language::PatternOperator(Multiplication ::defaultName, new Multiplication()), new Multiplication());
+         ->add(new Language::PatternOperator(Multiplication ::defaultName, new Multiplication()), new Multiplication())
+         ->add(new Language::PatternOperator(Assignment     ::defaultName, new Assignment()), new Assignment());
 }
 
 Environment* Environment::create()

@@ -2,48 +2,27 @@
 #include "Variable.h"
 #include "Environment.h"
 #include "Pattern.h"
+#include <string>
+#include "Operation.h"
 
 namespace Language
 {
 
-Assignment::Assignment()
+Expression* Assignment::operate(Expression* first,
+                                Expression* second,
+                                Environment*& env)
 {
-
-}
-
-Expression* Assignment::apply(Expression* e, Environment*& env)
-{
-    return new AssignmentOfValue(e);
+    env = env->add(first->pattern(),
+                   second);
+    return second;
 }
 
 std::string Assignment::toString() const
 {
-    return defaultName;
+    return Assignment::defaultName;
 }
 
-const std::string Assignment::defaultName = "assign";
+const std::string Assignment::defaultName = "=";
 
-
-AssignmentOfValue::AssignmentOfValue(Expression* e)
-    : value(e)
-{
-}
-
-AssignmentOfValue::~AssignmentOfValue()
-{
-    delete value;
-}
-
-Expression* AssignmentOfValue::apply(Expression* e, Environment*& env)
-{
-    env = env->add(e->pattern(),
-                   value);
-    return value;
-}
-
-std::string AssignmentOfValue::toString() const
-{
-    return "(= " + value->toString() + ")";
-}
 
 }
