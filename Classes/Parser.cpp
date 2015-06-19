@@ -49,7 +49,8 @@ inline bool notSpecialCharacter(char c)
            c == '?'  ||
            c == '/'  ||
            c == '^'  ||
-           c == '='  ;
+           c == '='
+            ;
 }
 
 inline bool isExpressionEnd(char c)

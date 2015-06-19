@@ -1,5 +1,7 @@
 #pragma once
 #include "Function.h"
+#include "Integer.h"
+#include "Operator.h"
 
 namespace Language
 {

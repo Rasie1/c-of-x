@@ -1,43 +1,28 @@
 #include "Multiplication.h"
 #include <string>
+#include "Operation.h"
 
 namespace Language
 {
 
-std::string MultiplicationOfValue::toString() const
+Expression* Multiplication::operate(Expression* first,
+                                    Expression* second,
+                                    Environment*& env)
 {
-    return std::to_string(value) + " *";
-}
+    auto firstInteger  = dynamic_cast<Integer*>(first ->eval(env));
+    auto secondInteger = dynamic_cast<Integer*>(second->eval(env));
 
-Expression* MultiplicationOfValue::apply(Expression* e, Environment*& env)
-{
-    e = e->evalConstEnv(env);
-    {
-        auto i = dynamic_cast<Integer*>(e);
-        if (i)
-            return new Integer(i->value * value);
-    }
-    return Expression::applyConstEnv(e, env);
-}
-
-Expression* Multiplication::apply(Expression* e, Environment*& env)
-{
-    e = e->evalConstEnv(env);
-    {
-        auto i = dynamic_cast<Integer*>(e);
-        if (i)
-            return new MultiplicationOfValue(i->value);
-    }
-    return Expression::applyConstEnv(e, env);
+    if (firstInteger && secondInteger)
+        return new Integer(firstInteger->value *
+                           secondInteger->value);
+    return new Operation(new Multiplication(), first, second);
 }
 
 std::string Multiplication::toString() const
 {
-    return defaultName;
+    return Multiplication::defaultName;
 }
 
-const std::string Multiplication::defaultName = "mul";
-
-
+const std::string Multiplication::defaultName = "*";
 
 }

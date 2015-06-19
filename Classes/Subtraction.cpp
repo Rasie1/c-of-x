@@ -1,44 +1,28 @@
 #include "Subtraction.h"
 #include <string>
+#include "Operation.h"
 
 namespace Language
 {
 
-std::string SubtractionOfValue::toString() const
+Expression* Subtraction::operate(Expression* first,
+                              Expression* second,
+                              Environment*& env)
 {
-    return std::to_string(value) + " -";
-}
+    auto firstInteger  = dynamic_cast<Integer*>(first ->eval(env));
+    auto secondInteger = dynamic_cast<Integer*>(second->eval(env));
 
-Expression* SubtractionOfValue::apply(Expression* e, Environment*& env)
-{
-    e = e->evalConstEnv(env);
-    {
-        auto i = dynamic_cast<Integer*>(e);
-        if (i)
-            return new Integer(i->value - value);
-    }
-    return Expression::applyConstEnv(e, env);
+    if (firstInteger && secondInteger)
+        return new Integer(firstInteger->value -
+                           secondInteger->value);
+    return new Operation(new Subtraction(), first, second);
 }
-
-Expression* Subtraction::apply(Expression* e, Environment*& env)
-{
-    e = e->evalConstEnv(env);
-    {
-        auto i = dynamic_cast<Integer*>(e);
-        if (i)
-            return new SubtractionOfValue(i->value);
-    }
-    return Expression::applyConstEnv(e, env);
-}
-
 
 std::string Subtraction::toString() const
 {
-    return defaultName;
+    return Subtraction::defaultName;
 }
 
-const std::string Subtraction::defaultName = "subtract";
-
-
+const std::string Subtraction::defaultName = "-";
 
 }

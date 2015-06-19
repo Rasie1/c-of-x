@@ -80,20 +80,18 @@ Environment* Environment::add(Pattern* p, Expression* e)
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(new Language::PatternVariable(Addition       ::defaultName), new Addition())
-         ->add(new Language::PatternVariable(Subtraction::    defaultName), new Subtraction())
-         ->add(new Language::PatternVariable(Multiplication:: defaultName), new Multiplication())
-         ->add(new Language::PatternVariable(Mutation::       defaultName), new Mutation())
-         ->add(new Language::PatternVariable(Assignment::     defaultName), new Assignment())
-         ->add(new Language::PatternVariable(EvalForce::      defaultName), new EvalForce())
-         ->add(new Language::PatternVariable(EvalDelay::      defaultName), new EvalDelay())
+    return add(new Language::PatternVariable(Mutation       ::defaultName), new Mutation())
+         ->add(new Language::PatternVariable(Assignment     ::defaultName), new Assignment())
+         ->add(new Language::PatternVariable(EvalForce      ::defaultName), new EvalForce())
+         ->add(new Language::PatternVariable(EvalDelay      ::defaultName), new EvalDelay())
          ->add(new Language::PatternVariable(PairConstructor::defaultName), new PairConstructor())
-         ->add(new Language::PatternVariable(Print::          defaultName), new Print())
-         ->add(new Language::PatternVariable(PrintPattern::   defaultName), new PrintPattern())
-         ->add(new Language::PatternVariable(Include::        defaultName), new Include())
-         ->add(new Language::PatternVariable("list"),                       new MakeList())
-         ->add(new Language::PatternVariable(Lambda::         defaultName), new Lambda())
-         ->add(new Language::PatternOperator(Plus::           defaultName, new Plus()), new Plus());
+         ->add(new Language::PatternVariable(Print          ::defaultName), new Print())
+         ->add(new Language::PatternVariable(PrintPattern   ::defaultName), new PrintPattern())
+         ->add(new Language::PatternVariable(Include        ::defaultName), new Include())
+         ->add(new Language::PatternVariable(Lambda         ::defaultName), new Lambda())
+         ->add(new Language::PatternOperator(Addition       ::defaultName, new Addition()), new Addition())
+         ->add(new Language::PatternOperator(Subtraction    ::defaultName, new Subtraction()), new Subtraction())
+         ->add(new Language::PatternOperator(Multiplication ::defaultName, new Multiplication()), new Multiplication());
 }
 
 Environment* Environment::create()
