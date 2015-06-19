@@ -23,6 +23,7 @@ public:
     Environment* add(Pattern* p, Expression* e);
     Environment* pop();
     Expression* get(Pattern* p);
+    bool compareOperators(Expression* first, Expression* second);
 
     static Environment* create();
 

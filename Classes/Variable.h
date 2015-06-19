@@ -13,6 +13,7 @@ public:
 
     Expression* eval(Environment*& env);
     Pattern* pattern() override;
+    bool isOperator(Environment* env) override;
     std::string toString() const;
 
     std::string name;

@@ -17,6 +17,7 @@
 #include "List.h"
 #include "Mutation.h"
 #include "Print.h"
+#include "Application.h"
 //#include "Operator.h"
 
 #include "EvalDelay.h"
@@ -101,6 +102,18 @@ Environment* Environment::create()
                 new Language::PatternVariable(Void::defaultName), new Void());
     auto environment = new Environment(firstVariable, nullptr);
     return environment->loadDefaultVariables();
+}
+
+bool Environment::compareOperators(Expression* first, Expression* second)
+{
+    int firstValue = 0, secondValue = 1;
+
+    if (dynamic_cast<Application*>(first))
+        firstValue = 10;
+    if (dynamic_cast<Application*>(second))
+        secondValue = 10;
+
+    return firstValue < secondValue;
 }
 
 

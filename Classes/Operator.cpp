@@ -13,6 +13,11 @@ std::string Operator::toString() const
 {
     return "op";
 }
+
+bool Operator::isOperator(Environment *env)
+{
+    return true;
+}
 /*
 PrecedenceInfo::PrecedenceInfo(Operator *more, Operator *less)
     : more(more),

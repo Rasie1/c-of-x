@@ -1,4 +1,5 @@
 #include "PatternOperator.h"
+#include "PatternVariable.h"
 #include "Operator.h"
 
 namespace Language
@@ -14,6 +15,9 @@ PatternOperator::PatternOperator(const std::string& name,
 
 bool PatternOperator::match(Pattern* other, Environment* env)
 {
+    auto y = dynamic_cast<PatternVariable*>(other);
+    if (y)
+        return y->name == name;
     auto x = dynamic_cast<PatternOperator*>(other);
     if (x == nullptr)
         return false;

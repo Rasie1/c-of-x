@@ -41,11 +41,11 @@ const std::string Addition::defaultName = "add";
 
 
 Expression* Plus::operate(Expression* first,
-                                      Expression* second,
-                                      Environment*& env)
+                          Expression* second,
+                          Environment*& env)
 {
-    auto firstInteger = dynamic_cast<Integer*>(first);
-    auto secondInteger = dynamic_cast<Integer*>(second);
+    auto firstInteger = dynamic_cast<Integer*>(first->eval(env));
+    auto secondInteger = dynamic_cast<Integer*>(second->eval(env));
 
     if (firstInteger && secondInteger)
         return new Integer(firstInteger->value +
@@ -55,7 +55,7 @@ Expression* Plus::operate(Expression* first,
 
 std::string Plus::toString() const
 {
-    return Plus::name;
+    return Plus::defaultName;
 }
 
 const std::string Plus::defaultName = "+";

@@ -13,6 +13,7 @@ public:
     virtual Expression* operate(Expression* first,
                                 Expression* second,
                                 Environment*& env) = 0;
+    bool isOperator(Environment *env) override;
     bool isRightAssociative;
     const std::string name;
 

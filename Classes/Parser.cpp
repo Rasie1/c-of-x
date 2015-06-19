@@ -119,6 +119,24 @@ Expression* Parser::parseName(const std::string& s,
     }
 }
 
+void makeOperation(std::stack<Expression*>& operatorStack,
+                   std::deque<Expression*>& q,
+                   Environment* env)
+{
+    Expression* left;
+    Expression* right;
+    Expression* top = operatorStack.top();
+    Operator* op = (Operator*)(top->eval(env)); // eval in parser?!
+    operatorStack.pop();
+
+    right = q.back();
+    q.pop_back();
+    left  = q.back();
+    q.pop_back();
+
+    q.push_back(new Operation(op, left, right));
+}
+
 Expression* Parser::parse(const std::string& s,
                           size_t& i,
                           size_t n,
@@ -127,7 +145,8 @@ Expression* Parser::parse(const std::string& s,
     Expression* ret = nullptr;
 
     std::stack<Expression*> operatorStack;
-
+    std::deque<Expression*> q;
+    bool applicationFlag = false;
 
     while (i < n)
     {
@@ -147,36 +166,56 @@ Expression* Parser::parse(const std::string& s,
                 e = parseName(s, i, n, env);
             else if (currentCharacter == '(')
                 e = parse(s, ++i, n, env);
-            /*
-            if (ret != nullptr)
+
+            /* SHUNTING-YARD
+             * token = name     => q.push token
+             *       | function => s.push token
+             *       | operator => 1. while s.top is operator
+             *                     && (token is left  associative
+             *                     && token <= s.top
+             *                     || token is right associative
+             *                     && token <  s.top)
+             *                     { q.push(s.pop) }
+             *                     2. s.push token
+             */
+
+            if (e->isOperator(env))
             {
-                if (e->isOperator(env))
-                {
-                    while (operatorStack.top()->isOperator())
-                    {
+                applicationFlag = false;
 
-                    }
+                while (!operatorStack.empty()
+                       && env->compareOperators(e, operatorStack.top()))
+                    makeOperation(operatorStack, q, env);
 
-                    ret = new Operation(new Application(),
-                                        ret,
-                                        e);
-                }
-                else
-                    operatorStack.push(e);
+                operatorStack.push(e);
             }
             else
-                ret = e;
-            */
+            {
+                q.push_back(e);
+                if (applicationFlag)
+                {
+                    operatorStack.push(new Application());
+                    makeOperation(operatorStack, q, env);
+                }
 
+                applicationFlag = true;
+            }
 
+/*
             if (ret != nullptr)
                 ret = new Operation(new Application(),
                                     ret,
                                     e);
             else
-                ret = e;
+                ret = e;*/
         }
     }
+
+    while (!operatorStack.empty())
+        makeOperation(operatorStack, q, env);
+
+    if (!q.empty())
+        ret = q.front();
     if (!ret)
         ret = new Void();
 

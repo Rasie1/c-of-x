@@ -20,9 +20,20 @@ Pattern* Variable::pattern()
     return new PatternVariable(name);
 }
 
+bool Variable::isOperator(Environment* env)
+{
+    auto e = env->get(pattern());
+    if (e)
+        return e->isOperator(env);
+    else
+        return false;
+}
+
 std::string Variable::toString() const
 {
     return name;
 }
+
+
 
 }
