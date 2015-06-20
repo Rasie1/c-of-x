@@ -2,6 +2,7 @@
 #include "Function.h"
 #include "Environment.h"
 #include "Function.h"
+#include "Pattern.h"
 
 namespace Language
 {
@@ -26,7 +27,12 @@ Expression* Closure::apply(Expression* e, Environment*& env)
 
 std::string Closure::toString() const
 {
-    return "closure " + function->toString();
+    return "closure{"
+            + env->top().first->toString()
+            + " = "
+            + env->top().second->toString()
+            + "} "
+            + function->toString();
 }
 
 }

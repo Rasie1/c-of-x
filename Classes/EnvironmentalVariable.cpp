@@ -25,4 +25,9 @@ Expression* EnvironmentalVariable::get()
     return value;
 }
 
+Pattern* EnvironmentalVariable::getPattern()
+{
+    return pattern;
+}
+
 }

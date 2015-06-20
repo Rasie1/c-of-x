@@ -15,6 +15,7 @@ public:
 
     bool match(Pattern* other, Environment* env);
     Expression* get();
+    Pattern* getPattern();
 
 private:
     Pattern* pattern;

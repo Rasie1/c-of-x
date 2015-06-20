@@ -115,6 +115,13 @@ bool Environment::compareOperators(Expression* first, Expression* second)
     return firstValue < secondValue;
 }
 
+std::pair<Pattern*, Expression*> Environment::top()
+{
+    return std::pair<Pattern*, Expression*>(
+                data->getPattern(),
+                data->get());
+}
+
 
 bool PrecedenceTable::more(Operator* first, Operator* second)
 {

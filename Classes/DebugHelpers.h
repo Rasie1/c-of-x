@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#define DEBUG_EVAL_
+#define DEBUG_EVAL
 #ifdef DEBUG_EVAL
 #include <iostream>
 #define DEBUG_PRINT(s) std::cout << (s);

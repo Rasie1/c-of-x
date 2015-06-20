@@ -113,8 +113,12 @@ Expression* Parser::parseName(const std::string& s,
             ++i;
 
         auto ss = s.substr(start, i - start);
-
-        //Operator* op = env->get(new PatternOperator(
+/*
+        auto variable = new Variable(ss);
+        auto e = env->get(variable->pattern());
+        if (e)
+            */
+        //auto op = new PatternOperator(
 
         return new Variable(ss);
     }
@@ -127,6 +131,7 @@ void makeOperation(std::stack<Expression*>& operatorStack,
     Expression* left;
     Expression* right;
     Expression* top = operatorStack.top();
+    //Operator* op = (Operator*)(top);
     Operator* op = (Operator*)(top->eval(env)); // eval in parser?!
     operatorStack.pop();
 
@@ -169,15 +174,16 @@ Expression* Parser::parse(const std::string& s,
                 e = parse(s, ++i, n, env);
 
             /* SHUNTING-YARD
-             * token = name     => q.push token
-             *       | function => s.push token
-             *       | operator => 1. while s.top is operator
-             *                     && (token is left  associative
-             *                     && token <= s.top
-             *                     || token is right associative
-             *                     && token <  s.top)
-             *                     { q.push(s.pop) }
-             *                     2. s.push token
+             * f token = name     => q.push token
+             *         | function => s.push token
+             *         | operator => 1. while s.top is operator
+             *                       && (token is left  associative
+             *                       && token <= s.top
+             *                       || token is right associative
+             *                       && token <  s.top)
+             *                       { q.push(s.pop) }
+             *                       2. s.push token
+             * (modified version is used, this ^ is just for a reference
              */
 
             if (e->isOperator(env))
@@ -201,14 +207,6 @@ Expression* Parser::parse(const std::string& s,
 
                 applicationFlag = true;
             }
-
-/*
-            if (ret != nullptr)
-                ret = new Operation(new Application(),
-                                    ret,
-                                    e);
-            else
-                ret = e;*/
         }
     }
 

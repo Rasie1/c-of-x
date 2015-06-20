@@ -28,7 +28,7 @@ Expression* Application::operate(Expression* first,
 
 std::string Application::toString() const
 {
-    return "<]";
+    return "";
 }
 
 }

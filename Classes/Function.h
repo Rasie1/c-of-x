@@ -10,7 +10,7 @@ public:
     Function(Expression* body, Pattern* argument);
     ~Function();
 
-    Expression* evalConstEnv(Environment* env) override;
+    Expression* eval(Environment*& env) override;
     Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
 

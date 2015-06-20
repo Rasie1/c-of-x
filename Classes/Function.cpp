@@ -27,15 +27,14 @@ Expression* Function::apply(Expression* e, Environment*& env)
     return body->evalConstEnv(newEnv);
 }
 
-Expression* Function::evalConstEnv(Environment* env)
+Expression* Function::eval(Environment*& env)
 {
-	// wtf is this?
     return new Closure(this, env);
 }
 
 std::string Function::toString() const
 {
-    return "\\" + argument->toString() + ".(" + body->toString() + ")";
+    return "\u03BB" + argument->toString() + ".(" + body->toString() + ")";
 }
 
 }
