@@ -1,31 +1,19 @@
 #pragma once
-#include "Expression.h"
+#include "Operator.h"
 
 namespace Language
 {
 
-class Mutation : public Expression
+class Mutation : public Operator
 {
 public:
-    Mutation();
+    Expression* operate(Expression* first,
+                        Expression* second,
+                        Environment*& env) override;
+    std::string toString() const override;
 
-    Expression* applyConstEnv(Expression* e, Environment* env);
-    std::string toString() const;
     static const std::string defaultName;
 private:
-};
-
-class MutationWithValue : public Expression
-{
-public:
-    MutationWithValue(Expression* e);
-    ~MutationWithValue();
-
-    Expression* applyConstEnv(Expression* e, Environment* env);
-    std::string toString() const;
-
-private:
-    Expression* value;
 };
 
 }

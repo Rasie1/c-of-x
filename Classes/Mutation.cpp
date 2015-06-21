@@ -2,49 +2,27 @@
 #include "Variable.h"
 #include "Environment.h"
 #include "Pattern.h"
+#include <string>
+#include "Operation.h"
 
 namespace Language
 {
 
-Mutation::Mutation()
+Expression* Mutation::operate(Expression* first,
+                              Expression* second,
+                              Environment*& env)
 {
-
+    throw std::logic_error("Mutate is still in TODO state");
+    env = env->add(first->pattern(),
+                   second->evalConstEnv(env));
+    return second;
 }
-
-Expression* Mutation::applyConstEnv(Expression* e, Environment* env)
-{
-    return new MutationWithValue(e);
-}
-
 
 std::string Mutation::toString() const
 {
-    return defaultName;
+    return Mutation::defaultName;
 }
 
-const std::string Mutation::defaultName = "mutate";
-
-
-
-MutationWithValue::MutationWithValue(Expression* e)
-    : value(e)
-{
-
-}
-
-MutationWithValue::~MutationWithValue()
-{
-    delete value;
-}
-
-Expression* MutationWithValue::applyConstEnv(Expression* e, Environment* env)
-{
-    return value;
-}
-
-std::string MutationWithValue::toString() const
-{
-    return "(:= " + value->toString() + ")";
-}
+const std::string Mutation::defaultName = ":=";
 
 }

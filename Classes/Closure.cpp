@@ -22,7 +22,7 @@ Closure::~Closure()
 
 Expression* Closure::apply(Expression* e, Environment*& env)
 {
-    return function->applyConstEnv(e, this->env);
+    return function->applyConstEnv(e->eval(env), this->env);
 }
 
 std::string Closure::toString() const

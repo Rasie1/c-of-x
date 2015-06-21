@@ -14,7 +14,6 @@
 #include "Function.h"
 #include "Lambda.h"
 #include "Include.h"
-#include "List.h"
 #include "Mutation.h"
 #include "Print.h"
 #include "Application.h"
@@ -84,7 +83,6 @@ Environment* Environment::loadDefaultVariables()
          ->add(new Language::PatternVariable(Assignment     ::defaultName), new Assignment())
          ->add(new Language::PatternVariable(EvalForce      ::defaultName), new EvalForce())
          ->add(new Language::PatternVariable(EvalDelay      ::defaultName), new EvalDelay())
-         ->add(new Language::PatternVariable(PairConstructor::defaultName), new PairConstructor())
          ->add(new Language::PatternVariable(Print          ::defaultName), new Print())
          ->add(new Language::PatternVariable(PrintPattern   ::defaultName), new PrintPattern())
          ->add(new Language::PatternVariable(Include        ::defaultName), new Include())
@@ -92,7 +90,8 @@ Environment* Environment::loadDefaultVariables()
          ->add(new Language::PatternOperator(Addition       ::defaultName, new Addition()), new Addition())
          ->add(new Language::PatternOperator(Subtraction    ::defaultName, new Subtraction()), new Subtraction())
          ->add(new Language::PatternOperator(Multiplication ::defaultName, new Multiplication()), new Multiplication())
-         ->add(new Language::PatternOperator(Assignment     ::defaultName, new Assignment()), new Assignment());
+         ->add(new Language::PatternOperator(Assignment     ::defaultName, new Assignment()), new Assignment())
+         ->add(new Language::PatternOperator(Pair           ::defaultName, new Pair()), new Pair());
 }
 
 Environment* Environment::create()

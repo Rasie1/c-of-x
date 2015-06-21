@@ -49,18 +49,18 @@ inline bool notSpecialCharacter(char c)
            c == '?'  ||
            c == '/'  ||
            c == '^'  ||
+           c == ';'  ||
+           c == ','  ||
+           c == '.'  ||
            c == '='
             ;
 }
 
 inline bool isExpressionEnd(char c)
 {
-    return c == ';' ||
-           c == ',' ||
-           c == ')' ||
+    return c == ')'/* ||
            c == '}' ||
-           c == '.' ||
-           c == ']';
+           c == ']'*/;
 }
 
 inline bool shouldSkipCharacter(char c)

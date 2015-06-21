@@ -13,8 +13,8 @@ Expression* Assignment::operate(Expression* first,
                                 Environment*& env)
 {
     env = env->add(first->pattern(),
-                   second);
-    return second;
+                   second->evalConstEnv(env));
+    return second->evalConstEnv(env);
 }
 
 std::string Assignment::toString() const
@@ -23,6 +23,5 @@ std::string Assignment::toString() const
 }
 
 const std::string Assignment::defaultName = "=";
-
 
 }

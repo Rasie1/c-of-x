@@ -1,44 +1,18 @@
 #pragma once
-#include "Expression.h"
 #include "Function.h"
-#include <string>
+#include "Operator.h"
 
 namespace Language
 {
 
-class Pair : public Expression
+class Pair : public Operator
 {
 public:
-    Pair(Expression* l, Expression* r)
-        : l(l),
-          r(r) {}
-
-    Expression* eval(Environment*& env) override;
-    std::string toString() const;
-
-    Expression* l;
-    Expression* r;
-};
-
-class PairConstructorWithValue : public Expression
-{
-public:
-    PairConstructorWithValue(Expression* e)
-        : value(e) {}
-
-    Expression* apply(Expression* e, Environment*& env) override;
+    Expression* operate(Expression* first,
+                        Expression* second,
+                        Environment*& env) override;
     std::string toString() const override;
 
-    Expression* value;
-};
-
-class PairConstructor : public Expression
-{
-public:
-    PairConstructor() {}
-
-    Expression* apply(Expression* e, Environment*& env) override;
-    std::string toString() const override;
     static const std::string defaultName;
 };
 

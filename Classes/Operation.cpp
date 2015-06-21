@@ -22,7 +22,12 @@ Operation::~Operation()
 
 Expression* Operation::eval(Environment*& env)
 {
-    return op->operate(left, right, env);
+    DEBUG_PRINT_OP(op);
+    DEBUG_PRINT_LT(left);
+    DEBUG_PRINT_RT(right);
+    auto ret = op->operate(left, right, env);
+    DEBUG_PRINT_RS(ret);
+    return ret;
 }
 
 Pattern* Operation::pattern()

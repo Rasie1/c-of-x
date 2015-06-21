@@ -29,6 +29,7 @@ Expression* Function::apply(Expression* e, Environment*& env)
 
 Expression* Function::eval(Environment*& env)
 {
+    throw std::logic_error("we aren\'t supposed to get here");
     return new Closure(this, env);
 }
 

@@ -1,48 +1,24 @@
 #include "Pair.h"
-#include "Void.h"
+#include "Operation.h"
 
 namespace Language
 {
 
-Expression* Pair::eval(Environment*& env)
+Expression* Pair::operate(Expression* first,
+                          Expression* second,
+                          Environment*& env)
 {
-    auto ret = l->eval(env);
-    auto null = dynamic_cast<Void*>(r);
-
-    // Returns if right value is void
-    if (null != nullptr)
-        return ret;
-
-    ret = r->eval(env);
-
-    return ret;
+    Environment* newEnv = env;
+    first->eval(newEnv);
+    return second->eval(newEnv);
 }
 
 std::string Pair::toString() const
 {
-    return "(" + l->toString() + ":" + r->toString() + ")";
+    return Pair::defaultName;
 }
 
-Expression* PairConstructorWithValue::apply(Expression* e, Environment*& env)
-{
-    return new Pair(value->eval(env), e->eval(env));
-}
+const std::string Pair::defaultName = ";";
 
-std::string PairConstructorWithValue::toString() const
-{
-    return "pair{" + value->toString() + "}";
-}
-
-Expression* PairConstructor::apply(Expression* e, Environment*& env)
-{
-    return new PairConstructorWithValue(e);
-}
-
-std::string PairConstructor::toString() const
-{
-    return defaultName;
-}
-
-const std::string PairConstructor::defaultName = "pair";
 
 }
