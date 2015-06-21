@@ -15,7 +15,9 @@ Expression* Addition::operate(Expression* first,
     if (firstInteger && secondInteger)
         return new Integer(firstInteger->value +
                            secondInteger->value);
-    return new Operation(new Addition(), first, second);
+    return new Operation(new Addition(),
+                         first,
+                         second);
 }
 
 std::string Addition::toString() const

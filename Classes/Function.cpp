@@ -7,7 +7,8 @@
 namespace Language
 {
 
-Function::Function(Expression* body, Pattern* argument)
+Function::Function(Expression* body,
+                   const std::shared_ptr<Pattern>& argument)
     : body(body),
       argument(argument)
 {
@@ -17,7 +18,6 @@ Function::Function(Expression* body, Pattern* argument)
 Function::~Function()
 {
     delete body;
-    delete argument;
 }
 
 Expression* Function::apply(Expression* e, Environment*& env)

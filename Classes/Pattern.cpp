@@ -8,7 +8,8 @@ Pattern::Pattern()
 
 }
 
-bool Pattern::match(Pattern* other, Environment* env)
+bool Pattern::match(const std::shared_ptr<Pattern>& other,
+                    Environment* env) const
 {
     return true;
 }

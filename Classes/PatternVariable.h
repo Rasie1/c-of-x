@@ -10,7 +10,8 @@ public:
     PatternVariable(const std::string& name)
         : name(name) {}
 
-    bool match(Pattern* other, Environment* env) override;
+    bool match(const std::shared_ptr<Pattern>& other,
+               Environment* env) const override;
     std::string toString() const override;
 
     std::string name;

@@ -15,9 +15,9 @@ Expression* Variable::eval(Environment*& env)
     return ret->evalConstEnv(env);
 }
 
-Pattern* Variable::pattern()
+std::shared_ptr<Pattern> Variable::pattern() const
 {
-    return new PatternVariable(name);
+    return std::make_shared<PatternVariable>(name);
 }
 
 bool Variable::isOperator(Environment* env)

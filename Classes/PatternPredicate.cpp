@@ -12,7 +12,8 @@ PatternPredicate::PatternPredicate(Expression* predicate)
 
 }
 
-bool PatternPredicate::match(Pattern* other, Environment* env)
+bool PatternPredicate::match(const std::shared_ptr<Pattern>& other,
+                             Environment* env) const
 {
     auto argument = env->get(other);
     auto result  = predicate->applyConstEnv(argument, env);

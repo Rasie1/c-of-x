@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 
 namespace Language
 {
@@ -10,15 +11,16 @@ class Environment;
 class EnvironmentalVariable
 {
 public:
-    EnvironmentalVariable(Pattern* pattern, Expression* value);
+    EnvironmentalVariable(const std::shared_ptr<Pattern>&  pattern, Expression* value);
     ~EnvironmentalVariable();
 
-    bool match(Pattern* other, Environment* env);
+    bool match(const std::shared_ptr<Pattern>& other,
+               Environment* env) const;
     Expression* get();
-    Pattern* getPattern();
+    std::shared_ptr<Pattern> getPattern() const;
 
 private:
-    Pattern* pattern;
+    std::shared_ptr<Pattern> pattern;
     Expression* value;
 };
 

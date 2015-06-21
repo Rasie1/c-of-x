@@ -18,10 +18,10 @@ std::string Integer::toString() const
 }
 
 
-Pattern* Integer::pattern()
+std::shared_ptr<Pattern> Integer::pattern() const
 {
     // Wrong, I think it should return "(== value)?"
-    return new PatternVariable(toString());
+    return std::make_shared<PatternVariable>(toString());
 }
 
 }

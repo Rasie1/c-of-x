@@ -13,13 +13,14 @@ PatternOperator::PatternOperator(const std::string& name,
 
 }
 
-bool PatternOperator::match(Pattern* other, Environment* env)
+bool PatternOperator::match(const std::shared_ptr<Pattern>& other,
+                            Environment* env) const
 {
-    auto y = dynamic_cast<PatternVariable*>(other);
+    auto y = std::dynamic_pointer_cast<PatternVariable>(other);
     if (y)
         return y->name == name;
-    auto x = dynamic_cast<PatternOperator*>(other);
-    if (x == nullptr)
+    auto x = std::dynamic_pointer_cast<PatternOperator>(other);
+    if (x)
         return false;
     return x->name == name;
 }
@@ -34,7 +35,7 @@ std::string PatternOperator::toString() const
     return "operator";
 }
 
-bool PatternOperator::isMoreThan(PatternOperator* other,
+bool PatternOperator::isMoreThan(const std::shared_ptr<PatternOperator>& other,
                                  Environment* env) const
 {
     // ???

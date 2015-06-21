@@ -4,18 +4,18 @@
 namespace Language
 {
 
-EnvironmentalVariable::EnvironmentalVariable(Pattern* pattern, Expression* value)
+EnvironmentalVariable::EnvironmentalVariable(const std::shared_ptr<Pattern>&  pattern, Expression* value)
     : pattern(pattern),
       value(value)
 {}
 
 EnvironmentalVariable::~EnvironmentalVariable()
 {
-    delete pattern;
     //delete value; // deletes when assignment is deleted
 }
 
-bool EnvironmentalVariable::match(Pattern* other, Environment* env)
+bool EnvironmentalVariable::match(const std::shared_ptr<Pattern>& other,
+                                  Environment* env) const
 {
     return other->match(pattern, env);
 }
@@ -25,7 +25,7 @@ Expression* EnvironmentalVariable::get()
     return value;
 }
 
-Pattern* EnvironmentalVariable::getPattern()
+std::shared_ptr<Pattern> EnvironmentalVariable::getPattern() const
 {
     return pattern;
 }

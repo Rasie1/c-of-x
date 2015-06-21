@@ -22,7 +22,7 @@ std::string Lambda::toString() const
 const std::string Lambda::defaultName = "\\";
 
 
-LambdaArguments::LambdaArguments(Pattern* argument)
+LambdaArguments::LambdaArguments(const std::shared_ptr<Pattern>& argument)
     : pattern(argument)
 {
 

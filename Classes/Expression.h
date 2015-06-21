@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 #include "DebugHelpers.h"
 
 namespace Language
@@ -8,7 +9,7 @@ namespace Language
 class Environment;
 
 class Pattern;
-class Expression
+class Expression : public std::enable_shared_from_this<Expression>
 {
 public:
     Expression();
@@ -18,7 +19,7 @@ public:
     virtual Expression* eval(Environment*& env);
     virtual Expression* applyConstEnv(Expression* e, Environment* env);
     virtual Expression* apply(Expression* e, Environment*& env);
-    virtual Pattern* pattern();
+    virtual std::shared_ptr<Pattern> pattern() const;
     virtual bool isOperator(Environment* env);
     virtual std::string toString() const;
 };

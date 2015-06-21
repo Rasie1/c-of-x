@@ -9,9 +9,9 @@ Expression* UnknownName::evalConstEnv(Environment* env)
     return this;
 }
 
-Pattern* UnknownName::pattern()
+std::shared_ptr<Pattern> UnknownName::pattern() const
 {
-    return new PatternVariable(name);
+    return std::make_shared<PatternVariable>(name);
 }
 
 std::string UnknownName::toString() const

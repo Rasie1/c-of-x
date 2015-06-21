@@ -20,12 +20,12 @@ class Pattern;
 class LambdaArguments : public Expression
 {
 public:
-    LambdaArguments(Pattern* argument);
+    LambdaArguments(const std::shared_ptr<Pattern>& argument);
 
     Expression* apply(Expression* e, Environment*& env) override;
     std::string toString() const override;
 
-    Pattern* pattern;
+    std::shared_ptr<Pattern> pattern;
 };
 
 }

@@ -7,16 +7,17 @@
 namespace Language
 {
 
-bool PatternVariable::match(Pattern* other, Environment* env)
+bool PatternVariable::match(const std::shared_ptr<Pattern>& other,
+                            Environment* env) const
 {
 
-    auto y = dynamic_cast<PatternVariable*>(other);
+    auto y = std::dynamic_pointer_cast<PatternVariable>(other);
     if (y)
         return y->name == name;
-    auto x = dynamic_cast<PatternOperator*>(other);
-    if (x == nullptr)
-        return false;
-    return x->name == name;
+    auto x = std::dynamic_pointer_cast<PatternOperator>(other);
+    if (x)
+        return x->name == name;
+    return false;
     /*
     auto x = dynamic_cast<PatternVariable*>(other);
     if (x == nullptr)

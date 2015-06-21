@@ -12,7 +12,7 @@ public:
         : name(name) {}
 
     Expression* evalConstEnv(Environment* env) override;
-    Pattern* pattern() override;
+    std::shared_ptr<Pattern> pattern() const override;
 
     std::string toString() const override;
 

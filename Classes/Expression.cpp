@@ -38,10 +38,10 @@ Expression* Expression::apply(Expression* e, Environment*& env)
     return new Operation(new Application(), this, e);
 }
 
-Pattern* Expression::pattern()
+std::shared_ptr<Pattern> Expression::pattern() const
 {
     throw std::exception();
-    return new Pattern();
+    return std::make_shared<Pattern>();
 }
 
 bool Expression::isOperator(Environment* env)

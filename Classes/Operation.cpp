@@ -30,9 +30,9 @@ Expression* Operation::eval(Environment*& env)
     return ret;
 }
 
-Pattern* Operation::pattern()
+std::shared_ptr<Pattern> Operation::pattern() const
 {
-    return new PatternOperator(op->name,
+    return std::make_shared<PatternOperator>(op->name,
                                op);
 }
 

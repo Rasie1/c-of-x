@@ -60,7 +60,7 @@ Environment* Environment::pop()
     return next;
 }
 
-Expression* Environment::get(Pattern* p)
+Expression* Environment::get(const std::shared_ptr<Pattern>& p)
 {
     if (data->match(p, this))
         return data->get();
@@ -71,7 +71,8 @@ Expression* Environment::get(Pattern* p)
     return next->get(p);
 }
 
-Environment* Environment::add(Pattern* p, Expression* e)
+Environment* Environment::add(const std::shared_ptr<Pattern>& p,
+                              Expression* e)
 {
     auto variable = new EnvironmentalVariable(p, e);
     return new Environment(variable, this);
@@ -79,25 +80,26 @@ Environment* Environment::add(Pattern* p, Expression* e)
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(new Language::PatternVariable(Mutation       ::defaultName), new Mutation())
-         ->add(new Language::PatternVariable(Assignment     ::defaultName), new Assignment())
-         ->add(new Language::PatternVariable(EvalForce      ::defaultName), new EvalForce())
-         ->add(new Language::PatternVariable(EvalDelay      ::defaultName), new EvalDelay())
-         ->add(new Language::PatternVariable(Print          ::defaultName), new Print())
-         ->add(new Language::PatternVariable(PrintPattern   ::defaultName), new PrintPattern())
-         ->add(new Language::PatternVariable(Include        ::defaultName), new Include())
-         ->add(new Language::PatternVariable(Lambda         ::defaultName), new Lambda())
-         ->add(new Language::PatternOperator(Addition       ::defaultName, new Addition()), new Addition())
-         ->add(new Language::PatternOperator(Subtraction    ::defaultName, new Subtraction()), new Subtraction())
-         ->add(new Language::PatternOperator(Multiplication ::defaultName, new Multiplication()), new Multiplication())
-         ->add(new Language::PatternOperator(Assignment     ::defaultName, new Assignment()), new Assignment())
-         ->add(new Language::PatternOperator(Pair           ::defaultName, new Pair()), new Pair());
+    return add(std::make_shared<PatternVariable>(Mutation       ::defaultName), new Mutation())
+         ->add(std::make_shared<PatternVariable>(Assignment     ::defaultName), new Assignment())
+         ->add(std::make_shared<PatternVariable>(EvalForce      ::defaultName), new EvalForce())
+         ->add(std::make_shared<PatternVariable>(EvalDelay      ::defaultName), new EvalDelay())
+         ->add(std::make_shared<PatternVariable>(Print          ::defaultName), new Print())
+         ->add(std::make_shared<PatternVariable>(PrintPattern   ::defaultName), new PrintPattern())
+         ->add(std::make_shared<PatternVariable>(Include        ::defaultName), new Include())
+         ->add(std::make_shared<PatternVariable>(Lambda         ::defaultName), new Lambda())
+         ->add(std::make_shared<PatternOperator>(Addition       ::defaultName, new Addition()), new Addition())
+         ->add(std::make_shared<PatternOperator>(Subtraction    ::defaultName, new Subtraction()), new Subtraction())
+         ->add(std::make_shared<PatternOperator>(Multiplication ::defaultName, new Multiplication()), new Multiplication())
+         ->add(std::make_shared<PatternOperator>(Assignment     ::defaultName, new Assignment()), new Assignment())
+         ->add(std::make_shared<PatternOperator>(Pair           ::defaultName, new Pair()), new Pair());
 }
 
 Environment* Environment::create()
 {
     auto firstVariable = new EnvironmentalVariable(
-                new Language::PatternVariable(Void::defaultName), new Void());
+                std::make_shared<PatternVariable>(Void::defaultName),
+                new Void());
     auto environment = new Environment(firstVariable, nullptr);
     return environment->loadDefaultVariables();
 }
@@ -114,9 +116,9 @@ bool Environment::compareOperators(Expression* first, Expression* second)
     return firstValue < secondValue;
 }
 
-std::pair<Pattern*, Expression*> Environment::top()
+std::pair<std::shared_ptr<Pattern>, Expression*> Environment::top()
 {
-    return std::pair<Pattern*, Expression*>(
+    return std::pair<std::shared_ptr<Pattern>, Expression*>(
                 data->getPattern(),
                 data->get());
 }

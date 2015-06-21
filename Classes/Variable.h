@@ -12,7 +12,7 @@ public:
         : name(name) {}
 
     Expression* eval(Environment*& env);
-    Pattern* pattern() override;
+    std::shared_ptr<Pattern> pattern() const override;
     bool isOperator(Environment* env) override;
     std::string toString() const;
 

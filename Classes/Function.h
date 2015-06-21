@@ -7,7 +7,8 @@ namespace Language
 class Function : public Expression
 {
 public:
-    Function(Expression* body, Pattern* argument);
+    Function(Expression* body,
+             const std::shared_ptr<Pattern>& argument);
     ~Function();
 
     Expression* eval(Environment*& env) override;
@@ -15,7 +16,7 @@ public:
     std::string toString() const override;
 
     Expression* body;
-    Pattern* argument;
+    std::shared_ptr<Pattern> argument;
 };
 
 }

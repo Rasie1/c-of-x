@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
+#include <memory>
 
 namespace Language
 {
@@ -20,10 +21,11 @@ public:
 
     void clean();
     void clear();
-    Environment* add(Pattern* p, Expression* e);
+    Environment* add(const std::shared_ptr<Pattern>& p,
+                     Expression* e);
     Environment* pop();
-    Expression* get(Pattern* p);
-    std::pair<Pattern*, Expression*> top();
+    Expression* get(const std::shared_ptr<Pattern>& p);
+    std::pair<std::shared_ptr<Pattern>, Expression*> top();
     bool compareOperators(Expression* first, Expression* second);
 
     static Environment* create();
