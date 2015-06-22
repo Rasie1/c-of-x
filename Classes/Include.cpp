@@ -8,14 +8,13 @@
 namespace Language
 {
 
-Expression* Include::apply(Expression* e, Environment*& env)
+ExpPtr Include::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto str = dynamic_cast<String*>(e);
+    auto str = std::dynamic_pointer_cast<String>(e);
     if (str == nullptr)
         return Expression::applyConstEnv(e, env);
 
     auto filename = str->value;
-
 
     std::ifstream ifs(filename);
     std::string content((std::istreambuf_iterator<char>(ifs)),

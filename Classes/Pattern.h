@@ -9,7 +9,7 @@ class Pattern : public Expression
 public:
     Pattern();
 
-    virtual bool match(const std::shared_ptr<Pattern>& other,
+    virtual bool match(const PatPtr& other,
                        Environment* env) const;
     virtual std::string toString() const override;
 };

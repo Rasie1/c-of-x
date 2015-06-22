@@ -4,9 +4,9 @@
 namespace Language
 {
 
-Expression* Pair::operate(Expression* first,
-                          Expression* second,
-                          Environment*& env)
+ExpPtr Pair::operate(const ExpPtr& first,
+                     const ExpPtr& second,
+                     Environment*& env) const
 {
     Environment* newEnv = env;
     first->eval(newEnv);

@@ -18,7 +18,7 @@ using namespace std;
 namespace Language
 {
 
-Expression* Parser::parse(const string& s, Environment* env)
+ExpPtr Parser::parse(const string& s, Environment* env)
 {
     size_t i = 0;
     return parse(s, i, s.size(), env);
@@ -69,10 +69,10 @@ inline bool shouldSkipCharacter(char c)
 }
 
 
-Expression* Parser::parseName(const std::string& s,
-                              size_t& i,
-                              size_t n,
-                              Environment* env)
+ExpPtr Parser::parseName(const std::string& s,
+                         size_t& i,
+                         size_t n,
+                         Environment* env)
 {
     if (s[i] == '\"')
     {
@@ -82,7 +82,7 @@ Expression* Parser::parseName(const std::string& s,
             ++i;
         auto ss = s.substr(start + 1, i - start - 1);
         ++i;
-        return new String(ss);
+        return std::make_shared<String>(ss);
     }
     if (s[i] >= '0' && s[i] <= '9')
     {
@@ -100,10 +100,10 @@ Expression* Parser::parseName(const std::string& s,
         }
         catch (std::exception&)
         {
-            return new ParseError();
+            return std::make_shared<ParseError>();
         }
 
-        return new Integer(stoll(ss));
+        return std::make_shared<Integer>(stoll(ss));
     }
     if (notSpecialCharacter(s[i]))
     {
@@ -120,19 +120,19 @@ Expression* Parser::parseName(const std::string& s,
             */
         //auto op = new PatternOperator(
 
-        return new Variable(ss);
+        return std::make_shared<Variable>(ss);
     }
 }
 
-void makeOperation(std::stack<Expression*>& operatorStack,
-                   std::deque<Expression*>& q,
+void makeOperation(std::stack<ExpPtr>& operatorStack,
+                   std::deque<ExpPtr>& q,
                    Environment* env)
 {
-    Expression* left;
-    Expression* right;
-    Expression* top = operatorStack.top();
+    ExpPtr left;
+    ExpPtr right;
+    ExpPtr top = operatorStack.top();
     //Operator* op = (Operator*)(top);
-    Operator* op = (Operator*)(top->eval(env)); // eval in parser?!
+    std::shared_ptr<Operator> op = std::dynamic_pointer_cast<Operator>(top->eval(env)); // eval in parser?!
     operatorStack.pop();
 
     right = q.back();
@@ -140,18 +140,18 @@ void makeOperation(std::stack<Expression*>& operatorStack,
     left  = q.back();
     q.pop_back();
 
-    q.push_back(new Operation(op, left, right));
+    q.push_back(std::make_shared<Operation>(op, left, right));
 }
 
-Expression* Parser::parse(const std::string& s,
-                          size_t& i,
-                          size_t n,
-                          Environment* env)
+ExpPtr Parser::parse(const std::string& s,
+                     size_t& i,
+                     size_t n,
+                     Environment* env)
 {
-    Expression* ret = nullptr;
+    ExpPtr ret = nullptr;
 
-    std::stack<Expression*> operatorStack;
-    std::deque<Expression*> q;
+    std::stack<ExpPtr> operatorStack;
+    std::deque<ExpPtr> q;
     bool applicationFlag = false;
 
     while (i < n)
@@ -167,7 +167,7 @@ Expression* Parser::parse(const std::string& s,
         }
         else
         {
-            Expression* e;
+            ExpPtr e;
             if (notSpecialCharacter(currentCharacter))
                 e = parseName(s, i, n, env);
             else if (currentCharacter == '(')
@@ -201,7 +201,7 @@ Expression* Parser::parse(const std::string& s,
                 q.push_back(e);
                 if (applicationFlag)
                 {
-                    operatorStack.push(new Application());
+                    operatorStack.push(std::make_shared<Application>());
                     makeOperation(operatorStack, q, env);
                 }
 
@@ -216,7 +216,7 @@ Expression* Parser::parse(const std::string& s,
     if (!q.empty())
         ret = q.front();
     if (!ret)
-        ret = new Void();
+        ret = std::make_shared<Void>();
 
     return ret;
 }

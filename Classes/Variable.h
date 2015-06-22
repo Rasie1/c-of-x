@@ -11,10 +11,10 @@ public:
     Variable(const std::string& name)
         : name(name) {}
 
-    Expression* eval(Environment*& env);
-    std::shared_ptr<Pattern> pattern() const override;
-    bool isOperator(Environment* env) override;
-    std::string toString() const;
+    ExpPtr eval(Environment*& env) const override;
+    PatPtr pattern() const override;
+    bool isOperator(Environment* env) const override;
+    std::string toString() const override;
 
     std::string name;
 };

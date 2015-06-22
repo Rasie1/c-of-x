@@ -7,15 +7,15 @@ namespace Language
 class PatternApplication : public Pattern
 {
 public:
-    PatternApplication(const std::shared_ptr<Pattern>& body,
-                       const std::shared_ptr<Pattern>& argument);
+    PatternApplication(const PatPtr& body,
+                       const PatPtr& argument);
 
-    bool match(const std::shared_ptr<Pattern>& other,
+    bool match(const PatPtr& other,
                Environment* env) const override;
     std::string toString() const override;
 
-    std::shared_ptr<Pattern> body;
-    std::shared_ptr<Pattern> argument;
+    PatPtr body;
+    PatPtr argument;
 };
 
 }

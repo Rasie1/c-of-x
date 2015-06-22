@@ -8,9 +8,9 @@
 namespace Language
 {
 
-Expression* Mutation::operate(Expression* first,
-                              Expression* second,
-                              Environment*& env)
+ExpPtr Mutation::operate(const ExpPtr& first,
+                               const ExpPtr& second,
+                               Environment*& env) const
 {
     throw std::logic_error("Mutate is still in TODO state");
     env = env->add(first->pattern(),

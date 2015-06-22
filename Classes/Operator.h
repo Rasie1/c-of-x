@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "Expression.h"
 
 namespace Language
@@ -10,10 +9,12 @@ class Operator : public Expression
 public:
     Operator(bool isRightAssociative = false);
 
-    virtual Expression* operate(Expression* first,
-                                Expression* second,
-                                Environment*& env) = 0;
-    bool isOperator(Environment *env) override;
+    virtual ExpPtr operate(
+            const ExpPtr& first,
+            const ExpPtr& second,
+            Environment*& env) const = 0;
+
+    bool isOperator(Environment* env) const override;
     bool isRightAssociative;
     const std::string name;
 

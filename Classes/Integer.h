@@ -11,7 +11,7 @@ class Integer : public BaseType
 public:
     Integer(long long value);
 
-    std::shared_ptr<Pattern> pattern() const override;
+    PatPtr pattern() const override;
     std::string toString() const override;
 
 

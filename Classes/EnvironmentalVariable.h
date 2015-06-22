@@ -7,21 +7,23 @@ namespace Language
 
 class Expression;
 class Pattern;
+typedef std::shared_ptr<Expression> ExpPtr;
+typedef std::shared_ptr<Pattern>    PatPtr;
 class Environment;
 class EnvironmentalVariable
 {
 public:
-    EnvironmentalVariable(const std::shared_ptr<Pattern>&  pattern, Expression* value);
+    EnvironmentalVariable(const PatPtr&  pattern, const ExpPtr& value);
     ~EnvironmentalVariable();
 
-    bool match(const std::shared_ptr<Pattern>& other,
+    bool match(const PatPtr& other,
                Environment* env) const;
-    Expression* get();
-    std::shared_ptr<Pattern> getPattern() const;
+    ExpPtr get();
+    PatPtr getPattern() const;
 
 private:
-    std::shared_ptr<Pattern> pattern;
-    Expression* value;
+    PatPtr pattern;
+    ExpPtr value;
 };
 
 }

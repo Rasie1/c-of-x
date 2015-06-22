@@ -2,15 +2,14 @@
 #include "Variable.h"
 #include "Environment.h"
 #include "Pattern.h"
-#include <string>
 #include "Operation.h"
 
 namespace Language
 {
 
-Expression* Assignment::operate(Expression* first,
-                                Expression* second,
-                                Environment*& env)
+ExpPtr Assignment::operate(const ExpPtr& first,
+                         const ExpPtr& second,
+                         Environment*& env) const
 {
     env = env->add(first->pattern(),
                    second->evalConstEnv(env));

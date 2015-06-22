@@ -4,7 +4,7 @@
 namespace Language
 {
 
-Expression* EvalDelay::apply(Expression* e, Environment*& env)
+ExpPtr EvalDelay::apply(const ExpPtr& e, Environment*& env) const
 {
     return e;
 }

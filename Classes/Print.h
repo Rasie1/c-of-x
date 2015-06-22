@@ -9,7 +9,8 @@ class Print : public Expression
 public:
     Print() {}
 
-    Expression* apply(Expression* e, Environment*& env) override;
+    ExpPtr apply(const ExpPtr& e,
+                 Environment*& env) const override;
     virtual std::string toString() const;
     static const std::string defaultName;
 };
@@ -17,7 +18,8 @@ public:
 class PrintPattern : public Expression
 {
 public:
-    Expression* apply(Expression* e, Environment*& env) override;
+    ExpPtr apply(const ExpPtr& e,
+                 Environment*& env) const override;
     std::string toString() const override;
     static const std::string defaultName;
 };

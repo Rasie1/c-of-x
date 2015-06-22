@@ -7,7 +7,7 @@
 namespace Language
 {
 
-Function::Function(Expression* body,
+Function::Function(const ExpPtr& body,
                    const std::shared_ptr<Pattern>& argument)
     : body(body),
       argument(argument)
@@ -17,20 +17,22 @@ Function::Function(Expression* body,
 
 Function::~Function()
 {
-    delete body;
 }
 
-Expression* Function::apply(Expression* e, Environment*& env)
+ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
 {
     auto newEnv = env->add(argument,
                            e->evalConstEnv(env));
     return body->evalConstEnv(newEnv);
 }
 
-Expression* Function::eval(Environment*& env)
+ExpPtr Function::eval(Environment*& env) const
 {
-    throw std::logic_error("we aren\'t supposed to get here");
-    return new Closure(this, env);
+    throw  std::logic_error("we aren\'t supposed to get here");
+    return std::make_shared<Closure>(
+                std::static_pointer_cast<Function>(
+                    std::const_pointer_cast<Expression>(shared_from_this())),
+                env);
 }
 
 std::string Function::toString() const

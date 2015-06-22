@@ -1,23 +1,23 @@
 #include "Addition.h"
-#include <string>
 #include "Operation.h"
+#include "Integer.h"
 
 namespace Language
 {
 
-Expression* Addition::operate(Expression* first,
-                              Expression* second,
-                              Environment*& env)
+ExpPtr Addition::operate(const ExpPtr& first,
+                         const ExpPtr& second,
+                         Environment*& env) const
 {
-    auto firstInteger  = dynamic_cast<Integer*>(first ->eval(env));
-    auto secondInteger = dynamic_cast<Integer*>(second->eval(env));
+    auto firstInteger  = std::dynamic_pointer_cast<Integer>(first ->eval(env));
+    auto secondInteger = std::dynamic_pointer_cast<Integer>(second->eval(env));
 
     if (firstInteger && secondInteger)
-        return new Integer(firstInteger->value +
-                           secondInteger->value);
-    return new Operation(new Addition(),
-                         first,
-                         second);
+        return std::make_shared<Integer>(firstInteger->value +
+                                         secondInteger->value);
+    return std::make_shared<Operation>(std::make_shared<Addition>(),
+                                       first,
+                                       second);
 }
 
 std::string Addition::toString() const

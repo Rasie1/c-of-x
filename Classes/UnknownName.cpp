@@ -4,12 +4,7 @@
 namespace Language
 {
 
-Expression* UnknownName::evalConstEnv(Environment* env)
-{
-    return this;
-}
-
-std::shared_ptr<Pattern> UnknownName::pattern() const
+PatPtr UnknownName::pattern() const
 {
     return std::make_shared<PatternVariable>(name);
 }

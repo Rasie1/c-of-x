@@ -9,9 +9,9 @@
 namespace Language
 {
 
-Expression* Lambda::apply(Expression* e, Environment*& env)
+ExpPtr Lambda::apply(const ExpPtr& e, Environment*& env) const
 {
-    return new LambdaArguments(e->pattern());
+    return std::make_shared<LambdaArguments>(e->pattern());
 }
 
 std::string Lambda::toString() const
@@ -22,15 +22,17 @@ std::string Lambda::toString() const
 const std::string Lambda::defaultName = "\\";
 
 
-LambdaArguments::LambdaArguments(const std::shared_ptr<Pattern>& argument)
+LambdaArguments::LambdaArguments(const PatPtr& argument)
     : pattern(argument)
 {
 
 }
 
-Expression* LambdaArguments::apply(Expression* e, Environment*& env)
+ExpPtr LambdaArguments::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto ret = new Closure(new Function(e, pattern), env);
+    auto ret = std::make_shared<Closure>(std::make_shared<Function>(e,
+                                                                    pattern),
+                                         env);
     return ret;
 }
 

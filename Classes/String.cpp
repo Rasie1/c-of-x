@@ -17,7 +17,7 @@ std::string String::toString() const
 }
 
 
-std::shared_ptr<Pattern> String::pattern() const
+PatPtr String::pattern() const
 {
     return std::make_shared<PatternVariable>(toString());
 }

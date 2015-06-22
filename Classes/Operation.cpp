@@ -5,7 +5,9 @@
 namespace Language
 {
 
-Operation::Operation(Operator* op, Expression* left, Expression* right)
+Operation::Operation(const std::shared_ptr<Operator>& op,
+                     const ExpPtr& left,
+                     const ExpPtr& right)
     : op(op),
       left(left),
       right(right)
@@ -15,12 +17,9 @@ Operation::Operation(Operator* op, Expression* left, Expression* right)
 
 Operation::~Operation()
 {
-    delete op;
-    delete left;
-    delete right;
 }
 
-Expression* Operation::eval(Environment*& env)
+ExpPtr Operation::eval(Environment*& env) const
 {
     DEBUG_PRINT_OP(op);
     DEBUG_PRINT_LT(left);
@@ -30,10 +29,10 @@ Expression* Operation::eval(Environment*& env)
     return ret;
 }
 
-std::shared_ptr<Pattern> Operation::pattern() const
+PatPtr Operation::pattern() const
 {
     return std::make_shared<PatternOperator>(op->name,
-                               op);
+                                             op);
 }
 
 std::string Operation::toString() const

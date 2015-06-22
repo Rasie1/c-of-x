@@ -12,12 +12,12 @@ PatternPredicate::PatternPredicate(Expression* predicate)
 
 }
 
-bool PatternPredicate::match(const std::shared_ptr<Pattern>& other,
+bool PatternPredicate::match(const PatPtr& other,
                              Environment* env) const
 {
     auto argument = env->get(other);
     auto result  = predicate->applyConstEnv(argument, env);
-    auto integer = dynamic_cast<Integer*>(result);
+    auto integer = std::dynamic_pointer_cast<Integer>(result);
     if (integer)
         return integer->value != 0;
 

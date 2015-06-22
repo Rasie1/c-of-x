@@ -28,7 +28,7 @@ void REPL::start()
             continue;
         else
         {
-            Expression* expression;
+            ExpPtr expression;
             try
             {
                 expression = parser.parse(instruction, env);

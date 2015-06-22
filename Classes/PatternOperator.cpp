@@ -6,14 +6,14 @@ namespace Language
 {
 
 PatternOperator::PatternOperator(const std::string& name,
-                                 Operator* op)
+                                 const std::shared_ptr<Operator>& op)
     : name(name),
       op(op)
 {
 
 }
 
-bool PatternOperator::match(const std::shared_ptr<Pattern>& other,
+bool PatternOperator::match(const PatPtr& other,
                             Environment* env) const
 {
     auto y = std::dynamic_pointer_cast<PatternVariable>(other);
@@ -25,7 +25,7 @@ bool PatternOperator::match(const std::shared_ptr<Pattern>& other,
     return x->name == name;
 }
 
-bool PatternOperator::isOperator(Environment* env)
+bool PatternOperator::isOperator(Environment* env) const
 {
     return true;
 }

@@ -7,7 +7,8 @@
 namespace Language
 {
 
-Closure::Closure(Function* function, Environment* env)
+Closure::Closure(const std::shared_ptr<Function>& function,
+                 Environment* env)
     : function(function),
       env(env)
 {
@@ -16,11 +17,9 @@ Closure::Closure(Function* function, Environment* env)
 
 Closure::~Closure()
 {
-    delete env;
-    delete function;
 }
 
-Expression* Closure::apply(Expression* e, Environment*& env)
+ExpPtr Closure::apply(const ExpPtr& e, Environment*& env) const
 {
     return function->applyConstEnv(e->eval(env), this->env);
 }

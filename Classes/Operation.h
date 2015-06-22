@@ -8,16 +8,18 @@ class Operator;
 class Operation : public Expression
 {
 public:
-    Operation(Operator* op, Expression* left, Expression* right);
+    Operation(const std::shared_ptr<Operator>& op,
+              const ExpPtr& left,
+              const ExpPtr& right);
     ~Operation();
 
-    Expression* eval(Environment*& env) override;
-    std::shared_ptr<Pattern> pattern() const override;
+    ExpPtr eval(Environment*& env) const override;
+    PatPtr pattern() const override;
     std::string toString() const override;
 private:
-    Operator* op;
-    Expression* left;
-    Expression* right;
+    std::shared_ptr<Operator> op;
+    ExpPtr left;
+    ExpPtr right;
 };
 /*
 class MakeOperator : public Expression

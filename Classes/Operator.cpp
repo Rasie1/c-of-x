@@ -14,7 +14,7 @@ std::string Operator::toString() const
     return "op";
 }
 
-bool Operator::isOperator(Environment *env)
+bool Operator::isOperator(Environment* env) const
 {
     return true;
 }

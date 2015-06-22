@@ -18,7 +18,7 @@ std::string Integer::toString() const
 }
 
 
-std::shared_ptr<Pattern> Integer::pattern() const
+PatPtr Integer::pattern() const
 {
     // Wrong, I think it should return "(== value)?"
     return std::make_shared<PatternVariable>(toString());

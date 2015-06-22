@@ -6,21 +6,21 @@
 namespace Language
 {
 
-Expression* Variable::eval(Environment*& env)
+ExpPtr Variable::eval(Environment*& env) const
 {
     auto ret = env->get(pattern());
     if (ret == nullptr)
-        return new UnknownName(name);
+        return std::make_shared<UnknownName>(name);
 
     return ret->evalConstEnv(env);
 }
 
-std::shared_ptr<Pattern> Variable::pattern() const
+PatPtr Variable::pattern() const
 {
     return std::make_shared<PatternVariable>(name);
 }
 
-bool Variable::isOperator(Environment* env)
+bool Variable::isOperator(Environment* env) const
 {
     auto e = env->get(pattern());
     if (e)

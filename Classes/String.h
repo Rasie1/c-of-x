@@ -12,7 +12,7 @@ class String : public BaseType
 public:
     String(const std::string& value);
 
-    std::shared_ptr<Pattern> pattern() const override;
+    PatPtr pattern() const override;
     std::string toString() const override;
 
 

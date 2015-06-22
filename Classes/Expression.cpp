@@ -18,33 +18,37 @@ Expression::~Expression()
 
 }
 
-Expression* Expression::evalConstEnv(Environment* env)
+ExpPtr Expression::evalConstEnv(Environment* env) const
 {
     return eval(env);
 }
 
-Expression* Expression::eval(Environment*& env)
+ExpPtr Expression::eval(Environment*& env) const
 {
-    return this;
+    return std::const_pointer_cast<Expression>(shared_from_this());
 }
 
-Expression* Expression::applyConstEnv(Expression* e, Environment* env)
+ExpPtr Expression::applyConstEnv(const ExpPtr& e,
+                                 Environment* env) const
 {
     return apply(e, env);
 }
 
-Expression* Expression::apply(Expression* e, Environment*& env)
+ExpPtr Expression::apply(const ExpPtr& e,
+                         Environment*& env) const
 {
-    return new Operation(new Application(), this, e);
+    return std::make_shared<Operation>(std::make_shared<Application>(),
+                                       std::const_pointer_cast<Expression>(shared_from_this()),
+                                       e);
 }
 
-std::shared_ptr<Pattern> Expression::pattern() const
+PatPtr Expression::pattern() const
 {
-    throw std::exception();
+    throw  std::exception();
     return std::make_shared<Pattern>();
 }
 
-bool Expression::isOperator(Environment* env)
+bool Expression::isOperator(Environment* env) const
 {
     return false;
 }

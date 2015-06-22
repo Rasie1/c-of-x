@@ -9,14 +9,15 @@ class Environment;
 class Closure : public Expression
 {
 public:
-    Closure(Function* function, Environment* env);
+    Closure(const std::shared_ptr<Function>& function,
+            Environment* env);
     ~Closure();
 
-    Expression* apply(Expression* e, Environment*& env) override;
+    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
     std::string toString() const override;
 
 private:
-    Function* function;
+    std::shared_ptr<Function> function;
     Environment* env;
 };
 

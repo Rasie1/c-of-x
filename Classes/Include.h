@@ -7,7 +7,7 @@ namespace Language
 class Include : public Expression
 {
 public:
-    Expression* apply(Expression* e, Environment*& env) override;
+    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
     std::string toString() const override;
     static const std::string defaultName;
 };

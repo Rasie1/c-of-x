@@ -5,17 +5,19 @@
 namespace Language
 {
 
-Expression* Subtraction::operate(Expression* first,
-                              Expression* second,
-                              Environment*& env)
+ExpPtr Subtraction::operate(const ExpPtr& first,
+                            const ExpPtr& second,
+                            Environment*& env) const
 {
-    auto firstInteger  = dynamic_cast<Integer*>(first ->eval(env));
-    auto secondInteger = dynamic_cast<Integer*>(second->eval(env));
+    auto firstInteger  = std::dynamic_pointer_cast<Integer>(first ->eval(env));
+    auto secondInteger = std::dynamic_pointer_cast<Integer>(second->eval(env));
 
     if (firstInteger && secondInteger)
-        return new Integer(firstInteger->value -
-                           secondInteger->value);
-    return new Operation(new Subtraction(), first, second);
+        return std::make_shared<Integer>(firstInteger->value -
+                                         secondInteger->value);
+    return std::make_shared<Operation>(std::make_shared<Subtraction>(),
+                                       first,
+                                       second);
 }
 
 std::string Subtraction::toString() const

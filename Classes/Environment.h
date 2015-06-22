@@ -13,6 +13,8 @@ class Pattern;
 class PrecedenceTable;
 class PrecedenceInfo;
 class Operator;
+typedef std::shared_ptr<Expression> ExpPtr;
+typedef std::shared_ptr<Pattern>    PatPtr;
 class Environment
 {
 public:
@@ -21,12 +23,12 @@ public:
 
     void clean();
     void clear();
-    Environment* add(const std::shared_ptr<Pattern>& p,
-                     Expression* e);
+    Environment* add(const PatPtr& p,
+                     const ExpPtr& e);
     Environment* pop();
-    Expression* get(const std::shared_ptr<Pattern>& p);
-    std::pair<std::shared_ptr<Pattern>, Expression*> top();
-    bool compareOperators(Expression* first, Expression* second);
+    ExpPtr get(const PatPtr& p);
+    std::pair<PatPtr, ExpPtr> top();
+    bool compareOperators(const ExpPtr& first, const ExpPtr& second) const;
 
     static Environment* create();
 
@@ -35,10 +37,10 @@ private:
 
     EnvironmentalVariable* data;
     Environment* next;
-    PrecedenceTable* precedenceTable;
+    //PrecedenceTable* precedenceTable;
 };
 
-
+/*
 class PrecedenceTable
 {
 public:
@@ -51,5 +53,5 @@ private:
     std::unordered_map<unsigned,
                        std::map<double, double>> table;
 };
-
+*/
 }

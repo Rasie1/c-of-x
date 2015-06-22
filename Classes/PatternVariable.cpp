@@ -7,7 +7,7 @@
 namespace Language
 {
 
-bool PatternVariable::match(const std::shared_ptr<Pattern>& other,
+bool PatternVariable::match(const PatPtr& other,
                             Environment* env) const
 {
 

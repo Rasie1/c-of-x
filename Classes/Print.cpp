@@ -5,7 +5,7 @@
 namespace Language
 {
 
-Expression* Print::apply(Expression* e, Environment*& env)
+ExpPtr Print::apply(const ExpPtr& e, Environment*& env) const
 {
     auto evaluated = e->evalConstEnv(env);
     std::cout << evaluated->toString() << std::endl;
@@ -21,7 +21,7 @@ const std::string Print::defaultName = "print";
 
 
 
-Expression* PrintPattern::apply(Expression* e, Environment*& env)
+ExpPtr PrintPattern::apply(const ExpPtr& e, Environment*& env) const
 {
     std::cout << e->pattern()->toString();
 

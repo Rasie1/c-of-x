@@ -1,20 +1,18 @@
 #include "Application.h"
-#include <string>
 #include "Expression.h"
 
 namespace Language
 {
 
 Application::Application()
-    : Operator()
 {
 }
 
-Expression* Application::operate(Expression* first,
-                                 Expression* second,
-                                 Environment*& env)
+ExpPtr Application::operate(const ExpPtr& first,
+                         const ExpPtr& second,
+                         Environment*& env) const
 {
-    Expression* function = first->eval(env);
+    auto function = first->eval(env);
     DEBUG_PRINT_EV(function);
     auto ret = function->apply(second, env);
 
