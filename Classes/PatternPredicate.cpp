@@ -16,7 +16,8 @@ bool PatternPredicate::match(const PatPtr& other,
                              Environment* env) const
 {
     auto argument = env->get(other);
-    auto result  = predicate->applyConstEnv(argument, env);
+    auto newEnv = env;
+    auto result  = predicate->apply(argument, newEnv);
     auto integer = std::dynamic_pointer_cast<Integer>(result);
     if (integer)
         return integer->value != 0;

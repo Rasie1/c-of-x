@@ -31,8 +31,9 @@ ExpPtr Operation::eval(Environment*& env) const
 
 PatPtr Operation::pattern() const
 {
-    return std::make_shared<PatternOperator>(op->name,
-                                             op);
+    return std::make_shared<PatternOperation>(op->pattern(),
+                                              op->leftPattern(left),
+                                              op->rightPattern(right));
 }
 
 std::string Operation::toString() const

@@ -12,7 +12,8 @@ ExpPtr Variable::eval(Environment*& env) const
     if (ret == nullptr)
         return std::make_shared<UnknownName>(name);
 
-    return ret->evalConstEnv(env);
+    auto newEnv = env;
+    return ret->eval(newEnv);
 }
 
 PatPtr Variable::pattern() const

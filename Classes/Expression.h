@@ -18,11 +18,9 @@ public:
     Expression();
     virtual ~Expression();
 
-    virtual ExpPtr evalConstEnv(Environment* env) const;
     virtual ExpPtr eval(Environment*& env) const;
+    //virtual ExpPtr calculate(Environment*& env) const;
 
-    virtual ExpPtr applyConstEnv(const ExpPtr& e,
-                                 Environment* env) const;
     virtual ExpPtr apply(const ExpPtr& e,
                          Environment*& env) const;
 

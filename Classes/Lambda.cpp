@@ -30,8 +30,7 @@ LambdaArguments::LambdaArguments(const PatPtr& argument)
 
 ExpPtr LambdaArguments::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto ret = std::make_shared<Closure>(std::make_shared<Function>(e,
-                                                                    pattern),
+    auto ret = std::make_shared<Closure>(std::make_shared<Function>(e, pattern),
                                          env);
     return ret;
 }

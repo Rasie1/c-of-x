@@ -21,7 +21,9 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(const ExpPtr& e, Environment*& env) const
 {
-    return function->applyConstEnv(e->eval(env), this->env);
+    auto newEnv = env;
+    return function->apply(e->eval(newEnv),
+                           const_cast<Closure*>(this)->env);
 }
 
 std::string Closure::toString() const

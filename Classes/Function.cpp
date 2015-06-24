@@ -21,9 +21,10 @@ Function::~Function()
 
 ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto newEnv = env->add(argument,
-                           e->evalConstEnv(env));
-    return body->evalConstEnv(newEnv);
+    auto newEnv1 = env;
+    auto newEnv2 = env->add(argument,
+                            e->eval(newEnv1));
+    return body->eval(newEnv2);
 }
 
 ExpPtr Function::eval(Environment*& env) const

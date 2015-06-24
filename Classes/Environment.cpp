@@ -17,7 +17,6 @@
 #include "Mutation.h"
 #include "Print.h"
 #include "Application.h"
-//#include "Operator.h"
 
 #include "EvalDelay.h"
 #include "EvalForce.h"
@@ -84,6 +83,7 @@ Environment* Environment::loadDefaultVariables()
          ->add(std::make_shared<PatternVariable>(Assignment     ::defaultName), std::make_shared<Assignment>())
          ->add(std::make_shared<PatternVariable>(EvalForce      ::defaultName), std::make_shared<EvalForce>())
          ->add(std::make_shared<PatternVariable>(EvalDelay      ::defaultName), std::make_shared<EvalDelay>())
+         ->add(std::make_shared<PatternVariable>(ReturnPattern  ::defaultName), std::make_shared<ReturnPattern>())
          ->add(std::make_shared<PatternVariable>(Print          ::defaultName), std::make_shared<Print>())
          ->add(std::make_shared<PatternVariable>(PrintPattern   ::defaultName), std::make_shared<PrintPattern>())
          ->add(std::make_shared<PatternVariable>(Include        ::defaultName), std::make_shared<Include>())

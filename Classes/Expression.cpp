@@ -18,20 +18,9 @@ Expression::~Expression()
 
 }
 
-ExpPtr Expression::evalConstEnv(Environment* env) const
-{
-    return eval(env);
-}
-
 ExpPtr Expression::eval(Environment*& env) const
 {
     return std::const_pointer_cast<Expression>(shared_from_this());
-}
-
-ExpPtr Expression::applyConstEnv(const ExpPtr& e,
-                                 Environment* env) const
-{
-    return apply(e, env);
 }
 
 ExpPtr Expression::apply(const ExpPtr& e,
@@ -44,7 +33,6 @@ ExpPtr Expression::apply(const ExpPtr& e,
 
 PatPtr Expression::pattern() const
 {
-    throw  std::exception();
     return std::make_shared<Pattern>();
 }
 

@@ -32,7 +32,7 @@ bool PatternOperator::isOperator(Environment* env) const
 
 std::string PatternOperator::toString() const
 {
-    return "operator";
+    return op->toString();
 }
 
 bool PatternOperator::isMoreThan(const std::shared_ptr<PatternOperator>& other,
@@ -40,6 +40,39 @@ bool PatternOperator::isMoreThan(const std::shared_ptr<PatternOperator>& other,
 {
     // ???
     return false;
+}
+
+
+PatternOperation::PatternOperation(const PatPtr& op,
+                                   const PatPtr& left,
+                                   const PatPtr& right)
+    : op(op),
+      left(left),
+      right(right)
+{
+
+}
+
+bool PatternOperation::match(const PatPtr& other,
+                             Environment* env) const
+{
+    auto x = std::dynamic_pointer_cast<PatternOperation>(other);
+    if (!x)
+        return false;
+    if (!op->match(x->op, env))
+        return false;
+    if (!left->match(x->left, env))
+        return false;
+    if (!right->match(x->right, env))
+        return false;
+    return true;
+}
+
+std::string PatternOperation::toString() const
+{
+    return "(" + left->toString() + " " +
+            op->toString()
+            + " " + right->toString() + ")";
 }
 
 }

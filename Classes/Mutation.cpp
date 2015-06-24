@@ -13,8 +13,9 @@ ExpPtr Mutation::operate(const ExpPtr& first,
                                Environment*& env) const
 {
     throw std::logic_error("Mutate is still in TODO state");
+    auto newEnv = env;
     env = env->add(first->pattern(),
-                   second->evalConstEnv(env));
+                   second->eval(newEnv));
     return second;
 }
 

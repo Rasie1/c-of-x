@@ -1,13 +1,15 @@
 #include "Print.h"
 #include <iostream>
 #include "Pattern.h"
+#include "Environment.h"
 
 namespace Language
 {
 
 ExpPtr Print::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto evaluated = e->evalConstEnv(env);
+    auto newEnv = env;
+    auto evaluated = e->eval(newEnv);
     std::cout << evaluated->toString() << std::endl;
     return evaluated;
 }
@@ -23,9 +25,10 @@ const std::string Print::defaultName = "print";
 
 ExpPtr PrintPattern::apply(const ExpPtr& e, Environment*& env) const
 {
-    std::cout << e->pattern()->toString();
+    std::cout << e->pattern()->toString() << std::endl;
 
-    return e->evalConstEnv(env);
+    auto newEnv = env;
+    return e->eval(newEnv);
 }
 
 std::string PrintPattern::toString() const

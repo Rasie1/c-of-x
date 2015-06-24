@@ -44,12 +44,6 @@ void REPL::start()
             auto evaluated = expression->eval(env);
             //cout << evaluated->toString() << endl;
             DEBUG_LINEBREAK;
-            // Something is wrong and makes assigned variables to
-            // be associated with themselves in environment
-            // so, almost all the memory is leaked while this line
-            // is commented
-            //delete evaluated;
-            // TODO: fix
         }
     }
 

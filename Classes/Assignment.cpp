@@ -8,12 +8,14 @@ namespace Language
 {
 
 ExpPtr Assignment::operate(const ExpPtr& first,
-                         const ExpPtr& second,
-                         Environment*& env) const
+                           const ExpPtr& second,
+                           Environment*& env) const
 {
+    auto newEnv = env;
     env = env->add(first->pattern(),
-                   second->evalConstEnv(env));
-    return second->evalConstEnv(env);
+                   second->eval(newEnv));
+    newEnv = env;
+    return second->eval(newEnv);
 }
 
 std::string Assignment::toString() const

@@ -13,6 +13,7 @@
 #include "Operation.h"
 #include "Environment.h"
 #include "PatternOperator.h"
+#include "EvalForce.h"
 
 using namespace std;
 namespace Language
@@ -140,7 +141,16 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
     left  = q.back();
     q.pop_back();
 
-    q.push_back(std::make_shared<Operation>(op, left, right));
+    // "Preprocessor" handling (#)
+    auto variable = std::dynamic_pointer_cast<Variable>(left);
+    bool evalForce = false;
+    if (variable)
+        evalForce = variable->name == "#";
+
+    if (evalForce)
+        q.push_back(right->eval(env));
+    else
+        q.push_back(std::make_shared<Operation>(op, left, right));
 }
 
 ExpPtr Parser::parse(const std::string& s,

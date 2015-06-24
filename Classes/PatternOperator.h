@@ -23,4 +23,20 @@ public:
     std::shared_ptr<Operator> op;
 };
 
+class PatternOperation : public Pattern
+{
+public:
+    PatternOperation(const PatPtr& op,
+                     const PatPtr& left,
+                     const PatPtr& right);
+
+    bool match(const PatPtr& other,
+               Environment* env) const override;
+    std::string toString() const override;
+
+    PatPtr op;
+    PatPtr left;
+    PatPtr right;
+};
+
 }

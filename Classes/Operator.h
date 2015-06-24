@@ -15,6 +15,9 @@ public:
             Environment*& env) const = 0;
 
     bool isOperator(Environment* env) const override;
+    PatPtr pattern() const override;
+    virtual PatPtr leftPattern(const ExpPtr& e) const;
+    virtual PatPtr rightPattern(const ExpPtr& e) const;
     bool isRightAssociative;
     const std::string name;
 
