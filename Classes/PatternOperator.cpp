@@ -21,8 +21,8 @@ bool PatternOperator::match(const PatPtr& other,
         return y->name == name;
     auto x = std::dynamic_pointer_cast<PatternOperator>(other);
     if (x)
-        return false;
-    return x->name == name;
+        return x->name == name;
+    return false;
 }
 
 bool PatternOperator::isOperator(Environment* env) const

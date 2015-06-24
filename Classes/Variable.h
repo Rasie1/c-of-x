@@ -11,7 +11,7 @@ public:
     Variable(const std::string& name)
         : name(name) {}
 
-    ExpPtr eval(Environment*& env) const override;
+    ExpPtr evaluation(Environment*& env) const override;
     PatPtr pattern() const override;
     bool isOperator(Environment* env) const override;
     std::string toString() const override;

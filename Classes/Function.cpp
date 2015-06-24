@@ -27,7 +27,7 @@ ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
     return body->eval(newEnv2);
 }
 
-ExpPtr Function::eval(Environment*& env) const
+ExpPtr Function::evaluation(Environment*& env) const
 {
     throw  std::logic_error("we aren\'t supposed to get here");
     return std::make_shared<Closure>(

@@ -11,7 +11,7 @@ public:
              const PatPtr& argument);
     ~Function();
 
-    ExpPtr eval(Environment*& env) const override;
+    ExpPtr evaluation(Environment*& env) const override;
     ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
     std::string toString() const override;
 

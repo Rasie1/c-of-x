@@ -6,7 +6,7 @@
 namespace Language
 {
 
-ExpPtr Variable::eval(Environment*& env) const
+ExpPtr Variable::evaluation(Environment*& env) const
 {
     auto ret = env->get(pattern());
     if (ret == nullptr)

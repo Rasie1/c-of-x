@@ -18,8 +18,8 @@ public:
     Expression();
     virtual ~Expression();
 
-    virtual ExpPtr eval(Environment*& env) const;
-    //virtual ExpPtr calculate(Environment*& env) const;
+    ExpPtr eval(Environment*& env) const;
+    virtual ExpPtr evaluation(Environment*& env) const;
 
     virtual ExpPtr apply(const ExpPtr& e,
                          Environment*& env) const;
@@ -27,6 +27,7 @@ public:
     virtual PatPtr pattern() const;
     virtual bool isOperator(Environment* env) const;
     virtual std::string toString() const;
+protected:
 };
 
 typedef Expression::ExpPtr ExpPtr;

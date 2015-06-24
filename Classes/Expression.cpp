@@ -4,6 +4,7 @@
 #include "Pattern.h"
 #include "Application.h"
 #include "Operation.h"
+#include "Environment.h"
 
 namespace Language
 {
@@ -19,6 +20,14 @@ Expression::~Expression()
 }
 
 ExpPtr Expression::eval(Environment*& env) const
+{
+    auto fromEnv = env->get(pattern());
+    if (fromEnv)
+        return fromEnv;
+    return evaluation(env);
+}
+
+ExpPtr Expression::evaluation(Environment*& env) const
 {
     return std::const_pointer_cast<Expression>(shared_from_this());
 }

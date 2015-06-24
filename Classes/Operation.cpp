@@ -19,7 +19,7 @@ Operation::~Operation()
 {
 }
 
-ExpPtr Operation::eval(Environment*& env) const
+ExpPtr Operation::evaluation(Environment*& env) const
 {
     DEBUG_PRINT_OP(op);
     DEBUG_PRINT_LT(left);

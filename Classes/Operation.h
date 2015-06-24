@@ -13,7 +13,7 @@ public:
               const ExpPtr& right);
     ~Operation();
 
-    ExpPtr eval(Environment*& env) const override;
+    ExpPtr evaluation(Environment*& env) const override;
     PatPtr pattern() const override;
     std::string toString() const override;
 private:
