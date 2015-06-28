@@ -5,6 +5,12 @@
 namespace Language
 {
 
+Multiplication::Multiplication()
+    : Operator(false, 7)
+{
+
+}
+
 ExpPtr Multiplication::operate(const ExpPtr& first,
                                const ExpPtr& second,
                                Environment*& env) const

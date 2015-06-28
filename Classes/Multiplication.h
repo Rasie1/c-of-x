@@ -9,6 +9,8 @@ namespace Language
 class Multiplication : public Operator
 {
 public:
+    Multiplication();
+
     ExpPtr operate(const ExpPtr&  first,
                    const ExpPtr&  second,
                    Environment*& env) const override;

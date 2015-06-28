@@ -105,16 +105,27 @@ Environment* Environment::create()
 }
 
 bool Environment::compareOperators(const ExpPtr& first,
-                                   const ExpPtr& second) const
+                                   const ExpPtr& second)
 {
     int firstValue = 0, secondValue = 1;
+    bool isFirstRightAssociative = false;
 
-    if (std::dynamic_pointer_cast<Application>(first))
-        firstValue = 10;
-    if (std::dynamic_pointer_cast<Application>(second))
-        secondValue = 10;
+    std::shared_ptr<Operator> firstOperator, secondOperator;
+    //std::shared_ptr<Variable> firstOperator, secondOperator;
+    auto env = this;
+    firstOperator  = std::dynamic_pointer_cast<Operator>(first->eval(env));
+    secondOperator = std::dynamic_pointer_cast<Operator>(second->eval(env));
 
-    return firstValue < secondValue;
+    if (firstOperator)
+    {
+        firstValue = firstOperator->priority;
+        isFirstRightAssociative = firstOperator->isRightAssociative;
+    }
+    if (secondOperator)
+        secondValue = secondOperator->priority;
+
+    return firstValue < secondValue ||
+           isFirstRightAssociative && (firstValue <= secondValue);
 }
 
 std::pair<PatPtr, ExpPtr> Environment::top()

@@ -28,7 +28,7 @@ public:
     Environment* pop();
     ExpPtr get(const PatPtr& p);
     std::pair<PatPtr, ExpPtr> top();
-    bool compareOperators(const ExpPtr& first, const ExpPtr& second) const;
+    bool compareOperators(const ExpPtr& first, const ExpPtr& second);
 
     static Environment* create();
 

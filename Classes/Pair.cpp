@@ -4,6 +4,12 @@
 namespace Language
 {
 
+Pair::Pair()
+    : Operator(true, 0)
+{
+
+}
+
 ExpPtr Pair::operate(const ExpPtr& first,
                      const ExpPtr& second,
                      Environment*& env) const

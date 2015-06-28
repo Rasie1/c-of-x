@@ -7,7 +7,7 @@ namespace Language
 class Operator : public Expression
 {
 public:
-    Operator(bool isRightAssociative = false);
+    Operator(bool isRightAssociative = false, int priority = 5);
 
     virtual ExpPtr operate(
             const ExpPtr& first,
@@ -19,6 +19,7 @@ public:
     virtual PatPtr leftPattern(const ExpPtr& e) const;
     virtual PatPtr rightPattern(const ExpPtr& e) const;
     bool isRightAssociative;
+    int priority;
     const std::string name;
 
     virtual std::string toString() const;

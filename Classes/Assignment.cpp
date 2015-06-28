@@ -7,6 +7,12 @@
 namespace Language
 {
 
+Assignment::Assignment()
+    : Operator(true, 2)
+{
+
+}
+
 ExpPtr Assignment::operate(const ExpPtr& first,
                            const ExpPtr& second,
                            Environment*& env) const

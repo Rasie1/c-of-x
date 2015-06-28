@@ -8,6 +8,7 @@ namespace Language
 {
 
 Application::Application()
+    : Operator(false, 10)
 {
 }
 

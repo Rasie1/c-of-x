@@ -7,6 +7,8 @@ namespace Language
 class Assignment : public Operator
 {
 public:
+    Assignment();
+
     ExpPtr operate(const ExpPtr&  first,
                    const ExpPtr&  second,
                    Environment*& env) const override;

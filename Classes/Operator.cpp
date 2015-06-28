@@ -4,8 +4,9 @@
 namespace Language
 {
 
-Operator::Operator(bool isRightAssociative)
+Operator::Operator(bool isRightAssociative, int priority)
     : isRightAssociative(isRightAssociative),
+      priority(priority),
       name("op")
 {
 }
