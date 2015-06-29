@@ -25,37 +25,44 @@ ExpPtr Parser::parse(const string& s, Environment* env)
     return parse(s, i, s.size(), env);
 }
 
-inline bool notSpecialCharacter(char c)
+inline bool isOperatorCharacter(char c)
 {
-    return c >= 'a' && c <= 'z' ||
-           c >= 'A' && c <= 'Z' ||
-           c >= '0' && c <= '9' ||
-           c == '\'' ||
-           c == '\\' ||
-           c == '\"' ||
-           c == '_'  ||
-           c == '+'  ||
-           c == '-'  ||
-           c == '*'  ||
-           c == ':'  ||
-           c == '#'  ||
-           c == '~'  ||
-           c == '$'  ||
-           c == '*'  ||
-           c == '@'  ||
-           c == '%'  ||
-           c == '&'  ||
-           c == '`'  ||
-           c == '|'  ||
-           c == '?'  ||
-           c == '/'  ||
-           c == '^'  ||
-           c == ';'  ||
-           c == ','  ||
-           c == '.'  ||
-           c == '='
+    return
+            c == '\'' ||
+            c == '\\' ||
+            c == '_'  ||
+            c == '+'  ||
+            c == '-'  ||
+            c == '*'  ||
+            c == ':'  ||
+            c == '#'  ||
+            c == '~'  ||
+            c == '$'  ||
+            c == '*'  ||
+            c == '@'  ||
+            c == '%'  ||
+            c == '&'  ||
+            c == '`'  ||
+            c == '|'  ||
+            c == '?'  ||
+            c == '/'  ||
+            c == '^'  ||
+            c == ';'  ||
+            c == ','  ||
+            c == '.'  ||
+            c == '='
             ;
 }
+
+inline bool isNameCharacter(char c)
+{
+    return
+            c >= 'a' && c <= 'z' ||
+            c >= 'A' && c <= 'Z' ||
+            c >= '0' && c <= '9'
+            ;
+}
+
 
 inline bool isExpressionEnd(char c)
 {
@@ -71,28 +78,13 @@ inline bool shouldSkipCharacter(char c)
 
 
 ExpPtr Parser::parseName(const std::string& s,
-                         size_t& i,
-                         size_t n,
+                         size_t start,
+                         size_t end,
                          Environment* env)
 {
-    if (s[i] == '\"')
+    if (s[start] >= '0' && s[start] <= '9')
     {
-        int start = i;
-        ++i;
-        while (i < n && s[i] != '\"')
-            ++i;
-        auto ss = s.substr(start + 1, i - start - 1);
-        ++i;
-        return std::make_shared<String>(ss);
-    }
-    if (s[i] >= '0' && s[i] <= '9')
-    {
-        int start = i;
-        ++i;
-        while (i < n && notSpecialCharacter(s[i]))
-            ++i;
-
-        auto ss = s.substr(start, i - start);
+        auto ss = s.substr(start, end - start);
 
         long long number;
         try
@@ -106,20 +98,21 @@ ExpPtr Parser::parseName(const std::string& s,
 
         return std::make_shared<Integer>(stoll(ss));
     }
-    if (notSpecialCharacter(s[i]))
+    if (isNameCharacter(s[start]))
     {
-        int start = i;
-        ++i;
-        while (i < n && notSpecialCharacter(s[i]))
-            ++i;
-
-        auto ss = s.substr(start, i - start);
+        auto ss = s.substr(start, end - start);
 /*
         auto variable = new Variable(ss);
         auto e = env->get(variable->pattern());
         if (e)
             */
         //auto op = new PatternOperator(
+
+        return std::make_shared<Variable>(ss);
+    }
+    if (isOperatorCharacter(s[start]))
+    {
+        auto ss = s.substr(start, end - start);
 
         return std::make_shared<Variable>(ss);
     }
@@ -178,10 +171,33 @@ ExpPtr Parser::parse(const std::string& s,
         else
         {
             ExpPtr e;
-            if (notSpecialCharacter(currentCharacter))
-                e = parseName(s, i, n, env);
+            if (isNameCharacter(currentCharacter))
+            {
+                // Find name end
+                size_t start = i;
+                ++i;
+                while (i < n && isNameCharacter(s[i]))
+                    ++i;
+
+                e = parseName(s, start, i, env);
+            }
+            else if (isOperatorCharacter(s[i]))
+            {
+                e = parseName(s, i, i + 1, env);
+                ++i;
+            }
             else if (currentCharacter == '(')
                 e = parse(s, ++i, n, env);
+            else if (s[i] == '\"')
+            {
+                size_t start = i;
+                ++i;
+                while (i < n && s[i] != '\"')
+                    ++i;
+                auto ss = s.substr(start + 1, i - start - 1);
+                ++i;
+                e = std::make_shared<String>(ss);
+            }
 
             /* SHUNTING-YARD
              * f token = name     => q.push token

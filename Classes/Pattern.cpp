@@ -11,12 +11,12 @@ Pattern::Pattern()
 bool Pattern::match(const PatPtr& other,
                     Environment* env) const
 {
-    return true;
+    return false;
 }
 
 std::string Pattern::toString() const
 {
-    return "_";
+    return "unknownpattern";
 }
 
 

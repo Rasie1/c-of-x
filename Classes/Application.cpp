@@ -2,6 +2,7 @@
 #include "Expression.h"
 #include "Pattern.h"
 #include "PatternOperator.h"
+#include "PatternVariable.h"
 #include "Environment.h"
 
 namespace Language
@@ -44,7 +45,7 @@ PatPtr Application::leftPattern(const ExpPtr& e) const
 
 PatPtr Application::rightPattern(const ExpPtr& e) const
 {
-    return std::make_shared<Pattern>();
+    return std::make_shared<PatternWildcard>();
 }
 
 }

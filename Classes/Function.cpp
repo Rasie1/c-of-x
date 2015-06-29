@@ -8,7 +8,7 @@ namespace Language
 {
 
 Function::Function(const ExpPtr& body,
-                   const std::shared_ptr<Pattern>& argument)
+                   const PatPtr& argument)
     : body(body),
       argument(argument)
 {

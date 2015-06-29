@@ -14,9 +14,8 @@ ExpPtr Pair::operate(const ExpPtr& first,
                      const ExpPtr& second,
                      Environment*& env) const
 {
-    Environment* newEnv = env;
-    first->eval(newEnv);
-    return second->eval(newEnv);
+    first->eval(env);
+    return second->eval(env);
 }
 
 std::string Pair::toString() const

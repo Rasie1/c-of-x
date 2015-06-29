@@ -21,7 +21,7 @@ private:
                         size_t n,
                         Environment* env);
     static ExpPtr parseName(const std::string& s,
-                            size_t& i,
+                            size_t i,
                             size_t n,
                             Environment* env);
 };

@@ -31,4 +31,16 @@ std::string PatternVariable::toString() const
     return name;
 }
 
+bool PatternWildcard::match(const PatPtr& other,
+                            Environment* env) const
+{
+    return true;
+}
+
+
+std::string PatternWildcard::toString() const
+{
+    return "_";
+}
+
 }
