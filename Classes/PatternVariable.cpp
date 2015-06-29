@@ -1,7 +1,6 @@
 #include "PatternVariable.h"
 #include "PatternOperator.h"
 #include "Application.h"
-#include "Integer.h"
 #include "Environment.h"
 
 namespace Language
@@ -29,18 +28,6 @@ bool PatternVariable::match(const PatPtr& other,
 std::string PatternVariable::toString() const
 {
     return name;
-}
-
-bool PatternWildcard::match(const PatPtr& other,
-                            Environment* env) const
-{
-    return true;
-}
-
-
-std::string PatternWildcard::toString() const
-{
-    return "_";
 }
 
 }

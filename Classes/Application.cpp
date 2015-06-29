@@ -1,8 +1,7 @@
 #include "Application.h"
 #include "Expression.h"
-#include "Pattern.h"
 #include "PatternOperator.h"
-#include "PatternVariable.h"
+#include "PatternWildcard.h"
 #include "Environment.h"
 
 namespace Language

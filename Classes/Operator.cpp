@@ -40,17 +40,4 @@ PatPtr Operator::rightPattern(const ExpPtr& e) const
     return e->pattern();
 }
 
-/*
-PrecedenceInfo::PrecedenceInfo(Operator *more, Operator *less)
-    : more(more),
-      less(less)
-{
-
-}
-
-std::string PrecedenceInfo::toString() const
-{
-    return more->toString() + " > " + less->toString();
-}
-*/
 }

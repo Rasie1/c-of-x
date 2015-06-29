@@ -21,14 +21,5 @@ private:
     ExpPtr left;
     ExpPtr right;
 };
-/*
-class MakeOperator : public Expression
-{
-    Expression* apply(Expression* e, Environment*& env) override;
-    std::string toString() const override;
-    static const std::string defaultName;
-
-private:
-};*/
 
 }
