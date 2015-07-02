@@ -16,6 +16,7 @@
 #include "Environment.h"
 #include "PatternOperator.h"
 #include "EvalForce.h"
+#include "Lambda.h"
 
 using namespace std;
 namespace Language
@@ -133,19 +134,40 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
 
     right = q.back();
     q.pop_back();
-    left  = q.back();
-    q.pop_back();
+    if (!q.empty())
+    {
+        left  = q.back();
+        q.pop_back();
 
-    // "Preprocessor" handling (#)
-    auto variable = std::dynamic_pointer_cast<Variable>(left);
-    bool evalForce = false;
-    if (variable)
-        evalForce = variable->name == "#";
+        // "Preprocessor" handling (#)
+        auto variable = std::dynamic_pointer_cast<Variable>(left);
+        bool evalForce = false;
+        if (variable)
+            evalForce = variable->name == "#";
 
-    if (evalForce)
-        q.push_back(right->eval(env));
+        if (evalForce)
+            q.push_back(right->eval(env));
+        else
+            q.push_back(std::make_shared<Operation>(op, left, right));
+    }
     else
-        q.push_back(std::make_shared<Operation>(op, left, right));
+    {
+        // if it's operator and one expression
+        auto variableName = "snd";
+        auto body = std::make_shared<Operation>(
+                    op,
+                    std::make_shared<Variable>(variableName),
+                    right);
+        auto lambdaApp = std::make_shared<Operation>(
+                    std::make_shared<Application>(),
+                    std::make_shared<Lambda>(),
+                    std::make_shared<Variable>(variableName));
+        auto lambda = std::make_shared<Operation>(
+                    std::make_shared<Application>(),
+                    lambdaApp,
+                    body);
+        q.push_back(lambda);
+    }
 }
 
 ExpPtr Parser::parse(const std::string& s,
