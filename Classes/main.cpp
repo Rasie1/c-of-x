@@ -1,5 +1,7 @@
 #include <iostream>
+#include "Parser.h"
 #include "REPL.h"
+#include "Expression.h"
 
 int main(int argc, char* argv[])
 {
@@ -9,7 +11,9 @@ int main(int argc, char* argv[])
         repl.start();
     }
     else
-        std::cout << "Command line arguments are not yet implemented" << std::endl;
+    {
+        std::cout << Language::Parser::parseFile(argv[1])->toString();
+    }
 
     return 0;
 }

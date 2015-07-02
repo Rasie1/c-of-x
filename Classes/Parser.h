@@ -15,6 +15,9 @@ class Parser
 {
 public:
     static ExpPtr parse(const std::string& s, Environment* env);
+    static ExpPtr parseFile(const std::string& filename);
+    static ExpPtr parseFile(const std::string& filename,
+                            Environment* env);
 private:
     static ExpPtr parse(const std::string& s,
                         size_t& i,

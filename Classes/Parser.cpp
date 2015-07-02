@@ -3,6 +3,8 @@
 #include <string>
 #include <stack>
 #include <queue>
+#include <iostream>
+#include <fstream>
 #include "Integer.h"
 #include "Application.h"
 #include "ExceptionParseError.h"
@@ -247,5 +249,21 @@ ExpPtr Parser::parse(const std::string& s,
     return ret;
 }
 
+ExpPtr Parser::parseFile(const std::string& filename)
+{
+    auto env = Environment::create();
+    // Leak!
+    auto exp = parseFile(filename, env);
+    return exp;
+}
+
+ExpPtr Parser::parseFile(const std::string& filename, Environment* env)
+{
+    std::ifstream ifs(filename);
+    std::string content((std::istreambuf_iterator<char>(ifs)),
+                        (std::istreambuf_iterator<char>()   ));
+    auto newEnv = env;
+    return Parser::parse(content, env)->eval(newEnv);
+}
 
 }
