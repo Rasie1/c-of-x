@@ -10,10 +10,11 @@ class Pattern;
 typedef std::shared_ptr<Expression> ExpPtr;
 typedef std::shared_ptr<Pattern>    PatPtr;
 class Environment;
+
 class EnvironmentalVariable
 {
 public:
-    EnvironmentalVariable(const PatPtr&  pattern, const ExpPtr& value);
+    EnvironmentalVariable(const PatPtr& pattern, const ExpPtr& value);
     ~EnvironmentalVariable();
 
     bool match(const PatPtr& other,

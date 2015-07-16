@@ -8,10 +8,10 @@ namespace Language
 
 ExpPtr Print::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto newEnv = env;
-    auto evaluated = e->eval(newEnv);
-    std::cout << evaluated->toString() << std::endl;
-    return evaluated;
+    //auto newEnv = env;
+    //auto evaluated = e->eval(newEnv);
+    std::cout << e->toString() << std::endl;
+    return e->eval(env);
 }
 
 std::string Print::toString() const

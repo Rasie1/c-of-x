@@ -35,10 +35,6 @@ Environment::~Environment()
     delete data;
 }
 
-void Environment::clean()
-{
-}
-
 void Environment::clear()
 {
     delete data;

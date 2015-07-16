@@ -7,8 +7,8 @@ namespace Language
 class Addition : public Operator
 {
 public:
-    ExpPtr operate(const ExpPtr&  first,
-                   const ExpPtr&  second,
+    ExpPtr operate(const ExpPtr& first,
+                   const ExpPtr& second,
                    Environment*& env) const override;
 
     std::string toString() const override;

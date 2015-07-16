@@ -42,7 +42,7 @@ void REPL::start()
             //cout << expression->toString() << " =" << endl;
             DEBUG_LINEBREAK;
             auto evaluated = expression->eval(env);
-            //cout << evaluated->toString() << endl;
+            cout << evaluated->toString() << endl;
             DEBUG_LINEBREAK;
         }
     }
@@ -61,7 +61,6 @@ void displayHelp()
 {
     cout << "Help commands :" << endl <<
             "-q -quit      : quit" << endl <<
-            "-clean        : remove unused variables from env" << endl <<
             "-clear        : clear environment" << endl <<
             "-h -help      : this message" << endl;
 }
@@ -70,8 +69,6 @@ bool REPL::command(const std::string& s)
 {
     if (s == "")
         return 1;
-    else if (s == "-clean")
-        env->clean();
     else if (s == "-clear")
         env->clear();
     else if (s == "-h" || s == "-help")

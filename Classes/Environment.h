@@ -21,7 +21,6 @@ public:
     Environment(EnvironmentalVariable* data, Environment* next = nullptr);
     ~Environment();
 
-    void clean();
     void clear();
     Environment* add(const PatPtr& p,
                      const ExpPtr& e);
