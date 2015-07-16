@@ -17,11 +17,16 @@ ExpPtr Assignment::operate(const ExpPtr& first,
                            const ExpPtr& second,
                            Environment*& env) const
 {
-    auto newEnv = env;
+    /*auto newEnv = env;
     env = env->add(first->pattern(),
                    second->eval(newEnv));
     newEnv = env;
-    return second->eval(newEnv);
+    return second->eval(newEnv);*/
+
+    auto evaluated = second->eval(env);
+    env = env->add(first->pattern(),
+                   evaluated);
+    return evaluated;
 }
 
 std::string Assignment::toString() const
