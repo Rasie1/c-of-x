@@ -45,5 +45,15 @@ std::string Operation::toString() const
             ")";
 }
 
+bool Operation::unwind(ExpPtr& lvalue,
+                       ExpPtr& rvalue,
+                       Environment*& env)
+{
+    return op->unwind(left,
+                      right,
+                      lvalue,
+                      rvalue,
+                      env);
+}
 
 }

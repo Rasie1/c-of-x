@@ -2,6 +2,7 @@
 #include "Environment.h"
 #include "UnknownName.h"
 #include "PatternVariable.h"
+#include <string>
 
 namespace Language
 {
@@ -32,9 +33,19 @@ bool Variable::isOperator(Environment* env) const
 
 std::string Variable::toString() const
 {
-    return name;
+    return "$" + name;
 }
 
+bool Variable::unwind(ExpPtr& lvalue,
+                      ExpPtr& rvalue,
+                      Environment*& env)
+{
+    auto evaluated = env->get(rvalue->pattern());
+    if (evaluated == nullptr)
+        return false;
+    rvalue = evaluated;
 
+    return true;
+}
 
 }

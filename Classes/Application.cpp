@@ -3,6 +3,7 @@
 #include "PatternOperator.h"
 #include "PatternWildcard.h"
 #include "Environment.h"
+#include "Lambda.h"
 
 namespace Language
 {
@@ -44,7 +45,21 @@ PatPtr Application::leftPattern(const ExpPtr& e) const
 
 PatPtr Application::rightPattern(const ExpPtr& e) const
 {
-    return std::make_shared<PatternWildcard>();
+    return e->pattern();
+    //return std::make_shared<PatternWildcard>();
+}
+
+bool Application::unwind(const ExpPtr& left,
+                         const ExpPtr& right,
+                         ExpPtr& lvalue,
+                         ExpPtr& rvalue,
+                         Environment*& env)
+{
+    lvalue = left;
+    rvalue = Lambda::construct(right->pattern(),
+                               rvalue,
+                               env);
+    return true;
 }
 
 }

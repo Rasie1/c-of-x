@@ -55,4 +55,11 @@ std::string Expression::toString() const
     return "expr";
 }
 
+bool Expression::unwind(ExpPtr& lvalue,
+                        ExpPtr& rvalue,
+                        Environment*& env)
+{
+    return false;
+}
+
 }

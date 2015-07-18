@@ -12,6 +12,7 @@ public:
     virtual bool match(const PatPtr& other,
                        Environment* env) const;
     virtual std::string toString() const override;
+    PatPtr pattern() const override;
 };
 
 class ReturnPattern : public Expression

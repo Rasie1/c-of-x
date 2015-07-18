@@ -23,8 +23,10 @@ public:
 
     virtual ExpPtr apply(const ExpPtr& e,
                          Environment*& env) const;
-
     virtual PatPtr pattern() const;
+    virtual bool unwind(ExpPtr& lvalue,
+                        ExpPtr& rvalue,
+                        Environment*& env);
     virtual bool isOperator(Environment* env) const;
     virtual std::string toString() const;
 protected:

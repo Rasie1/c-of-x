@@ -18,4 +18,10 @@ public:
     long long value;
 };
 
+class IntegerSet
+{
+public:
+    IntegerSet() {}
+};
+
 }

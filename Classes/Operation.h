@@ -16,6 +16,9 @@ public:
     ExpPtr evaluation(Environment*& env) const override;
     PatPtr pattern() const override;
     std::string toString() const override;
+    virtual bool unwind(ExpPtr& lvalue,
+                        ExpPtr& rvalue,
+                        Environment*& env) override;
 private:
     std::shared_ptr<Operator> op;
     ExpPtr left;

@@ -12,7 +12,6 @@ Function::Function(const ExpPtr& body,
     : body(body),
       argument(argument)
 {
-
 }
 
 Function::~Function()
@@ -38,7 +37,7 @@ ExpPtr Function::evaluation(Environment*& env) const
 
 std::string Function::toString() const
 {
-    return "\u03BB" + argument->toString() + ".(" + body->toString() + ")";
+    return "(" + argument->toString() + ")._(" + body->toString() + ")";
 }
 
 }

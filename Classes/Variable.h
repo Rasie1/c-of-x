@@ -16,6 +16,10 @@ public:
     bool isOperator(Environment* env) const override;
     std::string toString() const override;
 
+    virtual bool unwind(ExpPtr& lvalue,
+                        ExpPtr& rvalue,
+                        Environment*& env) override;
+
     std::string name;
 };
 

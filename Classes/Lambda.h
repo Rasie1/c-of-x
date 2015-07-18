@@ -1,5 +1,6 @@
 #pragma once
 #include "Expression.h"
+#include "Operator.h"
 
 namespace Language
 {
@@ -13,6 +14,8 @@ public:
     std::string toString() const override;
     static const std::string defaultName;
 
+    // Convenience function for fast lambda creation in C++
+    static ExpPtr construct(PatPtr arg, ExpPtr body, Environment* c);
 private:
 };
 
@@ -26,6 +29,28 @@ public:
     std::string toString() const override;
 
     PatPtr pattern;
+};
+
+class ClosureOperator : public Operator
+{
+public:
+    ClosureOperator();
+
+    ExpPtr operate(const ExpPtr& first,
+                   const ExpPtr& second,
+                   Environment*& env) const override;
+
+    virtual bool unwind(const ExpPtr& left,
+                        const ExpPtr& right,
+                        ExpPtr& lvalue,
+                        ExpPtr& rvalue,
+                        Environment*& env) override;
+
+    std::string toString() const override;
+
+    static const std::string defaultName;
+private:
+    Environment* environment;
 };
 
 }

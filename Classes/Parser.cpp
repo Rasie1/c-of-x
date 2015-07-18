@@ -129,7 +129,8 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
     ExpPtr right;
     ExpPtr top = operatorStack.top();
     //Operator* op = (Operator*)(top);
-    std::shared_ptr<Operator> op = std::dynamic_pointer_cast<Operator>(top->eval(env)); // eval in parser?!
+    std::shared_ptr<Operator> op =
+            std::dynamic_pointer_cast<Operator>(top->eval(env)); // eval in parser?!
     operatorStack.pop();
 
     right = q.back();
@@ -152,6 +153,14 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
     }
     else
     {
+        // Unary operator case
+        auto body = std::make_shared<Operation>(
+                    op,
+                    right,
+                    std::make_shared<Integer>(0)); // should get type
+        q.push_back(body); //and take default value of the type
+
+        /*
         // if it's operator and one expression
         auto variableName = "snd";
         auto body = std::make_shared<Operation>(
@@ -166,7 +175,7 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
                     std::make_shared<Application>(),
                     lambdaApp,
                     body);
-        q.push_back(lambda);
+        q.push_back(lambda);*/
     }
 }
 

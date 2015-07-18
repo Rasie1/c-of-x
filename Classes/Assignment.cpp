@@ -3,6 +3,7 @@
 #include "Environment.h"
 #include "Pattern.h"
 #include "Operation.h"
+#include "Lambda.h"
 
 namespace Language
 {
@@ -17,15 +18,19 @@ ExpPtr Assignment::operate(const ExpPtr& first,
                            const ExpPtr& second,
                            Environment*& env) const
 {
-    /*auto newEnv = env;
-    env = env->add(first->pattern(),
-                   second->eval(newEnv));
-    newEnv = env;
-    return second->eval(newEnv);*/
-
-    auto evaluated = second->eval(env);
-    env = env->add(first->pattern(),
-                   evaluated);
+    ExpPtr lvalue = first;
+    ExpPtr rvalue = second;
+    while (lvalue->unwind(lvalue, rvalue, env));
+    ExpPtr evaluated = rvalue->eval(env);
+    env = env->add(lvalue->pattern(), evaluated);
+    //auto unwinded  = first->unwind(env);
+    //auto evaluated = second->eval(env);
+    //env = env->add(unwinded.first,
+    //               unwinded.second == PatPtr()
+    //               ? evaluated
+    //               : Lambda::construct(unwinded.second,
+    //                                   evaluated,
+    //                                   env));
     return evaluated;
 }
 

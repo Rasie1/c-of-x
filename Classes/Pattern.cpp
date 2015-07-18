@@ -14,6 +14,15 @@ bool Pattern::match(const PatPtr& other,
     return false;
 }
 
+PatPtr Pattern::pattern() const
+{
+    return Expression::pattern();
+    //auto e = std:: const_pointer_cast<Expression>(shared_from_this());
+    //auto p = std::static_pointer_cast<Pattern>(e);
+    //return p;
+}
+
+
 std::string Pattern::toString() const
 {
     return "unknownpattern";
