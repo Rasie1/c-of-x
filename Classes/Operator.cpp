@@ -31,18 +31,8 @@ PatPtr Operator::pattern() const
                         shared_from_this())));
 }
 
-PatPtr Operator::leftPattern(const ExpPtr& e) const
-{
-    return e->pattern();
-}
-
-PatPtr Operator::rightPattern(const ExpPtr& e) const
-{
-    return e->pattern();
-}
-
-bool Operator::unwind(const ExpPtr& left,
-                      const ExpPtr& right,
+bool Operator::unwind(ExpPtr& left,
+                      ExpPtr& right,
                       ExpPtr& lvalue,
                       ExpPtr& rvalue,
                       Environment*& env)

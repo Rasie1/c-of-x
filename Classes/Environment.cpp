@@ -17,6 +17,7 @@
 #include "Mutation.h"
 #include "Print.h"
 #include "Application.h"
+#include "Variable.h"
 
 #include "EvalDelay.h"
 #include "EvalForce.h"
@@ -55,7 +56,7 @@ Environment* Environment::pop()
     return next;
 }
 
-ExpPtr Environment::get(const PatPtr& p)
+ExpPtr Environment::get(const ExpPtr& p)
 {
     if (data->match(p, this))
         return data->get();
@@ -66,7 +67,7 @@ ExpPtr Environment::get(const PatPtr& p)
     return next->get(p);
 }
 
-Environment* Environment::add(const PatPtr& p,
+Environment* Environment::add(const ExpPtr& p,
                               const ExpPtr& e)
 {
     auto variable = new EnvironmentalVariable(p, e);
@@ -75,6 +76,23 @@ Environment* Environment::add(const PatPtr& p,
 
 Environment* Environment::loadDefaultVariables()
 {
+    return add(std::make_shared<Variable>(Mutation       ::defaultName), std::make_shared<Mutation>())
+         ->add(std::make_shared<Variable>(Assignment     ::defaultName), std::make_shared<Assignment>())
+         ->add(std::make_shared<Variable>(EvalForce      ::defaultName), std::make_shared<EvalForce>())
+         ->add(std::make_shared<Variable>(EvalDelay      ::defaultName), std::make_shared<EvalDelay>())
+         ->add(std::make_shared<Variable>(ReturnPattern  ::defaultName), std::make_shared<ReturnPattern>())
+         ->add(std::make_shared<Variable>(Print          ::defaultName), std::make_shared<Print>())
+         ->add(std::make_shared<Variable>(PrintPattern   ::defaultName), std::make_shared<PrintPattern>())
+         ->add(std::make_shared<Variable>(Include        ::defaultName), std::make_shared<Include>())
+         ->add(std::make_shared<Variable>(Lambda         ::defaultName), std::make_shared<Lambda>())
+         ->add(std::make_shared<Variable>(Addition       ::defaultName), std::make_shared<Addition>())
+         ->add(std::make_shared<Variable>(ClosureOperator::defaultName), std::make_shared<ClosureOperator>())
+         ->add(std::make_shared<Variable>(Subtraction    ::defaultName), std::make_shared<Subtraction>())
+         ->add(std::make_shared<Variable>(Multiplication ::defaultName), std::make_shared<Multiplication>())
+         ->add(std::make_shared<Variable>(Assignment     ::defaultName), std::make_shared<Assignment>())
+         ->add(std::make_shared<Variable>(Pair           ::defaultName), std::make_shared<Pair>());
+    /*
+     *
     return add(std::make_shared<PatternVariable>(Mutation       ::defaultName), std::make_shared<Mutation>())
          ->add(std::make_shared<PatternVariable>(Assignment     ::defaultName), std::make_shared<Assignment>())
          ->add(std::make_shared<PatternVariable>(EvalForce      ::defaultName), std::make_shared<EvalForce>())
@@ -90,6 +108,7 @@ Environment* Environment::loadDefaultVariables()
          ->add(std::make_shared<PatternOperator>(Multiplication ::defaultName, std::make_shared<Multiplication>()), std::make_shared<Multiplication>())
          ->add(std::make_shared<PatternOperator>(Assignment     ::defaultName, std::make_shared<Assignment>()), std::make_shared<Assignment>())
          ->add(std::make_shared<PatternOperator>(Pair           ::defaultName, std::make_shared<Pair>()), std::make_shared<Pair>());
+         */
 }
 
 Environment* Environment::create()
@@ -122,12 +141,12 @@ bool Environment::compareOperators(const ExpPtr& first,
         secondValue = secondOperator->priority;
 
     return firstValue < secondValue ||
-           isFirstRightAssociative && (firstValue <= secondValue);
+           !isFirstRightAssociative && (firstValue <= secondValue);
 }
 
-std::pair<PatPtr, ExpPtr> Environment::top()
+std::pair<ExpPtr, ExpPtr> Environment::top()
 {
-    return std::pair<PatPtr, ExpPtr>(
+    return std::pair<ExpPtr, ExpPtr>(
                 data->getPattern(),
                 data->get());
 }

@@ -13,12 +13,15 @@ public:
 
     ExpPtr evaluation(Environment*& env) const override;
     PatPtr pattern() const override;
+    bool match(const ExpPtr& other, Environment* env) const;
     bool isOperator(Environment* env) const override;
     std::string toString() const override;
 
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env) override;
+
+    bool hasNonOpVariable(Environment* env) const;
 
     std::string name;
 };

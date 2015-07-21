@@ -9,7 +9,7 @@ class Pattern : public Expression
 public:
     Pattern();
 
-    virtual bool match(const PatPtr& other,
+    virtual bool match(const ExpPtr& other,
                        Environment* env) const;
     virtual std::string toString() const override;
     PatPtr pattern() const override;

@@ -1,9 +1,18 @@
 #include "Addition.h"
 #include "Operation.h"
 #include "Integer.h"
+#include "Environment.h"
+#include "Subtraction.h"
+#include "Variable.h"
 
 namespace Language
 {
+
+Addition::Addition()
+    : Operator(false, 5)
+{
+}
+
 
 ExpPtr Addition::operate(const ExpPtr& first,
                          const ExpPtr& second,
@@ -26,5 +35,36 @@ std::string Addition::toString() const
 }
 
 const std::string Addition::defaultName = "+";
+
+bool Addition::unwind(ExpPtr& left,
+                      ExpPtr& right,
+                      ExpPtr& lvalue,
+                      ExpPtr& rvalue,
+                      Environment*& env)
+{
+    auto newEnv = env;
+    if (left->hasNonOpVariable(env))
+    {
+        if (right->hasNonOpVariable(env))
+            return false;
+        lvalue = left;
+        rvalue = std::make_shared<Operation>(
+                    std::make_shared<Subtraction>(),
+                    rvalue,
+                    right);
+        return true;
+    }
+    else if (right->hasNonOpVariable(env))
+    {
+        lvalue = right;
+        rvalue = std::make_shared<Operation>(
+                    std::make_shared<Subtraction>(),
+                    rvalue,
+                    left);
+        return true;
+    }
+    return false;
+}
+
 
 }

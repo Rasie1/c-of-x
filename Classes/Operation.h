@@ -19,6 +19,7 @@ public:
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env) override;
+    bool hasNonOpVariable(Environment* env) const;
 private:
     std::shared_ptr<Operator> op;
     ExpPtr left;

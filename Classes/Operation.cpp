@@ -32,8 +32,8 @@ ExpPtr Operation::evaluation(Environment*& env) const
 PatPtr Operation::pattern() const
 {
     return std::make_shared<PatternOperation>(op->pattern(),
-                                              op->leftPattern(left),
-                                              op->rightPattern(right));
+                                              left->pattern(),
+                                              right->pattern());
 }
 
 std::string Operation::toString() const
@@ -54,6 +54,11 @@ bool Operation::unwind(ExpPtr& lvalue,
                       lvalue,
                       rvalue,
                       env);
+}
+
+bool Operation::hasNonOpVariable(Environment* env) const
+{
+    return left->hasNonOpVariable(env) || right->hasNonOpVariable(env);
 }
 
 }

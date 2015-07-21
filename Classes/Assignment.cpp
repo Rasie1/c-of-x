@@ -18,20 +18,13 @@ ExpPtr Assignment::operate(const ExpPtr& first,
                            const ExpPtr& second,
                            Environment*& env) const
 {
+
+    ExpPtr rvalue = second->eval(env);
     ExpPtr lvalue = first;
-    ExpPtr rvalue = second;
     while (lvalue->unwind(lvalue, rvalue, env));
-    ExpPtr evaluated = rvalue->eval(env);
-    env = env->add(lvalue->pattern(), evaluated);
-    //auto unwinded  = first->unwind(env);
-    //auto evaluated = second->eval(env);
-    //env = env->add(unwinded.first,
-    //               unwinded.second == PatPtr()
-    //               ? evaluated
-    //               : Lambda::construct(unwinded.second,
-    //                                   evaluated,
-    //                                   env));
-    return evaluated;
+    env = env->add(lvalue, rvalue->eval(env));
+
+    return second;
 }
 
 std::string Assignment::toString() const

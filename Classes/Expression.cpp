@@ -21,7 +21,7 @@ Expression::~Expression()
 
 ExpPtr Expression::eval(Environment*& env) const
 {
-    auto fromEnv = env->get(pattern());
+    auto fromEnv = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
     if (fromEnv)
         return fromEnv;
     return evaluation(env);
@@ -38,6 +38,11 @@ ExpPtr Expression::apply(const ExpPtr& e,
     return std::make_shared<Operation>(std::make_shared<Application>(),
                                        std::const_pointer_cast<Expression>(shared_from_this()),
                                        e);
+}
+
+bool Expression::match(const ExpPtr& other, Environment* env) const
+{
+    return false;
 }
 
 PatPtr Expression::pattern() const
@@ -58,6 +63,11 @@ std::string Expression::toString() const
 bool Expression::unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env)
+{
+    return false;
+}
+
+bool Expression::hasNonOpVariable(Environment* env) const
 {
     return false;
 }

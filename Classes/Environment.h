@@ -22,11 +22,11 @@ public:
     ~Environment();
 
     void clear();
-    Environment* add(const PatPtr& p,
+    Environment* add(const ExpPtr& p,
                      const ExpPtr& e);
     Environment* pop();
-    ExpPtr get(const PatPtr& p);
-    std::pair<PatPtr, ExpPtr> top();
+    ExpPtr get(const ExpPtr& p);
+    std::pair<ExpPtr, ExpPtr> top();
     bool compareOperators(const ExpPtr& first, const ExpPtr& second);
 
     static Environment* create();

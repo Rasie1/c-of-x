@@ -13,7 +13,7 @@ PatternApplication::PatternApplication(const PatPtr& body,
 
 }
 
-bool PatternApplication::match(const PatPtr& other,
+bool PatternApplication::match(const ExpPtr& other,
                                Environment* env) const
 {
     auto x = std::dynamic_pointer_cast<PatternApplication>(other);

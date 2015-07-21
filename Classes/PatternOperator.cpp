@@ -13,7 +13,7 @@ PatternOperator::PatternOperator(const std::string& name,
 
 }
 
-bool PatternOperator::match(const PatPtr& other,
+bool PatternOperator::match(const ExpPtr& other,
                             Environment* env) const
 {
     auto y = std::dynamic_pointer_cast<PatternVariable>(other);
@@ -53,7 +53,7 @@ PatternOperation::PatternOperation(const PatPtr& op,
 
 }
 
-bool PatternOperation::match(const PatPtr& other,
+bool PatternOperation::match(const ExpPtr& other,
                              Environment* env) const
 {
     auto x = std::dynamic_pointer_cast<PatternOperation>(other);

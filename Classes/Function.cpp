@@ -3,12 +3,13 @@
 #include "Pattern.h"
 #include "Closure.h"
 #include "Environment.h"
+#include "String.h"
 
 namespace Language
 {
 
 Function::Function(const ExpPtr& body,
-                   const PatPtr& argument)
+                   const ExpPtr& argument)
     : body(body),
       argument(argument)
 {
@@ -20,10 +21,14 @@ Function::~Function()
 
 ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
 {
-    auto newEnv1 = env;
+    /*auto newEnv1 = env;
     auto newEnv2 = env->add(argument,
-                            e->eval(newEnv1));
-    return body->eval(newEnv2);
+                            e->eval(newEnv1));*/
+    //if (!argument->match(e, env))
+    //    return std::make_shared<String>("!No Match!");
+
+    env = env->add(argument, e);
+    return body->eval(env);
 }
 
 ExpPtr Function::evaluation(Environment*& env) const
@@ -37,7 +42,7 @@ ExpPtr Function::evaluation(Environment*& env) const
 
 std::string Function::toString() const
 {
-    return "(" + argument->toString() + ")._(" + body->toString() + ")";
+    return "(" + argument->toString() + "){" + body->toString() + "}";
 }
 
 }

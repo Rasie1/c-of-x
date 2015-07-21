@@ -8,7 +8,7 @@ class PatternPredicate : public Pattern
 {
     PatternPredicate(Expression* predicate);
 
-    bool match(const PatPtr& other,
+    bool match(const ExpPtr& other,
                Environment* env) const override;
     std::string toString() const override;
 

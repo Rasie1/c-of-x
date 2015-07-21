@@ -28,11 +28,11 @@ ExpPtr Closure::apply(const ExpPtr& e, Environment*& env) const
 
 std::string Closure::toString() const
 {
-    return "closure{"
+    return "["
             + env->top().first->toString()
             + " = "
             + env->top().second->toString()
-            + "} "
+            + "]"
             + function->toString();
 }
 

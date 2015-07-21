@@ -16,14 +16,12 @@ public:
 
     bool isOperator(Environment* env) const override;
     PatPtr pattern() const override;
-    virtual PatPtr leftPattern(const ExpPtr& e) const;
-    virtual PatPtr rightPattern(const ExpPtr& e) const;
     bool isRightAssociative;
     int priority;
     const std::string name;
 
-    virtual bool unwind(const ExpPtr& left,
-                        const ExpPtr& right,
+    virtual bool unwind(ExpPtr& left,
+                        ExpPtr& right,
                         ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env);
@@ -31,7 +29,19 @@ public:
     virtual std::string toString() const;
 private:
 };
+/*
+class CustomOperator : public Operator
+{
+public:
+    CustomOperator();
 
+    ExpPtr operate(const ExpPtr&  first,
+                   const ExpPtr&  second,
+                   Environment*& env) const override;
+
+    std::string toString() const override;
+};
+*/
 
 class MakeOperator : public Expression
 {

@@ -137,7 +137,7 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
     q.pop_back();
     if (!q.empty())
     {
-        left  = q.back();
+        left = q.back();
         q.pop_back();
 
         // "Preprocessor" handling (#)

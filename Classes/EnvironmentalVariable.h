@@ -14,16 +14,16 @@ class Environment;
 class EnvironmentalVariable
 {
 public:
-    EnvironmentalVariable(const PatPtr& pattern, const ExpPtr& value);
+    EnvironmentalVariable(const ExpPtr& pattern, const ExpPtr& value);
     ~EnvironmentalVariable();
 
-    bool match(const PatPtr& other,
+    bool match(const ExpPtr& other,
                Environment* env) const;
     ExpPtr get();
-    PatPtr getPattern() const;
+    ExpPtr getPattern() const;
 
 private:
-    PatPtr pattern;
+    ExpPtr pattern;
     ExpPtr value;
 };
 

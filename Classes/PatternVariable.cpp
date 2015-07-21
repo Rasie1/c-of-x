@@ -6,17 +6,17 @@
 namespace Language
 {
 
-bool PatternVariable::match(const PatPtr& other,
+bool PatternVariable::match(const ExpPtr& other,
                             Environment* env) const
 {
 
-    auto y = std::dynamic_pointer_cast<PatternVariable>(other);
-    if (y)
-        return y->name == name;
-    auto x = std::dynamic_pointer_cast<PatternOperator>(other);
-    if (x)
-        return x->name == name;
-    return false;
+    //auto y = std::dynamic_pointer_cast<PatternVariable>(other);
+    //if (y)
+    //    return y->name == name;
+    //auto x = std::dynamic_pointer_cast<PatternOperator>(other);
+    //if (x)
+    //    return x->name == name;
+    return true;
     /*
     auto x = dynamic_cast<PatternVariable*>(other);
     if (x == nullptr)
@@ -27,7 +27,7 @@ bool PatternVariable::match(const PatPtr& other,
 
 std::string PatternVariable::toString() const
 {
-    return name;
+    return "auto " + name;
 }
 
 }

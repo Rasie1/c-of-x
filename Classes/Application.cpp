@@ -4,6 +4,7 @@
 #include "PatternWildcard.h"
 #include "Environment.h"
 #include "Lambda.h"
+#include "Operation.h"
 
 namespace Language
 {
@@ -18,8 +19,9 @@ ExpPtr Application::operate(const ExpPtr& first,
                             Environment*& env) const
 {
     auto function = first->eval(env);
+    auto argument = second->eval(env);
     DEBUG_PRINT_EV(function);
-    auto ret = function->apply(second, env);
+    auto ret = function->apply(argument, env);
 
     return ret;
 }
@@ -38,27 +40,20 @@ PatPtr Application::pattern() const
                         shared_from_this())));
 }
 
-PatPtr Application::leftPattern(const ExpPtr& e) const
-{
-    return e->pattern();
-}
-
-PatPtr Application::rightPattern(const ExpPtr& e) const
-{
-    return e->pattern();
-    //return std::make_shared<PatternWildcard>();
-}
-
-bool Application::unwind(const ExpPtr& left,
-                         const ExpPtr& right,
+bool Application::unwind(ExpPtr& left,
+                         ExpPtr& right,
                          ExpPtr& lvalue,
                          ExpPtr& rvalue,
                          Environment*& env)
 {
     lvalue = left;
-    rvalue = Lambda::construct(right->pattern(),
-                               rvalue,
-                               env);
+    //rvalue = Lambda::construct(right,
+    //                           rvalue,
+    //                           env);
+    rvalue = std::make_shared<Operation>(
+                std::make_shared<ClosureOperator>(),
+                right,
+                rvalue);
     return true;
 }
 

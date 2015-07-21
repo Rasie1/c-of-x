@@ -7,7 +7,7 @@ namespace Language
 class PatternWildcard : public Pattern
 {
 public:
-    bool match(const PatPtr& other,
+    bool match(const ExpPtr& other,
                Environment* env) const override;
     std::string toString() const override;
 };

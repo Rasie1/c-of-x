@@ -8,7 +8,7 @@ class Function : public Expression
 {
 public:
     Function(const ExpPtr& body,
-             const PatPtr& argument);
+             const ExpPtr& argument);
     ~Function();
 
     ExpPtr evaluation(Environment*& env) const override;
@@ -16,7 +16,7 @@ public:
     std::string toString() const override;
 
     ExpPtr body;
-    PatPtr argument;
+    ExpPtr argument;
 };
 
 }

@@ -25,7 +25,7 @@ std::string Lambda::toString() const
 const std::string Lambda::defaultName = "\\";
 
 
-LambdaArguments::LambdaArguments(const PatPtr& argument)
+LambdaArguments::LambdaArguments(const ExpPtr& argument)
     : pattern(argument)
 {
 
@@ -43,7 +43,7 @@ std::string LambdaArguments::toString() const
     return "\u03BB(" + pattern->toString() + ")";
 }
 
-ExpPtr Lambda::construct(PatPtr arg, ExpPtr body, Environment* env)
+ExpPtr Lambda::construct(ExpPtr arg, ExpPtr body, Environment* env)
 {
     /*auto lambdaApp = std::make_shared<Operation>(
                 std::make_shared<Application>(),
@@ -54,14 +54,14 @@ ExpPtr Lambda::construct(PatPtr arg, ExpPtr body, Environment* env)
                 arg,
                 body);
     return lambda->eval(env);*/
-    auto lambda = std::make_shared<Operation>(
-                std::make_shared<Application>(),
-                std::make_shared<LambdaArguments>(arg),
-                body);
-    return lambda->eval(env);
-    //return std::make_shared<Closure>(std::make_shared<Function>(body,
-    //                                                            arg),
-    //                                 env);
+    //auto lambda = std::make_shared<Operation>(
+    //            std::make_shared<Application>(),
+    //            std::make_shared<LambdaArguments>(arg),
+    //            body);
+    //return lambda->eval(env);
+    return std::make_shared<Closure>(std::make_shared<Function>(body,
+                                                                arg),
+                                     env);
 }
 
 
@@ -74,7 +74,7 @@ ExpPtr ClosureOperator::operate(const ExpPtr& first,
                                 const ExpPtr& second,
                                 Environment*& env) const
 {
-    return Lambda::construct(std::static_pointer_cast<Pattern>(first->eval(env)),
+    return Lambda::construct(first,
                              second,
                              env);
     //auto fun = std::make_shared<Function>(second,
@@ -87,8 +87,8 @@ std::string ClosureOperator::toString() const
     return ".";
 }
 
-bool ClosureOperator::unwind(const ExpPtr& left,
-                             const ExpPtr& right,
+bool ClosureOperator::unwind(ExpPtr& left,
+                             ExpPtr& right,
                              ExpPtr& lvalue,
                              ExpPtr& rvalue,
                              Environment*& env)

@@ -12,7 +12,7 @@ PatternPredicate::PatternPredicate(Expression* predicate)
 
 }
 
-bool PatternPredicate::match(const PatPtr& other,
+bool PatternPredicate::match(const ExpPtr& other,
                              Environment* env) const
 {
     auto argument = env->get(other);

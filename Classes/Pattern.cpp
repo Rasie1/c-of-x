@@ -8,7 +8,7 @@ Pattern::Pattern()
 
 }
 
-bool Pattern::match(const PatPtr& other,
+bool Pattern::match(const ExpPtr& other,
                     Environment* env) const
 {
     return false;
