@@ -28,10 +28,9 @@ ExpPtr Parser::parse(const string& s, Environment* env)
     return parse(s, i, s.size(), env);
 }
 
-inline bool isOperatorCharacter(char c)
+static constexpr bool isOperatorCharacter(char c)
 {
-    return
-            c == '\'' ||
+    return  c == '\'' ||
             c == '\\' ||
             c == '_'  ||
             c == '+'  ||
@@ -57,7 +56,7 @@ inline bool isOperatorCharacter(char c)
             ;
 }
 
-inline bool isNameCharacter(char c)
+static constexpr bool isNameCharacter(char c)
 {
     return
             c >= 'a' && c <= 'z' ||
@@ -67,14 +66,14 @@ inline bool isNameCharacter(char c)
 }
 
 
-inline bool isExpressionEnd(char c)
+static constexpr bool isExpressionEnd(char c)
 {
     return c == ')'/* ||
            c == '}' ||
            c == ']'*/;
 }
 
-inline bool shouldSkipCharacter(char c)
+static constexpr bool shouldSkipCharacter(char c)
 {
     return c < '!';
 }

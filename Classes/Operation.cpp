@@ -61,4 +61,11 @@ bool Operation::hasNonOpVariable(Environment* env) const
     return left->hasNonOpVariable(env) || right->hasNonOpVariable(env);
 }
 
+void Operation::getAllVariables(
+        std::vector<std::shared_ptr<Variable>>& variables)
+{
+    left->getAllVariables(variables);
+    right->getAllVariables(variables);
+}
+
 }

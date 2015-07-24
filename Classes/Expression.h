@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
 #include "DebugHelpers.h"
 
 namespace Language
@@ -9,6 +10,7 @@ namespace Language
 class Environment;
 
 class Pattern;
+class Variable;
 class Expression : public std::enable_shared_from_this<Expression>
 {
 public:
@@ -31,6 +33,8 @@ public:
     virtual bool isOperator(Environment* env) const;
     virtual std::string toString() const;
     virtual bool hasNonOpVariable(Environment* env) const;
+    virtual void getAllVariables(
+            std::vector<std::shared_ptr<Variable>>& variables);
 protected:
 };
 

@@ -28,6 +28,7 @@ public:
     ExpPtr get(const ExpPtr& p);
     std::pair<ExpPtr, ExpPtr> top();
     bool compareOperators(const ExpPtr& first, const ExpPtr& second);
+    Environment* getNext();
 
     static Environment* create();
 

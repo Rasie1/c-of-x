@@ -151,6 +151,11 @@ std::pair<ExpPtr, ExpPtr> Environment::top()
                 data->get());
 }
 
+Environment* Environment::getNext()
+{
+    return this->next;
+}
+
 /*
 bool PrecedenceTable::more(Operator* first, Operator* second)
 {

@@ -47,9 +47,6 @@ bool Application::unwind(ExpPtr& left,
                          Environment*& env)
 {
     lvalue = left;
-    //rvalue = Lambda::construct(right,
-    //                           rvalue,
-    //                           env);
     rvalue = std::make_shared<Operation>(
                 std::make_shared<ClosureOperator>(),
                 right,

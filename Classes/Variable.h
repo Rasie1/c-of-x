@@ -22,6 +22,8 @@ public:
                         Environment*& env) override;
 
     bool hasNonOpVariable(Environment* env) const;
+    void getAllVariables(
+            std::vector<std::shared_ptr<Variable>>& variables) override;
 
     std::string name;
 };

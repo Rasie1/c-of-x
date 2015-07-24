@@ -3,20 +3,24 @@
 #include "Environment.h"
 #include "Function.h"
 #include "Pattern.h"
+#include <string>
 
 namespace Language
 {
 
 Closure::Closure(const std::shared_ptr<Function>& function,
-                 Environment* env)
+                 Environment* env,
+                 int envSize)
     : function(function),
-      env(env)
+      env(env),
+      envSize(envSize)
 {
 
 }
 
 Closure::~Closure()
 {
+    // delete envSize elements
 }
 
 ExpPtr Closure::apply(const ExpPtr& e, Environment*& env) const
@@ -28,12 +32,17 @@ ExpPtr Closure::apply(const ExpPtr& e, Environment*& env) const
 
 std::string Closure::toString() const
 {
-    return "["
-            + env->top().first->toString()
-            + " = "
-            + env->top().second->toString()
-            + "]"
-            + function->toString();
+    std::string ret = "[";
+    auto top = env;
+    for (int i = 0; i < envSize; ++i)
+    {
+        ret +=top->top().first->toString()
+            + std::string(" = ")
+            + top->top().second->toString()
+            + std::string(";");
+        top = top->getNext();
+    }
+    return ret + std::string("]") + function->toString();
 }
 
 }

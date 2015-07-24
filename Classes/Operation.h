@@ -20,6 +20,8 @@ public:
                         ExpPtr& rvalue,
                         Environment*& env) override;
     bool hasNonOpVariable(Environment* env) const;
+    void getAllVariables(
+            std::vector<std::shared_ptr<Variable>>& variables) override;
 private:
     std::shared_ptr<Operator> op;
     ExpPtr left;

@@ -10,7 +10,8 @@ class Closure : public Expression
 {
 public:
     Closure(const std::shared_ptr<Function>& function,
-            Environment* env);
+            Environment* env,
+            int envSize = 0);
     ~Closure();
 
     ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
@@ -19,6 +20,7 @@ public:
 private:
     std::shared_ptr<Function> function;
     Environment* env;
+    int envSize;
 };
 
 }

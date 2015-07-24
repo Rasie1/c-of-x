@@ -3,6 +3,7 @@
 #include "UnknownName.h"
 #include "PatternVariable.h"
 #include <string>
+#include <list>
 
 namespace Language
 {
@@ -61,6 +62,13 @@ bool Variable::unwind(ExpPtr& lvalue,
 bool Variable::hasNonOpVariable(Environment* env) const
 {
     return env->get(std::const_pointer_cast<Expression>(shared_from_this())) == nullptr;
+}
+
+void Variable::getAllVariables(
+        std::vector<std::shared_ptr<Variable>>& variables)
+{
+    variables.push_back(
+                std::static_pointer_cast<Variable>(shared_from_this()));
 }
 
 }

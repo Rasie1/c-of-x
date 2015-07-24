@@ -72,4 +72,11 @@ bool Expression::hasNonOpVariable(Environment* env) const
     return false;
 }
 
+void Expression::getAllVariables(
+        std::vector<std::shared_ptr<Variable>>& variables)
+{
+}
+
+
+
 }

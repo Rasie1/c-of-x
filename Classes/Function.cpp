@@ -4,6 +4,9 @@
 #include "Closure.h"
 #include "Environment.h"
 #include "String.h"
+#include "Variable.h"
+#include <string>
+#include <iostream>
 
 namespace Language
 {
@@ -26,9 +29,15 @@ ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
                             e->eval(newEnv1));*/
     //if (!argument->match(e, env))
     //    return std::make_shared<String>("!No Match!");
-
-    env = env->add(argument, e);
-    return body->eval(env);
+    std::vector<std::shared_ptr<Variable>> argumentVariables;
+    argument->getAllVariables(argumentVariables);
+    auto newEnv1 = env;
+    for (auto x : argumentVariables)
+    {
+        std::cout << x->toString() << std::endl;
+        newEnv1 = newEnv1->add(x, e);
+    }
+    return body->eval(newEnv1);
 }
 
 ExpPtr Function::evaluation(Environment*& env) const
