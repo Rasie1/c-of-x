@@ -23,7 +23,7 @@ Closure::~Closure()
     // delete envSize elements
 }
 
-ExpPtr Closure::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
     auto newEnv = env;
     return function->apply(e->eval(newEnv),

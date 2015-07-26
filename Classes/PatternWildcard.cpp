@@ -3,7 +3,7 @@
 namespace Language
 {
 
-bool PatternWildcard::match(const ExpPtr& other,
+bool PatternWildcard::match(ExpPtrArg other,
                             Environment* env) const
 {
     return true;

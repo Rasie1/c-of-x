@@ -5,15 +5,15 @@
 namespace Language
 {
 
-PatternApplication::PatternApplication(const PatPtr& body,
-                                       const PatPtr& argument)
+PatternApplication::PatternApplication(PatPtrArg body,
+                                       PatPtrArg argument)
     : argument(argument),
       body(body)
 {
 
 }
 
-bool PatternApplication::match(const ExpPtr& other,
+bool PatternApplication::match(ExpPtrArg other,
                                Environment* env) const
 {
     auto x = std::dynamic_pointer_cast<PatternApplication>(other);

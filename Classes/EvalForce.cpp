@@ -4,7 +4,7 @@
 namespace Language
 {
 
-ExpPtr EvalForce::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr EvalForce::apply(ExpPtrArg e, Environment*& env) const
 {
     return e->eval(env)->eval(env);
 }

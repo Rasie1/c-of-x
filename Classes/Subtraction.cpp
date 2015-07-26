@@ -11,17 +11,17 @@ Subtraction::Subtraction()
 {
 }
 
-ExpPtr Subtraction::operate(const ExpPtr& first,
-                            const ExpPtr& second,
+ExpPtr Subtraction::operate(ExpPtrArg first,
+                            ExpPtrArg second,
                             Environment*& env) const
 {
     auto firstInteger  = std::dynamic_pointer_cast<Integer>(first ->eval(env));
     auto secondInteger = std::dynamic_pointer_cast<Integer>(second->eval(env));
 
     if (firstInteger && secondInteger)
-        return std::make_shared<Integer>(firstInteger->value -
+        return make_ptr<Integer>(firstInteger->value -
                                          secondInteger->value);
-    return std::make_shared<Operation>(std::make_shared<Subtraction>(),
+    return make_ptr<Operation>(make_ptr<Subtraction>(),
                                        first,
                                        second);
 }
@@ -46,8 +46,8 @@ bool Subtraction::unwind(ExpPtr& left,
         if (right->hasNonOpVariable(env))
             return false;
         lvalue = left;
-        rvalue = std::make_shared<Operation>(
-                    std::make_shared<Addition>(),
+        rvalue = make_ptr<Operation>(
+                    make_ptr<Addition>(),
                     rvalue,
                     right);
         return true;
@@ -55,8 +55,8 @@ bool Subtraction::unwind(ExpPtr& left,
     else if (right->hasNonOpVariable(env))
     {
         lvalue = right;
-        rvalue = std::make_shared<Operation>(
-                    std::make_shared<Subtraction>(),
+        rvalue = make_ptr<Operation>(
+                    make_ptr<Subtraction>(),
                     left,
                     rvalue);
         return true;

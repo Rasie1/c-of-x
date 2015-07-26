@@ -3,37 +3,41 @@
 #include <map>
 #include <unordered_map>
 #include <memory>
+#include "Expression.h"
 
 namespace Language
 {
 
-class Expression;
 class EnvironmentalVariable;
-class Pattern;
 class PrecedenceTable;
 class PrecedenceInfo;
 class Operator;
-typedef std::shared_ptr<Expression> ExpPtr;
-typedef std::shared_ptr<Pattern>    PatPtr;
 class Environment
 {
+    typedef std::map<std::string, ExpPtr> Variables;
+    typedef std::map<std::string, ExpPtr> Operators;
 public:
     Environment(EnvironmentalVariable* data, Environment* next = nullptr);
     ~Environment();
 
     void clear();
-    Environment* add(const ExpPtr& p,
-                     const ExpPtr& e);
+    Environment* add(ExpPtrArg p,
+                     ExpPtrArg e);
     Environment* pop();
-    ExpPtr get(const ExpPtr& p);
+    ExpPtr get(ExpPtrArg p);
     std::pair<ExpPtr, ExpPtr> top();
-    bool compareOperators(const ExpPtr& first, const ExpPtr& second);
+    bool compareOperators(ExpPtrArg first, ExpPtrArg second);
     Environment* getNext();
 
     static Environment* create();
 
 private:
     Environment* loadDefaultVariables();
+
+    Variables variables;
+    Operators operators;
+
+    ExpPtr lookup(const std::string& name);
 
     EnvironmentalVariable* data;
     Environment* next;

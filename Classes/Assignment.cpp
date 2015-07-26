@@ -14,8 +14,8 @@ Assignment::Assignment()
 
 }
 
-ExpPtr Assignment::operate(const ExpPtr& first,
-                           const ExpPtr& second,
+ExpPtr Assignment::operate(ExpPtrArg first,
+                           ExpPtrArg second,
                            Environment*& env) const
 {
 

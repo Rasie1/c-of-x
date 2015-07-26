@@ -10,8 +10,8 @@ public:
     Operator(bool isRightAssociative = false, int priority = 5);
 
     virtual ExpPtr operate(
-            const ExpPtr& first,
-            const ExpPtr& second,
+            ExpPtrArg first,
+            ExpPtrArg second,
             Environment*& env) const = 0;
 
     bool isOperator(Environment* env) const override;
@@ -35,8 +35,8 @@ class CustomOperator : public Operator
 public:
     CustomOperator(Expression* function);
 
-    ExpPtr operate(const ExpPtr& first,
-                   const ExpPtr& second,
+    ExpPtr operate(ExpPtrArg first,
+                   ExpPtrArg second,
                    Environment*& env) const override;
 
     std::string toString() const override;
@@ -45,7 +45,7 @@ public:
 class MakeOperator : public Expression
 {
 public:
-    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string toString() const override;
     static const std::string defaultName;
 };
@@ -53,7 +53,7 @@ public:
 class OperatorOperator : public Expression
 {
 public:
-    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string toString() const override;
 
 

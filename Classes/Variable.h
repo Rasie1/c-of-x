@@ -13,7 +13,7 @@ public:
 
     ExpPtr evaluation(Environment*& env) const override;
     PatPtr pattern() const override;
-    bool match(const ExpPtr& other, Environment* env) const;
+    bool match(ExpPtrArg other, Environment* env) const;
     bool isOperator(Environment* env) const override;
     std::string toString() const override;
 
@@ -23,7 +23,7 @@ public:
 
     bool hasNonOpVariable(Environment* env) const;
     void getAllVariables(
-            std::vector<std::shared_ptr<Variable>>& variables) override;
+            std::vector<VarPtr>& variables) override;
 
     std::string name;
 };

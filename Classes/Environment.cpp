@@ -22,8 +22,52 @@
 #include "EvalDelay.h"
 #include "EvalForce.h"
 
+#include <vector>
+
 namespace Language
 {
+
+
+
+
+
+
+/*
+class MatchChain : public Expression,
+                   private std::vector<ExpPtr>
+{
+    typedef std::vector<ExpPtr> Container;
+public:
+    void add(ExpPtrArg exp)
+    {
+        push_back(exp);
+    }
+    ExpPtr find(ExpPtrArg pat)
+    {
+        for (auto i = rbegin(); i != rend(); ++i)
+        {
+            if (i->match(pat))
+                return *i;
+        }
+        return nullptr;
+    }
+private:
+    using Container::push_back;
+    using Container::rbegin;
+    using Container::rend;
+};
+*/
+
+
+
+
+
+
+
+
+
+
+
 
 Environment::Environment(EnvironmentalVariable* data, Environment* next)
     : data(data),
@@ -56,7 +100,7 @@ Environment* Environment::pop()
     return next;
 }
 
-ExpPtr Environment::get(const ExpPtr& p)
+ExpPtr Environment::get(ExpPtrArg p)
 {
     if (data->match(p, this))
         return data->get();
@@ -67,8 +111,8 @@ ExpPtr Environment::get(const ExpPtr& p)
     return next->get(p);
 }
 
-Environment* Environment::add(const ExpPtr& p,
-                              const ExpPtr& e)
+Environment* Environment::add(ExpPtrArg p,
+                              ExpPtrArg e)
 {
     auto variable = new EnvironmentalVariable(p, e);
     return new Environment(variable, this);
@@ -76,53 +120,53 @@ Environment* Environment::add(const ExpPtr& p,
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(std::make_shared<Variable>(Mutation       ::defaultName), std::make_shared<Mutation>())
-         ->add(std::make_shared<Variable>(Assignment     ::defaultName), std::make_shared<Assignment>())
-         ->add(std::make_shared<Variable>(EvalForce      ::defaultName), std::make_shared<EvalForce>())
-         ->add(std::make_shared<Variable>(EvalDelay      ::defaultName), std::make_shared<EvalDelay>())
-         ->add(std::make_shared<Variable>(ReturnPattern  ::defaultName), std::make_shared<ReturnPattern>())
-         ->add(std::make_shared<Variable>(Show           ::defaultName), std::make_shared<Show>())
-         ->add(std::make_shared<Variable>(Print          ::defaultName), std::make_shared<Print>())
-         ->add(std::make_shared<Variable>(PrintPattern   ::defaultName), std::make_shared<PrintPattern>())
-         ->add(std::make_shared<Variable>(Include        ::defaultName), std::make_shared<Include>())
-         ->add(std::make_shared<Variable>(Lambda         ::defaultName), std::make_shared<Lambda>())
-         ->add(std::make_shared<Variable>(Addition       ::defaultName), std::make_shared<Addition>())
-         ->add(std::make_shared<Variable>(ClosureOperator::defaultName), std::make_shared<ClosureOperator>())
-         ->add(std::make_shared<Variable>(Subtraction    ::defaultName), std::make_shared<Subtraction>())
-         ->add(std::make_shared<Variable>(Multiplication ::defaultName), std::make_shared<Multiplication>())
-         ->add(std::make_shared<Variable>(Assignment     ::defaultName), std::make_shared<Assignment>())
-         ->add(std::make_shared<Variable>(Pair           ::defaultName), std::make_shared<Pair>());
+    return add(make_ptr<Variable>(Mutation       ::defaultName), make_ptr<Mutation>())
+         ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<Variable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
+         ->add(make_ptr<Variable>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
+         ->add(make_ptr<Variable>(ReturnPattern  ::defaultName), make_ptr<ReturnPattern>())
+         ->add(make_ptr<Variable>(Show           ::defaultName), make_ptr<Show>())
+         ->add(make_ptr<Variable>(Print          ::defaultName), make_ptr<Print>())
+         ->add(make_ptr<Variable>(PrintPattern   ::defaultName), make_ptr<PrintPattern>())
+         ->add(make_ptr<Variable>(Include        ::defaultName), make_ptr<Include>())
+         ->add(make_ptr<Variable>(Lambda         ::defaultName), make_ptr<Lambda>())
+         ->add(make_ptr<Variable>(Addition       ::defaultName), make_ptr<Addition>())
+         ->add(make_ptr<Variable>(ClosureOperator::defaultName), make_ptr<ClosureOperator>())
+         ->add(make_ptr<Variable>(Subtraction    ::defaultName), make_ptr<Subtraction>())
+         ->add(make_ptr<Variable>(Multiplication ::defaultName), make_ptr<Multiplication>())
+         ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<Variable>(Pair           ::defaultName), make_ptr<Pair>());
     /*
      *
-    return add(std::make_shared<PatternVariable>(Mutation       ::defaultName), std::make_shared<Mutation>())
-         ->add(std::make_shared<PatternVariable>(Assignment     ::defaultName), std::make_shared<Assignment>())
-         ->add(std::make_shared<PatternVariable>(EvalForce      ::defaultName), std::make_shared<EvalForce>())
-         ->add(std::make_shared<PatternVariable>(EvalDelay      ::defaultName), std::make_shared<EvalDelay>())
-         ->add(std::make_shared<PatternVariable>(ReturnPattern  ::defaultName), std::make_shared<ReturnPattern>())
-         ->add(std::make_shared<PatternVariable>(Print          ::defaultName), std::make_shared<Print>())
-         ->add(std::make_shared<PatternVariable>(PrintPattern   ::defaultName), std::make_shared<PrintPattern>())
-         ->add(std::make_shared<PatternVariable>(Include        ::defaultName), std::make_shared<Include>())
-         ->add(std::make_shared<PatternVariable>(Lambda         ::defaultName), std::make_shared<Lambda>())
-         ->add(std::make_shared<PatternOperator>(Addition       ::defaultName, std::make_shared<Addition>()), std::make_shared<Addition>())
-         ->add(std::make_shared<PatternOperator>(ClosureOperator::defaultName, std::make_shared<ClosureOperator>()), std::make_shared<ClosureOperator>())
-         ->add(std::make_shared<PatternOperator>(Subtraction    ::defaultName, std::make_shared<Subtraction>()), std::make_shared<Subtraction>())
-         ->add(std::make_shared<PatternOperator>(Multiplication ::defaultName, std::make_shared<Multiplication>()), std::make_shared<Multiplication>())
-         ->add(std::make_shared<PatternOperator>(Assignment     ::defaultName, std::make_shared<Assignment>()), std::make_shared<Assignment>())
-         ->add(std::make_shared<PatternOperator>(Pair           ::defaultName, std::make_shared<Pair>()), std::make_shared<Pair>());
+    return add(make_ptr<PatternVariable>(Mutation       ::defaultName), make_ptr<Mutation>())
+         ->add(make_ptr<PatternVariable>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<PatternVariable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
+         ->add(make_ptr<PatternVariable>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
+         ->add(make_ptr<PatternVariable>(ReturnPattern  ::defaultName), make_ptr<ReturnPattern>())
+         ->add(make_ptr<PatternVariable>(Print          ::defaultName), make_ptr<Print>())
+         ->add(make_ptr<PatternVariable>(PrintPattern   ::defaultName), make_ptr<PrintPattern>())
+         ->add(make_ptr<PatternVariable>(Include        ::defaultName), make_ptr<Include>())
+         ->add(make_ptr<PatternVariable>(Lambda         ::defaultName), make_ptr<Lambda>())
+         ->add(make_ptr<PatternOperator>(Addition       ::defaultName, make_ptr<Addition>()), make_ptr<Addition>())
+         ->add(make_ptr<PatternOperator>(ClosureOperator::defaultName, make_ptr<ClosureOperator>()), make_ptr<ClosureOperator>())
+         ->add(make_ptr<PatternOperator>(Subtraction    ::defaultName, make_ptr<Subtraction>()), make_ptr<Subtraction>())
+         ->add(make_ptr<PatternOperator>(Multiplication ::defaultName, make_ptr<Multiplication>()), make_ptr<Multiplication>())
+         ->add(make_ptr<PatternOperator>(Assignment     ::defaultName, make_ptr<Assignment>()), make_ptr<Assignment>())
+         ->add(make_ptr<PatternOperator>(Pair           ::defaultName, make_ptr<Pair>()), make_ptr<Pair>());
          */
 }
 
 Environment* Environment::create()
 {
     auto firstVariable = new EnvironmentalVariable(
-                std::make_shared<PatternVariable>(Void::defaultName),
-                std::make_shared<Void>());
+                make_ptr<PatternVariable>(Void::defaultName),
+                make_ptr<Void>());
     auto environment = new Environment(firstVariable, nullptr);
     return environment->loadDefaultVariables();
 }
 
-bool Environment::compareOperators(const ExpPtr& first,
-                                   const ExpPtr& second)
+bool Environment::compareOperators(ExpPtrArg first,
+                                   ExpPtrArg second)
 {
     int firstValue = 0, secondValue = 1;
     bool isFirstRightAssociative = false;
@@ -155,6 +199,16 @@ std::pair<ExpPtr, ExpPtr> Environment::top()
 Environment* Environment::getNext()
 {
     return this->next;
+}
+
+ExpPtr Environment::lookup(const std::string& name)
+{
+    return nullptr;
+//    auto exp   = variables.at(name);
+//    auto chain = std::static_pointer_cast<MatchChain>(chain);
+//    auto match = chain.match(exp);
+
+//    return match;
 }
 
 /*

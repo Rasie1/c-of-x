@@ -20,10 +20,10 @@ ExpPtr Variable::evaluation(Environment*& env) const
 
 PatPtr Variable::pattern() const
 {
-    return std::make_shared<PatternVariable>(name);
+    return make_ptr<PatternVariable>(name);
 }
 
-bool Variable::match(const ExpPtr& other,
+bool Variable::match(ExpPtrArg other,
                      Environment* env) const
 {
     auto variable = std::dynamic_pointer_cast<Variable>(other);

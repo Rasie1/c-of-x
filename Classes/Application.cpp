@@ -14,8 +14,8 @@ Application::Application()
 {
 }
 
-ExpPtr Application::operate(const ExpPtr& first,
-                            const ExpPtr& second,
+ExpPtr Application::operate(ExpPtrArg first,
+                            ExpPtrArg second,
                             Environment*& env) const
 {
     auto function = first->eval(env);
@@ -33,7 +33,7 @@ std::string Application::toString() const
 
 PatPtr Application::pattern() const
 {
-    return std::make_shared<PatternOperator>(
+    return make_ptr<PatternOperator>(
                 name,
                 std::static_pointer_cast<Operator>(
                     std::const_pointer_cast<Expression>(
@@ -47,8 +47,8 @@ bool Application::unwind(ExpPtr& left,
                          Environment*& env)
 {
     lvalue = left;
-    rvalue = std::make_shared<Operation>(
-                std::make_shared<ClosureOperator>(),
+    rvalue = make_ptr<Operation>(
+                make_ptr<ClosureOperator>(),
                 right,
                 rvalue);
     return true;

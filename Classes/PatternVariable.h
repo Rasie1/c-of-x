@@ -10,7 +10,7 @@ public:
     PatternVariable(const std::string& name)
         : name(name) {}
 
-    bool match(const ExpPtr& other,
+    bool match(ExpPtrArg other,
                Environment* env) const override;
     std::string toString() const override;
 

@@ -7,10 +7,10 @@ namespace Language
 class PatternApplication : public Pattern
 {
 public:
-    PatternApplication(const PatPtr& body,
-                       const PatPtr& argument);
+    PatternApplication(PatPtrArg body,
+                       PatPtrArg argument);
 
-    bool match(const ExpPtr& other,
+    bool match(ExpPtrArg other,
                Environment* env) const override;
     std::string toString() const override;
 

@@ -10,8 +10,8 @@ Pair::Pair()
 
 }
 
-ExpPtr Pair::operate(const ExpPtr& first,
-                     const ExpPtr& second,
+ExpPtr Pair::operate(ExpPtrArg first,
+                     ExpPtrArg second,
                      Environment*& env) const
 {
     first->eval(env);

@@ -9,7 +9,7 @@ class Print : public Expression
 public:
     Print() {}
 
-    ExpPtr apply(const ExpPtr& e,
+    ExpPtr apply(ExpPtrArg e,
                  Environment*& env) const override;
     virtual std::string toString() const;
     static const std::string defaultName;
@@ -20,7 +20,7 @@ class Show : public Expression
 public:
     Show() {}
 
-    ExpPtr apply(const ExpPtr& e,
+    ExpPtr apply(ExpPtrArg e,
                  Environment*& env) const override;
     virtual std::string toString() const;
     static const std::string defaultName;
@@ -29,7 +29,7 @@ public:
 class PrintPattern : public Expression
 {
 public:
-    ExpPtr apply(const ExpPtr& e,
+    ExpPtr apply(ExpPtrArg e,
                  Environment*& env) const override;
     std::string toString() const override;
     static const std::string defaultName;

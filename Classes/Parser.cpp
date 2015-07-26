@@ -22,6 +22,7 @@ using namespace std;
 namespace Language
 {
 
+
 ExpPtr Parser::parse(const string& s, Environment* env)
 {
     size_t i = 0;
@@ -95,10 +96,10 @@ ExpPtr Parser::parseName(const std::string& s,
         }
         catch (std::exception&)
         {
-            return std::make_shared<ParseError>();
+            return make_ptr<ParseError>();
         }
 
-        return std::make_shared<Integer>(stoll(ss));
+        return make_ptr<Integer>(stoll(ss));
     }
     if (isNameCharacter(s[start]))
     {
@@ -110,13 +111,13 @@ ExpPtr Parser::parseName(const std::string& s,
             */
         //auto op = new PatternOperator(
 
-        return std::make_shared<Variable>(ss);
+        return make_ptr<Variable>(ss);
     }
     if (isOperatorCharacter(s[start]))
     {
         auto ss = s.substr(start, end - start);
 
-        return std::make_shared<Variable>(ss);
+        return make_ptr<Variable>(ss);
     }
 }
 
@@ -148,30 +149,30 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
         if (evalForce)
             q.push_back(right->eval(env));
         else
-            q.push_back(std::make_shared<Operation>(op, left, right));
+            q.push_back(make_ptr<Operation>(op, left, right));
     }
     else
     {
         // Unary operator case
-        auto body = std::make_shared<Operation>(
+        auto body = make_ptr<Operation>(
                     op,
                     right,
-                    std::make_shared<Integer>(0)); // should get type
+                    make_ptr<Integer>(0)); // should get type
         q.push_back(body); //and take default value of the type
 
         /*
         // if it's operator and one expression
         auto variableName = "snd";
-        auto body = std::make_shared<Operation>(
+        auto body = make_ptr<Operation>(
                     op,
-                    std::make_shared<Variable>(variableName),
+                    make_ptr<Variable>(variableName),
                     right);
-        auto lambdaApp = std::make_shared<Operation>(
-                    std::make_shared<Application>(),
-                    std::make_shared<Lambda>(),
-                    std::make_shared<Variable>(variableName));
-        auto lambda = std::make_shared<Operation>(
-                    std::make_shared<Application>(),
+        auto lambdaApp = make_ptr<Operation>(
+                    make_ptr<Application>(),
+                    make_ptr<Lambda>(),
+                    make_ptr<Variable>(variableName));
+        auto lambda = make_ptr<Operation>(
+                    make_ptr<Application>(),
                     lambdaApp,
                     body);
         q.push_back(lambda);*/
@@ -228,11 +229,11 @@ ExpPtr Parser::parse(const std::string& s,
                     ++i;
                 auto ss = s.substr(start + 1, i - start - 1);
                 ++i;
-                e = std::make_shared<String>(ss);
+                e = make_ptr<String>(ss);
             }
 
             /* SHUNTING-YARD
-             * f token = name     => q.push token
+             * f token : name     => q.push token
              *         | function => s.push token
              *         | operator => 1. while s.top is operator
              *                       && (token is left  associative
@@ -259,7 +260,7 @@ ExpPtr Parser::parse(const std::string& s,
                 q.push_back(e);
                 if (applicationFlag)
                 {
-                    operatorStack.push(std::make_shared<Application>());
+                    operatorStack.push(make_ptr<Application>());
                     makeOperation(operatorStack, q, env);
                 }
 
@@ -274,7 +275,7 @@ ExpPtr Parser::parse(const std::string& s,
     if (!q.empty())
         ret = q.front();
     if (!ret)
-        ret = std::make_shared<Void>();
+        ret = make_ptr<Void>();
 
     return ret;
 }
@@ -294,6 +295,23 @@ ExpPtr Parser::parseFile(const std::string& filename, Environment* env)
                         (std::istreambuf_iterator<char>()   ));
     auto newEnv = env;
     return Parser::parse(content, env)->eval(newEnv);
+}
+
+std::vector<Parser::Token> Parser::split(const std::string& s,
+                                         Environment* env)
+{
+    std::vector<Token> ret;
+
+    bool parsingName = false;
+    bool applicationFlag = false;
+    auto currentNameStart = s.begin();
+    for (auto c = s.begin(); c != s.end(); c++)
+    {
+        if (shouldSkipCharacter(*c))
+        {
+            continue;
+        }
+    }
 }
 
 }

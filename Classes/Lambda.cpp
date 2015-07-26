@@ -12,7 +12,7 @@
 namespace Language
 {
 
-ExpPtr Lambda::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr Lambda::apply(ExpPtrArg e, Environment*& env) const
 {
     return e->pattern();
 }
@@ -25,15 +25,15 @@ std::string Lambda::toString() const
 const std::string Lambda::defaultName = "\\";
 
 
-LambdaArguments::LambdaArguments(const ExpPtr& argument)
+LambdaArguments::LambdaArguments(ExpPtrArg argument)
     : pattern(argument)
 {
 
 }
 
-ExpPtr LambdaArguments::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr LambdaArguments::apply(ExpPtrArg e, Environment*& env) const
 {
-    auto ret = std::make_shared<Closure>(std::make_shared<Function>(e, pattern),
+    auto ret = make_ptr<Closure>(make_ptr<Function>(e, pattern),
                                          env, 1);
     return ret;
 }
@@ -45,7 +45,7 @@ std::string LambdaArguments::toString() const
 
 ExpPtr Lambda::construct(ExpPtr arg, ExpPtr body, Environment* env)
 {
-    return std::make_shared<Closure>(std::make_shared<Function>(body,
+    return make_ptr<Closure>(make_ptr<Function>(body,
                                                                 arg),
                                      env, 1);
 }
@@ -55,16 +55,16 @@ ClosureOperator::ClosureOperator()
 {
 }
 
-ExpPtr ClosureOperator::operate(const ExpPtr& first,
-                                const ExpPtr& second,
+ExpPtr ClosureOperator::operate(ExpPtrArg first,
+                                ExpPtrArg second,
                                 Environment*& env) const
 {
     return Lambda::construct(first,
                              second,
                              env);
-    //auto fun = std::make_shared<Function>(second,
+    //auto fun = make_ptr<Function>(second,
     //                                      std::static_pointer_cast<Pattern>(first));
-    //return std::make_shared<Closure>(fun, env);
+    //return make_ptr<Closure>(fun, env);
 }
 
 std::string ClosureOperator::toString() const

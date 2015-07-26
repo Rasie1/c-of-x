@@ -8,7 +8,7 @@ Pattern::Pattern()
 
 }
 
-bool Pattern::match(const ExpPtr& other,
+bool Pattern::match(ExpPtrArg other,
                     Environment* env) const
 {
     return false;
@@ -29,7 +29,7 @@ std::string Pattern::toString() const
 }
 
 
-ExpPtr ReturnPattern::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr ReturnPattern::apply(ExpPtrArg e, Environment*& env) const
 {
     return e->pattern();
 }

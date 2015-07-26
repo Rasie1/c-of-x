@@ -6,7 +6,7 @@
 namespace Language
 {
 
-ExpPtr Include::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
 {
     auto str = std::dynamic_pointer_cast<String>(e);
     auto newEnv = env;

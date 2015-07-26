@@ -10,7 +10,7 @@ class Lambda : public Expression
 public:
     Lambda() {}
 
-    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string toString() const override;
     static const std::string defaultName;
 
@@ -23,9 +23,9 @@ class Pattern;
 class LambdaArguments : public Expression
 {
 public:
-    LambdaArguments(const ExpPtr& argument);
+    LambdaArguments(ExpPtrArg argument);
 
-    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string toString() const override;
 
     ExpPtr pattern;
@@ -36,8 +36,8 @@ class ClosureOperator : public Operator
 public:
     ClosureOperator();
 
-    ExpPtr operate(const ExpPtr& first,
-                   const ExpPtr& second,
+    ExpPtr operate(ExpPtrArg first,
+                   ExpPtrArg second,
                    Environment*& env) const override;
 
     virtual bool unwind(ExpPtr& left,

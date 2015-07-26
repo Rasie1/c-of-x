@@ -6,8 +6,8 @@ namespace Language
 {
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
-                     const ExpPtr& left,
-                     const ExpPtr& right)
+                     ExpPtrArg left,
+                     ExpPtrArg right)
     : op(op),
       left(left),
       right(right)
@@ -31,7 +31,7 @@ ExpPtr Operation::evaluation(Environment*& env) const
 
 PatPtr Operation::pattern() const
 {
-    return std::make_shared<PatternOperation>(op->pattern(),
+    return make_ptr<PatternOperation>(op->pattern(),
                                               left->pattern(),
                                               right->pattern());
 }

@@ -1,23 +1,22 @@
 #pragma once
 #include <string>
 #include <memory>
+#include "Expression.h"
 
 namespace Language
 {
 
 class Expression;
 class Pattern;
-typedef std::shared_ptr<Expression> ExpPtr;
-typedef std::shared_ptr<Pattern>    PatPtr;
 class Environment;
 
 class EnvironmentalVariable
 {
 public:
-    EnvironmentalVariable(const ExpPtr& pattern, const ExpPtr& value);
+    EnvironmentalVariable(ExpPtrArg pattern, ExpPtrArg value);
     ~EnvironmentalVariable();
 
-    bool match(const ExpPtr& other,
+    bool match(ExpPtrArg other,
                Environment* env) const;
     ExpPtr get();
     ExpPtr getPattern() const;

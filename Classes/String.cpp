@@ -19,7 +19,7 @@ std::string String::toString() const
 
 PatPtr String::pattern() const
 {
-    return std::make_shared<PatternVariable>(toString());
+    return make_ptr<PatternVariable>(toString());
 }
 
 }

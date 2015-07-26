@@ -11,17 +11,17 @@ Multiplication::Multiplication()
 
 }
 
-ExpPtr Multiplication::operate(const ExpPtr& first,
-                               const ExpPtr& second,
+ExpPtr Multiplication::operate(ExpPtrArg first,
+                               ExpPtrArg second,
                                Environment*& env) const
 {
     auto firstInteger  = std::dynamic_pointer_cast<Integer>(first ->eval(env));
     auto secondInteger = std::dynamic_pointer_cast<Integer>(second->eval(env));
 
     if (firstInteger && secondInteger)
-        return std::make_shared<Integer>(firstInteger->value *
+        return make_ptr<Integer>(firstInteger->value *
                                          secondInteger->value);
-    return std::make_shared<Operation>(std::make_shared<Multiplication>(),
+    return make_ptr<Operation>(make_ptr<Multiplication>(),
                                        first,
                                        second);
 }

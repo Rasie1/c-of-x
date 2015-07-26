@@ -32,22 +32,22 @@ ExpPtr Expression::evaluation(Environment*& env) const
     return std::const_pointer_cast<Expression>(shared_from_this());
 }
 
-ExpPtr Expression::apply(const ExpPtr& e,
+ExpPtr Expression::apply(ExpPtrArg e,
                          Environment*& env) const
 {
-    return std::make_shared<Operation>(std::make_shared<Application>(),
+    return make_ptr<Operation>(make_ptr<Application>(),
                                        std::const_pointer_cast<Expression>(shared_from_this()),
                                        e);
 }
 
-bool Expression::match(const ExpPtr& other, Environment* env) const
+bool Expression::match(ExpPtrArg other, Environment* env) const
 {
     return false;
 }
 
 PatPtr Expression::pattern() const
 {
-    return std::make_shared<Pattern>();
+    return make_ptr<Pattern>();
 }
 
 bool Expression::isOperator(Environment* env) const

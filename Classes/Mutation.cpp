@@ -8,8 +8,8 @@
 namespace Language
 {
 
-ExpPtr Mutation::operate(const ExpPtr& first,
-                               const ExpPtr& second,
+ExpPtr Mutation::operate(ExpPtrArg first,
+                               ExpPtrArg second,
                                Environment*& env) const
 {
     throw std::logic_error("Mutate is still in TODO state");

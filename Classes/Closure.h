@@ -14,7 +14,7 @@ public:
             int envSize = 0);
     ~Closure();
 
-    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string toString() const override;
 
 private:

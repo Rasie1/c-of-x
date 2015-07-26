@@ -4,7 +4,7 @@
 namespace Language
 {
 
-EnvironmentalVariable::EnvironmentalVariable(const ExpPtr&  pattern, const ExpPtr& value)
+EnvironmentalVariable::EnvironmentalVariable(ExpPtrArg  pattern, ExpPtrArg value)
     : pattern(pattern),
       value(value)
 {}
@@ -14,7 +14,7 @@ EnvironmentalVariable::~EnvironmentalVariable()
     //delete value; // deletes when assignment is deleted
 }
 
-bool EnvironmentalVariable::match(const ExpPtr& other,
+bool EnvironmentalVariable::match(ExpPtrArg other,
                                   Environment* env) const
 {
     return other->match(pattern, env);

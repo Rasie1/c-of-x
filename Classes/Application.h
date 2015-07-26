@@ -9,8 +9,8 @@ class Application : public Operator
 public:
     Application();
 
-    ExpPtr operate(const ExpPtr& first,
-                   const ExpPtr& second,
+    ExpPtr operate(ExpPtrArg first,
+                   ExpPtrArg second,
                    Environment*& env) const override;
     PatPtr pattern() const override;
 

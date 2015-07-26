@@ -9,7 +9,7 @@ class EvalForce : public Expression
 public:
     EvalForce() {}
 
-    ExpPtr apply(const ExpPtr& e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     virtual std::string toString() const;
     static const std::string defaultName;
 };

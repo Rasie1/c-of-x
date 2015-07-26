@@ -24,7 +24,7 @@ bool Operator::isOperator(Environment* env) const
 
 PatPtr Operator::pattern() const
 {
-    return std::make_shared<PatternOperator>(
+    return make_ptr<PatternOperator>(
                 name,
                 std::static_pointer_cast<Operator>(
                     std::const_pointer_cast<Expression>(
@@ -42,7 +42,7 @@ bool Operator::unwind(ExpPtr& left,
 
 //MakeOperator
 
-ExpPtr MakeOperator::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr MakeOperator::apply(ExpPtrArg e, Environment*& env) const
 {
     return nullptr;
 }
@@ -56,7 +56,7 @@ const std::string MakeOperator::defaultName = "operator";
 
 //OperatorOperator
 
-ExpPtr OperatorOperator::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr OperatorOperator::apply(ExpPtrArg e, Environment*& env) const
 {
     return nullptr;
 }

@@ -7,8 +7,8 @@ namespace Language
 class Mutation : public Operator
 {
 public:
-    ExpPtr operate(const ExpPtr&  first,
-                   const ExpPtr&  second,
+    ExpPtr operate(ExpPtrArg  first,
+                   ExpPtrArg  second,
                    Environment*& env) const override;
 
     std::string toString() const override;

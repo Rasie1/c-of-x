@@ -2,6 +2,7 @@
 #include <string>
 #include <stack>
 #include <memory>
+#include <vector>
 
 namespace Language
 {
@@ -27,6 +28,14 @@ private:
                             size_t i,
                             size_t n,
                             Environment* env);
+    struct Token
+    {
+        std::string name;
+        bool attachedToL = false;
+        bool attachedToR = false;
+    };
+    static std::vector<Token> split(const std::string& s,
+                                    Environment* env);
 };
 
 }

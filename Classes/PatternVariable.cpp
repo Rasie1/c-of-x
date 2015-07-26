@@ -6,7 +6,7 @@
 namespace Language
 {
 
-bool PatternVariable::match(const ExpPtr& other,
+bool PatternVariable::match(ExpPtrArg other,
                             Environment* env) const
 {
 

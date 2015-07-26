@@ -9,8 +9,8 @@ class Operation : public Expression
 {
 public:
     Operation(const std::shared_ptr<Operator>& op,
-              const ExpPtr& left,
-              const ExpPtr& right);
+              ExpPtrArg left,
+              ExpPtrArg right);
     ~Operation();
 
     ExpPtr evaluation(Environment*& env) const override;
