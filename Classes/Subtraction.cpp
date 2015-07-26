@@ -15,8 +15,8 @@ ExpPtr Subtraction::operate(ExpPtrArg first,
                             ExpPtrArg second,
                             Environment*& env) const
 {
-    auto firstInteger  = std::dynamic_pointer_cast<Integer>(first ->eval(env));
-    auto secondInteger = std::dynamic_pointer_cast<Integer>(second->eval(env));
+    auto firstInteger  = d_cast<Integer>(first ->eval(env));
+    auto secondInteger = d_cast<Integer>(second->eval(env));
 
     if (firstInteger && secondInteger)
         return make_ptr<Integer>(firstInteger->value -

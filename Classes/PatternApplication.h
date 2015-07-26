@@ -10,8 +10,7 @@ public:
     PatternApplication(PatPtrArg body,
                        PatPtrArg argument);
 
-    bool match(ExpPtrArg other,
-               Environment* env) const override;
+    bool match(ExpPtrArg other) const override;
     std::string toString() const override;
 
     PatPtr body;

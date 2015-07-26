@@ -26,7 +26,7 @@ PatPtr Operator::pattern() const
 {
     return make_ptr<PatternOperator>(
                 name,
-                std::static_pointer_cast<Operator>(
+                s_cast<Operator>(
                     std::const_pointer_cast<Expression>(
                         shared_from_this())));
 }

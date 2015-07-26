@@ -8,8 +8,7 @@ Pattern::Pattern()
 
 }
 
-bool Pattern::match(ExpPtrArg other,
-                    Environment* env) const
+bool Pattern::match(ExpPtrArg other) const
 {
     return false;
 }
@@ -18,7 +17,7 @@ PatPtr Pattern::pattern() const
 {
     return Expression::pattern();
     //auto e = std:: const_pointer_cast<Expression>(shared_from_this());
-    //auto p = std::static_pointer_cast<Pattern>(e);
+    //auto p = s_cast<Pattern>(e);
     //return p;
 }
 

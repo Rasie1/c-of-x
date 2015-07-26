@@ -18,6 +18,7 @@
 #include "Print.h"
 #include "Application.h"
 #include "Variable.h"
+#include "String.h"
 
 #include "EvalDelay.h"
 #include "EvalForce.h"
@@ -32,12 +33,17 @@ namespace Language
 
 
 
-/*
+
 class MatchChain : public Expression,
                    private std::vector<ExpPtr>
 {
     typedef std::vector<ExpPtr> Container;
 public:
+    ExpPtr apply(ExpPtrArg e, Environment*& env) const override
+    {
+        return find(e);
+    }
+
     void add(ExpPtrArg exp)
     {
         push_back(exp);
@@ -46,17 +52,20 @@ public:
     {
         for (auto i = rbegin(); i != rend(); ++i)
         {
-            if (i->match(pat))
+            if (!d_cast<String>(i->match(pat)))
                 return *i;
         }
-        return nullptr;
+        return make_ptr<String>("!No Match!");
     }
+
+    std::string toString() const override { return defaultName; }
+    static const std::string defaultName = "match_chain";
 private:
     using Container::push_back;
     using Container::rbegin;
     using Container::rend;
 };
-*/
+
 
 
 
@@ -174,8 +183,8 @@ bool Environment::compareOperators(ExpPtrArg first,
     std::shared_ptr<Operator> firstOperator, secondOperator;
     //std::shared_ptr<Variable> firstOperator, secondOperator;
     auto env = this;
-    firstOperator  = std::dynamic_pointer_cast<Operator>(first->eval(env));
-    secondOperator = std::dynamic_pointer_cast<Operator>(second->eval(env));
+    firstOperator  = d_cast<Operator>(first->eval(env));
+    secondOperator = d_cast<Operator>(second->eval(env));
 
     if (firstOperator)
     {
@@ -205,7 +214,7 @@ ExpPtr Environment::lookup(const std::string& name)
 {
     return nullptr;
 //    auto exp   = variables.at(name);
-//    auto chain = std::static_pointer_cast<MatchChain>(chain);
+//    auto chain = s_cast<MatchChain>(chain);
 //    auto match = chain.match(exp);
 
 //    return match;

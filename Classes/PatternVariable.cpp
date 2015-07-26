@@ -6,14 +6,13 @@
 namespace Language
 {
 
-bool PatternVariable::match(ExpPtrArg other,
-                            Environment* env) const
+bool PatternVariable::match(ExpPtrArg other) const
 {
 
-    //auto y = std::dynamic_pointer_cast<PatternVariable>(other);
+    //auto y = d_cast<PatternVariable>(other);
     //if (y)
     //    return y->name == name;
-    //auto x = std::dynamic_pointer_cast<PatternOperator>(other);
+    //auto x = d_cast<PatternOperator>(other);
     //if (x)
     //    return x->name == name;
     return true;

@@ -13,13 +13,12 @@ PatternApplication::PatternApplication(PatPtrArg body,
 
 }
 
-bool PatternApplication::match(ExpPtrArg other,
-                               Environment* env) const
+bool PatternApplication::match(ExpPtrArg other) const
 {
-    auto x = std::dynamic_pointer_cast<PatternApplication>(other);
+    auto x = d_cast<PatternApplication>(other);
     if (x)
         return false;
-    return body->match(x->body, env);
+    return body->match(x->body);
 }
 
 std::string PatternApplication::toString() const

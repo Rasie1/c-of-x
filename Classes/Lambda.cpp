@@ -34,7 +34,7 @@ LambdaArguments::LambdaArguments(ExpPtrArg argument)
 ExpPtr LambdaArguments::apply(ExpPtrArg e, Environment*& env) const
 {
     auto ret = make_ptr<Closure>(make_ptr<Function>(e, pattern),
-                                         env, 1);
+                                 env, 1);
     return ret;
 }
 
@@ -46,8 +46,8 @@ std::string LambdaArguments::toString() const
 ExpPtr Lambda::construct(ExpPtr arg, ExpPtr body, Environment* env)
 {
     return make_ptr<Closure>(make_ptr<Function>(body,
-                                                                arg),
-                                     env, 1);
+                                                arg),
+                             env, 1);
 }
 
 ClosureOperator::ClosureOperator()
@@ -63,7 +63,7 @@ ExpPtr ClosureOperator::operate(ExpPtrArg first,
                              second,
                              env);
     //auto fun = make_ptr<Function>(second,
-    //                                      std::static_pointer_cast<Pattern>(first));
+    //                                      s_cast<Pattern>(first));
     //return make_ptr<Closure>(fun, env);
 }
 

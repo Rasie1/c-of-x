@@ -11,8 +11,7 @@ public:
     PatternOperator(const std::string& name,
                     const std::shared_ptr<Operator>& op);
 
-    bool match(ExpPtrArg other,
-               Environment* env) const override;
+    bool match(ExpPtrArg other) const override;
     bool isOperator(Environment* env) const override;
     bool isMoreThan(const std::shared_ptr<PatternOperator>& other,
                     Environment* env) const;
@@ -30,8 +29,7 @@ public:
                      PatPtrArg left,
                      PatPtrArg right);
 
-    bool match(ExpPtrArg other,
-               Environment* env) const override;
+    bool match(ExpPtrArg other) const override;
     std::string toString() const override;
 
     PatPtr op;

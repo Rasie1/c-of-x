@@ -12,15 +12,14 @@ PatternPredicate::PatternPredicate(Expression* predicate)
 
 }
 
-bool PatternPredicate::match(ExpPtrArg other,
-                             Environment* env) const
+bool PatternPredicate::match(ExpPtrArg other) const
 {
-    auto argument = env->get(other);
+    /*auto argument = env->get(other);
     auto newEnv = env;
     auto result  = predicate->apply(argument, newEnv);
-    auto integer = std::dynamic_pointer_cast<Integer>(result);
+    auto integer = d_cast<Integer>(result);
     if (integer)
-        return integer->value != 0;
+        return integer->value != 0;*/
 
     return false;
 }

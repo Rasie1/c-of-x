@@ -29,7 +29,7 @@ public:
     virtual ExpPtr apply(ExpPtrArg e,
                          Environment*& env) const;
     virtual PatPtr pattern() const;
-    virtual bool match(ExpPtrArg other, Environment* env) const;
+    virtual bool match(ExpPtrArg other) const;
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env);
@@ -38,7 +38,6 @@ public:
     virtual bool hasNonOpVariable(Environment* env) const;
     virtual void getAllVariables(
             std::vector<VarPtr>& variables);
-protected:
 };
 
 typedef Expression::ExpPtr ExpPtr;
@@ -49,9 +48,21 @@ typedef Expression::PatPtr PatPtrArg;
 typedef Expression::VarPtr VarPtrArg;
 template <class T, class... Args>
 constexpr auto make_ptr(Args&&... args)
--> decltype(std::make_shared<T>(std::forward<Args>(args)...))
+ -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
 {
     return std::make_shared<T>(std::forward<Args>(args)...);
+}
+template <class T, class... Args>
+constexpr auto s_cast(Args&&... args)
+ -> decltype(std::static_pointer_cast<T>(std::forward<Args>(args)...))
+{
+    return std::static_pointer_cast<T>(std::forward<Args>(args)...);
+}
+template <class T, class... Args>
+constexpr auto d_cast(Args&&... args)
+ -> decltype(std::dynamic_pointer_cast<T>(std::forward<Args>(args)...))
+{
+    return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
 }
 
 

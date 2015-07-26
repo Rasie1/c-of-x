@@ -130,7 +130,7 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
     ExpPtr top = operatorStack.top();
     //Operator* op = (Operator*)(top);
     std::shared_ptr<Operator> op =
-            std::dynamic_pointer_cast<Operator>(top->eval(env)); // eval in parser?!
+            d_cast<Operator>(top->eval(env)); // eval in parser?!
     operatorStack.pop();
 
     right = q.back();
@@ -141,7 +141,7 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
         q.pop_back();
 
         // "Preprocessor" handling (#)
-        auto variable = std::dynamic_pointer_cast<Variable>(left);
+        auto variable = d_cast<Variable>(left);
         bool evalForce = false;
         if (variable)
             evalForce = variable->name == "#";

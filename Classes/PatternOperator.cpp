@@ -13,13 +13,12 @@ PatternOperator::PatternOperator(const std::string& name,
 
 }
 
-bool PatternOperator::match(ExpPtrArg other,
-                            Environment* env) const
+bool PatternOperator::match(ExpPtrArg other) const
 {
-    auto y = std::dynamic_pointer_cast<PatternVariable>(other);
+    auto y = d_cast<PatternVariable>(other);
     if (y)
         return y->name == name;
-    auto x = std::dynamic_pointer_cast<PatternOperator>(other);
+    auto x = d_cast<PatternOperator>(other);
     if (x)
         return x->name == name;
     return false;
@@ -53,17 +52,16 @@ PatternOperation::PatternOperation(PatPtrArg op,
 
 }
 
-bool PatternOperation::match(ExpPtrArg other,
-                             Environment* env) const
+bool PatternOperation::match(ExpPtrArg other) const
 {
-    auto x = std::dynamic_pointer_cast<PatternOperation>(other);
+    auto x = d_cast<PatternOperation>(other);
     if (!x)
         return false;
-    if (!op->match(x->op, env))
+    if (!op->match(x->op))
         return false;
-    if (!left->match(x->left, env))
+    if (!left->match(x->left))
         return false;
-    if (!right->match(x->right, env))
+    if (!right->match(x->right))
         return false;
     return true;
 }

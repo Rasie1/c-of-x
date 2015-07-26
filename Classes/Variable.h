@@ -13,7 +13,7 @@ public:
 
     ExpPtr evaluation(Environment*& env) const override;
     PatPtr pattern() const override;
-    bool match(ExpPtrArg other, Environment* env) const;
+    bool match(ExpPtrArg other) const;
     bool isOperator(Environment* env) const override;
     std::string toString() const override;
 

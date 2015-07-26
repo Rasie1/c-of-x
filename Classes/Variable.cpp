@@ -23,10 +23,9 @@ PatPtr Variable::pattern() const
     return make_ptr<PatternVariable>(name);
 }
 
-bool Variable::match(ExpPtrArg other,
-                     Environment* env) const
+bool Variable::match(ExpPtrArg other) const
 {
-    auto variable = std::dynamic_pointer_cast<Variable>(other);
+    auto variable = d_cast<Variable>(other);
     if (variable)
         return name == variable->name;
 
@@ -68,7 +67,7 @@ void Variable::getAllVariables(
         std::vector<std::shared_ptr<Variable>>& variables)
 {
     variables.push_back(
-                std::static_pointer_cast<Variable>(shared_from_this()));
+                s_cast<Variable>(shared_from_this()));
 }
 
 }

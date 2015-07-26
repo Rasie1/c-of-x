@@ -17,7 +17,7 @@ EnvironmentalVariable::~EnvironmentalVariable()
 bool EnvironmentalVariable::match(ExpPtrArg other,
                                   Environment* env) const
 {
-    return other->match(pattern, env);
+    return other->match(pattern);
 }
 
 ExpPtr EnvironmentalVariable::get()

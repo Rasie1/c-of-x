@@ -40,7 +40,7 @@ ExpPtr Expression::apply(ExpPtrArg e,
                                        e);
 }
 
-bool Expression::match(ExpPtrArg other, Environment* env) const
+bool Expression::match(ExpPtrArg other) const
 {
     return false;
 }

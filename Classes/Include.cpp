@@ -8,7 +8,7 @@ namespace Language
 
 ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
 {
-    auto str = std::dynamic_pointer_cast<String>(e);
+    auto str = d_cast<String>(e);
     auto newEnv = env;
     if (str == nullptr)
         return Expression::apply(e, newEnv);
