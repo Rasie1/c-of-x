@@ -15,6 +15,17 @@ public:
     static const std::string defaultName;
 };
 
+class Show : public Expression
+{
+public:
+    Show() {}
+
+    ExpPtr apply(const ExpPtr& e,
+                 Environment*& env) const override;
+    virtual std::string toString() const;
+    static const std::string defaultName;
+};
+
 class PrintPattern : public Expression
 {
 public:

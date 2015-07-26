@@ -19,7 +19,7 @@ ExpPtr Application::operate(const ExpPtr& first,
                             Environment*& env) const
 {
     auto function = first->eval(env);
-    auto argument = second->eval(env);
+    auto argument = second;//->eval(env);
     DEBUG_PRINT_EV(function);
     auto ret = function->apply(argument, env);
 

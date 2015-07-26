@@ -19,7 +19,7 @@ ExpPtr Assignment::operate(const ExpPtr& first,
                            Environment*& env) const
 {
 
-    ExpPtr rvalue = second->eval(env);
+    ExpPtr rvalue = second;//->eval(env);
     ExpPtr lvalue = first;
     while (lvalue->unwind(lvalue, rvalue, env));
     env = env->add(lvalue, rvalue->eval(env));

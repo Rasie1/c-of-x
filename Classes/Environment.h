@@ -54,4 +54,5 @@ private:
                        std::map<double, double>> table;
 };
 */
+
 }

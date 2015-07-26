@@ -17,6 +17,7 @@ public:
 
     ExpPtr body;
     ExpPtr argument;
+    std::string name;
 };
 
 }

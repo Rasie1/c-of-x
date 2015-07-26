@@ -22,6 +22,20 @@ std::string Print::toString() const
 const std::string Print::defaultName = "print";
 
 
+ExpPtr Show::apply(const ExpPtr& e, Environment*& env) const
+{
+    std::cout << e->toString() << std::endl;
+    return e->eval(env);
+}
+
+std::string Show::toString() const
+{
+    return defaultName;
+}
+
+const std::string Show::defaultName = "show";
+
+
 
 ExpPtr PrintPattern::apply(const ExpPtr& e, Environment*& env) const
 {

@@ -41,4 +41,9 @@ protected:
 typedef Expression::ExpPtr ExpPtr;
 typedef Expression::PatPtr PatPtr;
 
+//class Set : public Expression
+//{
+
+//};
+
 }

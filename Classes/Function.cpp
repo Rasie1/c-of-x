@@ -22,7 +22,8 @@ Function::~Function()
 {
 }
 
-ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
+ExpPtr Function::apply(const ExpPtr& e,
+                       Environment*& env) const
 {
     /*auto newEnv1 = env;
     auto newEnv2 = env->add(argument,
@@ -37,6 +38,8 @@ ExpPtr Function::apply(const ExpPtr& e, Environment*& env) const
         std::cout << x->toString() << std::endl;
         newEnv1 = newEnv1->add(x, e);
     }
+//    newEnv1->add(std::const_pointer_cast<Expression>(shared_from_this()),
+//                 std::make_shared<PatternVariable>(this->name));
     return body->eval(newEnv1);
 }
 

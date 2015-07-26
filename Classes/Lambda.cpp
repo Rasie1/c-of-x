@@ -51,7 +51,7 @@ ExpPtr Lambda::construct(ExpPtr arg, ExpPtr body, Environment* env)
 }
 
 ClosureOperator::ClosureOperator()
-    : Operator(false, 9)
+    : Operator(true, 9)
 {
 }
 
