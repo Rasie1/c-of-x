@@ -1,3 +1,5 @@
+Update: Now, the project is stopped. I have some new ideas that doesn't match with this, so, sooner or later I'll present some more.
+
 # c(x)
 
 This is a in-development prototype for c(x) (or c-of-x) functional programming language that can work as extension to C.
