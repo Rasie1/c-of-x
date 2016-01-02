@@ -34,7 +34,7 @@ namespace Language
 
 
 
-class MatchChain : public Expression,
+/*class MatchChain : public Expression,
                    private std::vector<ExpPtr>
 {
     typedef std::vector<ExpPtr> Container;
@@ -59,7 +59,7 @@ public:
     }
 
     std::string toString() const override { return defaultName; }
-    static const std::string defaultName = "match_chain";
+    static const std::string defaultName;
 private:
     using Container::push_back;
     using Container::rbegin;
@@ -67,7 +67,7 @@ private:
 };
 
 
-
+const std::string MatchChain::defaultName = "match_chain";*/
 
 
 
