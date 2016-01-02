@@ -15,7 +15,7 @@ public:
     PatPtr pattern() const override;
     bool match(ExpPtrArg other) const;
     bool isOperator(Environment* env) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,

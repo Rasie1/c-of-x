@@ -24,9 +24,9 @@ bool PatternPredicate::match(ExpPtrArg other) const
     return false;
 }
 
-std::string PatternPredicate::toString() const
+std::string PatternPredicate::show() const
 {
-    return "(" + predicate->toString() + ") ?";
+    return "(" + predicate->show() + ") ?";
 }
 
 }

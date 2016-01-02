@@ -58,7 +58,7 @@ public:
         return make_ptr<String>("!No Match!");
     }
 
-    std::string toString() const override { return defaultName; }
+    std::string show() const override { return defaultName; }
     static const std::string defaultName;
 private:
     using Container::push_back;

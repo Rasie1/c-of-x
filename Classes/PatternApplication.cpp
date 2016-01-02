@@ -21,9 +21,9 @@ bool PatternApplication::match(ExpPtrArg other) const
     return body->match(x->body);
 }
 
-std::string PatternApplication::toString() const
+std::string PatternApplication::show() const
 {
-    return "(" + body->toString() + " " + argument->toString() + ")";
+    return "(" + body->show() + " " + argument->show() + ")";
 }
 
 }

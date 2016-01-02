@@ -29,9 +29,9 @@ bool PatternOperator::isOperator(Environment* env) const
     return true;
 }
 
-std::string PatternOperator::toString() const
+std::string PatternOperator::show() const
 {
-    return op->toString();
+    return op->show();
 }
 
 bool PatternOperator::isMoreThan(const std::shared_ptr<PatternOperator>& other,
@@ -66,11 +66,11 @@ bool PatternOperation::match(ExpPtrArg other) const
     return true;
 }
 
-std::string PatternOperation::toString() const
+std::string PatternOperation::show() const
 {
-    return "(" + left->toString() + " " +
-            op->toString()
-            + " " + right->toString() + ")";
+    return "(" + left->show() + " " +
+            op->show()
+            + " " + right->show() + ")";
 }
 
 }

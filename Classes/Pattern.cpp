@@ -22,7 +22,7 @@ PatPtr Pattern::pattern() const
 }
 
 
-std::string Pattern::toString() const
+std::string Pattern::show() const
 {
     return "unknownpattern";
 }
@@ -33,7 +33,7 @@ ExpPtr ReturnPattern::apply(ExpPtrArg e, Environment*& env) const
     return e->pattern();
 }
 
-std::string ReturnPattern::toString() const
+std::string ReturnPattern::show() const
 {
     return defaultName;
 }

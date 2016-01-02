@@ -9,7 +9,7 @@ ExpPtr EvalDelay::apply(ExpPtrArg e, Environment*& env) const
     return e;
 }
 
-std::string EvalDelay::toString() const
+std::string EvalDelay::show() const
 {
     return defaultName;
 }

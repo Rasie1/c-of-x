@@ -11,7 +11,7 @@ public:
     Lambda() {}
 
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
     static const std::string defaultName;
 
     // Convenience function for fast lambda creation in C++
@@ -26,7 +26,7 @@ public:
     LambdaArguments(ExpPtrArg argument);
 
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
     ExpPtr pattern;
 };
@@ -46,7 +46,7 @@ public:
                         ExpPtr& rvalue,
                         Environment*& env) override;
 
-    std::string toString() const override;
+    std::string show() const override;
 
     static const std::string defaultName;
 private:

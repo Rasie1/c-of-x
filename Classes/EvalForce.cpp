@@ -9,7 +9,7 @@ ExpPtr EvalForce::apply(ExpPtrArg e, Environment*& env) const
     return e->eval(env)->eval(env);
 }
 
-std::string EvalForce::toString() const
+std::string EvalForce::show() const
 {
     return defaultName;
 }

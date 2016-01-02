@@ -24,7 +24,7 @@ bool PatternVariable::match(ExpPtrArg other) const
 }
 
 
-std::string PatternVariable::toString() const
+std::string PatternVariable::show() const
 {
     return "auto " + name;
 }

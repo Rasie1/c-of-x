@@ -29,7 +29,7 @@ ExpPtr Addition::operate(ExpPtrArg first,
                                        second);
 }
 
-std::string Addition::toString() const
+std::string Addition::show() const
 {
     return Addition::defaultName;
 }

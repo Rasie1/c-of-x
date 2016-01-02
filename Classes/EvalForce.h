@@ -10,7 +10,7 @@ public:
     EvalForce() {}
 
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    virtual std::string toString() const;
+    virtual std::string show() const;
     static const std::string defaultName;
 };
 

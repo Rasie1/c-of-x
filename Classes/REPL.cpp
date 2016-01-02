@@ -39,10 +39,10 @@ void REPL::start()
                 continue;
             }
 
-            //cout << expression->toString() << " =" << endl;
+            //cout << expression->show() << " =" << endl;
             DEBUG_LINEBREAK;
             auto evaluated = expression->eval(env);
-            cout << evaluated->toString() << endl;
+            cout << evaluated->show() << endl;
             DEBUG_LINEBREAK;
         }
     }

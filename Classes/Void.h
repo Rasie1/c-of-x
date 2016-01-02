@@ -7,7 +7,7 @@ namespace Language
 class Void : public Expression
 {
 public:
-    virtual std::string toString() const;
+    virtual std::string show() const;
     static const std::string defaultName;
 };
 

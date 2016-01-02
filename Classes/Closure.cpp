@@ -30,19 +30,19 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
                            const_cast<Closure*>(this)->env);
 }
 
-std::string Closure::toString() const
+std::string Closure::show() const
 {
     std::string ret = "[";
     auto top = env;
     for (int i = 0; i < envSize; ++i)
     {
-        ret +=top->top().first->toString()
+        ret +=top->top().first->show()
             + std::string(" = ")
-            + top->top().second->toString()
+            + top->top().second->show()
             + std::string(";");
         top = top->getNext();
     }
-    return ret + std::string("]") + function->toString();
+    return ret + std::string("]") + function->show();
 }
 
 }

@@ -36,12 +36,12 @@ PatPtr Operation::pattern() const
                                               right->pattern());
 }
 
-std::string Operation::toString() const
+std::string Operation::show() const
 {
     return "(" +
-            left->toString() +
-            " " + op->toString() + " " +
-            right->toString() +
+            left->show() +
+            " " + op->show() + " " +
+            right->show() +
             ")";
 }
 

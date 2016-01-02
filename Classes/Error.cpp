@@ -3,7 +3,7 @@
 namespace Language
 {
 
-std::string Error::toString() const
+std::string Error::show() const
 {
     return "Unknown error";
 }

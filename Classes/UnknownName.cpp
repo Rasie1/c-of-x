@@ -9,7 +9,7 @@ PatPtr UnknownName::pattern() const
     return make_ptr<PatternVariable>(name);
 }
 
-std::string UnknownName::toString() const
+std::string UnknownName::show() const
 {
     return "UnknownName(" + name + ")";
 }

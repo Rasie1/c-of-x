@@ -15,7 +15,7 @@ public:
     ~Closure();
 
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
 private:
     std::shared_ptr<Function> function;

@@ -11,7 +11,7 @@ public:
                        PatPtrArg argument);
 
     bool match(ExpPtrArg other) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
     PatPtr body;
     PatPtr argument;

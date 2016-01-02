@@ -9,7 +9,7 @@ bool PatternWildcard::match(ExpPtrArg other) const
 }
 
 
-std::string PatternWildcard::toString() const
+std::string PatternWildcard::show() const
 {
     return "_";
 }

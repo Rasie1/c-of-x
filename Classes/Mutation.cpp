@@ -19,7 +19,7 @@ ExpPtr Mutation::operate(ExpPtrArg first,
     return second;
 }
 
-std::string Mutation::toString() const
+std::string Mutation::show() const
 {
     return Mutation::defaultName;
 }

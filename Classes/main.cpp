@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        std::cout << Language::Parser::parseFile(argv[1])->toString();
+        std::cout << Language::Parser::parseFile(argv[1])->show();
     }
 
     return 0;

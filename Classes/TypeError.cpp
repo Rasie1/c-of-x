@@ -8,7 +8,7 @@ Expression* TypeError::evalConstEnv(Environment* env)
     return this;
 }
 
-std::string TypeError::toString() const
+std::string TypeError::show() const
 {
     return "Type Error";
 }

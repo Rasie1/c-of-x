@@ -26,7 +26,7 @@ ExpPtr Multiplication::operate(ExpPtrArg first,
                                        second);
 }
 
-std::string Multiplication::toString() const
+std::string Multiplication::show() const
 {
     return Multiplication::defaultName;
 }

@@ -18,7 +18,7 @@ ExpPtr Pair::operate(ExpPtrArg first,
     return second->eval(env);
 }
 
-std::string Pair::toString() const
+std::string Pair::show() const
 {
     return Pair::defaultName;
 }

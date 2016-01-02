@@ -16,7 +16,7 @@ public:
     bool isMoreThan(const std::shared_ptr<PatternOperator>& other,
                     Environment* env) const;
 
-    std::string toString() const override;
+    std::string show() const override;
 
     std::string name;
     std::shared_ptr<Operator> op;
@@ -30,7 +30,7 @@ public:
                      PatPtrArg right);
 
     bool match(ExpPtrArg other) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
     PatPtr op;
     PatPtr left;

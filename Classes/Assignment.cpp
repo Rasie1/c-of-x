@@ -27,7 +27,7 @@ ExpPtr Assignment::operate(ExpPtrArg first,
     return second;
 }
 
-std::string Assignment::toString() const
+std::string Assignment::show() const
 {
     return Assignment::defaultName;
 }

@@ -12,7 +12,7 @@ Operator::Operator(bool isRightAssociative, int priority)
 {
 }
 
-std::string Operator::toString() const
+std::string Operator::show() const
 {
     return "op";
 }
@@ -47,7 +47,7 @@ ExpPtr MakeOperator::apply(ExpPtrArg e, Environment*& env) const
     return nullptr;
 }
 
-std::string MakeOperator::toString() const
+std::string MakeOperator::show() const
 {
     return defaultName;
 }
@@ -61,7 +61,7 @@ ExpPtr OperatorOperator::apply(ExpPtrArg e, Environment*& env) const
     return nullptr;
 }
 
-std::string OperatorOperator::toString() const
+std::string OperatorOperator::show() const
 {
     return static_cast<std::string>("operator{") + "variable" + "}";
 }

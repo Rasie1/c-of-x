@@ -35,7 +35,7 @@ ExpPtr Function::apply(ExpPtrArg e,
     auto newEnv1 = env;
     for (auto x : argumentVariables)
     {
-        //std::cout << x->toString() << std::endl;
+        //std::cout << x->show() << std::endl;
         newEnv1 = newEnv1->add(x, e);
     }
 //    newEnv1->add(std::const_pointer_cast<Expression>(shared_from_this()),
@@ -52,9 +52,9 @@ ExpPtr Function::evaluation(Environment*& env) const
                 env);
 }
 
-std::string Function::toString() const
+std::string Function::show() const
 {
-    return "(" + argument->toString() + "){" + body->toString() + "}";
+    return "(" + argument->show() + "){" + body->show() + "}";
 }
 
 }

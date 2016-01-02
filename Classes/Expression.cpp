@@ -55,7 +55,7 @@ bool Expression::isOperator(Environment* env) const
     return false;
 }
 
-std::string Expression::toString() const
+std::string Expression::show() const
 {
     return "expr";
 }

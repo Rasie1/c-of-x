@@ -11,7 +11,7 @@ public:
 
     ExpPtr apply(ExpPtrArg e,
                  Environment*& env) const override;
-    virtual std::string toString() const;
+    virtual std::string show() const;
     static const std::string defaultName;
 };
 
@@ -22,7 +22,7 @@ public:
 
     ExpPtr apply(ExpPtrArg e,
                  Environment*& env) const override;
-    virtual std::string toString() const;
+    virtual std::string show() const;
     static const std::string defaultName;
 };
 
@@ -31,7 +31,7 @@ class PrintPattern : public Expression
 public:
     ExpPtr apply(ExpPtrArg e,
                  Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
     static const std::string defaultName;
 };
 

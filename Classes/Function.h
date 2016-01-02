@@ -13,7 +13,7 @@ public:
 
     ExpPtr evaluation(Environment*& env) const override;
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
     ExpPtr body;
     ExpPtr argument;

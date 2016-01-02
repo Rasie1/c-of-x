@@ -18,7 +18,7 @@ ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
     return Parser::parseFile(filename, env);
 }
 
-std::string Include::toString() const
+std::string Include::show() const
 {
     return defaultName;
 }

@@ -26,7 +26,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     return ret;
 }
 
-std::string Application::toString() const
+std::string Application::show() const
 {
     return "";
 }

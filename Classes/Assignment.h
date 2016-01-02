@@ -13,7 +13,7 @@ public:
                    ExpPtrArg  second,
                    Environment*& env) const override;
 
-    std::string toString() const override;
+    std::string show() const override;
 
     static const std::string defaultName;
 };

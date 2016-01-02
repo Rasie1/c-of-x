@@ -17,7 +17,7 @@ ExpPtr Lambda::apply(ExpPtrArg e, Environment*& env) const
     return e->pattern();
 }
 
-std::string Lambda::toString() const
+std::string Lambda::show() const
 {
     return defaultName;
 }
@@ -38,9 +38,9 @@ ExpPtr LambdaArguments::apply(ExpPtrArg e, Environment*& env) const
     return ret;
 }
 
-std::string LambdaArguments::toString() const
+std::string LambdaArguments::show() const
 {
-    return "\u03BB(" + pattern->toString() + ")";
+    return "\u03BB(" + pattern->show() + ")";
 }
 
 ExpPtr Lambda::construct(ExpPtr arg, ExpPtr body, Environment* env)
@@ -67,7 +67,7 @@ ExpPtr ClosureOperator::operate(ExpPtrArg first,
     //return make_ptr<Closure>(fun, env);
 }
 
-std::string ClosureOperator::toString() const
+std::string ClosureOperator::show() const
 {
     return ".";
 }

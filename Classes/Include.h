@@ -8,7 +8,7 @@ class Include : public Expression
 {
 public:
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
     static const std::string defaultName;
 };
 

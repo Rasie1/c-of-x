@@ -41,7 +41,7 @@ bool Variable::isOperator(Environment* env) const
         return false;
 }
 
-std::string Variable::toString() const
+std::string Variable::show() const
 {
     return "$" + name;
 }

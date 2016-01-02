@@ -11,7 +11,7 @@ String::String(const std::string& value)
 
 }
 
-std::string String::toString() const
+std::string String::show() const
 {
     return "\"" + value + "\"";
 }
@@ -19,7 +19,7 @@ std::string String::toString() const
 
 PatPtr String::pattern() const
 {
-    return make_ptr<PatternVariable>(toString());
+    return make_ptr<PatternVariable>(show());
 }
 
 }

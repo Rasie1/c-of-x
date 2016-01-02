@@ -12,7 +12,7 @@ Integer::Integer(long long value)
 
 }
 
-std::string Integer::toString() const
+std::string Integer::show() const
 {
     return std::to_string(value);
 }
@@ -21,7 +21,7 @@ std::string Integer::toString() const
 PatPtr Integer::pattern() const
 {
     // Wrong, I think it should return "(== value)?"
-    return make_ptr<PatternVariable>(toString()); //patternValue
+    return make_ptr<PatternVariable>(show()); //patternValue
 }
 
 }

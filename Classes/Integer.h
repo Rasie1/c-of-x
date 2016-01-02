@@ -12,7 +12,7 @@ public:
     Integer(long long value = 0);
 
     PatPtr pattern() const override;
-    std::string toString() const override;
+    std::string show() const override;
 
 
     long long value;

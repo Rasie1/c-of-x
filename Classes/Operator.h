@@ -26,7 +26,7 @@ public:
                         ExpPtr& rvalue,
                         Environment*& env);
 
-    virtual std::string toString() const;
+    virtual std::string show() const;
 private:
 };
 /*
@@ -39,14 +39,14 @@ public:
                    ExpPtrArg second,
                    Environment*& env) const override;
 
-    std::string toString() const override;
+    std::string show() const override;
 };*/
 
 class MakeOperator : public Expression
 {
 public:
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
     static const std::string defaultName;
 };
 
@@ -54,7 +54,7 @@ class OperatorOperator : public Expression
 {
 public:
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string toString() const override;
+    std::string show() const override;
 
 
 };

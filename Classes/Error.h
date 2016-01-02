@@ -10,7 +10,7 @@ class Error : public Expression
 public:
     Error() {}
 
-    virtual std::string toString() const override;
+    virtual std::string show() const override;
 };
 
 }

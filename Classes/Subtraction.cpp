@@ -26,7 +26,7 @@ ExpPtr Subtraction::operate(ExpPtrArg first,
                                        second);
 }
 
-std::string Subtraction::toString() const
+std::string Subtraction::show() const
 {
     return Subtraction::defaultName;
 }

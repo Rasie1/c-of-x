@@ -3,7 +3,7 @@
 namespace Language
 {
 
-std::string Void::toString() const
+std::string Void::show() const
 {
     return defaultName;
 }

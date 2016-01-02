@@ -13,7 +13,7 @@ public:
 
     PatPtr pattern() const override;
 
-    std::string toString() const override;
+    std::string show() const override;
 
     std::string name;
 };

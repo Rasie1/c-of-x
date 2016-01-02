@@ -12,7 +12,7 @@ public:
 
     Expression* evalConstEnv(Environment* env);
 
-    std::string toString() const override;
+    std::string show() const override;
 };
 
 }

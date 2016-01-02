@@ -10,11 +10,11 @@ ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
 {
     //auto newEnv = env;
     //auto evaluated = e->eval(newEnv);
-    std::cout << e->toString() << std::endl;
+    std::cout << e->show() << std::endl;
     return e->eval(env);
 }
 
-std::string Print::toString() const
+std::string Print::show() const
 {
     return defaultName;
 }
@@ -24,11 +24,11 @@ const std::string Print::defaultName = "print";
 
 ExpPtr Show::apply(ExpPtrArg e, Environment*& env) const
 {
-    std::cout << e->toString() << std::endl;
+    std::cout << e->show() << std::endl;
     return e->eval(env);
 }
 
-std::string Show::toString() const
+std::string Show::show() const
 {
     return defaultName;
 }
@@ -39,13 +39,13 @@ const std::string Show::defaultName = "show";
 
 ExpPtr PrintPattern::apply(ExpPtrArg e, Environment*& env) const
 {
-    std::cout << e->pattern()->toString() << std::endl;
+    std::cout << e->pattern()->show() << std::endl;
 
     auto newEnv = env;
     return e->eval(newEnv);
 }
 
-std::string PrintPattern::toString() const
+std::string PrintPattern::show() const
 {
     return defaultName;
 }
