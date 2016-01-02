@@ -6,7 +6,6 @@
 Integer::Integer(long long value)
     : value(value)
 {
-
 }
 
 std::string Integer::show() const

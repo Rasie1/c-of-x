@@ -12,7 +12,9 @@ ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
 
     auto filename = str->value;
 
-    return Parser::parseFile(filename, env);
+    Parser parser;
+
+    return parser.parseFile(filename, env);
 }
 
 std::string Include::show() const

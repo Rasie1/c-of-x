@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <stack>
 #include <memory>
 #include <vector>
 
@@ -12,26 +11,26 @@ class Environment;
 class Parser
 {
 public:
-    static ExpPtr parse(const std::string& s, Environment* env);
-    static ExpPtr parseFile(const std::string& filename);
-    static ExpPtr parseFile(const std::string& filename,
-                            Environment* env);
+    ExpPtr parse(const std::string& s, Environment* env);
+    ExpPtr parseFile(const std::string& filename);
+    ExpPtr parseFile(const std::string& filename,
+                     Environment* env);
 private:
-    static ExpPtr parse(const std::string& s,
-                        size_t& i,
-                        size_t n,
-                        Environment* env);
-    static ExpPtr parseName(const std::string& s,
-                            size_t i,
-                            size_t n,
-                            Environment* env);
+    ExpPtr parse(const std::string& s,
+                 size_t& i,
+                 size_t n,
+                 Environment* env);
+    ExpPtr parseName(const std::string& s,
+                     size_t i,
+                     size_t n,
+                     Environment* env);
     struct Token
     {
         std::string name;
         bool attachedToL = false;
         bool attachedToR = false;
     };
-    static std::vector<Token> split(const std::string& s,
-                                    Environment* env);
+    std::vector<Token> split(const std::string& s,
+                             Environment* env);
 };
 
