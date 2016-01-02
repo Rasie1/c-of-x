@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class Print : public Expression
 {
 public:
@@ -34,6 +31,3 @@ public:
     std::string show() const override;
     static const std::string defaultName;
 };
-
-
-}

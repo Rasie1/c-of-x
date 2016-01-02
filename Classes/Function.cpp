@@ -8,9 +8,6 @@
 #include <string>
 #include <iostream>
 
-namespace Language
-{
-
 Function::Function(ExpPtrArg body,
                    ExpPtrArg argument)
     : body(body),
@@ -55,6 +52,4 @@ ExpPtr Function::evaluation(Environment*& env) const
 std::string Function::show() const
 {
     return "(" + argument->show() + "){" + body->show() + "}";
-}
-
 }

@@ -5,9 +5,6 @@
 #include "Pattern.h"
 #include <string>
 
-namespace Language
-{
-
 Closure::Closure(const std::shared_ptr<Function>& function,
                  Environment* env,
                  int envSize)
@@ -43,6 +40,4 @@ std::string Closure::show() const
         top = top->getNext();
     }
     return ret + std::string("]") + function->show();
-}
-
 }

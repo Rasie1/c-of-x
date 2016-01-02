@@ -3,9 +3,6 @@
 #include "Integer.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 PatternPredicate::PatternPredicate(Expression* predicate)
     : predicate(predicate)
 {
@@ -29,4 +26,3 @@ std::string PatternPredicate::show() const
     return "(" + predicate->show() + ") ?";
 }
 
-}

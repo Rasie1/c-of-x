@@ -5,9 +5,6 @@
 #include <string>
 #include <list>
 
-namespace Language
-{
-
 ExpPtr Variable::evaluation(Environment*& env) const
 {
     auto ret = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
@@ -68,6 +65,4 @@ void Variable::getAllVariables(
 {
     variables.push_back(
                 s_cast<Variable>(shared_from_this()));
-}
-
 }

@@ -6,9 +6,6 @@
 #include "Operation.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 Expression::Expression()
 {
 
@@ -75,8 +72,4 @@ bool Expression::hasNonOpVariable(Environment* env) const
 void Expression::getAllVariables(
         std::vector<std::shared_ptr<Variable>>& variables)
 {
-}
-
-
-
 }

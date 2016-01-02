@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class EvalForce : public Expression
 {
 public:
@@ -14,4 +11,3 @@ public:
     static const std::string defaultName;
 };
 
-}

@@ -19,9 +19,6 @@
 #include "Lambda.h"
 
 using namespace std;
-namespace Language
-{
-
 
 ExpPtr Parser::parse(const string& s, Environment* env)
 {
@@ -312,6 +309,4 @@ std::vector<Parser::Token> Parser::split(const std::string& s,
             continue;
         }
     }
-}
-
 }

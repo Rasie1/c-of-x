@@ -2,9 +2,6 @@
 #include <string>
 #include "Operation.h"
 
-namespace Language
-{
-
 Multiplication::Multiplication()
     : Operator(false, 7)
 {
@@ -33,4 +30,3 @@ std::string Multiplication::show() const
 
 const std::string Multiplication::defaultName = "*";
 
-}

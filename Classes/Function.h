@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class Function : public Expression
 {
 public:
@@ -19,5 +16,3 @@ public:
     ExpPtr argument;
     std::string name;
 };
-
-}

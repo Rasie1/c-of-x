@@ -5,9 +5,6 @@
 #include "Subtraction.h"
 #include "Variable.h"
 
-namespace Language
-{
-
 Addition::Addition()
     : Operator(false, 5)
 {
@@ -64,7 +61,4 @@ bool Addition::unwind(ExpPtr& left,
         return true;
     }
     return false;
-}
-
-
 }

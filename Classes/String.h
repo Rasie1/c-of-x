@@ -2,9 +2,6 @@
 #include "BaseType.h"
 #include <string>
 
-namespace Language
-{
-
 class AdditionOfValue;
 
 class String : public BaseType
@@ -18,5 +15,3 @@ public:
 
     std::string value;
 };
-
-}

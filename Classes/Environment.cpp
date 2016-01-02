@@ -25,14 +25,6 @@
 
 #include <vector>
 
-namespace Language
-{
-
-
-
-
-
-
 
 /*class MatchChain : public Expression,
                    private std::vector<ExpPtr>
@@ -236,4 +228,3 @@ void PrecedenceTable::remove(PrecedenceInfo* op)
 
 }*/
 
-}

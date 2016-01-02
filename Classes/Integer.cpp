@@ -3,9 +3,6 @@
 #include <algorithm>
 #include "PatternVariable.h"
 
-namespace Language
-{
-
 Integer::Integer(long long value)
     : value(value)
 {
@@ -22,6 +19,4 @@ PatPtr Integer::pattern() const
 {
     // Wrong, I think it should return "(== value)?"
     return make_ptr<PatternVariable>(show()); //patternValue
-}
-
 }

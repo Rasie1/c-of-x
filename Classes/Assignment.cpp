@@ -5,9 +5,6 @@
 #include "Operation.h"
 #include "Lambda.h"
 
-namespace Language
-{
-
 Assignment::Assignment()
     : Operator(true, 2)
 {
@@ -33,5 +30,3 @@ std::string Assignment::show() const
 }
 
 const std::string Assignment::defaultName = "=";
-
-}

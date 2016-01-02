@@ -1,9 +1,6 @@
 #include "EnvironmentalVariable.h"
 #include "Pattern.h"
 
-namespace Language
-{
-
 EnvironmentalVariable::EnvironmentalVariable(ExpPtrArg  pattern, ExpPtrArg value)
     : pattern(pattern),
       value(value)
@@ -28,6 +25,4 @@ ExpPtr EnvironmentalVariable::get()
 ExpPtr EnvironmentalVariable::getPattern() const
 {
     return pattern;
-}
-
 }

@@ -2,9 +2,6 @@
 #include "Function.h"
 #include "Operator.h"
 
-namespace Language
-{
-
 class Pair : public Operator
 {
 public:
@@ -18,4 +15,3 @@ public:
     static const std::string defaultName;
 };
 
-}

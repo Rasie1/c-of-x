@@ -1,9 +1,6 @@
 #pragma once
 #include "Operator.h"
 
-namespace Language
-{
-
 class Addition : public Operator
 {
 public:
@@ -22,5 +19,3 @@ public:
 
     static const std::string defaultName;
 };
-
-}

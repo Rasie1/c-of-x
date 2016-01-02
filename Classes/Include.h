@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class Include : public Expression
 {
 public:
@@ -12,4 +9,3 @@ public:
     static const std::string defaultName;
 };
 
-}

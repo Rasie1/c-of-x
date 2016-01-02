@@ -1,9 +1,6 @@
 #pragma once
 #include "Operator.h"
 
-namespace Language
-{
-
 class Assignment : public Operator
 {
 public:
@@ -17,5 +14,3 @@ public:
 
     static const std::string defaultName;
 };
-
-}

@@ -3,9 +3,6 @@
 #include <memory>
 #include "Expression.h"
 
-namespace Language
-{
-
 class Expression;
 class Pattern;
 class Environment;
@@ -25,5 +22,3 @@ private:
     ExpPtr pattern;
     ExpPtr value;
 };
-
-}

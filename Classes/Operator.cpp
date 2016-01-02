@@ -2,9 +2,6 @@
 #include "PatternOperator.h"
 #include <string>
 
-namespace Language
-{
-
 Operator::Operator(bool isRightAssociative, int priority)
     : isRightAssociative(isRightAssociative),
       priority(priority),
@@ -64,6 +61,4 @@ ExpPtr OperatorOperator::apply(ExpPtrArg e, Environment*& env) const
 std::string OperatorOperator::show() const
 {
     return static_cast<std::string>("operator{") + "variable" + "}";
-}
-
 }

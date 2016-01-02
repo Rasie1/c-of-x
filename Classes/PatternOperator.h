@@ -1,9 +1,6 @@
 #pragma once
 #include "Pattern.h"
 
-namespace Language
-{
-
 class Operator;
 class PatternOperator : public Pattern
 {
@@ -37,4 +34,3 @@ public:
     PatPtr right;
 };
 
-}

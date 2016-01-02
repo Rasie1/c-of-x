@@ -5,9 +5,6 @@
 #include <memory>
 #include "Expression.h"
 
-namespace Language
-{
-
 class EnvironmentalVariable;
 class PrecedenceTable;
 class PrecedenceInfo;
@@ -59,4 +56,3 @@ private:
 };
 */
 
-}

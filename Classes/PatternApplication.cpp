@@ -2,9 +2,6 @@
 #include "Application.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 PatternApplication::PatternApplication(PatPtrArg body,
                                        PatPtrArg argument)
     : argument(argument),
@@ -26,4 +23,3 @@ std::string PatternApplication::show() const
     return "(" + body->show() + " " + argument->show() + ")";
 }
 
-}

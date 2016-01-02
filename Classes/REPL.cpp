@@ -7,9 +7,6 @@
 
 using namespace std;
 
-namespace Language
-{
-
 void REPL::start()
 {
     env = Environment::create();
@@ -75,6 +72,4 @@ bool REPL::command(const std::string& s)
         displayHelp();
     else
         return 0;
-}
-
 }

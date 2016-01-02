@@ -2,9 +2,6 @@
 #include "Error.h"
 #include <string>
 
-namespace Language
-{
-
 class TypeError : public Error
 {
 public:
@@ -14,5 +11,3 @@ public:
 
     std::string show() const override;
 };
-
-}

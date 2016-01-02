@@ -2,9 +2,6 @@
 #include <exception>
 #include <string>
 
-namespace Language
-{
-
 struct ExceptionParseError : public std::exception
 {
     ExceptionParseError(const std::string& s)
@@ -13,4 +10,3 @@ struct ExceptionParseError : public std::exception
     std::string s;
 };
 
-}

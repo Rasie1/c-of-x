@@ -2,9 +2,6 @@
 #include "Expression.h"
 #include "Operator.h"
 
-namespace Language
-{
-
 class Lambda : public Expression
 {
 public:
@@ -52,5 +49,3 @@ public:
 private:
     Environment* environment;
 };
-
-}

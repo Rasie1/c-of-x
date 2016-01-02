@@ -3,9 +3,6 @@
 #include "Operation.h"
 #include "Addition.h"
 
-namespace Language
-{
-
 Subtraction::Subtraction()
     : Operator(false, 5)
 {
@@ -62,7 +59,4 @@ bool Subtraction::unwind(ExpPtr& left,
         return true;
     }
     return false;
-}
-
-
 }

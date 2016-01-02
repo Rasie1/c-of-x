@@ -6,9 +6,6 @@
 #include "Lambda.h"
 #include "Operation.h"
 
-namespace Language
-{
-
 Application::Application()
     : Operator(false, 10)
 {
@@ -52,6 +49,4 @@ bool Application::unwind(ExpPtr& left,
                 right,
                 rvalue);
     return true;
-}
-
 }

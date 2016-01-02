@@ -1,9 +1,6 @@
 #pragma once
 #include "Pattern.h"
 
-namespace Language
-{
-
 class PatternPredicate : public Pattern
 {
     PatternPredicate(Expression* predicate);
@@ -13,5 +10,3 @@ class PatternPredicate : public Pattern
 
     Expression* predicate;
 };
-
-}

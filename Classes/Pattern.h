@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class Pattern : public Expression
 {
 public:
@@ -23,4 +20,3 @@ public:
     static const std::string defaultName;
 };
 
-}

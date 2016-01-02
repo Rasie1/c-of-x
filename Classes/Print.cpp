@@ -3,9 +3,6 @@
 #include "Pattern.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
 {
     //auto newEnv = env;
@@ -51,6 +48,3 @@ std::string PrintPattern::show() const
 }
 
 const std::string PrintPattern::defaultName = "printPattern";
-
-
-}

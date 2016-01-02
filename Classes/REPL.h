@@ -2,9 +2,6 @@
 #include "Environment.h"
 #include "Parser.h"
 
-namespace Language
-{
-
 class REPL
 {
 public:
@@ -17,4 +14,3 @@ private:
     bool shouldExit(const std::string& s);
 };
 
-}

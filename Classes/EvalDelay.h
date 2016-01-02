@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class EvalDelay : public Expression
 {
 public:
@@ -13,5 +10,3 @@ public:
     virtual std::string show() const;
     static const std::string defaultName;
 };
-
-}

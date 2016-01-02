@@ -2,8 +2,6 @@
 #include "Operator.h"
 #include "PatternOperator.h"
 
-namespace Language
-{
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
                      ExpPtrArg left,
@@ -66,6 +64,4 @@ void Operation::getAllVariables(
 {
     left->getAllVariables(variables);
     right->getAllVariables(variables);
-}
-
 }

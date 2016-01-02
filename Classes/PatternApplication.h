@@ -1,9 +1,6 @@
 #pragma once
 #include "Pattern.h"
 
-namespace Language
-{
-
 class PatternApplication : public Pattern
 {
 public:
@@ -16,5 +13,3 @@ public:
     PatPtr body;
     PatPtr argument;
 };
-
-}

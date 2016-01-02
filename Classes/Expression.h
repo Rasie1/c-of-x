@@ -4,9 +4,6 @@
 #include <vector>
 #include "DebugHelpers.h"
 
-namespace Language
-{
-
 class Environment;
 class Pattern;
 class Variable;
@@ -70,5 +67,3 @@ constexpr auto d_cast(Args&&... args)
 //{
 
 //};
-
-}

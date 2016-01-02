@@ -3,9 +3,6 @@
 #include "Application.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 bool PatternVariable::match(ExpPtrArg other) const
 {
 
@@ -29,4 +26,3 @@ std::string PatternVariable::show() const
     return "auto " + name;
 }
 
-}

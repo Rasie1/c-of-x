@@ -1,9 +1,6 @@
 #include "Pair.h"
 #include "Operation.h"
 
-namespace Language
-{
-
 Pair::Pair()
     : Operator(true, 0)
 {
@@ -25,5 +22,3 @@ std::string Pair::show() const
 
 const std::string Pair::defaultName = ";";
 
-
-}

@@ -5,8 +5,6 @@
 #include <string>
 #include "Operation.h"
 
-namespace Language
-{
 
 ExpPtr Mutation::operate(ExpPtrArg first,
                                ExpPtrArg second,
@@ -24,6 +22,4 @@ std::string Mutation::show() const
     return Mutation::defaultName;
 }
 
-const std::string Mutation::defaultName = ":=";
-
-}
+const std::string Mutation::defaultName = "<-";

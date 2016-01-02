@@ -2,9 +2,6 @@
 #include "Expression.h"
 #include <string>
 
-namespace Language
-{
-
 class Error : public Expression
 {
 public:
@@ -13,4 +10,3 @@ public:
     virtual std::string show() const override;
 };
 
-}

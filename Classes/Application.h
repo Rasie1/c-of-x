@@ -1,9 +1,6 @@
 #pragma once
 #include "Operator.h"
 
-namespace Language
-{
-
 class Application : public Operator
 {
 public:
@@ -23,5 +20,3 @@ public:
     std::string show() const override;
 private:
 };
-
-}

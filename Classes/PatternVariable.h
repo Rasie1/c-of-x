@@ -1,9 +1,6 @@
 #pragma once
 #include "Pattern.h"
 
-namespace Language
-{
-
 class PatternVariable : public Pattern
 {
 public:
@@ -16,4 +13,3 @@ public:
     std::string name;
 };
 
-}

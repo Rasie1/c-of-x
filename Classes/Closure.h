@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class Function;
 class Environment;
 class Closure : public Expression
@@ -23,4 +20,3 @@ private:
     int envSize;
 };
 
-}

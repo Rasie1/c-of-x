@@ -1,9 +1,6 @@
 #pragma once
 #include "Operator.h"
 
-namespace Language
-{
-
 class Mutation : public Operator
 {
 public:
@@ -17,4 +14,3 @@ public:
 private:
 };
 
-}

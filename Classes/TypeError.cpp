@@ -1,8 +1,5 @@
 #include "TypeError.h"
 
-namespace Language
-{
-
 Expression* TypeError::evalConstEnv(Environment* env)
 {
     return this;
@@ -10,7 +7,5 @@ Expression* TypeError::evalConstEnv(Environment* env)
 
 std::string TypeError::show() const
 {
-    return "Type Error";
-}
-
+    return "Typing Error";
 }

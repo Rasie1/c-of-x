@@ -3,9 +3,6 @@
 #include "Integer.h"
 #include "Operator.h"
 
-namespace Language
-{
-
 class Subtraction : public Operator
 {
 public:
@@ -25,5 +22,3 @@ public:
 
     static const std::string defaultName;
 };
-
-}

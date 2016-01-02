@@ -2,9 +2,6 @@
 #include "PatternVariable.h"
 #include "Operator.h"
 
-namespace Language
-{
-
 PatternOperator::PatternOperator(const std::string& name,
                                  const std::shared_ptr<Operator>& op)
     : name(name),
@@ -71,6 +68,4 @@ std::string PatternOperation::show() const
     return "(" + left->show() + " " +
             op->show()
             + " " + right->show() + ")";
-}
-
 }

@@ -2,9 +2,6 @@
 #include "Expression.h"
 #include <string>
 
-namespace Language
-{
-
 class Variable : public Expression
 {
 public:
@@ -28,4 +25,3 @@ public:
     std::string name;
 };
 
-}

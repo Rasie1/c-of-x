@@ -1,8 +1,5 @@
 #include "Pattern.h"
 
-namespace Language
-{
-
 Pattern::Pattern()
 {
 
@@ -40,4 +37,3 @@ std::string ReturnPattern::show() const
 
 const std::string ReturnPattern::defaultName = "pattern";
 
-}

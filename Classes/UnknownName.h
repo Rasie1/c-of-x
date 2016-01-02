@@ -2,9 +2,6 @@
 #include "Error.h"
 #include <string>
 
-namespace Language
-{
-
 class UnknownName : public Expression
 {
 public:
@@ -17,5 +14,3 @@ public:
 
     std::string name;
 };
-
-}

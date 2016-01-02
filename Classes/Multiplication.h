@@ -3,9 +3,6 @@
 #include "Integer.h"
 #include "Operator.h"
 
-namespace Language
-{
-
 class Multiplication : public Operator
 {
 public:
@@ -20,4 +17,3 @@ public:
     static const std::string defaultName;
 };
 
-}

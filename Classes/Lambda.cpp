@@ -9,9 +9,6 @@
 #include "Application.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 ExpPtr Lambda::apply(ExpPtrArg e, Environment*& env) const
 {
     return e->pattern();
@@ -86,5 +83,3 @@ bool ClosureOperator::unwind(ExpPtr& left,
 }
 
 const std::string ClosureOperator::defaultName = ".";
-
-}

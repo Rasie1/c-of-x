@@ -4,9 +4,6 @@
 #include <memory>
 #include <vector>
 
-namespace Language
-{
-
 class Expression;
 class Pattern;
 typedef std::shared_ptr<Expression> ExpPtr;
@@ -38,4 +35,3 @@ private:
                                     Environment* env);
 };
 
-}

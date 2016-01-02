@@ -3,9 +3,6 @@
 #include "Parser.h"
 #include "Environment.h"
 
-namespace Language
-{
-
 ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
 {
     auto str = d_cast<String>(e);
@@ -25,4 +22,3 @@ std::string Include::show() const
 
 const std::string Include::defaultName = "include";
 
-}

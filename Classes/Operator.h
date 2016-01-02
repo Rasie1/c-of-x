@@ -1,9 +1,6 @@
 #pragma once
 #include "Expression.h"
 
-namespace Language
-{
-
 class Operator : public Expression
 {
 public:
@@ -58,6 +55,3 @@ public:
 
 
 };
-
-
-}
