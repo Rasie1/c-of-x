@@ -6,8 +6,8 @@ class Environment;
 class Closure : public Function
 {
 public:
-    Closure(ExpPtrArg body,
-            ExpPtrArg arg,
+    Closure(ExpPtrArg argument,
+            ExpPtrArg body,
             Environment* env,
             int envSize = 0);
     ~Closure();

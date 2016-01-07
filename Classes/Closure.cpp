@@ -5,12 +5,12 @@
 #include "Error.h"
 #include "Variable.h"
 
-Closure::Closure(ExpPtrArg body,
-                 ExpPtrArg arg,
+Closure::Closure(ExpPtrArg argument,
+                 ExpPtrArg body,
                  Environment* env,
                  int envSize)
     : body(body),
-      argument(arg),
+      argument(argument),
       env(env),
       envSize(envSize)
 {
@@ -24,6 +24,7 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
+    std::cout << "...ARG: " + argument->show() << std::endl;
     auto variable = d_cast<Variable>(argument);
 
     if (!variable)
