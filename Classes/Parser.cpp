@@ -221,7 +221,11 @@ ExpPtr Parser::parse(const std::string& s,
                 ++i;
                 e = make_ptr<String>(ss);
             }
-
+            else
+            {
+                e = make_ptr<ParseError>("Unable to parse expression");
+                return e;
+            }
             /* SHUNTING-YARD
              * f token = name     => q.push token
              *         | function => s.push token
