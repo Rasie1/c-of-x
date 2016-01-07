@@ -26,32 +26,4 @@ public:
     virtual std::string show() const;
 private:
 };
-/*
-class CustomOperator : public Operator
-{
-public:
-    CustomOperator(Expression* function);
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
-                   Environment*& env) const override;
-
-    std::string show() const override;
-};*/
-
-class MakeOperator : public Expression
-{
-public:
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string show() const override;
-    static const std::string defaultName;
-};
-
-class OperatorOperator : public Expression
-{
-public:
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string show() const override;
-
-
-};

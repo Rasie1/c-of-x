@@ -36,29 +36,3 @@ bool Operator::unwind(ExpPtr& left,
 {
     return false;
 }
-
-//MakeOperator
-
-ExpPtr MakeOperator::apply(ExpPtrArg e, Environment*& env) const
-{
-    return nullptr;
-}
-
-std::string MakeOperator::show() const
-{
-    return defaultName;
-}
-
-const std::string MakeOperator::defaultName = "operator";
-
-//OperatorOperator
-
-ExpPtr OperatorOperator::apply(ExpPtrArg e, Environment*& env) const
-{
-    return nullptr;
-}
-
-std::string OperatorOperator::show() const
-{
-    return static_cast<std::string>("operator{") + "variable" + "}";
-}

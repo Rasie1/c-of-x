@@ -44,9 +44,9 @@ bool Application::unwind(ExpPtr& left,
                          Environment*& env)
 {
     lvalue = left;
-    rvalue = make_ptr<Operation>(
-                make_ptr<ClosureOperator>(),
-                right,
-                rvalue);
+    rvalue = make_ptr<Operation>(make_ptr<Lambda>(),
+                                 right,
+                                 rvalue);
     return true;
 }
+

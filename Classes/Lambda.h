@@ -2,36 +2,10 @@
 #include "Expression.h"
 #include "Operator.h"
 
-class Lambda : public Expression
+class Lambda : public Operator
 {
 public:
-    Lambda() {}
-
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string show() const override;
-    static const std::string defaultName;
-
-    // Convenience function for fast lambda creation in C++
-    static ExpPtr construct(ExpPtr arg, ExpPtr body, Environment* c);
-private:
-};
-
-class Pattern;
-class LambdaArguments : public Expression
-{
-public:
-    LambdaArguments(ExpPtrArg argument);
-
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-    std::string show() const override;
-
-    ExpPtr pattern;
-};
-
-class ClosureOperator : public Operator
-{
-public:
-    ClosureOperator();
+    Lambda();
 
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
@@ -47,5 +21,4 @@ public:
 
     static const std::string defaultName;
 private:
-    Environment* environment;
 };
