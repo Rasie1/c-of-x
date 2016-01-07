@@ -29,14 +29,9 @@ ExpPtr Function::apply(ExpPtrArg e,
 //    if (!evaluated->pattern()->match(e))
 //        return make_ptr<String>("!No Match!");
 
-    std::vector<VarPtr> argumentVariables;
-    argument->getAllVariables(argumentVariables);
+    auto variable = d_cast<Variable>(argument);
     auto newEnv1 = env;
-    for (auto x : argumentVariables)
-    {
-        //std::cout << x->show() << std::endl;
-        newEnv1 = newEnv1->add(x, e);
-    }
+    newEnv1 = newEnv1->add(variable, e);
 //    newEnv1->add(std::const_pointer_cast<Expression>(shared_from_this()),
 //                 make_ptr<PatternVariable>(this->name));
     return body->eval(newEnv1);

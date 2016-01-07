@@ -33,8 +33,6 @@ public:
     virtual bool isOperator(Environment* env) const;
     virtual std::string show() const;
     virtual bool hasNonOpVariable(Environment* env) const;
-    virtual void getAllVariables(
-            std::vector<VarPtr>& variables);
 };
 
 typedef Expression::ExpPtr ExpPtr;
