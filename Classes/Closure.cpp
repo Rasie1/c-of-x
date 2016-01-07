@@ -2,7 +2,6 @@
 #include <string>
 #include "Function.h"
 #include "Environment.h"
-#include "Pattern.h"
 #include "Error.h"
 #include "Variable.h"
 
@@ -51,9 +50,3 @@ std::string Closure::show() const
     }
     return ret + std::string("]") + "(" + argument->show() + "){" + body->show() + "}";
 }
-
-
-// std::string Function::show() const
-// {
-//     return "(" + argument->show() + "){" + body->show() + "}";
-// }

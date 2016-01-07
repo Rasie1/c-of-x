@@ -12,7 +12,6 @@ public:
             Environment*& env) const = 0;
 
     bool isOperator(Environment* env) const override;
-    PatPtr pattern() const override;
     bool isRightAssociative;
     int priority;
     const std::string name;

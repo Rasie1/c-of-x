@@ -14,7 +14,6 @@
 #include "String.h"
 #include "Operation.h"
 #include "Environment.h"
-#include "PatternOperator.h"
 #include "EvalForce.h"
 #include "Lambda.h"
 
@@ -101,12 +100,6 @@ ExpPtr Parser::parseName(const std::string& s,
     if (isNameCharacter(s[start]))
     {
         auto ss = s.substr(start, end - start);
-/*
-        auto variable = new Variable(ss);
-        auto e = env->get(variable->pattern());
-        if (e)
-            */
-        //auto op = new PatternOperator(
 
         return make_ptr<Variable>(ss);
     }

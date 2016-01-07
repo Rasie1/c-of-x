@@ -1,7 +1,6 @@
 #include "Expression.h"
 #include <stdexcept>
 #include "TypeError.h"
-#include "Pattern.h"
 #include "Application.h"
 #include "Operation.h"
 #include "Environment.h"
@@ -32,11 +31,6 @@ ExpPtr Expression::evaluation(Environment*& env) const
 bool Expression::match(ExpPtrArg other) const
 {
     return false;
-}
-
-PatPtr Expression::pattern() const
-{
-    return make_ptr<Pattern>();
 }
 
 bool Expression::isOperator(Environment* env) const

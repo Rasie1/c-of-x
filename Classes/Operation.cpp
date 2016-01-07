@@ -1,6 +1,5 @@
 #include "Operation.h"
 #include "Operator.h"
-#include "PatternOperator.h"
 
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
@@ -13,10 +12,6 @@ Operation::Operation(const std::shared_ptr<Operator>& op,
 
 }
 
-Operation::~Operation()
-{
-}
-
 ExpPtr Operation::evaluation(Environment*& env) const
 {
     DEBUG_PRINT_OP(op);
@@ -25,13 +20,6 @@ ExpPtr Operation::evaluation(Environment*& env) const
     auto ret = op->operate(left, right, env);
     DEBUG_PRINT_RS(ret);
     return ret;
-}
-
-PatPtr Operation::pattern() const
-{
-    return make_ptr<PatternOperation>(op->pattern(),
-                                      left->pattern(),
-                                      right->pattern());
 }
 
 std::string Operation::show() const

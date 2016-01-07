@@ -1,5 +1,4 @@
 #include "EnvironmentalVariable.h"
-#include "Pattern.h"
 
 EnvironmentalVariable::EnvironmentalVariable(ExpPtrArg  pattern, ExpPtrArg value)
     : pattern(pattern),

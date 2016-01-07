@@ -1,7 +1,5 @@
 #include "Lambda.h"
 #include <iostream>
-#include "UnknownName.h"
-#include "Pattern.h"
 #include "Closure.h"
 #include "Function.h"
 #include "Environment.h"

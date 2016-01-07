@@ -1,7 +1,6 @@
 #include "Mutation.h"
 #include "Variable.h"
 #include "Environment.h"
-#include "Pattern.h"
 #include <string>
 #include "Operation.h"
 
@@ -11,9 +10,6 @@ ExpPtr Mutation::operate(ExpPtrArg first,
                                Environment*& env) const
 {
     throw std::logic_error("Mutate is still in TODO state");
-    auto newEnv = env;
-    env = env->add(first->pattern(),
-                   second->eval(newEnv));
     return second;
 }
 

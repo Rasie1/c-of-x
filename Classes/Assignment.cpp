@@ -1,7 +1,6 @@
 #include "Assignment.h"
 #include "Variable.h"
 #include "Environment.h"
-#include "Pattern.h"
 #include "Operation.h"
 #include "Lambda.h"
 

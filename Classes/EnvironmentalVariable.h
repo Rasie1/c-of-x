@@ -4,7 +4,6 @@
 #include "Expression.h"
 
 class Expression;
-class Pattern;
 class Environment;
 
 class EnvironmentalVariable

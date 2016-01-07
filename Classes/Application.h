@@ -9,7 +9,6 @@ public:
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
                    Environment*& env) const override;
-    PatPtr pattern() const override;
 
     virtual bool unwind(ExpPtr& left,
                         ExpPtr& right,

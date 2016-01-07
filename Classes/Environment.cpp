@@ -2,8 +2,6 @@
 #include "Expression.h"
 #include "TypeError.h"
 #include "EnvironmentalVariable.h"
-#include "PatternVariable.h"
-#include "PatternOperator.h"
 
 #include "Addition.h"
 #include "Subtraction.h"
@@ -66,10 +64,6 @@ const std::string MatchChain::defaultName = "match_chain";*/
 
 
 
-
-
-
-
 Environment::Environment(EnvironmentalVariable* data, Environment* next)
     : data(data),
       next(next)
@@ -125,10 +119,7 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
          ->add(make_ptr<Variable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
          ->add(make_ptr<Variable>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
-         ->add(make_ptr<Variable>(ReturnPattern  ::defaultName), make_ptr<ReturnPattern>())
-         ->add(make_ptr<Variable>(Show           ::defaultName), make_ptr<Show>())
          ->add(make_ptr<Variable>(Print          ::defaultName), make_ptr<Print>())
-         ->add(make_ptr<Variable>(PrintPattern   ::defaultName), make_ptr<PrintPattern>())
          ->add(make_ptr<Variable>(Include        ::defaultName), make_ptr<Include>())
          ->add(make_ptr<Variable>(Addition       ::defaultName), make_ptr<Addition>())
          ->add(make_ptr<Variable>(Lambda         ::defaultName), make_ptr<Lambda>())
@@ -160,7 +151,7 @@ Environment* Environment::loadDefaultVariables()
 Environment* Environment::create()
 {
     auto firstVariable = new EnvironmentalVariable(
-                make_ptr<PatternVariable>(Void::defaultName),
+                make_ptr<Variable>(Void::defaultName),
                 make_ptr<Void>());
     auto environment = new Environment(firstVariable, nullptr);
     return environment->loadDefaultVariables();
@@ -193,7 +184,7 @@ bool Environment::compareOperators(ExpPtrArg first,
 std::pair<ExpPtr, ExpPtr> Environment::top()
 {
     return std::pair<ExpPtr, ExpPtr>(
-                data->getPattern(),
+                data->get(),
                 data->get());
 }
 

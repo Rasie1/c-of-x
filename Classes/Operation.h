@@ -8,10 +8,8 @@ public:
     Operation(const std::shared_ptr<Operator>& op,
               ExpPtrArg left,
               ExpPtrArg right);
-    ~Operation();
 
     ExpPtr evaluation(Environment*& env) const override;
-    PatPtr pattern() const override;
     std::string show() const override;
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,

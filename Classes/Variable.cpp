@@ -1,7 +1,6 @@
 #include "Variable.h"
 #include "Environment.h"
 #include "UnknownName.h"
-#include "PatternVariable.h"
 #include <string>
 #include <list>
 #include "Error.h"
@@ -14,11 +13,6 @@ ExpPtr Variable::evaluation(Environment*& env) const
         // return std::const_pointer_cast<Expression>(shared_from_this());
 
     return ret;
-}
-
-PatPtr Variable::pattern() const
-{
-    return make_ptr<PatternVariable>(name);
 }
 
 bool Variable::match(ExpPtrArg other) const
