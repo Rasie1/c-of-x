@@ -15,16 +15,6 @@ Expression::~Expression()
 
 }
 
-ExpPtr Expression::eval(Environment*& env) const
-{
-    return evaluation(env);
-}
-
-ExpPtr Expression::evaluation(Environment*& env) const
-{
-    return std::const_pointer_cast<Expression>(shared_from_this());
-}
-
 bool Expression::match(ExpPtrArg other) const
 {
     return false;

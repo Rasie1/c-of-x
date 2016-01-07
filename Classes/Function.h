@@ -1,10 +1,8 @@
 #pragma once
-#include "Expression.h"
+#include "DataType.h"
 
-class Function : public Expression
+class Function : public DataType
 {
 public:
-    // ExpPtr evaluation(Environment*& env) const override;
     virtual ExpPtr apply(ExpPtrArg e, Environment*& env) const = 0;
-    // std::string show() const override;
 };

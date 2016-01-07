@@ -1,7 +1,7 @@
 #pragma once
-#include "Expression.h"
+#include "DataType.h"
 
-class Operator : public Expression
+class Operator : public DataType
 {
 public:
     Operator(bool isRightAssociative = false, int priority = 5);

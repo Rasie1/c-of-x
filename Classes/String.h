@@ -1,8 +1,8 @@
 #pragma once
-#include "BaseType.h"
+#include "DataType.h"
 #include <string>
 
-class String : public BaseType
+class String : public DataType
 {
 public:
     String(const std::string& value);

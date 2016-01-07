@@ -24,7 +24,6 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
-    std::cout << "...ARG: " + argument->show() << std::endl;
     auto variable = d_cast<Variable>(argument);
 
     if (!variable)

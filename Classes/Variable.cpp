@@ -5,7 +5,7 @@
 #include <list>
 #include "Error.h"
 
-ExpPtr Variable::evaluation(Environment*& env) const
+ExpPtr Variable::eval(Environment*& env) const
 {
     auto ret = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
     if (ret == nullptr)

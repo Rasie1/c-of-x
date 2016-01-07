@@ -1,7 +1,7 @@
 #pragma once
-#include "BaseType.h"
+#include "DataType.h"
 
-class Integer : public BaseType
+class Integer : public DataType
 {
 public:
     Integer(long long value = 0);

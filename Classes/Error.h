@@ -1,8 +1,8 @@
 #pragma once
-#include "Expression.h"
+#include "DataType.h"
 #include <string>
 
-class Error : public Expression
+class Error : public DataType
 {
 public:
     Error() {}

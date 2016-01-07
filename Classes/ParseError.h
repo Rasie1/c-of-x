@@ -1,8 +1,8 @@
 #pragma once
-#include "Expression.h"
+#include "Error.h"
 
-class ParseError : public Expression
+class ParseError : public ErrorWithMessage
 {
 public:
-    ParseError();
+    ParseError(const std::string& msg) : ErrorWithMessage(msg) {}
 };

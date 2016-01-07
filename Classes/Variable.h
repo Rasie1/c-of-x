@@ -8,7 +8,7 @@ public:
     Variable(const std::string& name)
         : name(name) {}
 
-    ExpPtr evaluation(Environment*& env) const override;
+    ExpPtr eval(Environment*& env) const override;
     bool match(ExpPtrArg other) const;
     bool isOperator(Environment* env) const override;
     std::string show() const override;

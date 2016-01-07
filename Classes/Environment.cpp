@@ -128,24 +128,6 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
          ->add(make_ptr<Variable>(Pair           ::defaultName), make_ptr<Pair>())
          ;
-    /*
-     *
-    return add(make_ptr<PatternVariable>(Mutation       ::defaultName), make_ptr<Mutation>())
-         ->add(make_ptr<PatternVariable>(Assignment     ::defaultName), make_ptr<Assignment>())
-         ->add(make_ptr<PatternVariable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
-         ->add(make_ptr<PatternVariable>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
-         ->add(make_ptr<PatternVariable>(ReturnPattern  ::defaultName), make_ptr<ReturnPattern>())
-         ->add(make_ptr<PatternVariable>(Print          ::defaultName), make_ptr<Print>())
-         ->add(make_ptr<PatternVariable>(PrintPattern   ::defaultName), make_ptr<PrintPattern>())
-         ->add(make_ptr<PatternVariable>(Include        ::defaultName), make_ptr<Include>())
-         ->add(make_ptr<PatternVariable>(Lambda         ::defaultName), make_ptr<Lambda>())
-         ->add(make_ptr<PatternOperator>(Addition       ::defaultName, make_ptr<Addition>()), make_ptr<Addition>())
-         ->add(make_ptr<PatternOperator>(ClosureOperator::defaultName, make_ptr<ClosureOperator>()), make_ptr<ClosureOperator>())
-         ->add(make_ptr<PatternOperator>(Subtraction    ::defaultName, make_ptr<Subtraction>()), make_ptr<Subtraction>())
-         ->add(make_ptr<PatternOperator>(Multiplication ::defaultName, make_ptr<Multiplication>()), make_ptr<Multiplication>())
-         ->add(make_ptr<PatternOperator>(Assignment     ::defaultName, make_ptr<Assignment>()), make_ptr<Assignment>())
-         ->add(make_ptr<PatternOperator>(Pair           ::defaultName, make_ptr<Pair>()), make_ptr<Pair>());
-         */
 }
 
 Environment* Environment::create()

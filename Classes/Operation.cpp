@@ -12,7 +12,7 @@ Operation::Operation(const std::shared_ptr<Operator>& op,
 
 }
 
-ExpPtr Operation::evaluation(Environment*& env) const
+ExpPtr Operation::eval(Environment*& env) const
 {
     DEBUG_PRINT_OP(op);
     DEBUG_PRINT_LT(left);

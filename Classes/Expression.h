@@ -14,9 +14,7 @@ public:
     Expression();
     virtual ~Expression();
 
-    ExpPtr eval(Environment*& env) const;
-    virtual ExpPtr evaluation(Environment*& env) const;
-
+    virtual ExpPtr eval(Environment*& env) const = 0;
 
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,

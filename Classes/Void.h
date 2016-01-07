@@ -1,7 +1,7 @@
 #pragma once
-#include "Expression.h"
+#include "DataType.h"
 
-class Void : public Expression
+class Void : public DataType
 {
 public:
     virtual std::string show() const;

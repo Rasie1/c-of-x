@@ -92,7 +92,7 @@ ExpPtr Parser::parseName(const std::string& s,
         }
         catch (std::exception&)
         {
-            return make_ptr<ParseError>();
+            return make_ptr<ParseError>(ss);
         }
 
         return make_ptr<Integer>(stoll(ss));

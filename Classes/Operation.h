@@ -9,7 +9,7 @@ public:
               ExpPtrArg left,
               ExpPtrArg right);
 
-    ExpPtr evaluation(Environment*& env) const override;
+    ExpPtr eval(Environment*& env) const override;
     std::string show() const override;
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
