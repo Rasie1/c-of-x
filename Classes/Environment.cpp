@@ -136,7 +136,8 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Variable>(Subtraction    ::defaultName), make_ptr<Subtraction>())
          ->add(make_ptr<Variable>(Multiplication ::defaultName), make_ptr<Multiplication>())
          ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
-         ->add(make_ptr<Variable>(Pair           ::defaultName), make_ptr<Pair>());
+         ->add(make_ptr<Variable>(Pair           ::defaultName), make_ptr<Pair>())
+         ;
     /*
      *
     return add(make_ptr<PatternVariable>(Mutation       ::defaultName), make_ptr<Mutation>())

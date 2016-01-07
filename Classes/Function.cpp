@@ -25,8 +25,10 @@ ExpPtr Function::apply(ExpPtrArg e,
     /*auto newEnv1 = env;
     auto newEnv2 = env->add(argument,
                             e->eval(newEnv1));*/
-    if (!argument->eval(env)->match(e))
-        return make_ptr<String>("!No Match!");
+//    auto evaluated = argument->eval(env);
+//    if (!evaluated->pattern()->match(e))
+//        return make_ptr<String>("!No Match!");
+
     std::vector<VarPtr> argumentVariables;
     argument->getAllVariables(argumentVariables);
     auto newEnv1 = env;

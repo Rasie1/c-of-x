@@ -230,15 +230,15 @@ ExpPtr Parser::parse(const std::string& s,
             }
 
             /* SHUNTING-YARD
-             * f token : name     => q.push token
+             * f token = name     => q.push token
              *         | function => s.push token
-             *         | operator => 1. while s.top is operator
-             *                       && (token is left  associative
-             *                       && token <= s.top
-             *                       || token is right associative
-             *                       && token <  s.top)
+             *         | operator => while s.top is operator
+             *                          && (token is left associative
+             *                          && token <= s.top
+             *                          || token is right associative
+             *                          && token <  s.top)
              *                       { q.push(s.pop) }
-             *                       2. s.push token
+             *                       s.push token
              * (modified version is used, this ^ is just for a reference
              */
 

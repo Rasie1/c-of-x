@@ -5,9 +5,17 @@
 class TypeError : public Error
 {
 public:
-    TypeError() {}
+    TypeError(ExpPtrArg where,
+              ExpPtrArg expectedType,
+              ExpPtrArg actualType)
+      : where(where),
+        expected(expectedType),
+        actual(actualType) {}
 
     Expression* evalConstEnv(Environment* env);
 
     std::string show() const override;
+
+private:
+    ExpPtr where, expected, actual;
 };

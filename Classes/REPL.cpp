@@ -12,6 +12,8 @@ void REPL::start()
     env = Environment::create();
     cout << "Welcome to c(x), type -h to get help" << endl;
 
+    Parser parser;
+
     while (true)
     {
         string instruction;

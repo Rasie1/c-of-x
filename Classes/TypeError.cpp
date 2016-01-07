@@ -7,5 +7,11 @@ Expression* TypeError::evalConstEnv(Environment* env)
 
 std::string TypeError::show() const
 {
-    return "Typing Error";
+    return "(Typing Error: in expression \"" + 
+            where->show() +
+            "\", expected type \"" +
+            expected->show() +
+            "\", actual type: \"" +
+            actual->show() +
+            "\")";
 }

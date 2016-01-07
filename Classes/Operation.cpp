@@ -30,8 +30,8 @@ ExpPtr Operation::evaluation(Environment*& env) const
 PatPtr Operation::pattern() const
 {
     return make_ptr<PatternOperation>(op->pattern(),
-                                              left->pattern(),
-                                              right->pattern());
+                                      left->pattern(),
+                                      right->pattern());
 }
 
 std::string Operation::show() const

@@ -4,15 +4,16 @@
 #include "PatternVariable.h"
 #include <string>
 #include <list>
+#include "Error.h"
 
 ExpPtr Variable::evaluation(Environment*& env) const
 {
     auto ret = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
     if (ret == nullptr)
-        return std::const_pointer_cast<Expression>(shared_from_this());
+        return make_ptr<ErrorWithMessage>("Unknown name \"" + name + "\"");
+        // return std::const_pointer_cast<Expression>(shared_from_this());
 
-    auto newEnv = env;
-    return ret;//ret->eval(newEnv);
+    return ret;
 }
 
 PatPtr Variable::pattern() const
@@ -31,7 +32,7 @@ bool Variable::match(ExpPtrArg other) const
 
 bool Variable::isOperator(Environment* env) const
 {
-    auto e = env->get(std::const_pointer_cast<Expression>(shared_from_this())) ;
+    auto e = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
     if (e)
         return e->isOperator(env);
     else
@@ -40,7 +41,7 @@ bool Variable::isOperator(Environment* env) const
 
 std::string Variable::show() const
 {
-    return "$" + name;
+    return name;
 }
 
 bool Variable::unwind(ExpPtr& lvalue,

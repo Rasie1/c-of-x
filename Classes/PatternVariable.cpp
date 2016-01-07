@@ -2,10 +2,11 @@
 #include "PatternOperator.h"
 #include "Application.h"
 #include "Environment.h"
+#include <iostream>
 
 bool PatternVariable::match(ExpPtrArg other) const
 {
-
+//    std::cout << "lol";
     //auto y = d_cast<PatternVariable>(other);
     //if (y)
     //    return y->name == name;

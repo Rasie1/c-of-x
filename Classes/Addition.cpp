@@ -4,26 +4,31 @@
 #include "Environment.h"
 #include "Subtraction.h"
 #include "Variable.h"
+#include "TypeError.h"
 
 Addition::Addition()
     : Operator(false, 5)
 {
 }
 
-
 ExpPtr Addition::operate(ExpPtrArg first,
                          ExpPtrArg second,
                          Environment*& env) const
 {
-    auto firstInteger  = d_cast<Integer>(first ->eval(env));
-    auto secondInteger = d_cast<Integer>(second->eval(env));
+    auto l = first->eval(env);
+    auto r = second->eval(env);
+    auto firstInteger  = d_cast<Integer>(l);
+    auto secondInteger = d_cast<Integer>(r);
 
-    if (firstInteger && secondInteger)
-        return make_ptr<Integer>(firstInteger->value +
-                                         secondInteger->value);
-    return make_ptr<Operation>(make_ptr<Addition>(),
-                                       first,
-                                       second);
+    if (!firstInteger || !secondInteger)
+    {
+        auto operation = make_ptr<Operation>(make_ptr<Addition>(), l, r);
+        return make_ptr<TypeError>(operation, 
+                                   make_ptr<Variable>("int"),
+                                   make_ptr<Variable>("?"));
+    }
+
+    return make_ptr<Integer>(firstInteger->value + secondInteger->value);
 }
 
 std::string Addition::show() const
