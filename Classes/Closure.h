@@ -1,12 +1,13 @@
 #pragma once
 #include "Expression.h"
+#include "Function.h"
 
-class Function;
 class Environment;
-class Closure : public Expression
+class Closure : public Function
 {
 public:
-    Closure(const std::shared_ptr<Function>& function,
+    Closure(ExpPtrArg body,
+            ExpPtrArg arg,
             Environment* env,
             int envSize = 0);
     ~Closure();
@@ -14,8 +15,9 @@ public:
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string show() const override;
 
-private:
-    std::shared_ptr<Function> function;
+    ExpPtr body;
+    ExpPtr argument;
+
     Environment* env;
     int envSize;
 };

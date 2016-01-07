@@ -1,14 +1,17 @@
 #include "Closure.h"
+#include <string>
 #include "Function.h"
 #include "Environment.h"
-#include "Function.h"
 #include "Pattern.h"
-#include <string>
+#include "Error.h"
+#include "Variable.h"
 
-Closure::Closure(const std::shared_ptr<Function>& function,
+Closure::Closure(ExpPtrArg body,
+                 ExpPtrArg arg,
                  Environment* env,
                  int envSize)
-    : function(function),
+    : body(body),
+      argument(arg),
       env(env),
       envSize(envSize)
 {
@@ -22,9 +25,16 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
-    auto newEnv = env;
-    return function->apply(e->eval(newEnv),
-                           const_cast<Closure*>(this)->env);
+    auto variable = d_cast<Variable>(argument);
+
+    if (!variable)
+        return make_ptr<ErrorWithMessage>("Incorrect argument definition");
+
+    auto newEnv = this->env->add(variable, e);
+
+    auto evaluated = body->eval(newEnv);
+
+    return evaluated;
 }
 
 std::string Closure::show() const
@@ -39,5 +49,11 @@ std::string Closure::show() const
             + std::string(";");
         top = top->getNext();
     }
-    return ret + std::string("]") + function->show();
+    return ret + std::string("]") + "(" + argument->show() + "){" + body->show() + "}";
 }
+
+
+// std::string Function::show() const
+// {
+//     return "(" + argument->show() + "){" + body->show() + "}";
+// }
