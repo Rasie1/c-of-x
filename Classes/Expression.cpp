@@ -17,9 +17,6 @@ Expression::~Expression()
 
 ExpPtr Expression::eval(Environment*& env) const
 {
-    auto fromEnv = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
-    if (fromEnv)
-        return fromEnv;
     return evaluation(env);
 }
 
