@@ -37,6 +37,8 @@ static constexpr bool isOperatorCharacter(char c)
             c == '#'  ||
             c == '~'  ||
             c == '$'  ||
+            c == '>'  ||
+            c == '<'  ||
             c == '*'  ||
             c == '@'  ||
             c == '%'  ||

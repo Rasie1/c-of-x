@@ -17,7 +17,7 @@ void REPL::start()
     while (true)
     {
         string instruction;
-        cout << ">";
+        cout << "&>";
 
         getline(cin, instruction);
 

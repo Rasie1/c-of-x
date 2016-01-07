@@ -17,6 +17,7 @@
 #include "Application.h"
 #include "Variable.h"
 #include "String.h"
+#include "Then.h"
 
 #include "EvalDelay.h"
 #include "EvalForce.h"
@@ -117,6 +118,7 @@ Environment* Environment::loadDefaultVariables()
 {
     return add(make_ptr<Variable>(Mutation       ::defaultName), make_ptr<Mutation>())
          ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<Variable>(Then           ::defaultName), make_ptr<Then>())
          ->add(make_ptr<Variable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
          ->add(make_ptr<Variable>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
          ->add(make_ptr<Variable>(Print          ::defaultName), make_ptr<Print>())
