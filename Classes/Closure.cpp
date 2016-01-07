@@ -25,15 +25,20 @@ Closure::~Closure()
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
     auto variable = d_cast<Variable>(argument);
+    auto value = d_cast<DataType>(argument);
 
-    if (!variable)
+    if (variable)
+    {
+        auto newEnv = this->env->add(variable, e);
+        auto evaluated = body->eval(newEnv);
+        return evaluated;
+    }
+//    else if (value)
+//    {
+//        // check for equality
+//    }
+    else
         return make_ptr<ErrorWithMessage>("Incorrect argument definition");
-
-    auto newEnv = this->env->add(variable, e);
-
-    auto evaluated = body->eval(newEnv);
-
-    return evaluated;
 }
 
 std::string Closure::show() const

@@ -14,7 +14,8 @@ ExpPtr Application::operate(ExpPtrArg first,
                             ExpPtrArg second,
                             Environment*& env) const
 {
-    auto function = d_cast<Function>(first->eval(env));
+    auto evaluated = first->eval(env);
+    auto function = d_cast<Function>(evaluated);
 
     if (!function)
         return make_ptr<ErrorWithMessage>("Not a function");
