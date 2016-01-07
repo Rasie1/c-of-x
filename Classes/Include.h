@@ -1,7 +1,7 @@
 #pragma once
-#include "Expression.h"
+#include "Function.h"
 
-class Include : public Expression
+class Include : public Function
 {
 public:
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;

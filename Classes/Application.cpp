@@ -5,6 +5,7 @@
 #include "Environment.h"
 #include "Lambda.h"
 #include "Operation.h"
+#include "Error.h"
 
 Application::Application()
     : Operator(false, 10)
@@ -15,7 +16,12 @@ ExpPtr Application::operate(ExpPtrArg first,
                             ExpPtrArg second,
                             Environment*& env) const
 {
-    auto function = first->eval(env);
+    auto function = d_cast<Function>(first->eval(env));
+
+
+    if (!function)
+        return make_ptr<ErrorWithMessage>("Not a function");
+
     auto argument = second;//->eval(env);
     DEBUG_PRINT_EV(function);
     auto ret = function->apply(argument, env);

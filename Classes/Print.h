@@ -1,7 +1,7 @@
 #pragma once
-#include "Expression.h"
+#include "Function.h"
 
-class Print : public Expression
+class Print : public Function
 {
 public:
     Print() {}
@@ -12,7 +12,7 @@ public:
     static const std::string defaultName;
 };
 
-class Show : public Expression
+class Show : public Function
 {
 public:
     Show() {}
@@ -23,7 +23,7 @@ public:
     static const std::string defaultName;
 };
 
-class PrintPattern : public Expression
+class PrintPattern : public Function
 {
 public:
     ExpPtr apply(ExpPtrArg e,

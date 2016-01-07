@@ -2,13 +2,13 @@
 #include "String.h"
 #include "Parser.h"
 #include "Environment.h"
+#include "Error.h"
 
 ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
 {
     auto str = d_cast<String>(e);
-    auto newEnv = env;
-    if (str == nullptr)
-        return Expression::apply(e, newEnv);
+    if (!str)
+        return make_ptr<ErrorWithMessage>("Not a string");
 
     auto filename = str->value;
 

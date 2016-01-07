@@ -1,5 +1,5 @@
 #pragma once
-#include "Expression.h"
+#include "Function.h"
 
 class Pattern : public Expression
 {
@@ -11,7 +11,7 @@ public:
     PatPtr pattern() const override;
 };
 
-class ReturnPattern : public Expression
+class ReturnPattern : public Function
 {
 public:
     ExpPtr apply(ExpPtrArg e,

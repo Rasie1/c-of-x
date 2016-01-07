@@ -23,13 +23,13 @@ public:
     ExpPtr eval(Environment*& env) const;
     virtual ExpPtr evaluation(Environment*& env) const;
 
-    virtual ExpPtr apply(ExpPtrArg e,
-                         Environment*& env) const;
-    virtual PatPtr pattern() const;
-    virtual bool match(ExpPtrArg other) const;
+
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env);
+
+    virtual PatPtr pattern() const;
+    virtual bool match(ExpPtrArg other) const;
     virtual bool isOperator(Environment* env) const;
     virtual std::string show() const;
     virtual bool hasNonOpVariable(Environment* env) const;

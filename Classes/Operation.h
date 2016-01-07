@@ -15,7 +15,7 @@ public:
     std::string show() const override;
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
-                        Environment*& env) override;
+                        Environment*& env);
     bool hasNonOpVariable(Environment* env) const;
 
     std::shared_ptr<Operator> op;

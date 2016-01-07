@@ -29,14 +29,6 @@ ExpPtr Expression::evaluation(Environment*& env) const
     return std::const_pointer_cast<Expression>(shared_from_this());
 }
 
-ExpPtr Expression::apply(ExpPtrArg e,
-                         Environment*& env) const
-{
-    return make_ptr<Operation>(make_ptr<Application>(),
-                                       std::const_pointer_cast<Expression>(shared_from_this()),
-                                       e);
-}
-
 bool Expression::match(ExpPtrArg other) const
 {
     return false;
@@ -57,14 +49,14 @@ std::string Expression::show() const
     return "expr";
 }
 
-bool Expression::unwind(ExpPtr& lvalue,
-                        ExpPtr& rvalue,
-                        Environment*& env)
+bool Expression::hasNonOpVariable(Environment* env) const
 {
     return false;
 }
 
-bool Expression::hasNonOpVariable(Environment* env) const
+bool Expression::unwind(ExpPtr& lvalue,
+                        ExpPtr& rvalue,
+                        Environment*& env)
 {
     return false;
 }
