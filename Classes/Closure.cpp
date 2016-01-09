@@ -24,13 +24,17 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
-    auto variable = d_cast<Variable>(argument);
+    ExpPtr lvalue = argument;
+    ExpPtr rvalue = body;
+    while (lvalue->unwind(lvalue, rvalue, env));
+
+    auto variable = d_cast<Variable>(lvalue);
     auto value = d_cast<DataType>(argument);
 
     if (variable)
     {
         auto newEnv = this->env->add(variable, e);
-        auto evaluated = body->eval(newEnv);
+        auto evaluated = rvalue->eval(newEnv);
         return evaluated;
     }
 //    else if (value)
