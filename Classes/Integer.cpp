@@ -10,7 +10,11 @@ Integer::Integer(long long value)
 
 bool Integer::match(ExpPtrArg other) const
 {
-    return true;
+    auto integer = d_cast<Integer>(other);
+    if (!integer)
+        return false;
+
+    return this->value == integer->value;
 }
 
 std::string Integer::show() const

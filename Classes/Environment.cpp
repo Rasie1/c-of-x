@@ -116,7 +116,7 @@ Environment* Environment::add(ExpPtrArg p,
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(make_ptr<Variable>(Mutation       ::defaultName), make_ptr<Mutation>())
+    return add(make_ptr<Variable>(Lambda         ::defaultName), make_ptr<Lambda>())
          ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
          ->add(make_ptr<Variable>(Then           ::defaultName), make_ptr<Then>())
          ->add(make_ptr<Variable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
@@ -124,9 +124,9 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Variable>(Print          ::defaultName), make_ptr<Print>())
          ->add(make_ptr<Variable>(Include        ::defaultName), make_ptr<Include>())
          ->add(make_ptr<Variable>(Addition       ::defaultName), make_ptr<Addition>())
-         ->add(make_ptr<Variable>(Lambda         ::defaultName), make_ptr<Lambda>())
+         //->add(make_ptr<Variable>(Mutation       ::defaultName), make_ptr<Mutation>())
          ->add(make_ptr<Variable>(Subtraction    ::defaultName), make_ptr<Subtraction>())
-         ->add(make_ptr<Variable>(Multiplication ::defaultName), make_ptr<Multiplication>())
+         //->add(make_ptr<Variable>(Multiplication ::defaultName), make_ptr<Multiplication>())
          ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
          ->add(make_ptr<Variable>(Pair           ::defaultName), make_ptr<Pair>())
          ;

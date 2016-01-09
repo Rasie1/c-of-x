@@ -57,5 +57,6 @@ std::string Closure::show() const
             + std::string(";");
         top = top->getNext();
     }
-    return ret + std::string("]") + "(" + argument->show() + "){" + body->show() + "}";
+    ret += std::string("]");
+    return "(" + argument->show() + "){" + body->show() + "}";
 }

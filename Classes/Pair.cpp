@@ -20,5 +20,5 @@ std::string Pair::show() const
     return Pair::defaultName;
 }
 
-const std::string Pair::defaultName = "**";
+const std::string Pair::defaultName = ",";
 

@@ -5,6 +5,7 @@ class Addition : public Operator
 {
 public:
     Addition();
+
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
                    Environment*& env) const override;

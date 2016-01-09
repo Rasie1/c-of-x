@@ -1,7 +1,6 @@
 #include "Addition.h"
 #include "Operation.h"
 #include "Integer.h"
-#include "Environment.h"
 #include "Subtraction.h"
 #include "Variable.h"
 #include "TypeError.h"
@@ -23,7 +22,7 @@ ExpPtr Addition::operate(ExpPtrArg first,
     if (!firstInteger || !secondInteger)
     {
         auto operation = make_ptr<Operation>(make_ptr<Addition>(), l, r);
-        return make_ptr<TypeError>(operation, 
+        return make_ptr<TypeError>(operation,
                                    make_ptr<Variable>("int"),
                                    make_ptr<Variable>("?"));
     }

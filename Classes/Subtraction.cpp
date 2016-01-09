@@ -1,7 +1,10 @@
 #include "Subtraction.h"
 #include <string>
+#include "Integer.h"
 #include "Operation.h"
 #include "Addition.h"
+#include "Variable.h"
+#include "TypeError.h"
 
 Subtraction::Subtraction()
     : Operator(false, 5)
@@ -12,15 +15,20 @@ ExpPtr Subtraction::operate(ExpPtrArg first,
                             ExpPtrArg second,
                             Environment*& env) const
 {
-    auto firstInteger  = d_cast<Integer>(first ->eval(env));
-    auto secondInteger = d_cast<Integer>(second->eval(env));
+    auto l = first->eval(env);
+    auto r = second->eval(env);
+    auto firstInteger  = d_cast<Integer>(l);
+    auto secondInteger = d_cast<Integer>(r);
 
-    if (firstInteger && secondInteger)
-        return make_ptr<Integer>(firstInteger->value -
-                                         secondInteger->value);
-    return make_ptr<Operation>(make_ptr<Subtraction>(),
-                                       first,
-                                       second);
+    if (!firstInteger || !secondInteger)
+    {
+        auto operation = make_ptr<Operation>(make_ptr<Subtraction>(), l, r);
+        return make_ptr<TypeError>(operation,
+                                   make_ptr<Variable>("int"),
+                                   make_ptr<Variable>("?"));
+    }
+
+    return make_ptr<Integer>(firstInteger->value - secondInteger->value);
 }
 
 std::string Subtraction::show() const

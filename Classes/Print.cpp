@@ -4,8 +4,9 @@
 
 ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
 {
-    std::cout << e->show() << std::endl;
-    return e->eval(env);
+    auto evaluated = e->eval(env);
+    std::cout << evaluated->show() << std::endl;
+    return evaluated;
 }
 
 std::string Print::show() const
