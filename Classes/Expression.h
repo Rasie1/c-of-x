@@ -21,7 +21,6 @@ public:
                         Environment*& env);
 
     virtual bool match(ExpPtrArg other) const;
-    virtual bool isOperator(Environment* env) const;
     virtual std::string show() const;
     virtual bool hasNonOpVariable(Environment* env) const;
 };

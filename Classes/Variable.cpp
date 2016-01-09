@@ -24,15 +24,6 @@ bool Variable::match(ExpPtrArg other) const
     return false;
 }
 
-bool Variable::isOperator(Environment* env) const
-{
-    auto e = env->get(std::const_pointer_cast<Expression>(shared_from_this()));
-    if (e)
-        return e->isOperator(env);
-    else
-        return false;
-}
-
 std::string Variable::show() const
 {
     return name;

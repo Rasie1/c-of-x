@@ -10,7 +10,6 @@ public:
 
     ExpPtr eval(Environment*& env) const override;
     bool match(ExpPtrArg other) const;
-    bool isOperator(Environment* env) const override;
     std::string show() const override;
 
     virtual bool unwind(ExpPtr& lvalue,

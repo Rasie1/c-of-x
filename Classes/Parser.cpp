@@ -77,6 +77,18 @@ static constexpr bool shouldSkipCharacter(char c)
     return c < '!';
 }
 
+bool isOperator(ExpPtr e, Environment* env)
+{
+    if (d_cast<Operator>(e))
+        return true;
+    if (d_cast<Variable>(e))
+    {
+        auto value = env->get(e);
+        return d_cast<Operator>(value) != nullptr;
+    }
+    return false;
+}
+
 
 ExpPtr Parser::parseName(const std::string& s,
                          size_t start,
@@ -241,7 +253,7 @@ ExpPtr Parser::parse(const std::string& s,
              * (modified version is used, this ^ is just for a reference
              */
 
-            if (e->isOperator(env))
+            if (isOperator(e, env))
             {
                 applicationFlag = false;
 

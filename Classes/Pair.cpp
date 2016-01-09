@@ -11,8 +11,7 @@ ExpPtr Pair::operate(ExpPtrArg first,
                      ExpPtrArg second,
                      Environment*& env) const
 {
-    first->eval(env);
-    return second->eval(env);
+    make_ptr<Operation>(make_ptr<Pair>(), first, second);
 }
 
 std::string Pair::show() const

@@ -20,11 +20,6 @@ bool Expression::match(ExpPtrArg other) const
     return false;
 }
 
-bool Expression::isOperator(Environment* env) const
-{
-    return false;
-}
-
 std::string Expression::show() const
 {
     return "expr";

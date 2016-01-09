@@ -18,6 +18,8 @@
 #include "Variable.h"
 #include "String.h"
 #include "Then.h"
+#include "Union.h"
+#include "Intersection.h"
 
 #include "EvalDelay.h"
 #include "EvalForce.h"
@@ -124,6 +126,8 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Variable>(Print          ::defaultName), make_ptr<Print>())
          ->add(make_ptr<Variable>(Include        ::defaultName), make_ptr<Include>())
          ->add(make_ptr<Variable>(Addition       ::defaultName), make_ptr<Addition>())
+         ->add(make_ptr<Variable>(Union          ::defaultName), make_ptr<Union>())
+         ->add(make_ptr<Variable>(Intersection   ::defaultName), make_ptr<Intersection>())
          //->add(make_ptr<Variable>(Mutation       ::defaultName), make_ptr<Mutation>())
          ->add(make_ptr<Variable>(Subtraction    ::defaultName), make_ptr<Subtraction>())
          //->add(make_ptr<Variable>(Multiplication ::defaultName), make_ptr<Multiplication>())
