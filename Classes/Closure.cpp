@@ -4,6 +4,7 @@
 #include "Environment.h"
 #include "Error.h"
 #include "Variable.h"
+#include "Void.h"
 
 Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,
@@ -46,7 +47,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
         }
         else
         {
-            return make_ptr<ErrorWithMessage>("No Match");
+            return make_ptr<Void>();
         }
     }
     else

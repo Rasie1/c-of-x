@@ -1,5 +1,6 @@
 #include "Union.h"
 #include "Operation.h"
+#include "Void.h"
 
 Union::Union()
     : Operator(false, 4)
@@ -12,6 +13,11 @@ ExpPtr Union::operate(ExpPtrArg first,
 {
     auto l = first->eval(env);
     auto r = second->eval(env);
+
+    if (d_cast<Void>(l))
+        return r;
+    if (d_cast<Void>(r))
+        return l;
 
     if (l->match(r))
         return l;
