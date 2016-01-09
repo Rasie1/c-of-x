@@ -37,10 +37,18 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
         auto evaluated = rvalue->eval(newEnv);
         return evaluated;
     }
-//    else if (value)
-//    {
-//        // check for equality
-//    }
+    else if (value)
+    {
+        if (value->match(e))
+        {
+            auto newEnv = env;
+            return rvalue->eval(newEnv);
+        }
+        else
+        {
+            return make_ptr<ErrorWithMessage>("No Match");
+        }
+    }
     else
         return make_ptr<ErrorWithMessage>("Incorrect argument definition");
 }
