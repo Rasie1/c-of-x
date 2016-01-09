@@ -14,9 +14,9 @@ ExpPtr Union::operate(ExpPtrArg first,
     auto r = second->eval(env);
 
     if (l->match(r))
-        return r;
+        return l;
     else
-        make_ptr<Operation>(make_ptr<Union>(), l, r);
+        return make_ptr<Operation>(make_ptr<Union>(), l, r);
 }
 
 std::string Union::show() const
