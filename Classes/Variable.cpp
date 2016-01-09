@@ -12,7 +12,7 @@ ExpPtr Variable::eval(Environment*& env) const
         return make_ptr<ErrorWithMessage>("Unknown name \"" + name + "\"");
         // return std::const_pointer_cast<Expression>(shared_from_this());
 
-    return ret;
+    return ret->eval(env);
 }
 
 bool Variable::match(ExpPtrArg other) const

@@ -18,11 +18,14 @@ ExpPtr Assignment::operate(ExpPtrArg first,
     ExpPtr rvalue = second;
     ExpPtr lvalue = first;
     while (lvalue->unwind(lvalue, rvalue, env));
-    env = env->add(lvalue, rvalue->eval(env));
+    env = env->add(lvalue, rvalue);
+
 
     // Enable recursion
-    if (d_cast<Function>(rvalue))
+    auto operation = d_cast<Operation>(rvalue);
+    if (operation && d_cast<Lambda>(operation->op))
         env = env->add(lvalue, rvalue);
+
 
     return second;
 }
