@@ -20,7 +20,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     if (!function)
         return make_ptr<ErrorWithMessage>("Not a function");
 
-    auto argument = second;//->eval(newEnv);
+    auto argument = second->eval(env);
     auto ret = function->apply(argument, env);
 
     return ret;

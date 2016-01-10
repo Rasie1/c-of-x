@@ -5,7 +5,6 @@
 #include <memory>
 #include "Expression.h"
 
-class EnvironmentalVariable;
 class PrecedenceTable;
 class PrecedenceInfo;
 class Operator;
@@ -14,14 +13,13 @@ class Environment
     typedef std::map<std::string, ExpPtr> Variables;
     typedef std::map<std::string, ExpPtr> Operators;
 public:
-    Environment(EnvironmentalVariable* data, Environment* next = nullptr);
-    ~Environment();
+    Environment(ExpPtrArg key, ExpPtrArg value, Environment* next = nullptr);
 
     void clear();
-    Environment* add(ExpPtrArg p,
-                     ExpPtrArg e);
+    Environment* add(ExpPtrArg key,
+                     ExpPtrArg value);
     Environment* pop();
-    ExpPtr get(ExpPtrArg p);
+    ExpPtr get(ExpPtrArg key);
     std::pair<ExpPtr, ExpPtr> top();
     bool compareOperators(ExpPtrArg first, ExpPtrArg second);
     Environment* getNext();
@@ -36,7 +34,9 @@ private:
 
     ExpPtr lookup(const std::string& name);
 
-    EnvironmentalVariable* data;
+    ExpPtr key;
+    ExpPtr value;
+
     Environment* next;
     //PrecedenceTable* precedenceTable;
 };

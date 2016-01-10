@@ -1,6 +1,5 @@
 #include "Variable.h"
 #include "Environment.h"
-#include "UnknownName.h"
 #include <string>
 #include <list>
 #include "Error.h"

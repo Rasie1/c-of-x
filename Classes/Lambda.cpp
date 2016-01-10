@@ -18,14 +18,12 @@ ExpPtr Lambda::operate(ExpPtrArg first,
     return ret;
 }
 
-
 std::string Lambda::show() const
 {
     return Lambda::defaultName;
 }
 
 const std::string Lambda::defaultName = "\\";
-
 
 bool Lambda::unwind(ExpPtr& left,
                     ExpPtr& right,

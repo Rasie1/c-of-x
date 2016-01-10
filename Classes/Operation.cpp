@@ -46,7 +46,7 @@ ExpPtr Operation::eval(Environment*& env) const
 //    else
         ret = op->operate(left, right, env);
 
-    DEBUG_PRINT_RS(ret);
+//    DEBUG_PRINT_RS(ret);
     return ret;
 }
 

@@ -1,8 +1,6 @@
 #include "Environment.h"
 #include "Expression.h"
 #include "TypeError.h"
-#include "EnvironmentalVariable.h"
-
 #include "Addition.h"
 #include "Subtraction.h"
 #include "Multiplication.h"
@@ -20,71 +18,20 @@
 #include "Then.h"
 #include "Union.h"
 #include "Intersection.h"
-
 #include "EvalDelay.h"
 #include "EvalForce.h"
 
 #include <vector>
 
-
-/*class MatchChain : public Expression,
-                   private std::vector<ExpPtr>
-{
-    typedef std::vector<ExpPtr> Container;
-public:
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override
-    {
-        return find(e);
-    }
-
-    void add(ExpPtrArg exp)
-    {
-        push_back(exp);
-    }
-    ExpPtr find(ExpPtrArg pat)
-    {
-        for (auto i = rbegin(); i != rend(); ++i)
-        {
-            if (!d_cast<String>(i->match(pat)))
-                return *i;
-        }
-        return make_ptr<String>("!No Match!");
-    }
-
-    std::string show() const override { return defaultName; }
-    static const std::string defaultName;
-private:
-    using Container::push_back;
-    using Container::rbegin;
-    using Container::rend;
-};
-
-
-const std::string MatchChain::defaultName = "match_chain";*/
-
-
-
-
-
-
-Environment::Environment(EnvironmentalVariable* data, Environment* next)
-    : data(data),
+Environment::Environment(ExpPtrArg key, ExpPtrArg value, Environment* next)
+    : key(key),
+      value(value),
       next(next)
 {
 }
 
-Environment::~Environment()
-{
-    delete data;
-}
-
 void Environment::clear()
 {
-    delete data;
-    data = nullptr;
-    if (next == nullptr)
-        return;
-
     next->clear();
     delete next;
     next = nullptr;
@@ -98,22 +45,21 @@ Environment* Environment::pop()
     return next;
 }
 
-ExpPtr Environment::get(ExpPtrArg p)
+ExpPtr Environment::get(ExpPtrArg key)
 {
-    if (data->match(p, this))
-        return data->get();
+    if (this->key->match(key))
+        return value;
 
     if (next == nullptr)
         return nullptr;
 
-    return next->get(p);
+    return next->get(key);
 }
 
-Environment* Environment::add(ExpPtrArg p,
-                              ExpPtrArg e)
+Environment* Environment::add(ExpPtrArg key,
+                              ExpPtrArg value)
 {
-    auto variable = new EnvironmentalVariable(p, e);
-    return new Environment(variable, this);
+    return new Environment(key, value, this);
 }
 
 Environment* Environment::loadDefaultVariables()
@@ -138,10 +84,9 @@ Environment* Environment::loadDefaultVariables()
 
 Environment* Environment::create()
 {
-    auto firstVariable = new EnvironmentalVariable(
-                make_ptr<Variable>(Void::defaultName),
-                make_ptr<Void>());
-    auto environment = new Environment(firstVariable, nullptr);
+    auto environment = new Environment(make_ptr<Variable>(Void::defaultName),
+                                       make_ptr<Void>(),
+                                       nullptr);
     return environment->loadDefaultVariables();
 }
 
@@ -171,9 +116,7 @@ bool Environment::compareOperators(ExpPtrArg first,
 
 std::pair<ExpPtr, ExpPtr> Environment::top()
 {
-    return std::pair<ExpPtr, ExpPtr>(
-                data->get(),
-                data->get());
+    return std::pair<ExpPtr, ExpPtr>(key, value);
 }
 
 Environment* Environment::getNext()
@@ -184,11 +127,6 @@ Environment* Environment::getNext()
 ExpPtr Environment::lookup(const std::string& name)
 {
     return nullptr;
-//    auto exp   = variables.at(name);
-//    auto chain = s_cast<MatchChain>(chain);
-//    auto match = chain.match(exp);
-
-//    return match;
 }
 
 /*
