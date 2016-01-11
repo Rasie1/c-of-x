@@ -1,71 +1,98 @@
-Update: Now, the project is stopped. I have some new ideas that doesn't match with this, so, sooner or later I'll present some more.
+Warning: this document is under heavy development right now. 
 
-# c(x)
+# Welcome to c(x)
 
-This is a in-development prototype for c(x) (or c-of-x) functional programming language that can work as extension to C.
+This is an experimental programmable programming language that was designed with the idea to maintain expressiveness and usability while being fully able to meet functional, object oriented, logical or any other paradigm at the same time.
 
-The project aims not to compete with C or any other language in terms of performance, but to show some new beautiful ideas/semantics/syntax inspired by Haskell flexibility and C clarity.
+We have:
 
-It does sacrifice some type safety to provide math-like syntax with automatic type deduction from the context. 
++ Dependent refinement types and beyond
 
-The programming language is interpreted, so a lot of metaprogramming will be possible, for example, you will be able to tear out whole lines of your functions while paying (or not paying) attention to their environment).
++ Ability to be compiled, interpreted and JIT-compiled
 
-If you are interested, I expect you to come back in a short time because now I can show you only:
++ Higher order overloadable functions, types and operators
 
-1. Parser that still only supports application of argument to function (without any priority, binary operators, etc)
-2. Working lists, assignments, lambda expressions and some random stuff like reading from file, etc.
++ Mathematically-correct imperative style
 
-To get you interested, I will show you an example of what you will be able to do:
++ Optional purity, safety and automatic theorem proving
 
-This is a correct program on c(x)
++ Full dependent pattern matching
 
-	#include <stdio.h>
++ Evaluation control, laziness and strictness
 
-	int f(int x, int y)
-	{
-		int i;
-		for (int i = 1; i < 10; ++i)
-			x += y * i;
-	    return x;
-	}
++ Highly convenient object oriented features
 
-	int main()
-	{
-	    int i;
-	    scanf("%d",&i);
-	    printf("%d", f(i, i));
++ Pointer arithmetics and memory control
 
-	    return 0;
-	}
++ Multi-thread features, optional automatic parallelism
 
-Which is equal to
++ Automatic selection of interface implementation based on performance
 
-	#include <stdio.h>
++ Packaging system inside language, easy to use FFI
 
-	f (x, int y)
-	{
-	    for (i = 1; i < 10; ++i)
-	        x += y * i
-	    finally
-	        x
-	}
++ Interactive development features
 
-	main
-	{
-	    scanf("%d", &i);
-	    printf("%d", f i i);
-	    0
-	}
-
-Or even
-
-	f x y = x,
-	        for i in range(1, 10)
-	            x += y * i
-
-	main = 0,
-	       print (f i i), i = scan
++ Human readability while staying concise
 
 
-Pattern matching is there as well, by the way.
-Thanks for reading! 
+Let's begin with new features we've been considering. 
+
+**Sets define types. Predicates define sets.**
+
+```c
+                    // Let's define a value
+x : integer, (>= 0) // Here we say that x is a non-negative integer
+                    // Now, let's make it more specific.
+x < 5               // Actually, this is some kind of assignment.
+
+print x+1           // "12345" is printed
+```
+Let's think about what happened. "print" takes just one value. However, at the stage of using it, it is only known that "x" is in range [0; 5). This means that "print" could be applied to any of them. And as the function is impure, it has to be evaluated right now, so it iterates all possible x's, and it can be done thanks to the integer being an ordered finite set.
+
+However, here is overloaded "print" that takes set and some strings:
+```c
+print xs         : container, ordered
+      delimiter  : string
+      terminator : string 
+  = for x in xs \ xs[-1]  // Iterate on each value in "xs" excluding last
+        print (x, ", ")   // Call to overloaded "print" that takes tuple
+    print (xs[-1], ";")   // as an argument
+// Usage
+print [1..5] with delimiter ", " and terminator ";\n'
+// "1, 2, 3, 4, 5;\n" is printed
+```
+What's up with those "delimiter", "terminator", "with", "and" words? They are named arguments ("delimiter", "terminator") and empty words ("with", "and"). Both things are fully optional. They can separate things written in 1 line, decreasing need of parentheses, allow changing order of arguments and they also can be optional arguments. By the way, "for" and "if" are defined like that. There is no such thing as "keywords" in this language.
+
+Now, about object-oriented stuff. Here we create and "inherit" classes, override methods and use events (those are just functions that can be called when another events are executed)
+
+```c
+Creature = class
+         - health : integer, (< 200) // Notice "-", "+" and "#" as in UML notation
+                    property         // Makes variable exposed in constructor
+           die    : void -> void
+                    event
+           dead   : boolean
+         + takeDamage : integer -> void
+                      $ amount
+                      = if amount >= health then die()
+                                                 dead = true
+                                            else health -= amount
+
+Human = Creature
+      - damage     : integer = random {1..99}
+        experience : integer = 0
+        die   : override
+        die() = print "Ugh" 
+      + attack enemy = enemy.takeDamage this.damage
+                       onAttackedMonsterDeath.boundEvents = {}
+                       onAttackedMonsterDeath.bind enemy.die
+                                                   with argument enemy
+      - onAttackedEnemyDeath : event
+                             $ enemy : Creature
+                             = experience += 100
+                             
+// Usage
+a, b : Human
+for i in range(0, 10)
+    a.attack b
+```
