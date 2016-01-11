@@ -24,8 +24,8 @@ ExpPtr Subtraction::operate(ExpPtrArg first,
     {
         auto operation = make_ptr<Operation>(make_ptr<Subtraction>(), l, r);
         return make_ptr<TypeError>(operation,
-                                   make_ptr<Variable>("int"),
-                                   make_ptr<Variable>("?"));
+                                   make_ptr<Identifier>("int"),
+                                   make_ptr<Identifier>("?"));
     }
 
     return make_ptr<Integer>(firstInteger->value - secondInteger->value);

@@ -12,8 +12,6 @@ public:
         expected(expectedType),
         actual(actualType) {}
 
-    Expression* evalConstEnv(Environment* env);
-
     std::string show() const override;
 
 private:

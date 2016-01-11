@@ -1,23 +1,22 @@
 #pragma once
-#include "Expression.h"
+#include "DataType.h"
 #include <string>
 
-class Variable : public Expression
+class Identifier : public DataType
 {
 public:
-    Variable(const std::string& name)
+    Identifier(const std::string& name)
         : name(name) {}
 
-    ExpPtr eval(Environment*& env) const override;
+//    ExpPtr eval(Environment*& env) const override;
     bool match(ExpPtrArg other) const;
     std::string show() const override;
 
-    virtual bool unwind(ExpPtr& lvalue,
-                        ExpPtr& rvalue,
-                        Environment*& env) override;
+//    virtual bool unwind(ExpPtr& lvalue,
+//                        ExpPtr& rvalue,
+//                        Environment*& env) override;
 
     bool hasNonOpVariable(Environment* env) const;
 
     std::string name;
 };
-

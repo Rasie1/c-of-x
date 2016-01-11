@@ -10,11 +10,6 @@ Expression::Expression()
 
 }
 
-Expression::~Expression()
-{
-
-}
-
 bool Expression::match(ExpPtrArg other) const
 {
     return false;

@@ -64,27 +64,27 @@ Environment* Environment::add(ExpPtrArg key,
 
 Environment* Environment::loadDefaultVariables()
 {
-    return add(make_ptr<Variable>(Lambda         ::defaultName), make_ptr<Lambda>())
-         ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
-         ->add(make_ptr<Variable>(Then           ::defaultName), make_ptr<Then>())
-         ->add(make_ptr<Variable>(EvalForce      ::defaultName), make_ptr<EvalForce>())
-         ->add(make_ptr<Variable>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
-         ->add(make_ptr<Variable>(Print          ::defaultName), make_ptr<Print>())
-         ->add(make_ptr<Variable>(Include        ::defaultName), make_ptr<Include>())
-         ->add(make_ptr<Variable>(Addition       ::defaultName), make_ptr<Addition>())
-         ->add(make_ptr<Variable>(Union          ::defaultName), make_ptr<Union>())
-         ->add(make_ptr<Variable>(Intersection   ::defaultName), make_ptr<Intersection>())
-         //->add(make_ptr<Variable>(Mutation       ::defaultName), make_ptr<Mutation>())
-         ->add(make_ptr<Variable>(Subtraction    ::defaultName), make_ptr<Subtraction>())
-         //->add(make_ptr<Variable>(Multiplication ::defaultName), make_ptr<Multiplication>())
-         ->add(make_ptr<Variable>(Assignment     ::defaultName), make_ptr<Assignment>())
-         ->add(make_ptr<Variable>(Pair           ::defaultName), make_ptr<Pair>())
+    return add(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>())
+         ->add(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>())
+         ->add(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>())
+         ->add(make_ptr<Identifier>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
+         ->add(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>())
+         ->add(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>())
+         ->add(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>())
+         ->add(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>())
+         ->add(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>())
+         //->add(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>())
+         ->add(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>())
+         //->add(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>())
+         ->add(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>())
          ;
 }
 
 Environment* Environment::create()
 {
-    auto environment = new Environment(make_ptr<Variable>(Void::defaultName),
+    auto environment = new Environment(make_ptr<Identifier>(Void::defaultName),
                                        make_ptr<Void>(),
                                        nullptr);
     return environment->loadDefaultVariables();
@@ -97,7 +97,7 @@ bool Environment::compareOperators(ExpPtrArg first,
     bool isFirstRightAssociative = false;
 
     std::shared_ptr<Operator> firstOperator, secondOperator;
-    //std::shared_ptr<Variable> firstOperator, secondOperator;
+    //std::shared_ptr<Identifier> firstOperator, secondOperator;
     auto env = this;
     firstOperator  = d_cast<Operator>(first->eval(env));
     secondOperator = d_cast<Operator>(second->eval(env));

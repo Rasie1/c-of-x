@@ -20,12 +20,10 @@ ExpPtr Assignment::operate(ExpPtrArg first,
     while (lvalue->unwind(lvalue, rvalue, env));
     env = env->add(lvalue, rvalue);
 
-
     // Enable recursion
     auto operation = d_cast<Operation>(rvalue);
     if (operation && d_cast<Lambda>(operation->op))
         env = env->add(lvalue, rvalue);
-
 
     return second;
 }

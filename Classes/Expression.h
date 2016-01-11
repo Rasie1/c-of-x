@@ -12,7 +12,6 @@ public:
     typedef const ExpPtr& ExpPtrArg;
 
     Expression();
-    virtual ~Expression();
 
     virtual ExpPtr eval(Environment*& env) const = 0;
 

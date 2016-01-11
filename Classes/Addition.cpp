@@ -23,8 +23,8 @@ ExpPtr Addition::operate(ExpPtrArg first,
     {
         auto operation = make_ptr<Operation>(make_ptr<Addition>(), l, r);
         return make_ptr<TypeError>(operation,
-                                   make_ptr<Variable>("int"),
-                                   make_ptr<Variable>("?"));
+                                   make_ptr<Identifier>("arguments of type integer"),
+                                   make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
     }
 
     return make_ptr<Integer>(firstInteger->value + secondInteger->value);

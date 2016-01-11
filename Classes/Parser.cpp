@@ -81,7 +81,7 @@ bool isOperator(ExpPtr e, Environment* env)
 {
     if (d_cast<Operator>(e))
         return true;
-    if (d_cast<Variable>(e))
+    if (d_cast<Identifier>(e))
     {
         auto value = env->get(e);
         return d_cast<Operator>(value) != nullptr;
@@ -115,13 +115,13 @@ ExpPtr Parser::parseName(const std::string& s,
     {
         auto ss = s.substr(start, end - start);
 
-        return make_ptr<Variable>(ss);
+        return make_ptr<Identifier>(ss);
     }
     if (isOperatorCharacter(s[start]))
     {
         auto ss = s.substr(start, end - start);
 
-        return make_ptr<Variable>(ss);
+        return make_ptr<Identifier>(ss);
     }
 }
 
@@ -132,9 +132,9 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
     ExpPtr left;
     ExpPtr right;
     ExpPtr top = operatorStack.top();
-    //Operator* op = (Operator*)(top);
-    std::shared_ptr<Operator> op =
-            d_cast<Operator>(top->eval(env)); // eval in parser?!
+    std::shared_ptr<Operator> op = d_cast<Application>(top);
+    if (op == nullptr)
+        op = s_cast<Operator>(env->get(top));
     operatorStack.pop();
 
     right = q.back();
@@ -145,7 +145,7 @@ void makeOperation(std::stack<ExpPtr>& operatorStack,
         q.pop_back();
 
         // "Preprocessor" handling (#)
-        auto variable = d_cast<Variable>(left);
+        auto variable = d_cast<Identifier>(left);
         bool evalForce = false;
         if (variable)
             evalForce = variable->name == "#";

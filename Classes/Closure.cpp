@@ -29,7 +29,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, env));
 
-    auto variable = d_cast<Variable>(lvalue);
+    auto variable = d_cast<Identifier>(lvalue);
     auto value = d_cast<DataType>(argument);
 
     if (variable)
@@ -56,16 +56,16 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 
 std::string Closure::show() const
 {
-    std::string ret = "[";
-    auto top = env;
-    for (int i = 0; i < envSize; ++i)
-    {
-        ret +=top->top().first->show()
-            + std::string(" = ")
-            + top->top().second->show()
-            + std::string(";");
-        top = top->getNext();
-    }
-    ret += std::string("]");
-    return "(" + argument->show() + "){" + body->show() + "}";
+//    std::string ret = "[";
+//    auto top = env;
+//    for (int i = 0; i < envSize; ++i)
+//    {
+//        ret +=top->top().first->show()
+//            + std::string(" = ")
+//            + top->top().second->show()
+//            + std::string(";");
+//        top = top->getNext();
+//    }
+//    ret += std::string("]");
+    return "[|" + argument->show() + " => " + body->show() + "|]";
 }
