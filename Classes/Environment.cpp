@@ -90,25 +90,17 @@ Environment* Environment::create()
     return environment->loadDefaultVariables();
 }
 
-bool Environment::compareOperators(ExpPtrArg first,
-                                   ExpPtrArg second)
+bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
+                                   const std::shared_ptr<Operator>& second)
 {
     int firstValue = 0, secondValue = 1;
     bool isFirstRightAssociative = false;
 
-    std::shared_ptr<Operator> firstOperator, secondOperator;
-    //std::shared_ptr<Identifier> firstOperator, secondOperator;
     auto env = this;
-    firstOperator  = d_cast<Operator>(first->eval(env));
-    secondOperator = d_cast<Operator>(second->eval(env));
 
-    if (firstOperator)
-    {
-        firstValue = firstOperator->priority;
-        isFirstRightAssociative = firstOperator->isRightAssociative;
-    }
-    if (secondOperator)
-        secondValue = secondOperator->priority;
+    firstValue = first->priority;
+    isFirstRightAssociative = first->isRightAssociative;
+    secondValue = second->priority;
 
     return firstValue < secondValue ||
            !isFirstRightAssociative && (firstValue <= secondValue);

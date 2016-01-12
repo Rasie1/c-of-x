@@ -11,7 +11,7 @@ class Operator;
 class Environment
 {
     typedef std::map<std::string, ExpPtr> Variables;
-    typedef std::map<std::string, ExpPtr> Operators;
+    typedef std::map<std::string, std::shared_ptr<Operator>> Operators;
 public:
     Environment(ExpPtrArg key, ExpPtrArg value, Environment* next = nullptr);
 
@@ -21,7 +21,8 @@ public:
     Environment* pop();
     ExpPtr get(ExpPtrArg key);
     std::pair<ExpPtr, ExpPtr> top();
-    bool compareOperators(ExpPtrArg first, ExpPtrArg second);
+    bool compareOperators(const std::shared_ptr<Operator>& first,
+                          const std::shared_ptr<Operator>& second);
     Environment* getNext();
 
     static Environment* create();

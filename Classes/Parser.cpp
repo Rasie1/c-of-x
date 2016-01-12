@@ -125,16 +125,13 @@ ExpPtr Parser::parseName(const std::string& s,
     }
 }
 
-void makeOperation(std::stack<ExpPtr>& operatorStack,
+void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
                    std::deque<ExpPtr>& q,
                    Environment* env)
 {
     ExpPtr left;
     ExpPtr right;
-    ExpPtr top = operatorStack.top();
-    std::shared_ptr<Operator> op = d_cast<Application>(top);
-    if (op == nullptr)
-        op = s_cast<Operator>(env->get(top));
+    std::shared_ptr<Operator> op = operatorStack.top();
     operatorStack.pop();
 
     right = q.back();
@@ -190,7 +187,7 @@ ExpPtr Parser::parse(const std::string& s,
 {
     ExpPtr ret = nullptr;
 
-    std::stack<ExpPtr> operatorStack;
+    std::stack<std::shared_ptr<Operator>> operatorStack;
     std::deque<ExpPtr> q;
     bool applicationFlag = false;
 
@@ -257,11 +254,15 @@ ExpPtr Parser::parse(const std::string& s,
             {
                 applicationFlag = false;
 
-                while (!operatorStack.empty()
-                       && env->compareOperators(e, operatorStack.top()))
+                auto op = d_cast<Operator>(e);
+                if (!op)
+                    op = d_cast<Operator>(env->get(e));
+
+                while (!operatorStack.empty() &&
+                       env->compareOperators(op, operatorStack.top()))
                     makeOperation(operatorStack, q, env);
 
-                operatorStack.push(e);
+                operatorStack.push(op);
             }
             else
             {
