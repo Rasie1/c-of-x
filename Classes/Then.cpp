@@ -1,7 +1,8 @@
 #include "Then.h"
 #include "Operation.h"
 #include "Environment.h"
-#include "Variable.h"
+#include "Identifier.h"
+#include "Void.h"
 
 Then::Then()
     : Operator(true, 3)
@@ -14,6 +15,9 @@ ExpPtr Then::operate(ExpPtrArg first,
 {
     auto l = first->eval(env);
     auto r = second->eval(env);
+
+    if (d_cast<Void>(l))
+        return make_ptr<Void>();
 
     return r;
 }

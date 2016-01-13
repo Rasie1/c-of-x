@@ -4,7 +4,7 @@
 #include "Operation.h"
 #include "Error.h"
 #include "Function.h"
-#include "Variable.h"
+#include "Identifier.h"
 
 Application::Application()
     : Operator(false, 10)

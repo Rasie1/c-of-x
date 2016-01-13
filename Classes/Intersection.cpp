@@ -1,6 +1,6 @@
 #include "Intersection.h"
 #include "Operation.h"
-#include "Variable.h"
+#include "Identifier.h"
 #include "Void.h"
 
 Intersection::Intersection()

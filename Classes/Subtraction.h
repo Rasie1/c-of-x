@@ -1,9 +1,7 @@
 #pragma once
-#include "Function.h"
-#include "Integer.h"
-#include "Operator.h"
+#include "CalculationOperator.h"
 
-class Subtraction : public Operator
+class Subtraction : public CalculationOperator
 {
 public:
     Subtraction();

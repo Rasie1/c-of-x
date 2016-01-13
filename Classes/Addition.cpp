@@ -2,12 +2,12 @@
 #include "Operation.h"
 #include "Integer.h"
 #include "Subtraction.h"
-#include "Variable.h"
+#include "Identifier.h"
 #include "TypeError.h"
 #include "Environment.h"
 
 Addition::Addition()
-    : Operator(false, 5)
+    : CalculationOperator(false, 5)
 {
 }
 

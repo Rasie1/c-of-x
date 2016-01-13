@@ -3,11 +3,11 @@
 #include "Integer.h"
 #include "Operation.h"
 #include "Addition.h"
-#include "Variable.h"
+#include "Identifier.h"
 #include "TypeError.h"
 
 Subtraction::Subtraction()
-    : Operator(false, 5)
+    : CalculationOperator(false, 5)
 {
 }
 
