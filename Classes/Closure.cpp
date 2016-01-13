@@ -46,12 +46,14 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
     while (lvalue->unwind(lvalue, rvalue, env));
 
     auto variable = d_cast<Identifier>(lvalue);
-    auto value = d_cast<DataType>(argument);
+    auto value = d_cast<DataType>(lvalue);
 
     if (variable)
     {
         auto newEnv = this->env->add(variable, e);
         auto evaluated = rvalue->eval(newEnv);
+        if (d_cast<Identifier>(evaluated))
+            evaluated = newEnv->get(evaluated);
         return evaluated;
     }
     else if (value)
