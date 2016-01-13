@@ -11,23 +11,8 @@ Addition::Addition()
 {
 }
 
-ExpPtr Addition::operate(ExpPtrArg first,
-                         ExpPtrArg second,
-                         Environment*& env) const
+ExpPtr Addition::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    ExpPtr l, r;
-    l = d_cast<Identifier>(first);
-    if (l)
-        l = env->get(l);
-    else
-        l = first;
-    r = d_cast<Identifier>(second);
-    if (r)
-        r = env->get(r);
-    else
-        r = second;
-    l = l->eval(env);
-    r = r->eval(env);
     auto firstInteger  = d_cast<Integer>(l);
     auto secondInteger = d_cast<Integer>(r);
 

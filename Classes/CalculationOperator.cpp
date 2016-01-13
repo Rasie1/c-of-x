@@ -11,36 +11,26 @@ CalculationOperator::CalculationOperator(bool isRightAssociative, int priority)
 {
 }
 
-//ExpPtr CalculationOperator::operate(ExpPtrArg first,
-//                                    ExpPtrArg second,
-//                                    Environment*& env) const
-//{
-//    ExpPtr l, r;
-//    l = d_cast<Identifier>(first);
-//    if (l)
-//        l = env->get(l);
-//    else
-//        l = first;
-//    r = d_cast<Identifier>(second);
-//    if (r)
-//        r = env->get(r);
-//    else
-//        r = second;
-//    l = l->eval(env);
-//    r = r->eval(env);
-//    auto firstInteger  = d_cast<Integer>(l);
-//    auto secondInteger = d_cast<Integer>(r);
+ExpPtr CalculationOperator::operate(ExpPtrArg first,
+                                    ExpPtrArg second,
+                                    Environment*& env) const
+{
+    ExpPtr l, r;
+    l = d_cast<Identifier>(first);
+    if (l)
+        l = env->get(l);
+    else
+        l = first;
+    r = d_cast<Identifier>(second);
+    if (r)
+        r = env->get(r);
+    else
+        r = second;
+    l = l->eval(env);
+    r = r->eval(env);
 
-//    if (!firstInteger || !secondInteger)
-//    {
-//        auto operation = make_ptr<Operation>(make_ptr<Addition>(), l, r);
-//        return make_ptr<TypeError>(operation,
-//                                   make_ptr<Identifier>("arguments of type integer"),
-//                                   make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
-//    }
-
-//    return make_ptr<Integer>(firstInteger->value + secondInteger->value);
-//}
+    return calculate(l, r);
+}
 
 //bool CalculationOperator::unwind(ExpPtr& left,
 //                      ExpPtr& right,

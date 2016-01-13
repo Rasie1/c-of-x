@@ -6,9 +6,7 @@ class Subtraction : public CalculationOperator
 public:
     Subtraction();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
-                   Environment*& env) const override;
+    ExpPtr calculate(ExpPtrArg l, ExpPtrArg r) const override;
 
     std::string show() const override;
 

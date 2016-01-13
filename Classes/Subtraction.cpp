@@ -11,12 +11,8 @@ Subtraction::Subtraction()
 {
 }
 
-ExpPtr Subtraction::operate(ExpPtrArg first,
-                            ExpPtrArg second,
-                            Environment*& env) const
+ExpPtr Subtraction::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    auto l = first->eval(env);
-    auto r = second->eval(env);
     auto firstInteger  = d_cast<Integer>(l);
     auto secondInteger = d_cast<Integer>(r);
 
