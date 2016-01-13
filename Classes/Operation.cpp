@@ -20,55 +20,61 @@ ExpPtr Operation::eval(Environment*& env) const
     ExpPtr ret;
 
     // warning, env is not copied
-    if (!d_cast<Assignment>(op))
-    {
-        auto lVariable = d_cast<Identifier>(left);
-        auto rVariable = d_cast<Identifier>(right);
+//    if (!d_cast<Assignment>(op))
+//    {
+//        auto lVariable = d_cast<Identifier>(left);
+//        auto rVariable = d_cast<Identifier>(right);
 
-        auto left  = this->left;
-        auto right = this->right;
+//        auto left  = this->left;
+//        auto right = this->right;
 
-        if (lVariable)
-            left  = env->get(this->left);
-        if (rVariable)
-            right = env->get(this->right);
+//        if (lVariable)
+//            left  = env->get(this->left);
+//        if (rVariable)
+//            right = env->get(this->right);
 
-        if (left  == nullptr)
-            left  = this->left;
-        if (right == nullptr)
-            right = this->right;
+//        if (left  == nullptr)
+//            left  = this->left;
+//        if (right == nullptr)
+//            right = this->right;
 
         DEBUG_PRINT_OP(op);
-        DEBUG_PRINT_LT(left);
-        DEBUG_PRINT_RT(right);
+        auto l = d_cast<Identifier>(left) ? env->get(left) : left;
+        if (l == nullptr)
+            l = left;
+        auto r = d_cast<Identifier>(right) ? env->get(right) : right;
+        if (r == nullptr)
+            r = right;
+        DEBUG_PRINT_LT(l);
+        DEBUG_PRINT_RT(r);
 
-        auto operationLeft  = d_cast<Operation>(left);
-        auto operationRight = d_cast<Operation>(right);
-        if (operationLeft && d_cast<Union>(operationLeft->op))
-        {
-            if (operationRight && d_cast<Union>(operationRight->op))
-                ret = make_ptr<Operation>(make_ptr<Union>(),
-                                          make_ptr<Operation>(make_ptr<Union>(),
-                                                              op->operate(operationLeft->left, operationRight->left, env),
-                                                              op->operate(operationLeft->left, operationRight->right, env)),
-                                          make_ptr<Operation>(make_ptr<Union>(),
-                                                              op->operate(operationLeft->right, operationRight->left, env),
-                                                              op->operate(operationLeft->right, operationRight->right, env)));
-            else
-                ret = make_ptr<Operation>(make_ptr<Union>(),
-                                          op->operate(operationLeft->left, right, env),
-                                          op->operate(operationLeft->right, right, env));
+//        auto operationLeft  = d_cast<Operation>(left);
+//        auto operationRight = d_cast<Operation>(right);
+//        if (operationLeft && d_cast<Union>(operationLeft->op))
+//        {
+//            if (operationRight && d_cast<Union>(operationRight->op))
+//                ret = make_ptr<Operation>(make_ptr<Union>(),
+//                                          make_ptr<Operation>(make_ptr<Union>(),
+//                                                              op->operate(operationLeft->left, operationRight->left, env),
+//                                                              op->operate(operationLeft->left, operationRight->right, env)),
+//                                          make_ptr<Operation>(make_ptr<Union>(),
+//                                                              op->operate(operationLeft->right, operationRight->left, env),
+//                                                              op->operate(operationLeft->right, operationRight->right, env)));
+//            else
+//                ret = make_ptr<Operation>(make_ptr<Union>(),
+//                                          op->operate(operationLeft->left, right, env),
+//                                          op->operate(operationLeft->right, right, env));
 
-        }
-        else if (operationRight && d_cast<Union>(operationRight->op))
-            ret = make_ptr<Operation>(make_ptr<Union>(),
-                                      op->operate(left, operationRight->left, env),
-                                      op->operate(left, operationRight->right, env));
-        else
-            ret = op->operate(left, right, env);
-    }
-    else
-        ret = op->operate(left, right, env);
+//        }
+//        else if (operationRight && d_cast<Union>(operationRight->op))
+//            ret = make_ptr<Operation>(make_ptr<Union>(),
+//                                      op->operate(left, operationRight->left, env),
+//                                      op->operate(left, operationRight->right, env));
+//        else
+//            ret = op->operate(left, right, env);
+//    }
+//    else
+    ret = op->operate(left, right, env);
 
     DEBUG_PRINT_RS(ret);
 

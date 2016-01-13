@@ -1,10 +1,17 @@
 #include "Print.h"
 #include <iostream>
 #include "Environment.h"
+#include "Variable.h"
 
 ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
 {
-    auto evaluated = e->eval(env);
+    ExpPtr arg;
+    arg = d_cast<Identifier>(e);
+    if (arg)
+        arg = env->get(e);
+    else
+        arg = e;
+    auto evaluated = arg->eval(env);
     std::cout << evaluated->show() << std::endl;
     return evaluated;
 }

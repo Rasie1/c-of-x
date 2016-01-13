@@ -4,6 +4,7 @@
 #include "Subtraction.h"
 #include "Variable.h"
 #include "TypeError.h"
+#include "Environment.h"
 
 Addition::Addition()
     : Operator(false, 5)
@@ -14,8 +15,19 @@ ExpPtr Addition::operate(ExpPtrArg first,
                          ExpPtrArg second,
                          Environment*& env) const
 {
-    auto l = first->eval(env);
-    auto r = second->eval(env);
+    ExpPtr l, r;
+    l = d_cast<Identifier>(first);
+    if (l)
+        l = env->get(l);
+    else
+        l = first;
+    r = d_cast<Identifier>(second);
+    if (r)
+        r = env->get(r);
+    else
+        r = second;
+    l = l->eval(env);
+    r = r->eval(env);
     auto firstInteger  = d_cast<Integer>(l);
     auto secondInteger = d_cast<Integer>(r);
 

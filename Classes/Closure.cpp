@@ -25,6 +25,22 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
+//    ExpPtr lvalue, rvalue;
+
+//    if (d_cast<Identifier>(body))
+//        rvalue = env->get(body);
+//    if (rvalue == nullptr)
+//        rvalue = body;
+
+//    if (d_cast<Identifier>(lvalue))
+//        env = env->add(lvalue, rvalue);
+//    else
+//        while (lvalue->unwind(lvalue, rvalue, env));
+
+
+
+
+
     ExpPtr lvalue = argument;
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, env));

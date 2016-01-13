@@ -15,10 +15,18 @@ ExpPtr Assignment::operate(ExpPtrArg first,
                            ExpPtrArg second,
                            Environment*& env) const
 {
-    ExpPtr rvalue = second;
-    ExpPtr lvalue = first;
-    while (lvalue->unwind(lvalue, rvalue, env));
-    env = env->add(lvalue, rvalue);
+    ExpPtr lvalue, rvalue;
+    lvalue = first;
+
+    if (d_cast<Identifier>(second))
+        rvalue = env->get(second);
+    if (rvalue == nullptr)
+        rvalue = second;
+
+    if (d_cast<Identifier>(lvalue))
+        env = env->add(lvalue, rvalue);
+    else
+        while (lvalue->unwind(lvalue, rvalue, env));
 
     // Enable recursion
     auto operation = d_cast<Operation>(rvalue);
