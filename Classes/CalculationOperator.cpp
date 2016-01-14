@@ -16,7 +16,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
                                     ExpPtrArg second,
                                     Environment*& env) const
 {
-    ExpPtr l, r;
+    ExpPtr l, r, ret;
     l = d_cast<Identifier>(first);
     if (l)
         l = env->get(l);
@@ -27,11 +27,10 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
         r = env->get(r);
     else
         r = second;
-    auto left = l->eval(env);
+    auto left  = l->eval(env);
     auto right = r->eval(env);
 
-    ExpPtr ret;
-
+    // Handle indetermenism
     auto operationLeft  = d_cast<Operation>(left);
     auto operationRight = d_cast<Operation>(right);
     if (operationLeft && d_cast<Union>(operationLeft->op))
