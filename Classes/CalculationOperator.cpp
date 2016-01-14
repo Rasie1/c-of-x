@@ -5,6 +5,7 @@
 #include "Identifier.h"
 #include "TypeError.h"
 #include "Environment.h"
+#include "Union.h"
 
 CalculationOperator::CalculationOperator(bool isRightAssociative, int priority)
     : Operator(isRightAssociative, priority)
@@ -26,38 +27,38 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
         r = env->get(r);
     else
         r = second;
-    l = l->eval(env);
-    r = r->eval(env);
+    auto left = l->eval(env);
+    auto right = r->eval(env);
 
-    return calculate(l, r);
+    ExpPtr ret;
+
+    auto operationLeft  = d_cast<Operation>(left);
+    auto operationRight = d_cast<Operation>(right);
+    if (operationLeft && d_cast<Union>(operationLeft->op))
+        if (operationRight && d_cast<Union>(operationRight->op))
+            ret = make_ptr<Operation>(
+                        make_ptr<Union>(),
+                        make_ptr<Operation>(make_ptr<Union>(),
+                                            calculate(operationLeft->left,
+                                                      operationRight->left),
+                                            calculate(operationLeft->left,
+                                                      operationRight->right)),
+                        make_ptr<Operation>(make_ptr<Union>(),
+                                            calculate(operationLeft->right,
+                                                      operationRight->left),
+                                            calculate(operationLeft->right,
+                                                      operationRight->right)));
+        else
+            ret = make_ptr<Operation>(make_ptr<Union>(),
+                                      calculate(operationLeft->left, right),
+                                      calculate(operationLeft->right, right));
+
+    else if (operationRight && d_cast<Union>(operationRight->op))
+        ret = make_ptr<Operation>(make_ptr<Union>(),
+                                  calculate(left, operationRight->left),
+                                  calculate(left, operationRight->right));
+    else
+        ret = calculate(left, right);
+
+    return ret;
 }
-
-//bool CalculationOperator::unwind(ExpPtr& left,
-//                      ExpPtr& right,
-//                      ExpPtr& lvalue,
-//                      ExpPtr& rvalue,
-//                      Environment*& env)
-//{
-//    auto newEnv = env;
-//    if (left->hasNonOpVariable(env))
-//    {
-//        if (right->hasNonOpVariable(env))
-//            return false;
-//        lvalue = left;
-//        rvalue = make_ptr<Operation>(
-//                    make_ptr<Subtraction>(),
-//                    rvalue,
-//                    right);
-//        return true;
-//    }
-//    else if (right->hasNonOpVariable(env))
-//    {
-//        lvalue = right;
-//        rvalue = make_ptr<Operation>(
-//                    make_ptr<Subtraction>(),
-//                    rvalue,
-//                    left);
-//        return true;
-//    }
-//    return false;
-//}
