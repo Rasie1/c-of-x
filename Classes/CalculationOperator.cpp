@@ -33,31 +33,34 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     // Handle indetermenism
     auto operationLeft  = d_cast<Operation>(left);
     auto operationRight = d_cast<Operation>(right);
+
+    std::vector<ExpPtr> expressions;
+    expressions.reserve(4);
+
     if (operationLeft && d_cast<Union>(operationLeft->op))
         if (operationRight && d_cast<Union>(operationRight->op))
-            ret = make_ptr<Operation>(
-                        make_ptr<Union>(),
-                        make_ptr<Operation>(make_ptr<Union>(),
-                                            calculate(operationLeft->left,
-                                                      operationRight->left),
-                                            calculate(operationLeft->left,
-                                                      operationRight->right)),
-                        make_ptr<Operation>(make_ptr<Union>(),
-                                            calculate(operationLeft->right,
-                                                      operationRight->left),
-                                            calculate(operationLeft->right,
-                                                      operationRight->right)));
+        {
+            expressions.push_back(calculate(operationLeft->left,
+                                            operationRight->left));
+            expressions.push_back(calculate(operationLeft->left,
+                                            operationRight->right));
+            expressions.push_back(calculate(operationLeft->right,
+                                            operationRight->left));
+            expressions.push_back(calculate(operationLeft->right,
+                                            operationRight->right));
+        }
         else
-            ret = make_ptr<Operation>(make_ptr<Union>(),
-                                      calculate(operationLeft->left, right),
-                                      calculate(operationLeft->right, right));
-
+        {
+            expressions.push_back(calculate(operationLeft->left, right));
+            expressions.push_back(calculate(operationLeft->right, right));
+        }
     else if (operationRight && d_cast<Union>(operationRight->op))
-        ret = make_ptr<Operation>(make_ptr<Union>(),
-                                  calculate(left, operationRight->left),
-                                  calculate(left, operationRight->right));
+    {
+        expressions.push_back(calculate(left, operationRight->left));
+        expressions.push_back(calculate(left, operationRight->right));
+    }
     else
-        ret = calculate(left, right);
+        return calculate(left, right);
 
-    return ret;
+    return Union::make(expressions);
 }

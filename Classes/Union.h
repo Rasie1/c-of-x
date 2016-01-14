@@ -1,5 +1,6 @@
 #pragma once
 #include "Operator.h"
+#include <vector>
 
 class Union : public Operator
 {
@@ -11,6 +12,8 @@ public:
                    Environment*& env) const override;
 
     std::string show() const override;
+
+    static ExpPtr make(const std::vector<ExpPtr>& xs);
 
     static const std::string defaultName;
 };
