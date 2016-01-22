@@ -1,98 +1,156 @@
-Warning: this document is under heavy development right now. 
+Warning: this document is under heavy development right now
 
 # Welcome to c(x)
 
-This is an experimental programmable programming language that was designed with the idea to maintain expressiveness and usability while being fully able to meet functional, object oriented, logical or any other paradigm at the same time.
+This is an experimental programmable programming language that was designed with the idea to maintain excessive expressiveness while being comfortable to use and easy to read. The language meets object-oriented, functional and logical paradigms and provides endless possibilities to invent new ways of solving all kinds of problems.
 
 We have:
 
 + Dependent refinement types and beyond
 
-+ Ability to be compiled, interpreted and JIT-compiled
++ Compilation and optimization is done within the language
 
 + Higher order overloadable functions, types and operators
 
-+ Mathematically-correct imperative style
++ Mathematically-correct imperative style based on simple system
 
-+ Optional purity, safety and automatic theorem proving
++ Optional purity, safety and totality checking
 
-+ Full dependent pattern matching
++ Pattern matching and expression unwinding
 
-+ Evaluation control, laziness and strictness
-
-+ Highly convenient object oriented features
++ Powerful macro system and evaluation control
 
 + Pointer arithmetics and memory control
 
-+ Multi-thread features, optional automatic parallelism
-
-+ Automatic selection of interface implementation based on performance
-
-+ Packaging system inside language, easy to use FFI
-
 + Interactive development features
 
-+ Human readability while staying concise
++ Easy-to-use FFI
+<!-- 
+<> (Packaging system and project configuration tools inside the language)
+<> (Automatic choice of interface implementation based on performance)
+<> (Multithreaded features, optional automatic parallelism)
+<> (Human readability while staying concise)
+ -->
 
+Let's begin with features we've been considering. 
 
-Let's begin with new features we've been considering. 
-
-**Sets define types. Predicates define sets.**
+**Sets define types. Predicates define sets. Predicates are filters**
 
 ```c
-                    // Let's define a value
-x : integer, (>= 0) // Here we say that x is a non-negative integer
-                    // Now, let's make it more specific.
-x < 5               // Actually, this is some kind of assignment.
+             // Let's define a value
+x : int, > 0 // Here we say that x is a positive integer
+             // Now, let's make it more specific.
+x < 10       // Actually, this is some kind of assignment.
+             // And x is now an intersection of three sets:
+             // integers, positive numbers and numbers < 10
+             // Let's check it
 
-print x+1           // "12345" is printed
+if 0 < int x < 10 
+   then print "true"
+   else print "this will not get printed"
 ```
-Let's think about what happened. "print" takes just one value. However, at the stage of using it, it is only known that "x" is in range [0; 5). This means that "print" could be applied to any of them. And as the function is impure, it has to be evaluated right now, so it iterates all possible x's, and it can be done thanks to the integer being an ordered finite set.
+That's how you can deal with predicates.
 
-However, here is overloaded "print" that takes set and some strings:
+Things you may have noticed:
+
++ Operator ":" is just a syntactic sugar, "A : B" is the same as "B A". There are some more operators that do nothing but change order or priority.
+
++ "int" takes a value as an argument and returns it if it's in set. That's how types work here.
+
++ You can view "> 0", "isUppercase" and literally any other function as type: there is no distinction.
+
+Now, let's do something strange:
+
+```c
+print x+1 // What gets printed is "2345678910"
+```
+How is that? We didn't know what exactly "x" was!
+
+This is indeterminism. But, by saying that "x" is an integer, we had stated that it's one of infinite number of values. Then we are cutting both sides of infinity with other predicates and what left is only 9 values.
+
+We could do any operation on that "x" if the operation supports taking arguments of the same type of "x". It just wouldn't evaluate until it's needed. And then we triggered the evaluation using impure "print" - it has to iterate all possible variants.
+
+Compiler would give us a warning about ambiguous "x" used with impure, because such situation might be unwanted. 
+
+Don't confuse "x" with sets. Sets are containers holding multiple values, and "x" is just a value that can be equal to either one or another value.
+
+Next, some more syntactic sugar:
+
+```c
+xs = ^x  // Operator for constructing set from indeterministic values.
+         // Let's leave only even values is xs using
+         // anonymous function, equality and modulo operators:
+xs &= (x%2 = 0) => x
+         // Call an overloaded "print" function
+print mySet delimiter ", " terminator ";\n"
+         // stdout: "2, 4, 6, 8;\n"
+```
+
+As you can see, here we just intersect a set with an anonymous function. That may sound pretty anti-scientific at first, but under the hood it's logical enough: it takes value only if it can fit in the expression at left of "=>"
+
+Writing operators without spaces increases operator precedence and reduces need for parentheses: "2+2 \* 2 = 8" and "2 + 2\*2 = 6"
+
+Who the heck are those "delimiter", "terminator"? Argument names. They are optional and can be used for changing order of arguments and separating expressions (reducing number of parentheses)
+
+Let's take a look at how this "print" may be defined
+
 ```c
 print xs         : container, ordered
-      delimiter  : string
-      terminator : string 
-  = for x in xs \ xs[-1]  // Iterate on each value in "xs" excluding last
-        print (x, ", ")   // Call to overloaded "print" that takes tuple
-    print (xs[-1], ";")   // as an argument
-// Usage
-print [1..5] with delimiter ", " and terminator ";\n'
-// "1, 2, 3, 4, 5;\n" is printed
+      delimiter  : string, default " "
+      terminator : string, default "\n"
+  = for x in xs \ xs[-1]    // Iterate on each value in "xs" excluding last
+        print x & delimiter // Calling regular print
+    print xs[-1] & terminator   
 ```
-What's up with those "delimiter", "terminator", "with", "and" words? They are named arguments ("delimiter", "terminator") and empty words ("with", "and"). Both things are fully optional. They can separate things written in 1 line, decreasing need of parentheses, allow changing order of arguments and they also can be optional arguments. By the way, "for" and "if" are defined like that. There is no such thing as "keywords" in this language.
+**Objects**
 
-Now, about object-oriented stuff. Here we create and "inherit" classes, override methods and use events (those are just functions that can be called when another events are executed)
+Let's observe how OOP works while solving this diamond problem:
 
 ```c
-Creature = class
-         - health : integer, (< 200) // Notice "-", "+" and "#" as in UML notation
-                    property         // Makes variable exposed in constructor
-           die    : void -> void
-                    event
-           dead   : boolean
-         + takeDamage : integer -> void
-                      $ amount
-                      = if amount >= health then die()
-                                                 dead = true
-                                            else health -= amount
+Person : class
+         has money : int = 0
+             skill : int = 0
+         can think : void -> string
 
-Human = Creature
-      - damage     : integer = random {1..99}
-        experience : integer = 0
-        die   : override
-        die() = print "Ugh" 
-      + attack enemy = enemy.takeDamage this.damage
-                       onAttackedMonsterDeath.boundEvents = {}
-                       onAttackedMonsterDeath.bind enemy.die
-                                                   with argument enemy
-      - onAttackedEnemyDeath : event
-                             $ enemy : Creature
-                             = experience += 100
-                             
-// Usage
-a, b : Human
-for i in range(0, 10)
-    a.attack b
+Student = Person
+          can study() = knowledge++
+              think() : override
+                      = "a"
+
+Worker = Person
+         can work()  = money += skill
+             think() : override
+                     = "b"
 ```
+
+As you can see, "can" function is something like in-place trait.
+
+... WIP PART
+
+...
+
+```c
+f (x + 10) = x
+print f(15)    //Writing calls like that increases precedence
+    //stdout: 5
+```
+This is called unwinding. You can do this for every function if you define the "opposite" operation. As you may have notices, the "opposite" operation for constructing types is just unwrapping the value from type. You can define the language to solve even differential equations involving this syntax.
+
+But what if we do
+
+```c
+f (x + y) = print x, print y
+f 1+2
+```
+The language will give you an error on "print x", "print y" because you can't iterate on infinite containers. The reason of that is "1 + 2" should be calculated before applying to a function. So, "f" gets "3" as an argument, and there is an infinite number of ways to solve "x + y = 3".
+
+Now let's take a look what macros can do.
+```c
+f #(x + y) = print x, print y
+f 1+2 //stdout: 12
+```
+So, macro is just a function takes inevaluated arguments. "1 + 2" is fed to the function before it gets calculated, so "f" knows what "x" and "y" are.
+
+You can think of "f" as a function taking "code", or "abstract syntax tree". You can match agaisnt literally everything.
+
+Macros are first class objects and behaviour of passing macros around is resolved at compile-time.
