@@ -25,16 +25,33 @@ We have:
 + Interactive development features
 
 + Easy-to-use FFI
-<!-- 
-<> (Packaging system and project configuration tools inside the language)
-<> (Automatic choice of interface implementation based on performance)
-<> (Multithreaded features, optional automatic parallelism)
-<> (Human readability while staying concise)
- -->
+
 
 Let's begin with features we've been considering. 
 
 **Sets define types. Predicates define sets. Predicates are filters**
+
+```c
+             // Let's define a value
+x : int, > 0 // Here we say that x is a positive integer
+             // Now, let's make it more specific.
+x < 10       // Actually, this is some kind of assignment.
+             // And x is now an intersection of three sets:
+             // integers, positive numbers and numbers < 10
+             // Let's check it
+
+if 0 < int x < 10 
+   then print "true"
+   else print "this will not get printed"
+```
+That's how you can deal with predicates.
+
+Things you may have noticed:
+
++ Operator ":" is just a syntactic sugar, "A : B" is the same as "B A". There are some more operators that do nothing but change order or priority.
+
++ "int" takes a value as an argument and returns it if it's in set. That's how types work here.
+
 
 ```c
              // Let's define a value
@@ -104,61 +121,35 @@ print xs         : container, ordered
 ```
 **Objects**
 
-Let's observe how OOP works while solving this diamond problem:
+Let's observe how this language is object-oriented:
 
 ```c
-Person : class
+Person = class, abstract
+         construct money skill
          has money : int = 0
              skill : int = 0
-         can think : void -> string
+             think : void -> string
 
 Student = Person
-          can study() = knowledge++
+          has study() = knowledge++
               think() : override
                       = "a"
 
 Worker = Person
-         can work()  = money += skill
+         has work()  = money += skill
              think() : override
                      = "b"
 
-Programmer = Worker, Student
-
-
+Scientist = Worker, Student
+            has think = Worker::think 
 ```
 
-```c
-Creature : class
-         - health : integer, (< 200) // Notice "-", "+" and "#" as in UML notation
-                    property         // Makes variable exposed in constructor
-           die    : void -> void
-                    event
-           dead   : boolean
-         + takeDamage : integer -> void
-                      $ amount
-                      = if amount >= health then die()
-                                                 dead = true
-                                            else health -= amount
 
-Human = Creature
-      - damage     : integer = random {1..99}
-        experience : integer = 0
-        die   : override
-        die() = print "Ugh" 
-      + attack enemy = enemy.takeDamage this.damage
-                       onAttackedMonsterDeath.boundEvents = {}
-                       onAttackedMonsterDeath.bind enemy.die
-                                                   with argument enemy
-      - onAttackedEnemyDeath : event
-                             $ enemy : Creature
-                             = experience += 100
-                             
-// Usage
-a, b : Human
-for i in range(0, 10)
-    a.attack b
-```
+...
 
+WIP README PART
+
+...
 
 
 ```c
