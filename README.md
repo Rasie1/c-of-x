@@ -1,4 +1,4 @@
-Warning: this document is under heavy development right now
+Warning: this document is under heavy development right now. 
 
 # Welcome to c(x)
 
@@ -25,12 +25,6 @@ We have:
 + Interactive development features
 
 + Easy-to-use FFI
-<!-- 
-<> (Packaging system and project configuration tools inside the language)
-<> (Automatic choice of interface implementation based on performance)
-<> (Multithreaded features, optional automatic parallelism)
-<> (Human readability while staying concise)
- -->
 
 Let's begin with features we've been considering. 
 
@@ -104,30 +98,37 @@ print xs         : container, ordered
 ```
 **Objects**
 
-Let's observe how OOP works while solving this diamond problem:
+Let's observe how this language is object-oriented:
 
 ```c
-Person : class
+Person = class, abstract
+         construct money skill
          has money : int = 0
              skill : int = 0
-         can think : void -> string
+             think : void -> string
 
 Student = Person
-          can study() = knowledge++
+          has study() = knowledge++
               think() : override
                       = "a"
 
 Worker = Person
-         can work()  = money += skill
+         has work()  = money += skill
              think() : override
                      = "b"
+
+Scientist = Worker, Student
+            has think = Worker::think 
 ```
 
-As you can see, "can" function is something like in-place trait.
-
-... WIP PART
 
 ...
+
+WIP
+
+...
+
+
 
 ```c
 f (x + 10) = x
