@@ -10,14 +10,15 @@ Union::Union()
 
 bool findSameOperand(ExpPtrArg where, ExpPtrArg what)
 {
-    return false;
     if (where->match(what))
         return true;
-    auto op = d_cast<Operation>(where);
-    if (op && d_cast<Union>(op->op))
-        return findSameOperand(op->left, what) ||
-               findSameOperand(op->right, what);
     return false;
+
+//    auto op = d_cast<Operation>(where);
+//    if (op && d_cast<Union>(op->op))
+//        return findSameOperand(op->left, what) ||
+//               findSameOperand(op->right, what);
+//    return false;
 }
 
 bool isVoid(ExpPtr x)

@@ -12,7 +12,7 @@ ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
     else
         arg = e;
     auto evaluated = arg->eval(env);
-    std::cout << evaluated->show() << std::endl;
+    std::cout << evaluated->show();
     return evaluated;
 }
 
