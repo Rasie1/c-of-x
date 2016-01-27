@@ -31,27 +31,6 @@ Let's begin with features we've been considering.
 
 **Sets define types. Predicates define sets. Predicates are filters**
 
-```c
-             // Let's define a value
-x : int, > 0 // Here we say that x is a positive integer
-             // Now, let's make it more specific.
-x < 10       // Actually, this is some kind of assignment.
-             // And x is now an intersection of three sets:
-             // integers, positive numbers and numbers < 10
-             // Let's check it
-
-if 0 < int x < 10 
-   then print "true"
-   else print "this will not get printed"
-```
-That's how you can deal with predicates.
-
-Things you may have noticed:
-
-+ Operator ":" is just a syntactic sugar, "A : B" is the same as "B A". There are some more operators that do nothing but change order or priority.
-
-+ "int" takes a value as an argument and returns it if it's in set. That's how types work here.
-
 
 ```c
              // Let's define a value
@@ -109,16 +88,17 @@ Writing operators without spaces increases operator precedence and reduces need 
 
 Who the heck are those "delimiter", "terminator"? Argument names. They are optional and can be used for changing order of arguments and separating expressions (reducing number of parentheses)
 
-Let's take a look at how this "print" may be defined
+Let's take a look at how this "print" may be defined:
 
 ```c
-print xs         : container, ordered
+print xs         : iterable
       delimiter  : string, default " "
       terminator : string, default "\n"
-  = for x in xs \ xs[-1]    // Iterate on each value in "xs" excluding last
+  = for x : xs \ xs[-1]     // Iterate on each value in "xs" excluding last
         print x & delimiter // Calling regular print
     print xs[-1] & terminator   
 ```
+
 **Objects**
 
 Let's observe how this language is object-oriented:
