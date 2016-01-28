@@ -20,7 +20,6 @@ public:
                         Environment*& env);
 
     virtual bool operator==(const Expression& other) const;
-    bool match(ExpPtrArg other) { return shared_from_this()->operator==(*other); }
     virtual std::string show() const;
     virtual bool hasNonOpVariable(Environment* env) const;
 };

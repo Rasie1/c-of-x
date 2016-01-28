@@ -47,7 +47,7 @@ Environment* Environment::pop()
 
 ExpPtr Environment::get(ExpPtrArg key)
 {
-    if (this->key->match(key))
+    if (*(this->key) == *key)
         return value;
 
     if (next == nullptr)

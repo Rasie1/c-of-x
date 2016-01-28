@@ -14,11 +14,10 @@
 //    return ret;
 //}
 
-bool Identifier::match(ExpPtrArg other) const
+bool Identifier::operator==(const Expression& other) const
 {
-    auto variable = d_cast<Identifier>(other);
-    if (variable)
-        return name == variable->name;
+    if (typeid(other) == typeid(*this))
+        return name == static_cast<const Identifier&>(other).name;
 
     return false;
 }

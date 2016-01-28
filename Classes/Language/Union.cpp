@@ -21,6 +21,7 @@ bool findSameOperand(ExpPtrArg where, ExpPtrArg what)
 //    return false;
 }
 
+
 bool isVoid(ExpPtr x)
 {
     if (d_cast<Void>(x))

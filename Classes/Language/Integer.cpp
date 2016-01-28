@@ -8,13 +8,10 @@ Integer::Integer(long long value)
 {
 }
 
-bool Integer::match(ExpPtrArg other) const
+bool Integer::operator==(const Expression& other) const
 {
-    auto integer = d_cast<Integer>(other);
-    if (!integer)
-        return false;
-
-    return this->value == integer->value;
+    if (typeid(other) == typeid(*this))
+        return value == static_cast<const Integer&>(other).value;
 }
 
 std::string Integer::show() const

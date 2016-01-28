@@ -9,7 +9,7 @@ public:
         : name(name) {}
 
 //    ExpPtr eval(Environment*& env) const override;
-    bool match(ExpPtrArg other) const;
+    bool operator==(const Expression& other) const override;
     std::string show() const override;
 
 //    virtual bool unwind(ExpPtr& lvalue,

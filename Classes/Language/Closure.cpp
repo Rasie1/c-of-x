@@ -58,7 +58,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
     }
     else if (value)
     {
-        if (value->match(e))
+        if (*value == *e)
         {
             auto newEnv = env;
             return rvalue->eval(newEnv);

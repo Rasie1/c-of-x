@@ -15,7 +15,7 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     auto l = first->eval(env);
     auto r = second->eval(env);
 
-    if (l->match(r))
+    if (*l == *r)
         return r;
     else
         return make_ptr<Void>();
