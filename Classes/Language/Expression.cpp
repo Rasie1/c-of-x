@@ -10,7 +10,7 @@ Expression::Expression()
 
 }
 
-bool Expression::match(ExpPtrArg other) const
+bool Expression::operator==(const Expression& other) const
 {
     return false;
 }

@@ -10,7 +10,7 @@ Union::Union()
 
 bool findSameOperand(ExpPtrArg where, ExpPtrArg what)
 {
-    if (where->match(what))
+    if (*where == *what)
         return true;
     return false;
 
