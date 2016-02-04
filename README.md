@@ -32,7 +32,7 @@ Let's begin with features we've been considering.
 **Sets define types. Predicates define sets. Predicates are filters**
 
 
-```c
+```scala
              // Let's define a value
 x : int, > 0 // Here we say that x is a positive integer
              // Now, let's make it more specific.
@@ -57,7 +57,7 @@ Things you may have noticed:
 
 Now, let's do something strange:
 
-```c
+```scala
 print x+1 // What gets printed is "2345678910"
 ```
 How is that? We didn't know what exactly "x" was!
@@ -72,7 +72,7 @@ Don't confuse "x" with sets. Sets are containers holding multiple values, and "x
 
 Next, some more syntactic sugar:
 
-```c
+```scala
 xs = ^x  // Operator for constructing set from indeterministic values.
          // Let's leave only even values is xs using
          // anonymous function, equality and modulo operators:
@@ -90,7 +90,7 @@ Who the heck are those "delimiter", "terminator"? Argument names. They are optio
 
 Let's take a look at how this "print" may be defined:
 
-```c
+```scala
 print xs         : iterable
       delimiter  : string, default " "
       terminator : string, default "\n"
@@ -103,7 +103,7 @@ print xs         : iterable
 
 Let's observe how this language is object-oriented:
 
-```c
+```scala
 Person = class, abstract
          construct money skill
          has money : int = 0
@@ -132,7 +132,7 @@ WIP README PART
 ...
 
 
-```c
+```scala
 f (x + 10) = x
 print f(15)    //Writing calls like that increases precedence
     //stdout: 5
@@ -141,14 +141,14 @@ This is called unwinding. You can do this for every function if you define the "
 
 But what if we do
 
-```c
+```scala
 f (x + y) = print x, print y
 f 1+2
 ```
 The language will give you an error on "print x", "print y" because you can't iterate on infinite containers. The reason of that is "1 + 2" should be calculated before applying to a function. So, "f" gets "3" as an argument, and there is an infinite number of ways to solve "x + y = 3".
 
 Now let's take a look what macros can do.
-```c
+```scala
 f #(x + y) = print x, print y
 f 1+2 //stdout: 12
 ```

@@ -39,21 +39,4 @@ private:
     ExpPtr value;
 
     Environment* next;
-    //PrecedenceTable* precedenceTable;
 };
-
-/*
-class PrecedenceTable
-{
-public:
-    PrecedenceTable() {}
-    bool more(Operator* first, Operator* second);
-    void add(PrecedenceInfo* op);
-    void remove(PrecedenceInfo* op);
-
-private:
-    std::unordered_map<unsigned,
-                       std::map<double, double>> table;
-};
-*/
-
