@@ -2,6 +2,8 @@
 #include "Operation.h"
 #include "Void.h"
 #include "Identifier.h"
+#include <algorithm>
+#include <list>
 
 Union::Union()
     : Operator(false, 4)
@@ -35,46 +37,95 @@ bool isVoid(ExpPtr x)
     return false;
 }
 
-ExpPtr Union::make(const std::vector<ExpPtr>& xs)
+std::list<ExpPtr> unroll(ExpPtrArg x)
+{
+    if (isVoid(x))
+        return {};
+    auto op = d_cast<Operation>(x);
+    if (op != nullptr)
+    {
+        if (d_cast<Union>(op->op) != nullptr)
+        {
+            std::list<ExpPtr> ret;
+            ret.splice(ret.begin(), unroll(op->left));
+            ret.splice(ret.begin(), unroll(op->right));
+            return ret;
+        }
+        else
+            return {x};
+    }
+    else
+        return {x};
+}
+
+ExpPtr makeTree(const std::list<ExpPtr>::iterator& p0,
+                const std::list<ExpPtr>::iterator& p1)
+{
+    if (std::distance(p0, p1) == 0)
+        return *p0;
+    if (std::distance(p0, p1) == 1)
+        return make_ptr<Operation>(make_ptr<Union>(), *p0, *p1);
+    auto center = std::next(p0, std::distance(p0, p1) / 2);
+    return make_ptr<Operation>(make_ptr<Union>(),
+                               makeTree(p0, center),
+                               makeTree(std::next(center), p1));
+}
+
+ExpPtr Union::make(const std::vector<ExpPtr>& exps)
 {
     // TODO: make generic tree algorithm
+
+    std::list<ExpPtr> xs;
+    for (auto &x : exps)
+        xs.splice(xs.begin(), unroll(x));
 
     if (xs.size() == 0)
         return make_ptr<Void>();
 
-    if (xs.size() == 1)
-        return xs[0];
 
-    if (xs.size() == 2)
+    for (auto current = xs.begin(); current != xs.end(); ++current)
+    for (auto tested  = std::next(current); tested != xs.end(); ++tested)
     {
-        auto l = xs[0];
-        auto r = xs[1];
-        if (isVoid(l) || findSameOperand(r, l))
-            return r;
-        if (isVoid(r) || findSameOperand(l, r))
-            return l;
-        return make_ptr<Operation>(make_ptr<Union>(), l, r);
+        if (**current == **tested)
+        {
+            --tested;
+            xs.erase(std::next(tested));
+        }
     }
 
-    if (xs.size() == 3)
-    {
-        auto l = make({xs[0], xs[1]});
-        if (isVoid(xs[2]) ||
-            findSameOperand(xs[0], xs[2]) ||
-            findSameOperand(xs[1], xs[2]))
-            return l;
-        return make_ptr<Operation>(make_ptr<Union>(), l, xs[2]);
-    }
+    return makeTree(xs.begin(), std::prev(xs.end()));
 
-    if (xs.size() == 4)
-    {
-        auto l = make({xs[0], xs[1]});
-        auto r = make({xs[2], xs[3]});
-        return make({l, r});
-    }
+//    if (xs.size() == 1)
+//        return xs.front();
 
-    if (xs.size() > 4)
-        throw "unimplemented";
+//    if (xs.size() == 2)
+//    {
+//        return make_ptr<Operation>(make_ptr<Union>(),
+//                                   *xs.begin(),
+//                                   *std::next(xs.begin()));
+//    }
+
+//    if (xs.size() == 3)
+//    {
+//        return make_ptr<Operation>(make_ptr<Union>(), *xs.begin(),
+//                                   make_ptr<Operation>(make_ptr<Union>(),
+//                                                       *std::next(xs.begin(), 1),
+//                                                       *std::next(xs.begin(), 2)));
+//    }
+
+//    if (xs.size() == 4)
+//    {
+//        return make_ptr<Operation>(make_ptr<Union>(),
+//                                   make_ptr<Operation>(make_ptr<Union>(),
+//                                                       *std::next(xs.begin(), 0),
+//                                                       *std::next(xs.begin(), 1)),
+//                                   make_ptr<Operation>(make_ptr<Union>(),
+//                                                       *std::next(xs.begin(), 2),
+//                                                       *std::next(xs.begin(), 3)));
+//    }
+
+//    return make_ptr<Void>();
+
 }
 
 ExpPtr Union::operate(ExpPtrArg first,
