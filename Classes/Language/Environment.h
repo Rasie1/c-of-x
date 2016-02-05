@@ -1,17 +1,11 @@
 #pragma once
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <memory>
 #include "Expression.h"
 
-class PrecedenceTable;
-class PrecedenceInfo;
 class Operator;
+class Identifier;
+class Function;
 class Environment
 {
-    typedef std::map<std::string, ExpPtr> Variables;
-    typedef std::map<std::string, std::shared_ptr<Operator>> Operators;
 public:
     Environment(ExpPtrArg key, ExpPtrArg value, Environment* next = nullptr);
 
@@ -29,11 +23,6 @@ public:
 
 private:
     Environment* loadDefaultVariables();
-
-    Variables variables;
-    Operators operators;
-
-    ExpPtr lookup(const std::string& name);
 
     ExpPtr key;
     ExpPtr value;

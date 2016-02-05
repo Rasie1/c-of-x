@@ -115,25 +115,3 @@ Environment* Environment::getNext()
 {
     return this->next;
 }
-
-ExpPtr Environment::lookup(const std::string& name)
-{
-    return nullptr;
-}
-
-/*
-bool PrecedenceTable::more(Operator* first, Operator* second)
-{
-    return false;
-}
-
-void PrecedenceTable::add(PrecedenceInfo* op)
-{
-
-}
-
-void PrecedenceTable::remove(PrecedenceInfo* op)
-{
-
-}*/
-
