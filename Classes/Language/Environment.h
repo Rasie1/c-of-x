@@ -18,9 +18,13 @@ public:
     Environment* pop();
     ExpPtr get(ExpPtrArg key);
     std::pair<ExpPtr, ExpPtr> top();
+    Environment* getNext();
+
+    //Operators info
+
     bool compareOperators(const std::shared_ptr<Operator>& first,
                           const std::shared_ptr<Operator>& second);
-    Environment* getNext();
+
 
     static Environment* create();
 

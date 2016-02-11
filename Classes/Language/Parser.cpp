@@ -25,6 +25,8 @@ ExpPtr Parser::parse(const string& s, Environment* env)
     return parse(s, i, s.size(), env);
 }
 
+
+
 static constexpr bool isOperatorCharacter(char c)
 {
     return  c == '\'' ||
@@ -90,6 +92,14 @@ bool isOperator(ExpPtr e, Environment* env)
 }
 
 
+bool isBreakingSequence(const std::string& s,
+                        size_t start,
+                        size_t end,
+                        Environment* env)
+{
+    return isOperatorCharacter(s[start]);
+}
+
 ExpPtr Parser::parseName(const std::string& s,
                          size_t start,
                          size_t end,
@@ -117,12 +127,14 @@ ExpPtr Parser::parseName(const std::string& s,
 
         return make_ptr<Identifier>(ss);
     }
-    if (isOperatorCharacter(s[start]))
+    if (isBreakingSequence(s, start, end, env))
     {
         auto ss = s.substr(start, end - start);
 
         return make_ptr<Identifier>(ss);
     }
+
+    throw 0;
 }
 
 void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
