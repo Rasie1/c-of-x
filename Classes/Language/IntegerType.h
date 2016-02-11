@@ -1,10 +1,10 @@
 #pragma once
-#include "Function.h"
+#include "Predicate.h"
 
-class IntegerType : public Function
+class IntegerType : public Predicate
 {
 public:
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
+    bool holds(ExpPtrArg e, Environment*& env) const override;
 
     std::string show() const;
     static const std::string defaultName;
