@@ -9,6 +9,8 @@ class Environment
 public:
     Environment(ExpPtrArg key, ExpPtrArg value, Environment* next = nullptr);
 
+    std::pair<ExpPtr, Environment*> process(ExpPtrArg id, ExpPtrArg key);
+
     void clear();
     Environment* add(ExpPtrArg key,
                      ExpPtrArg value);

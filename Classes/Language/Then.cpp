@@ -14,12 +14,10 @@ ExpPtr Then::operate(ExpPtrArg first,
                      Environment*& env) const
 {
     auto l = first->eval(env);
-    auto r = second->eval(env);
-
     if (d_cast<Void>(l))
         return make_ptr<Void>();
 
-    return r;
+    return second->eval(env);
 }
 
 std::string Then::show() const
@@ -27,7 +25,7 @@ std::string Then::show() const
     return Then::defaultName;
 }
 
-const std::string Then::defaultName = "=>";
+const std::string Then::defaultName = "~";
 
 bool Then::unwind(ExpPtr& left,
                   ExpPtr& right,

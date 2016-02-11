@@ -20,6 +20,7 @@
 #include "Intersection.h"
 #include "EvalDelay.h"
 #include "EvalForce.h"
+#include "IntegerType.h"
 
 #include <vector>
 
@@ -71,8 +72,10 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Identifier>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
          ->add(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>())
          ->add(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>())
+         ->add(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>())
          ->add(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>())
          ->add(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>())
+         ->add(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>())
          ->add(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>())
          //->add(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>())
          ->add(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>())
@@ -114,4 +117,12 @@ std::pair<ExpPtr, ExpPtr> Environment::top()
 Environment* Environment::getNext()
 {
     return this->next;
+}
+
+std::pair<ExpPtr, Environment*> Environment::process(ExpPtrArg id, ExpPtrArg f)
+{
+    auto expr = this->get(id);
+    auto result = expr->intersect(f, this);
+
+    return std::pair<ExpPtr, Environment*>(result, this->add(id, result));
 }
