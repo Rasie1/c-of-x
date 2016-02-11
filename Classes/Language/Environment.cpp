@@ -81,6 +81,7 @@ Environment* Environment::loadDefaultVariables()
          ->add(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>())
          //->add(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>())
          ->add(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->add(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>())
          ->add(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>())
          ;
 }
@@ -119,10 +120,15 @@ Environment* Environment::getNext()
     return this->next;
 }
 
-std::pair<ExpPtr, Environment*> Environment::process(ExpPtrArg id, ExpPtrArg f)
+std::pair<ExpPtr, Environment*> Environment::process(ExpPtrArg id,
+                                                     const std::shared_ptr<const Function>& f)
 {
     auto expr = this->get(id);
-    auto result = expr->intersect(f, this);
+    if (expr == nullptr)
+        expr = id;
+    auto env = this;
+    auto result = f->apply(expr, env);
+//    auto result = expr->intersect(f, this);
 
-    return std::pair<ExpPtr, Environment*>(result, this->add(id, result));
+    return std::pair<ExpPtr, Environment*>(result, env->add(id, result));
 }

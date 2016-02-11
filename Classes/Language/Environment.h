@@ -9,7 +9,8 @@ class Environment
 public:
     Environment(ExpPtrArg key, ExpPtrArg value, Environment* next = nullptr);
 
-    std::pair<ExpPtr, Environment*> process(ExpPtrArg id, ExpPtrArg key);
+    std::pair<ExpPtr, Environment*> process(ExpPtrArg id,
+                                            const std::shared_ptr<const Function>& key);
 
     void clear();
     Environment* add(ExpPtrArg key,

@@ -16,10 +16,19 @@
 
 bool Identifier::operator==(const Expression& other) const
 {
-    if (typeid(other) == typeid(*this))
-        return name == static_cast<const Identifier&>(other).name;
+    try
+    {
+        auto id = dynamic_cast<const Identifier&>(other);
+        return id.name == name;
+    }
+    catch (std::bad_cast& bc)
+    {
+        return false;
+    }
 
-    return false;
+//    if (typeid(other) == typeid(*this))
+//        return name == static_cast<const Identifier&>(other).name;
+
 }
 
 std::string Identifier::show() const
