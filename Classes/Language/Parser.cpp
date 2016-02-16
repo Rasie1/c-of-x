@@ -85,7 +85,7 @@ bool isOperator(ExpPtr e, Environment* env)
         return true;
     if (d_cast<Identifier>(e))
     {
-        auto value = env->get(e);
+        auto value = env->getEqual(e);
         return d_cast<Operator>(value) != nullptr;
     }
     return false;
@@ -268,7 +268,7 @@ ExpPtr Parser::parse(const std::string& s,
 
                 auto op = d_cast<Operator>(e);
                 if (!op)
-                    op = d_cast<Operator>(env->get(e));
+                    op = d_cast<Operator>(env->getEqual(e));
 
                 while (!operatorStack.empty() &&
                        env->compareOperators(op, operatorStack.top()))

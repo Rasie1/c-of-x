@@ -33,7 +33,7 @@ bool Expression::unwind(ExpPtr& lvalue,
     return false;
 }
 
-ExpPtr Expression::intersect(ExpPtrArg& other, Environment* const& env)
+ExpPtr Expression::intersect(ExpPtrArg& other, Environment* env)
 {
     auto op =  make_ptr<Operation>(make_ptr<Intersection>(),
                                    shared_from_this(),

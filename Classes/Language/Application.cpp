@@ -22,7 +22,7 @@ ExpPtr Application::operate(ExpPtrArg first,
 
     left = d_cast<Identifier>(first);
     if (left)
-        left = env->get(first);
+        left = env->getEqual(first);
     if (left == nullptr)
         left = first;
 

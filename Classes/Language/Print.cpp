@@ -8,7 +8,7 @@ ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
     ExpPtr arg;
     arg = d_cast<Identifier>(e);
     if (arg)
-        arg = env->get(e);
+        arg = env->getEqual(e);
     else
         arg = e;
     auto evaluated = arg->eval(env);

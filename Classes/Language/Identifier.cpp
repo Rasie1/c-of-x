@@ -50,5 +50,5 @@ std::string Identifier::show() const
 
 bool Identifier::hasNonOpVariable(Environment* env) const
 {
-    return env->get(std::const_pointer_cast<Expression>(shared_from_this())) == nullptr;
+    return env->getEqual(std::const_pointer_cast<Expression>(shared_from_this())) == nullptr;
 }

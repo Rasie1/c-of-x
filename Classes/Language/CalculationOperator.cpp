@@ -19,12 +19,12 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     ExpPtr l, r, ret;
     l = d_cast<Identifier>(first);
     if (l)
-        l = env->get(l);
+        l = env->getEqual(l);
     else
         l = first;
     r = d_cast<Identifier>(second);
     if (r)
-        r = env->get(r);
+        r = env->getEqual(r);
     else
         r = second;
     auto left  = l->eval(env);

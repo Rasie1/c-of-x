@@ -19,19 +19,19 @@ ExpPtr Assignment::operate(ExpPtrArg first,
     lvalue = first;
 
     if (d_cast<Identifier>(second))
-        rvalue = env->get(second);
+        rvalue = env->getEqual(second);
     if (rvalue == nullptr)
         rvalue = second;
 
     if (d_cast<Identifier>(lvalue))
-        env = env->add(lvalue, rvalue);
+        env = env->addEqual(lvalue, rvalue);
     else
         while (lvalue->unwind(lvalue, rvalue, env));
 
     // Enable recursion
     auto operation = d_cast<Operation>(rvalue);
     if (operation && d_cast<Lambda>(operation->op))
-        env = env->add(lvalue, rvalue);
+        env = env->addEqual(lvalue, rvalue);
 
     return second;
 }

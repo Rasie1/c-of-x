@@ -21,6 +21,7 @@
 #include "EvalDelay.h"
 #include "EvalForce.h"
 #include "IntegerType.h"
+#include "Operation.h"
 
 #include <vector>
 
@@ -46,43 +47,53 @@ Environment* Environment::pop()
     return next;
 }
 
-ExpPtr Environment::get(ExpPtrArg key)
+ExpPtr Environment::getEqual(ExpPtrArg key)
 {
     if (*(this->key) == *key)
-        return value;
+    {
+        auto val = d_cast<Equals>(value);
+        if (val)
+            return val->value;
+        else
+            return next->getEqual(key);
+    }
 
     if (next == nullptr)
         return nullptr;
 
-    return next->get(key);
+    return next->getEqual(key);
 }
 
-Environment* Environment::add(ExpPtrArg key,
-                              ExpPtrArg value)
+Environment* Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
     return new Environment(key, value, this);
 }
 
+Environment* Environment::addEqual(ExpPtrArg key, ExpPtrArg value)
+{
+    return add(key, make_ptr<Equals>(value));
+}
+
 Environment* Environment::loadDefaultVariables()
 {
-    return add(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>())
-         ->add(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
-         ->add(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>())
-         ->add(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>())
-         ->add(make_ptr<Identifier>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
-         ->add(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>())
-         ->add(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>())
-         ->add(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>())
-         ->add(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>())
-         ->add(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>())
-         ->add(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>())
-         ->add(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>())
-         //->add(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>())
-         ->add(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>())
-         //->add(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>())
-         ->add(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
-         ->add(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>())
-         ->add(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>())
+    return addEqual(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>())
+         ->addEqual(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>())
+         ->addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>())
+         ->addEqual(make_ptr<Identifier>(EvalDelay      ::defaultName), make_ptr<EvalDelay>())
+         ->addEqual(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>())
+         ->addEqual(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>())
+         ->addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>())
+         ->addEqual(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>())
+         ->addEqual(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>())
+         ->addEqual(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>())
+         ->addEqual(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>())
+         //->addEqual(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>())
+         ->addEqual(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>())
+         //->addEqual(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>())
+         ->addEqual(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
+         ->addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>())
+         ->addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>())
          ;
 }
 
@@ -121,14 +132,29 @@ Environment* Environment::getNext()
 }
 
 std::pair<ExpPtr, Environment*> Environment::process(ExpPtrArg id,
-                                                     const std::shared_ptr<const Function>& f)
+                                                     const std::shared_ptr<Predicate>& f)
 {
-    auto expr = this->get(id);
-    if (expr == nullptr)
-        expr = id;
+    throw 0;
+    auto expr = this->getEqual(id);
+    auto result = f;
+//    auto result = f->intersect(expr);
     auto env = this;
-    auto result = f->apply(expr, env);
+    return std::pair<ExpPtr, Environment*>(result, env->addEqual(id, result));
+//    auto expr = this->get(id);
+//    if (expr == nullptr)
+//        expr = id;
+//    if (!f->holds(expr, this))
+//        return std::pair<ExpPtr, Environment*>(std::make_shared<Void>(), this);
+//    auto env = this;
+////    auto result = f->apply(expr, env);
 //    auto result = expr->intersect(f, this);
 
-    return std::pair<ExpPtr, Environment*>(result, env->add(id, result));
+//    return std::pair<ExpPtr, Environment*>(result, env->add(id, result));
+}
+
+
+ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
+{
+    auto env = this;
+    return Intersection().operate(l, r, env);
 }

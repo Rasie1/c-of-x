@@ -20,10 +20,10 @@ ExpPtr Operation::eval(Environment*& env) const
     ExpPtr ret;
 
     DEBUG_PRINT_OP(op);
-    auto l = d_cast<Identifier>(left) ? env->get(left) : left;
+    auto l = d_cast<Identifier>(left) ? env->getEqual(left) : left;
     if (l == nullptr)
         l = left;
-    auto r = d_cast<Identifier>(right) ? env->get(right) : right;
+    auto r = d_cast<Identifier>(right) ? env->getEqual(right) : right;
     if (r == nullptr)
         r = right;
     DEBUG_PRINT_LT(l);

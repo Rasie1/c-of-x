@@ -20,7 +20,7 @@ public:
                         Environment*& env);
 
     virtual bool operator==(const Expression& other) const;
-    virtual ExpPtr intersect(ExpPtrArg other, Environment* const& env);
+    virtual ExpPtr intersect(ExpPtrArg other, Environment* env);
 
     virtual std::string show() const;
     virtual bool hasNonOpVariable(Environment* env) const;
