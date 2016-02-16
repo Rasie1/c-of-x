@@ -5,6 +5,7 @@
 #include "Operation.h"
 #include "Environment.h"
 #include "Intersection.h"
+#include "Void.h"
 
 Expression::Expression()
 {
@@ -35,9 +36,5 @@ bool Expression::unwind(ExpPtr& lvalue,
 
 ExpPtr Expression::intersect(ExpPtrArg& other, Environment* env)
 {
-    auto op =  make_ptr<Operation>(make_ptr<Intersection>(),
-                                   shared_from_this(),
-                                   other);
-    auto newEnv = env;
-    return op->eval(newEnv);
+    return make_ptr<Void>();
 }
