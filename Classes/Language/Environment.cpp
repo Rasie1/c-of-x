@@ -131,28 +131,6 @@ Environment* Environment::getNext()
     return this->next;
 }
 
-std::pair<ExpPtr, Environment*> Environment::process(ExpPtrArg id,
-                                                     const std::shared_ptr<Predicate>& f)
-{
-    throw 0;
-    auto expr = this->getEqual(id);
-    auto result = f;
-//    auto result = f->intersect(expr);
-    auto env = this;
-    return std::pair<ExpPtr, Environment*>(result, env->addEqual(id, result));
-//    auto expr = this->get(id);
-//    if (expr == nullptr)
-//        expr = id;
-//    if (!f->holds(expr, this))
-//        return std::pair<ExpPtr, Environment*>(std::make_shared<Void>(), this);
-//    auto env = this;
-////    auto result = f->apply(expr, env);
-//    auto result = expr->intersect(f, this);
-
-//    return std::pair<ExpPtr, Environment*>(result, env->add(id, result));
-}
-
-
 ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
 {
     auto env = this;

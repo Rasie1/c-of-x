@@ -21,21 +21,6 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment*& env) const
     }
 
     return holds(e, env) ? e : make_ptr<Void>();
-//    auto t = std::const_pointer_cast<Expression>(shared_from_this());
-//    auto x = env->process(e, s_cast<Predicate>(t));
-
-//    return x.first;
-
-    //    ExpPtr value;
-//    if (d_cast<Identifier>(e))
-//        value = env->get(e);
-//    if (value == nullptr)
-//        value = e;
-
-//    if (holds(e, env))
-//        return e;
-//    else
-//        return make_ptr<Void>();
 }
 
 
