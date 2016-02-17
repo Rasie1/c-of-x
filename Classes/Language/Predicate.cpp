@@ -6,6 +6,7 @@
 #include "Lambda.h"
 #include "Closure.h"
 #include "Void.h"
+#include "Any.h"
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment*& env) const
 {
@@ -15,12 +16,16 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment*& env) const
         ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
         env = env->add(id, x);
 
-        return holds(env->getEqual(id), env) ||
-                env->intersect(std::const_pointer_cast<Expression>(shared_from_this()), id)
-                ? e : make_ptr<Void>();
+        auto expr = env->getEqual(id)->eval(env);
+
+        if (d_cast<Any>(expr) || holds(expr, env))
+            return e;
+
+        return env->intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
     }
 
-    return holds(e, env) ? e : make_ptr<Void>();
+    auto expr = e->eval(env);
+    return holds(expr, env) ? expr : make_ptr<Void>();
 }
 
 
@@ -36,6 +41,18 @@ std::string Equals::show() const
 
 const std::string Equals::defaultName = "eqv";
 
+
+ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
+{
+    if (std::shared_ptr<Equals> p = d_cast<Equals>(other))
+    {
+        if (*value == *p->value)
+            return value;
+        else
+            return make_ptr<Void>();
+    }
+    return make_ptr<Operation>(make_ptr<Intersection>(), value, other);
+}
 
 
 ExpPtr Equality::apply(ExpPtrArg e, Environment*& env) const

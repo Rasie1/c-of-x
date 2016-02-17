@@ -14,6 +14,7 @@ public:
     Environment* add(ExpPtrArg key, ExpPtrArg predicate);
     Environment* addEqual(ExpPtrArg key, ExpPtrArg value);
     Environment* pop();
+    ExpPtr get(ExpPtrArg key);
     ExpPtr getEqual(ExpPtrArg key);
     std::pair<ExpPtr, ExpPtr> top();
     Environment* getNext();

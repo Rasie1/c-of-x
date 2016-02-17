@@ -4,6 +4,7 @@
 #include "Assignment.h"
 #include "Identifier.h"
 #include "Environment.h"
+#include "Any.h"
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
                      ExpPtrArg left,
@@ -19,15 +20,17 @@ ExpPtr Operation::eval(Environment*& env) const
 {
     ExpPtr ret;
 
+    // debug-only
     DEBUG_PRINT_OP(op);
     auto l = d_cast<Identifier>(left) ? env->getEqual(left) : left;
-    if (l == nullptr)
+    if (d_cast<Any>(l))
         l = left;
     auto r = d_cast<Identifier>(right) ? env->getEqual(right) : right;
-    if (r == nullptr)
+    if (d_cast<Any>(r))
         r = right;
     DEBUG_PRINT_LT(l);
     DEBUG_PRINT_RT(r);
+    // /debug-only
 
     ret = op->operate(left, right, env);
 

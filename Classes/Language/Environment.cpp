@@ -22,6 +22,7 @@
 #include "EvalForce.h"
 #include "IntegerType.h"
 #include "Operation.h"
+#include "Any.h"
 
 #include <vector>
 
@@ -59,9 +60,22 @@ ExpPtr Environment::getEqual(ExpPtrArg key)
     }
 
     if (next == nullptr)
-        return nullptr;
+        return make_ptr<Any>();
 
     return next->getEqual(key);
+}
+
+ExpPtr Environment::get(ExpPtrArg key)
+{
+    if (*(this->key) == *key)
+    {
+        return value;
+    }
+
+    if (next == nullptr)
+        return make_ptr<Any>();
+
+    return next->get(key);
 }
 
 Environment* Environment::add(ExpPtrArg key, ExpPtrArg value)
@@ -94,6 +108,8 @@ Environment* Environment::loadDefaultVariables()
          ->addEqual(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>())
          ->addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>())
          ->addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>())
+         ->addEqual(make_ptr<Identifier>(Any            ::defaultName), make_ptr<Any>())
+         ->addEqual(make_ptr<Identifier>(PrintInfo      ::defaultName), make_ptr<PrintInfo>())
          ;
 }
 
@@ -134,5 +150,8 @@ Environment* Environment::getNext()
 ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
 {
     auto env = this;
-    return Intersection().operate(l, r, env);
+
+    auto lp = (d_cast<Identifier>(l) != nullptr) ? get(l) : l;
+    auto rp = (d_cast<Identifier>(r) != nullptr) ? get(r) : r;
+    return Intersection().operate(lp, rp, env);
 }

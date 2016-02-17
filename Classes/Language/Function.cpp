@@ -2,6 +2,7 @@
 #include "Environment.h"
 #include "Void.h"
 #include "Predicate.h"
+#include "Any.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, Environment *env)
 {
@@ -12,7 +13,7 @@ ExpPtr Function::intersect(ExpPtrArg other, Environment *env)
     {
         val = env->getEqual(other);
 
-        if (val == nullptr)
+        if (d_cast<Any>(val))
             return make_ptr<Void>();
     }
     else

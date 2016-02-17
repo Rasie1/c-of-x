@@ -4,6 +4,7 @@
 #include "Operation.h"
 #include "Lambda.h"
 #include "Closure.h"
+#include "Any.h"
 
 Assignment::Assignment()
     : Operator(true, 2)
@@ -20,7 +21,7 @@ ExpPtr Assignment::operate(ExpPtrArg first,
 
     if (d_cast<Identifier>(second))
         rvalue = env->getEqual(second);
-    if (rvalue == nullptr)
+    if (d_cast<Any>(rvalue))
         rvalue = second;
 
     if (d_cast<Identifier>(lvalue))

@@ -22,3 +22,24 @@ std::string Print::show() const
 }
 
 const std::string Print::defaultName = "print";
+
+
+ExpPtr PrintInfo::apply(ExpPtrArg e, Environment*& env) const
+{
+    ExpPtr arg;
+    arg = d_cast<Identifier>(e);
+    if (arg)
+        arg = env->get(e);
+    else
+        arg = e;
+    auto evaluated = arg->eval(env);
+    std::cout << evaluated->show();
+    return evaluated;
+}
+
+std::string PrintInfo::show() const
+{
+    return defaultName;
+}
+
+const std::string PrintInfo::defaultName = "info";

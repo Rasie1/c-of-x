@@ -25,22 +25,6 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 {
-//    ExpPtr lvalue, rvalue;
-
-//    if (d_cast<Identifier>(body))
-//        rvalue = env->get(body);
-//    if (rvalue == nullptr)
-//        rvalue = body;
-
-//    if (d_cast<Identifier>(lvalue))
-//        env = env->add(lvalue, rvalue);
-//    else
-//        while (lvalue->unwind(lvalue, rvalue, env));
-
-
-
-
-
     ExpPtr lvalue = argument;
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, env));
@@ -74,16 +58,5 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 
 std::string Closure::show() const
 {
-//    std::string ret = "[";
-//    auto top = env;
-//    for (int i = 0; i < envSize; ++i)
-//    {
-//        ret +=top->top().first->show()
-//            + std::string(" = ")
-//            + top->top().second->show()
-//            + std::string(";");
-//        top = top->getNext();
-//    }
-//    ret += std::string("]");
     return "[|" + argument->show() + " => " + body->show() + "|]";
 }

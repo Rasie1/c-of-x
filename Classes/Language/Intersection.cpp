@@ -9,14 +9,17 @@ Intersection::Intersection()
 }
 
 ExpPtr Intersection::operate(ExpPtrArg first,
-                         ExpPtrArg second,
-                         Environment*& env) const
+                             ExpPtrArg second,
+                             Environment*& env) const
 {
     auto l = first->eval(env);
     auto r = second->eval(env);
 
-    if (*(l->intersect(r, env)) == *(r->intersect(l, env)))
-        return r;
+    auto lr = l->intersect(r, env);
+    auto rl = r->intersect(l, env);
+
+    if (*rl == *lr)
+        return lr;
     else
         return make_ptr<Void>();
 }

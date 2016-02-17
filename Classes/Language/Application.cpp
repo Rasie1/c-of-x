@@ -7,6 +7,7 @@
 #include "Identifier.h"
 #include "Union.h"
 #include "Void.h"
+#include "Any.h"
 #include <vector>
 
 Application::Application()
@@ -20,10 +21,10 @@ ExpPtr Application::operate(ExpPtrArg first,
 {
     ExpPtr ret, left, right;
 
-    left = d_cast<Identifier>(first);
-    if (left)
+    left = first;
+    if (d_cast<Identifier>(first))
         left = env->getEqual(first);
-    if (left == nullptr)
+    if (d_cast<Any>(left))
         left = first;
 
     left = left->eval(env);

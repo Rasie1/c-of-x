@@ -19,6 +19,8 @@ public:
 
     ExpPtr value;
 
+    ExpPtr intersect(ExpPtrArg other, Environment* env) override;
+
     std::string show() const;
     static const std::string defaultName;
 };
