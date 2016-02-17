@@ -41,14 +41,6 @@ void Environment::clear()
     next = nullptr;
 }
 
-Environment* Environment::pop()
-{
-    auto next = this->next;
-    delete this;
-
-    return next;
-}
-
 ExpPtr Environment::getEqual(ExpPtrArg key)
 {
     if (*(this->key) == *key)
@@ -136,16 +128,6 @@ bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
 
     return firstValue < secondValue ||
            !isFirstRightAssociative && (firstValue <= secondValue);
-}
-
-std::pair<ExpPtr, ExpPtr> Environment::top()
-{
-    return std::pair<ExpPtr, ExpPtr>(key, value);
-}
-
-Environment* Environment::getNext()
-{
-    return this->next;
 }
 
 ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)

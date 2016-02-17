@@ -13,19 +13,15 @@ public:
     void clear();
     Environment* add(ExpPtrArg key, ExpPtrArg predicate);
     Environment* addEqual(ExpPtrArg key, ExpPtrArg value);
-    Environment* pop();
     ExpPtr get(ExpPtrArg key);
     ExpPtr getEqual(ExpPtrArg key);
-    std::pair<ExpPtr, ExpPtr> top();
-    Environment* getNext();
+    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
 
     //Operators info
 
     bool compareOperators(const std::shared_ptr<Operator>& first,
                           const std::shared_ptr<Operator>& second);
 
-
-    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
 
     static Environment* create();
 

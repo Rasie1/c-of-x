@@ -3,8 +3,6 @@
 #include "Environment.h"
 #include "Operation.h"
 #include "Intersection.h"
-#include "Lambda.h"
-#include "Closure.h"
 #include "Void.h"
 #include "Any.h"
 

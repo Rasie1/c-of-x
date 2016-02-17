@@ -3,10 +3,7 @@
 #include "Environment.h"
 #include "Operation.h"
 #include "Intersection.h"
-#include "Lambda.h"
-#include "Closure.h"
 #include "Void.h"
-#include "Any.h"
 
 bool Equals::holds(ExpPtrArg e, Environment* env) const
 {
@@ -20,7 +17,6 @@ std::string Equals::show() const
 
 const std::string Equals::defaultName = "eqv";
 
-
 ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
 {
     if (std::shared_ptr<Equals> p = d_cast<Equals>(other))
@@ -33,12 +29,10 @@ ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
     return make_ptr<Operation>(make_ptr<Intersection>(), value, other);
 }
 
-
 ExpPtr Equality::apply(ExpPtrArg e, Environment*& env) const
 {
     return make_ptr<Equals>(e);
 }
-
 
 std::string Equality::show() const
 {
