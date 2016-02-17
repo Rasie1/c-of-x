@@ -1,7 +1,7 @@
 #include "Function.h"
 #include "Environment.h"
 #include "Void.h"
-#include "Predicate.h"
+#include "Equality.h"
 #include "Any.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, Environment *env)

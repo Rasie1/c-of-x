@@ -23,6 +23,7 @@
 #include "IntegerType.h"
 #include "Operation.h"
 #include "Any.h"
+#include "Equality.h"
 
 #include <vector>
 
