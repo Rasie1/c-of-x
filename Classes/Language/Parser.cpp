@@ -303,9 +303,8 @@ ExpPtr Parser::parse(const std::string& s,
 
 ExpPtr Parser::parseFile(const std::string& filename)
 {
-    auto env = Environment::create();
-    // Leak!
-    auto exp = parseFile(filename, env);
+    Environment env;
+    auto exp = parseFile(filename, &env);
     return exp;
 }
 

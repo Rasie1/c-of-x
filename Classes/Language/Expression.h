@@ -23,6 +23,7 @@ public:
     virtual ExpPtr intersect(ExpPtrArg other, Environment* env);
 
     virtual std::string show() const;
+    virtual std::string hash() const;
     virtual bool hasNonOpVariable(Environment* env) const;
 };
 

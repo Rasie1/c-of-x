@@ -34,7 +34,8 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment*& env) const
 
     if (variable)
     {
-        auto newEnv = this->env->addEqual(variable, e);
+        auto newEnv = this->env;
+        newEnv->addEqual(variable, e);
         auto evaluated = rvalue->eval(newEnv);
         if (d_cast<Identifier>(evaluated))
             evaluated = newEnv->getEqual(evaluated);

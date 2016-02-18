@@ -9,9 +9,9 @@ using namespace std;
 
 void REPL::start()
 {
-    env = Environment::create();
     cout << "Welcome to c(x), type -h to get help" << endl;
 
+    env = new Environment();
     Parser parser;
 
     while (true)
@@ -47,7 +47,6 @@ void REPL::start()
     }
 
     cout << "Quitting REPL" << endl;
-    env->clear();
     delete env;
 }
 

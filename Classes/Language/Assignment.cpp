@@ -25,14 +25,14 @@ ExpPtr Assignment::operate(ExpPtrArg first,
         rvalue = second;
 
     if (d_cast<Identifier>(lvalue))
-        env = env->addEqual(lvalue, rvalue);
+        env->addEqual(lvalue, rvalue);
     else
         while (lvalue->unwind(lvalue, rvalue, env));
 
     // Enable recursion
     auto operation = d_cast<Operation>(rvalue);
     if (operation && d_cast<Lambda>(operation->op))
-        env = env->addEqual(lvalue, rvalue);
+        env->addEqual(lvalue, rvalue);
 
     return second;
 }

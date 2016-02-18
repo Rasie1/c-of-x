@@ -1,35 +1,27 @@
 #pragma once
 #include "Expression.h"
+#include <unordered_map>
 
 class Operator;
-class Identifier;
-class Function;
-class Predicate;
 class Environment
 {
 public:
-    Environment(ExpPtrArg key, ExpPtrArg value, Environment* next = nullptr);
+    Environment();
 
-    void clear();
-    Environment* add(ExpPtrArg key, ExpPtrArg predicate);
-    Environment* addEqual(ExpPtrArg key, ExpPtrArg value);
+    void add(ExpPtrArg key, ExpPtrArg predicate);
+    void addEqual(ExpPtrArg key, ExpPtrArg value);
     ExpPtr get(ExpPtrArg key);
     ExpPtr getEqual(ExpPtrArg key);
     ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
+    void clear();
 
     //Operators info
 
     bool compareOperators(const std::shared_ptr<Operator>& first,
                           const std::shared_ptr<Operator>& second);
 
-
-    static Environment* create();
-
 private:
-    Environment* loadDefaultVariables();
+    void addDefaultVariables();
 
-    ExpPtr key;
-    ExpPtr value;
-
-    Environment* next;
+    std::unordered_map<Expression, ExpPtr> data;
 };
