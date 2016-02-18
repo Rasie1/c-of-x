@@ -4,7 +4,7 @@
 
 bool IntegerType::holds(ExpPtrArg e, Environment* env) const
 {
-    auto x = d_cast<Integer>(e);
+    auto x = d_cast<Integer>(e->eval(env));
     return x != nullptr;
 }
 

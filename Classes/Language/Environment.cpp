@@ -50,7 +50,7 @@ ExpPtr Environment::getEqual(ExpPtrArg key)
 
 ExpPtr Environment::get(ExpPtrArg key)
 {
-    auto x = data.find(*key);
+    auto x = data.find(key);
     if (x == std::end(data))
         return make_ptr<Any>();
     else
@@ -59,7 +59,7 @@ ExpPtr Environment::get(ExpPtrArg key)
 
 void Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
-    data[*key] = value;
+    data[key] = value;
 }
 
 void Environment::addEqual(ExpPtrArg key, ExpPtrArg value)

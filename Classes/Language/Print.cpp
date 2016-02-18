@@ -6,13 +6,9 @@
 ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
 {
     ExpPtr arg;
-    arg = d_cast<Identifier>(e);
-    if (arg)
-        arg = env->getEqual(e);
-    else
-        arg = e;
+    arg = Identifier::unwrapIfId(e, env);
     auto evaluated = arg->eval(env);
-    std::cout << evaluated->show();
+    std::cout << Identifier::unwrapIfId(evaluated, env)->show();
     return evaluated;
 }
 

@@ -14,14 +14,19 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment*& env) const
         ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
         env->add(id, x);
 
-        auto expr = env->getEqual(id)->eval(env);
+        auto expr = env->getEqual(id);
 
         if (d_cast<Any>(expr) || holds(expr, env))
             return e;
 
-        return env->intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
+        auto ret = env->intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
+
+        return ret;
     }
 
     auto expr = e->eval(env);
-    return holds(expr, env) ? expr : make_ptr<Void>();
+
+    auto ret = holds(expr, env) ? expr : make_ptr<Void>();
+
+    return ret;
 }

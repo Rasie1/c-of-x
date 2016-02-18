@@ -17,6 +17,17 @@ bool Expression::operator==(const Expression& other) const
     return false;
 }
 
+bool Expression::operator< (const Expression& other) const
+{
+    return hash() < other.hash();
+}
+
+size_t Expression::hash() const
+{
+//    std::cout << show() << "::::" << std::hash<std::string>()(show()) << std::endl;
+    return std::hash<std::string>()(show());
+}
+
 std::string Expression::show() const
 {
     return "expr";

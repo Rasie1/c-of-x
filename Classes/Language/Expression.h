@@ -20,10 +20,11 @@ public:
                         Environment*& env);
 
     virtual bool operator==(const Expression& other) const;
+    bool         operator< (const Expression& other) const;
     virtual ExpPtr intersect(ExpPtrArg other, Environment* env);
 
     virtual std::string show() const;
-    virtual std::string hash() const;
+    virtual size_t      hash() const;
     virtual bool hasNonOpVariable(Environment* env) const;
 };
 
@@ -47,3 +48,4 @@ constexpr auto d_cast(Args&&... args)
 {
     return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
 }
+
