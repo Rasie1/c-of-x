@@ -1,7 +1,7 @@
 #pragma once
-#include "Predicate.h"
+#include "Type.h"
 
-class IntegerType : public Predicate
+class IntegerType : public Type
 {
 public:
     bool holds(ExpPtrArg e, Environment* env) const override;

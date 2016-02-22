@@ -73,6 +73,7 @@ ExpPtr Operation::intersect(ExpPtrArg other, Environment *env)
 
 bool Operation::operator==(const Expression& other) const
 {
+    return typeid(*this) == (typeid(other));
     try
     {
         auto x = dynamic_cast<const Operation&>(other);

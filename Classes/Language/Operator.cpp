@@ -21,3 +21,18 @@ bool Operator::unwind(ExpPtr& left,
 {
     return false;
 }
+
+bool Operator::operator==(const Expression& other) const
+{
+    return false;
+//    throw 0; // todo
+//    try
+//    {
+//        auto x = dynamic_cast<const Operator&>(other);
+//        return x.op == op && x.left == left && x.right == right;
+//    }
+//    catch (std::bad_cast&)
+//    {
+//        return false;
+//    }
+}

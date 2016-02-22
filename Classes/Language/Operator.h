@@ -14,6 +14,8 @@ public:
     int priority;
     const std::string name;
 
+    virtual bool operator==(const Expression& other) const override;
+
     virtual bool unwind(ExpPtr& left,
                         ExpPtr& right,
                         ExpPtr& lvalue,
