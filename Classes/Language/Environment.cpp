@@ -41,9 +41,8 @@ void Environment::clear()
 ExpPtr Environment::getEqual(ExpPtrArg key)
 {
     auto value = get(key);
-    auto val = d_cast<Equals>(value);
-    if (val)
-        return val->value;
+    if (typeid(*value) == typeid(Equals))
+        return s_cast<Equals>(value)->value;
     else
         return make_ptr<Any>();
 }
@@ -116,7 +115,7 @@ ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
 {
     auto env = this;
 
-    auto lp = (d_cast<Identifier>(l) != nullptr) ? get(l) : l;
-    auto rp = (d_cast<Identifier>(r) != nullptr) ? get(r) : r;
+    auto lp = (typeid(*l) == typeid(Identifier)) ? get(l) : l;
+    auto rp = (typeid(*r) == typeid(Identifier)) ? get(r) : r;
     return Intersection().operate(lp, rp, env);
 }

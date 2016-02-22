@@ -5,8 +5,7 @@
 
 bool IntegerType::holds(ExpPtrArg e, Environment* env) const
 {
-    auto x = d_cast<Integer>(Identifier::unwrapIfId(e->eval(env), env));
-    return x != nullptr;
+    return typeid(*(Identifier::unwrapIfId(e->eval(env), env))) == typeid(Integer);
 }
 
 std::string IntegerType::show() const

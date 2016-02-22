@@ -3,21 +3,22 @@
 #include "Void.h"
 #include "Equality.h"
 #include "Any.h"
+#include "Identifier.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, Environment *env)
 {
-    auto x = d_cast<Equals>(other);
-
     ExpPtr val;
-    if (x == nullptr)
+    if (typeid(*other) == typeid(Equals))
     {
-        val = env->getEqual(other);
-
-        if (d_cast<Any>(val))
-            return make_ptr<Void>();
+        auto eq = s_cast<Equals>(other);
+        return apply(eq->value, env);
     }
     else
-        val = x->value;
-
-    return apply(val, env); // what about commutative ops?
+    {
+        auto val = Identifier::unwrapIfId(other, env);
+        if (typeid(*val) == typeid(Any))
+            return make_ptr<Void>();
+        else
+            return apply(val, env);
+    }
 }
