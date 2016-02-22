@@ -4,6 +4,7 @@
 class Any : public DataType
 {
 public:
+    ExpPtr intersect(ExpPtrArg other, Environment *env);
     virtual std::string show() const;
     static const std::string defaultName;
 };

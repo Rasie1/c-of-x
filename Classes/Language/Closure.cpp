@@ -61,3 +61,17 @@ std::string Closure::show() const
 {
     return "[|" + argument->show() + " => " + body->show() + "|]";
 }
+
+bool Closure::operator==(const Expression& other) const
+{
+    throw 0; // todo: implement env eq test
+    try
+    {
+        auto x = dynamic_cast<const Closure&>(other);
+        return x.body == body && x.argument == argument;
+    }
+    catch (std::bad_cast&)
+    {
+        return false;
+    }
+}

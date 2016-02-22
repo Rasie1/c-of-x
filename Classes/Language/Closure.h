@@ -14,6 +14,7 @@ public:
 
     ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
     std::string show() const override;
+    bool operator==(const Expression& other) const override;
 
     ExpPtr body;
     ExpPtr argument;

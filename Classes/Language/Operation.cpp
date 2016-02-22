@@ -5,6 +5,7 @@
 #include "Identifier.h"
 #include "Environment.h"
 #include "Any.h"
+#include "Intersection.h"
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
                      ExpPtrArg left,
@@ -62,4 +63,23 @@ bool Operation::unwind(ExpPtr& lvalue,
 bool Operation::hasNonOpVariable(Environment* env) const
 {
     return left->hasNonOpVariable(env) || right->hasNonOpVariable(env);
+}
+
+ExpPtr Operation::intersect(ExpPtrArg other, Environment *env)
+{
+    return Intersection().operate(Intersection().operate(left, other, env),
+                                  Intersection().operate(right, other, env), env);
+}
+
+bool Operation::operator==(const Expression& other) const
+{
+    try
+    {
+        auto x = dynamic_cast<const Operation&>(other);
+        return x.op == op && x.left == left && x.right == right;
+    }
+    catch (std::bad_cast&)
+    {
+        return false;
+    }
 }

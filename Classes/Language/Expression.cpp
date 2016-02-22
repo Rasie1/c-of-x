@@ -47,5 +47,5 @@ bool Expression::unwind(ExpPtr& lvalue,
 
 ExpPtr Expression::intersect(ExpPtrArg& other, Environment* env)
 {
-    return make_ptr<Void>();
+    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }

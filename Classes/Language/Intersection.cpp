@@ -18,10 +18,12 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     auto lr = l->intersect(r, env);
     auto rl = r->intersect(l, env);
 
-    if (*rl == *lr)
-        return lr;
-    else
-        return make_ptr<Void>();
+    return lr;
+
+//    if (*rl == *lr)
+//        return lr;
+//    else
+//        return make_ptr<Void>();
 }
 
 std::string Intersection::show() const

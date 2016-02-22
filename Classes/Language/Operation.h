@@ -14,7 +14,11 @@ public:
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
                         Environment*& env);
+
+    ExpPtr intersect(ExpPtrArg other, Environment *env);
     bool hasNonOpVariable(Environment* env) const;
+
+    bool operator==(const Expression& other) const override;
 
     std::shared_ptr<Operator> op;
     ExpPtr left;

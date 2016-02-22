@@ -10,6 +10,7 @@ public:
     ExpPtr value;
 
     ExpPtr intersect(ExpPtrArg other, Environment* env) override;
+    bool operator==(const Expression& other) const;
 
     std::string show() const;
     static const std::string defaultName;

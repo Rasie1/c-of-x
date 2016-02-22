@@ -59,7 +59,11 @@ ExpPtr Environment::get(ExpPtrArg key)
 
 void Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
-    data[key] = value;
+    std::cout << "[[[" << key->show() << "]]]"
+              << std::endl << "  [" << get(key)->show() << "]&[" << value->show()
+              << "]" << std::endl;
+    data[key] = intersect(get(key), value);
+    std::cout << "===" << data[key]->show() << std::endl;
 }
 
 void Environment::addEqual(ExpPtrArg key, ExpPtrArg value)

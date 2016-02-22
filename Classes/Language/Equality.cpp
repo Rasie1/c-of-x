@@ -10,6 +10,19 @@ bool Equals::holds(ExpPtrArg e, Environment* env) const
     return *value == *e;
 }
 
+bool Equals::operator==(const Expression& other) const
+{
+    try
+    {
+        auto x = dynamic_cast<const Equals&>(other);
+        return value == x.value;
+    }
+    catch (std::bad_cast&)
+    {
+        return false;
+    }
+}
+
 std::string Equals::show() const
 {
     return defaultName + "(" + value->show() + ")";
@@ -21,7 +34,9 @@ ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
 {
     if (std::shared_ptr<Equals> p = d_cast<Equals>(other))
     {
-        if (*value == *p->value)
+        auto& l = *value;
+        auto& r = *(p->value);
+        if (l == r)
             return value;
         else
             return make_ptr<Void>();
