@@ -16,17 +16,9 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
                                     ExpPtrArg second,
                                     Environment*& env) const
 {
-    ExpPtr l, r, ret;
-    l = d_cast<Identifier>(first);
-    if (l)
-        l = env->getEqual(l);
-    else
-        l = first;
-    r = d_cast<Identifier>(second);
-    if (r)
-        r = env->getEqual(r);
-    else
-        r = second;
+    ExpPtr l, r;
+    l = Identifier::unwrapIfId(first, env);
+    r = Identifier::unwrapIfId(second, env);
     auto left  = l->eval(env);
     auto right = r->eval(env);
 

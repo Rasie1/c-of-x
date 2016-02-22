@@ -12,15 +12,13 @@ bool Equals::holds(ExpPtrArg e, Environment* env) const
 
 bool Equals::operator==(const Expression& other) const
 {
-    try
+    if (typeid(*this) == typeid(other))
     {
-        auto x = dynamic_cast<const Equals&>(other);
+        auto x = static_cast<const Equals&>(other);
         return value == x.value;
     }
-    catch (std::bad_cast&)
-    {
+    else
         return false;
-    }
 }
 
 std::string Equals::show() const
@@ -32,8 +30,9 @@ const std::string Equals::defaultName = "eqv";
 
 ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
 {
-    if (std::shared_ptr<Equals> p = d_cast<Equals>(other))
+    if (typeid(*this) == typeid(*other))
     {
+        auto p = s_cast<Equals>(other);
         auto& l = *value;
         auto& r = *(p->value);
         if (l == r)

@@ -7,15 +7,14 @@
 
 bool Identifier::operator==(const Expression& other) const
 {
-    try
+
+    if (typeid(*this) == typeid(other))
     {
-        auto id = dynamic_cast<const Identifier&>(other);
+        auto id = static_cast<const Identifier&>(other);
         return id.name == name;
     }
-    catch (std::bad_cast& bc)
-    {
+    else
         return false;
-    }
 }
 
 std::string Identifier::show() const

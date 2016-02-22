@@ -13,18 +13,19 @@ Addition::Addition()
 
 ExpPtr Addition::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    auto firstInteger  = d_cast<Integer>(l);
-    auto secondInteger = d_cast<Integer>(r);
-
-    if (!firstInteger || !secondInteger)
+    if (typeid(*l) == typeid(Integer) && typeid(*r) == typeid(Integer))
+    {
+        auto firstInteger  = s_cast<Integer>(l);
+        auto secondInteger = s_cast<Integer>(r);
+        return make_ptr<Integer>(firstInteger->value + secondInteger->value);
+    }
+    else
     {
         auto operation = make_ptr<Operation>(make_ptr<Addition>(), l, r);
         return make_ptr<TypeError>(operation,
                                    make_ptr<Identifier>("arguments of type integer"),
                                    make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
     }
-
-    return make_ptr<Integer>(firstInteger->value + secondInteger->value);
 }
 
 std::string Addition::show() const

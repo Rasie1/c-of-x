@@ -11,9 +11,9 @@ public:
 
     ExpPtr eval(Environment*& env) const override;
     std::string show() const override;
-    virtual bool unwind(ExpPtr& lvalue,
-                        ExpPtr& rvalue,
-                        Environment*& env);
+    bool unwind(ExpPtr& lvalue,
+                ExpPtr& rvalue,
+                Environment*& env);
 
     ExpPtr intersect(ExpPtrArg other, Environment *env);
     bool hasNonOpVariable(Environment* env) const;

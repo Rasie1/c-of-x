@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <typeinfo>
 #include "DebugHelpers.h"
 
 class Environment;

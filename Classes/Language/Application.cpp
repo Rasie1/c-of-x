@@ -21,11 +21,7 @@ ExpPtr Application::operate(ExpPtrArg first,
 {
     ExpPtr ret, left, right;
 
-    left = first;
-    if (d_cast<Identifier>(first))
-        left = env->getEqual(first);
-    if (d_cast<Any>(left))
-        left = first;
+    left = Identifier::unwrapIfId(first, env);
 
     left = left->eval(env);
     right = second;
