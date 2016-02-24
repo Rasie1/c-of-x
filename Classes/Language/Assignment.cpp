@@ -5,41 +5,43 @@
 #include "Lambda.h"
 #include "Closure.h"
 #include "Any.h"
+#include "Equality.h"
 
-Assignment::Assignment()
-    : Operator(true, 2)
-{
+//Assignment::Assignment()
+//    : Operator(true, 2)
+//{
 
-}
+//}
 
-ExpPtr Assignment::operate(ExpPtrArg first,
-                           ExpPtrArg second,
-                           Environment*& env) const
-{
-    ExpPtr lvalue, rvalue;
-    lvalue = first;
+//ExpPtr Assignment::operate(ExpPtrArg first,
+//                           ExpPtrArg second,
+//                           Environment*& env) const
+//{
 
-    if (d_cast<Identifier>(second))
-        rvalue = env->getEqual(second);
-    if (d_cast<Any>(rvalue))
-        rvalue = second;
+////    ExpPtr lvalue, rvalue;
+////    lvalue = first;
 
-    if (d_cast<Identifier>(lvalue))
-        env->addEqual(lvalue, rvalue);
-    else
-        while (lvalue->unwind(lvalue, rvalue, env));
+////    if (d_cast<Identifier>(second))
+////        rvalue = env->getEqual(second);
+////    if (d_cast<Any>(rvalue))
+////        rvalue = second;
 
-    // Enable recursion
-    auto operation = d_cast<Operation>(rvalue);
-    if (operation && d_cast<Lambda>(operation->op))
-        env->addEqual(lvalue, rvalue);
+////    if (d_cast<Identifier>(lvalue))
+////        env->addEqual(lvalue, rvalue);
+////    else
+////        while (lvalue->unwind(lvalue, rvalue, env));
 
-    return second;
-}
+////    // Enable recursion
+////    auto operation = d_cast<Operation>(rvalue);
+////    if (operation && d_cast<Lambda>(operation->op))
+////        env->addEqual(lvalue, rvalue);
 
-std::string Assignment::show() const
-{
-    return Assignment::defaultName;
-}
+////    return second;
+//}
 
-const std::string Assignment::defaultName = "=";
+//std::string Assignment::show() const
+//{
+//    return Assignment::defaultName;
+//}
+
+//const std::string Assignment::defaultName = "=";

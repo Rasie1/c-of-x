@@ -1,5 +1,22 @@
 #pragma once
 #include "Predicate.h"
+#include "Operator.h"
+
+
+class Equality : public Operator
+{
+public:
+    Equality();
+
+    ExpPtr operate(ExpPtrArg  first,
+                   ExpPtrArg  second,
+                   Environment*& env) const override;
+
+    std::string show() const override;
+
+    static const std::string defaultName;
+};
+
 
 class Equals : public Predicate
 {
@@ -16,11 +33,11 @@ public:
     static const std::string defaultName;
 };
 
-class Equality : public Function
-{
-public:
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
+//class Equality : public Function
+//{
+//public:
+//    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
 
-    std::string show() const;
-    static const std::string defaultName;
-};
+//    std::string show() const;
+//    static const std::string defaultName;
+//};
