@@ -2,7 +2,6 @@
 #include "Predicate.h"
 #include "Operator.h"
 
-
 class Equality : public Operator
 {
 public:
@@ -32,12 +31,3 @@ public:
     std::string show() const;
     static const std::string defaultName;
 };
-
-//class Equality : public Function
-//{
-//public:
-//    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
-
-//    std::string show() const;
-//    static const std::string defaultName;
-//};

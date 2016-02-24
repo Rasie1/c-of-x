@@ -86,8 +86,10 @@ ExpPtr Equality::operate(ExpPtrArg first,
     auto l = operateHelper(first, second, env);
     auto r = operateHelper(second, first, env);
 
-    if (l && r)
-        return first; // not always true
+    if (l)
+        return first;
+    else if (r)
+        return second;
     else
         return make_ptr<Void>();
 
@@ -104,16 +106,3 @@ std::string Equality::show() const
 }
 
 const std::string Equality::defaultName = "=";
-
-
-//ExpPtr Equality::apply(ExpPtrArg e, Environment*& env) const
-//{
-//    return make_ptr<Equals>(e);
-//}
-
-//std::string Equality::show() const
-//{
-//    return defaultName;
-//}
-
-//const std::string Equality::defaultName = "eq";
