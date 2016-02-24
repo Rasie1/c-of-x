@@ -4,7 +4,6 @@
 #include "Addition.h"
 #include "Subtraction.h"
 #include "Multiplication.h"
-#include "Assignment.h"
 #include "Pair.h"
 #include "Void.h"
 #include "Function.h"

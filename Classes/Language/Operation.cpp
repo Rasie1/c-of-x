@@ -1,7 +1,6 @@
 #include "Operation.h"
 #include "Operator.h"
 #include "Union.h"
-#include "Assignment.h"
 #include "Identifier.h"
 #include "Environment.h"
 #include "Any.h"
