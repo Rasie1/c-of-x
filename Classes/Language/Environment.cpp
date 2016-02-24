@@ -39,7 +39,18 @@ void Environment::clear()
 
 ExpPtr Environment::getEqual(ExpPtrArg key)
 {
+#ifdef DEBUG_EVAL
+    DEBUG_INDENTATION;
+    std::cout << "ENV GET: (" << key->show() << ") = (";
+#endif
+
     auto value = get(key);
+
+#ifdef DEBUG_EVAL
+    DEBUG_INDENTATION;
+    std::cout << value->show() << ")" << std::endl;
+#endif
+
     if (typeid(*value) == typeid(Equals))
         return s_cast<Equals>(value)->value;
     else
@@ -58,12 +69,12 @@ ExpPtr Environment::get(ExpPtrArg key)
 void Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
     DEBUG_INDENTATION;
-    std::cout << "Extending env (" << key->show() << ") = (" << get(key)->show() << ")" << std::endl;
+    std::cout << "ENV ADD: (" << key->show() << ") = (" << get(key)->show() << ")" << std::endl;
     DEBUG_INDENTATION;
-    std::cout << "New predicate: " << value->show() << std::endl;
+    std::cout << "    NEW: " << value->show() << std::endl;
     data[key] = intersect(get(key), value);
     DEBUG_INDENTATION;
-    std::cout << "Intersection:  " << data[key]->show() << std::endl;
+    std::cout << "    RET: " << data[key]->show() << std::endl;
 }
 
 void Environment::addEqual(ExpPtrArg key, ExpPtrArg value)

@@ -28,7 +28,7 @@ std::string Equals::show() const
     return defaultName + "(" + value->show() + ")";
 }
 
-const std::string Equals::defaultName = "eqv";
+const std::string Equals::defaultName = "eq";
 
 ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
 {
