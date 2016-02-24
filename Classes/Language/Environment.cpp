@@ -39,17 +39,7 @@ void Environment::clear()
 
 ExpPtr Environment::getEqual(ExpPtrArg key)
 {
-#ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
-    std::cout << "ENV GET: (" << key->show() << ") = (";
-#endif
-
     auto value = get(key);
-
-#ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
-    std::cout << value->show() << ")" << std::endl;
-#endif
 
     if (typeid(*value) == typeid(Equals))
         return s_cast<Equals>(value)->value;
@@ -59,17 +49,32 @@ ExpPtr Environment::getEqual(ExpPtrArg key)
 
 ExpPtr Environment::get(ExpPtrArg key)
 {
+#ifdef DEBUG_EVAL
+    DEBUG_INDENTATION;
+    std::cout << "ENV GET: (" << key->show() << ") = (";
+#endif
+
     auto x = data.find(key);
+
+    ExpPtr ret;
     if (x == std::end(data))
-        return make_ptr<Any>();
+        ret = make_ptr<Any>();
     else
-        return x->second;
+        ret = x->second;
+
+
+#ifdef DEBUG_EVAL
+    DEBUG_INDENTATION;
+    std::cout << ret->show() << ")" << std::endl;
+#endif
+    return ret;
 }
 
 void Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
     DEBUG_INDENTATION;
-    std::cout << "ENV ADD: (" << key->show() << ") = (" << get(key)->show() << ")" << std::endl;
+    std::cout << "ENV ADD: " << key->show() << std::endl;
+    get(key);
     DEBUG_INDENTATION;
     std::cout << "    NEW: " << value->show() << std::endl;
     data[key] = intersect(get(key), value);
