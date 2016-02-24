@@ -57,11 +57,13 @@ ExpPtr Environment::get(ExpPtrArg key)
 
 void Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
-    std::cout << "[[[" << key->show() << "]]]"
-              << std::endl << "  [" << get(key)->show() << "]&[" << value->show()
-              << "]" << std::endl;
+    DEBUG_INDENTATION;
+    std::cout << "Extending env (" << key->show() << ") = (" << get(key)->show() << ")" << std::endl;
+    DEBUG_INDENTATION;
+    std::cout << "New predicate: " << value->show() << std::endl;
     data[key] = intersect(get(key), value);
-    std::cout << "===" << data[key]->show() << std::endl;
+    DEBUG_INDENTATION;
+    std::cout << "Intersection:  " << data[key]->show() << std::endl;
 }
 
 void Environment::addEqual(ExpPtrArg key, ExpPtrArg value)

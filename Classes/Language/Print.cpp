@@ -8,7 +8,14 @@ ExpPtr Print::apply(ExpPtrArg e, Environment*& env) const
     ExpPtr arg;
     arg = Identifier::unwrapIfId(e, env);
     auto evaluated = arg->eval(env);
+
+#ifdef DEBUG_EVAL
+    std::cout << "stdout: [";
+#endif
     std::cout << Identifier::unwrapIfId(evaluated, env)->show();
+#ifdef DEBUG_EVAL
+    std::cout << "]" << std::endl;
+#endif
     return evaluated;
 }
 
