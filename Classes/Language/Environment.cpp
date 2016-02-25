@@ -64,7 +64,6 @@ ExpPtr Environment::get(ExpPtrArg key)
 
 
 #ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
     std::cout << ret->show() << ")" << std::endl;
 #endif
     return ret;

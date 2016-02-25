@@ -55,7 +55,6 @@ bool operateHelper(ExpPtrArg first,
                    ExpPtrArg second,
                    Environment*& env)
 {
-
     auto lvalue = first;
     auto rvalue = second;
     if (typeid(*lvalue) != typeid(Identifier))
@@ -83,13 +82,21 @@ ExpPtr Equality::operate(ExpPtrArg first,
                          Environment*& env) const
 
 {
-    auto l = operateHelper(first, second, env);
-    auto r = operateHelper(second, first, env);
+    auto envl = env;
+    auto envr = env;
+    auto l = operateHelper(first, second, envl);
+    auto r = operateHelper(second, first, envr);
 
     if (l)
+    {
+        env = envl;
         return first;
+    }
     else if (r)
+    {
+        env = envr;
         return second;
+    }
     else
         return make_ptr<Void>();
 
