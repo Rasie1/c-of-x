@@ -4,7 +4,7 @@
 #include "Operation.h"
 #include "Intersection.h"
 #include "Void.h"
-
+#include "Lambda.h"
 
 
 bool Equals::holds(ExpPtrArg e, const Environment& env) const
@@ -63,8 +63,19 @@ bool operateHelper(ExpPtrArg first,
     if (typeid(*lvalue) == typeid(Identifier))
     {
         auto id = s_cast<Identifier>(lvalue);
-        env.addEqual(id, rvalue->eval(env));
 
+        // For recursion
+        auto operation = d_cast<Operation>(rvalue);
+        if (operation && (typeid(*(operation->op)) == typeid(Lambda)))
+        {
+            auto newEnv = env;
+            newEnv.addEqual(id, rvalue);
+            env.addEqual(id, rvalue->eval(newEnv));
+        }
+        else
+        {
+            env.addEqual(id, rvalue->eval(env));
+        }
         return true;
     }
     else
@@ -103,24 +114,23 @@ ExpPtr Equality::operate(ExpPtrArg first,
 #ifdef DEBUG_EVAL
     DEBUG_INDENT_DECR;
 #endif
+
+    ExpPtr ret;
     if (l)
     {
         env = envl;
-        return first;
+        ret = first;
     }
     else if (r)
     {
         env = envr;
-        return second;
+        ret = second;
     }
     else
         return make_ptr<Void>();
 
-//    // How recursion was implemented
-//    auto operation = d_cast<Operation>(rvalue);
-//    if (operation && d_cast<Lambda>(operation->op))
-//        env.addEqual(lvalue, rvalue);
 
+    return ret;
 }
 
 std::string Equality::show() const
