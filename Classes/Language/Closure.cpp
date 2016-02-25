@@ -23,18 +23,18 @@ Closure::~Closure()
     // delete envSize elements
 }
 
-ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
 {
+    auto newEnv = this->env;
     ExpPtr lvalue = argument;
     ExpPtr rvalue = body;
-    while (lvalue->unwind(lvalue, rvalue, env));
+    while (lvalue->unwind(lvalue, rvalue, newEnv));
 
     auto variable = d_cast<Identifier>(lvalue);
     auto value = d_cast<DataType>(lvalue);
 
     if (variable)
     {
-        auto newEnv = this->env;
         newEnv.addEqual(variable, e);
         auto evaluated = rvalue->eval(newEnv);
         if (d_cast<Identifier>(evaluated))
@@ -45,7 +45,6 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
     {
         if (*value == *e)
         {
-            auto newEnv = env;
             return rvalue->eval(newEnv);
         }
         else

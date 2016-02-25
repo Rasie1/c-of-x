@@ -63,7 +63,7 @@ bool operateHelper(ExpPtrArg first,
     if (typeid(*lvalue) == typeid(Identifier))
     {
         auto id = s_cast<Identifier>(lvalue);
-        env.addEqual(id, rvalue);
+        env.addEqual(id, rvalue->eval(env));
 
         return true;
     }
