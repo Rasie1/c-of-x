@@ -29,6 +29,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
     ExpPtr lvalue = argument;
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, newEnv));
+    newEnv.erase(lvalue);
 
     auto variable = d_cast<Identifier>(lvalue);
     auto value = d_cast<DataType>(lvalue);

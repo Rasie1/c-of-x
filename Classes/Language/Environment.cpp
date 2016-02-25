@@ -69,6 +69,11 @@ ExpPtr Environment::get(ExpPtrArg key) const
     return ret;
 }
 
+void Environment::erase(ExpPtrArg e)
+{
+    data.erase(e);
+}
+
 void Environment::add(ExpPtrArg key, ExpPtrArg value)
 {
     DEBUG_INDENTATION;

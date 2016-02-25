@@ -30,6 +30,7 @@ public:
     ExpPtr get(ExpPtrArg key) const;
     ExpPtr getEqual(ExpPtrArg key) const;
     ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
+    void erase(ExpPtrArg e);
     void clear();
 
     bool compareOperators(const std::shared_ptr<Operator>& first,
