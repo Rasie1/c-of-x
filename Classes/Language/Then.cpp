@@ -14,8 +14,8 @@ ExpPtr Then::operate(ExpPtrArg first,
                      Environment& env) const
 {
     auto l = first->eval(env);
-    if (d_cast<Void>(l))
-        return make_ptr<Void>();
+    if (typeid(*l) == typeid(Void))
+        return l;
 
     return second->eval(env);
 }

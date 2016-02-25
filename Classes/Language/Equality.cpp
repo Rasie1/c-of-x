@@ -65,17 +65,21 @@ bool operateHelper(ExpPtrArg first,
         auto id = s_cast<Identifier>(lvalue);
 
         // For recursion
-        auto operation = d_cast<Operation>(rvalue);
-        if (operation && (typeid(*(operation->op)) == typeid(Lambda)))
+        if (typeid(*rvalue) == typeid(Operation))
         {
-            auto newEnv = env;
-            newEnv.addEqual(id, rvalue);
-            env.addEqual(id, rvalue->eval(newEnv));
+            auto operation = s_cast<Operation>(rvalue);
+            if (operation && (typeid(*(operation->op)) == typeid(Lambda)))
+            {
+                auto newEnv = env;
+                newEnv.addEqual(id, rvalue);
+                env.addEqual(id, rvalue->eval(newEnv));
+                return true;
+            }
         }
-        else
-        {
-            env.addEqual(id, rvalue->eval(env));
-        }
+
+        rvalue = Identifier::unwrapIfId(rvalue, env);
+
+        env.addEqual(id, rvalue->eval(env));
         return true;
     }
     else

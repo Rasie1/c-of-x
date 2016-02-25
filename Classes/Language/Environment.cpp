@@ -100,7 +100,6 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(EvalDelay      ::defaultName), make_ptr<EvalDelay>());
     addEqual(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>());
     addEqual(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>());
-    //addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>());
     addEqual(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>());
     addEqual(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>());
     addEqual(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>());
