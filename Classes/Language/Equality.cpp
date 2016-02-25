@@ -84,9 +84,25 @@ ExpPtr Equality::operate(ExpPtrArg first,
 {
     auto envl = env;
     auto envr = env;
+#ifdef DEBUG_EVAL
+    DEBUG_INDENTATION;
+    std::cout << "Equality: (" << first->show() << ") = (" << second->show() << ")"
+              << std::endl;
+    DEBUG_INDENTATION;
+    std::cout << "L R:" << std::endl;
+    DEBUG_INDENT_INCR;
+#endif
     auto l = operateHelper(first, second, envl);
+#ifdef DEBUG_EVAL
+    DEBUG_INDENT_DECR;
+    DEBUG_INDENTATION;
+    std::cout << "R L:" << std::endl;
+    DEBUG_INDENT_INCR;
+#endif
     auto r = operateHelper(second, first, envr);
-
+#ifdef DEBUG_EVAL
+    DEBUG_INDENT_DECR;
+#endif
     if (l)
     {
         env = envl;
