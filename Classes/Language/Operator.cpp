@@ -17,7 +17,7 @@ bool Operator::unwind(ExpPtr& left,
                       ExpPtr& right,
                       ExpPtr& lvalue,
                       ExpPtr& rvalue,
-                      Environment*& env)
+                      Environment& env)
 {
     return false;
 }

@@ -33,19 +33,19 @@ std::string Expression::show() const
     return "expr";
 }
 
-bool Expression::hasNonOpVariable(Environment* env) const
+bool Expression::hasNonOpVariable(const Environment& env) const
 {
     return false;
 }
 
 bool Expression::unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
-                        Environment*& env)
+                        Environment& env)
 {
     return false;
 }
 
-ExpPtr Expression::intersect(ExpPtrArg& other, Environment* env)
+ExpPtr Expression::intersect(ExpPtrArg& other, const Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }

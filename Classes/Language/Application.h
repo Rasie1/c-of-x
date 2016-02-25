@@ -8,13 +8,13 @@ public:
 
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
-                   Environment*& env) const override;
+                   Environment& env) const override;
 
     virtual bool unwind(ExpPtr& left,
                         ExpPtr& right,
                         ExpPtr& lvalue,
                         ExpPtr& rvalue,
-                        Environment*& env) override;
+                        Environment& env) override;
 
     std::string show() const override;
 private:

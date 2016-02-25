@@ -11,9 +11,6 @@ void REPL::start()
 {
     cout << "Welcome to c(x), type -h to get help" << endl;
 
-    env = new Environment();
-    Parser parser;
-
     while (true)
     {
         string instruction;
@@ -47,7 +44,6 @@ void REPL::start()
     }
 
     cout << "Quitting REPL" << endl;
-    delete env;
 }
 
 bool REPL::shouldExit(const std::string& s)
@@ -68,7 +64,7 @@ bool REPL::command(const std::string& s)
     if (s == "")
         return 1;
     else if (s == "-clear")
-        env->clear();
+        env.clear();
     else if (s == "-h" || s == "-help")
         displayHelp();
     else

@@ -16,16 +16,16 @@ Operation::Operation(const std::shared_ptr<Operator>& op,
 
 }
 
-ExpPtr Operation::eval(Environment*& env) const
+ExpPtr Operation::eval(Environment& env) const
 {
     ExpPtr ret;
 
     // debug-only
     DEBUG_PRINT_OP(op);
-    auto l = d_cast<Identifier>(left) ? env->getEqual(left) : left;
+    auto l = d_cast<Identifier>(left) ? env.getEqual(left) : left;
     if (d_cast<Any>(l))
         l = left;
-    auto r = d_cast<Identifier>(right) ? env->getEqual(right) : right;
+    auto r = d_cast<Identifier>(right) ? env.getEqual(right) : right;
     if (d_cast<Any>(r))
         r = right;
     DEBUG_PRINT_LT(l);
@@ -50,7 +50,7 @@ std::string Operation::show() const
 
 bool Operation::unwind(ExpPtr& lvalue,
                        ExpPtr& rvalue,
-                       Environment*& env)
+                       Environment& env)
 {
     return op->unwind(left,
                       right,
@@ -59,13 +59,14 @@ bool Operation::unwind(ExpPtr& lvalue,
                       env);
 }
 
-bool Operation::hasNonOpVariable(Environment* env) const
+bool Operation::hasNonOpVariable(const Environment& env) const
 {
     return left->hasNonOpVariable(env) || right->hasNonOpVariable(env);
 }
 
-ExpPtr Operation::intersect(ExpPtrArg other, Environment *env)
+ExpPtr Operation::intersect(ExpPtrArg other, const Environment& envc)
 {
+    auto env = envc;
     return Intersection().operate(Intersection().operate(left, other, env),
                                   Intersection().operate(right, other, env), env);
 }

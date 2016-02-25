@@ -17,7 +17,7 @@ Application::Application()
 
 ExpPtr Application::operate(ExpPtrArg first,
                             ExpPtrArg second,
-                            Environment*& env) const
+                            Environment& env) const
 {
     ExpPtr ret, left, right;
 
@@ -79,7 +79,7 @@ bool Application::unwind(ExpPtr& left,
                          ExpPtr& right,
                          ExpPtr& lvalue,
                          ExpPtr& rvalue,
-                         Environment*& env)
+                         Environment& env)
 {
     lvalue = left;
     rvalue = make_ptr<Operation>(make_ptr<Lambda>(),

@@ -7,7 +7,7 @@ class REPL
 public:
     void start();
 private:
-    Environment* env;
+    Environment env;
     Parser parser;
 
     bool command(const std::string& s);

@@ -39,7 +39,7 @@ bool Addition::unwind(ExpPtr& left,
                       ExpPtr& right,
                       ExpPtr& lvalue,
                       ExpPtr& rvalue,
-                      Environment*& env)
+                      Environment& env)
 {
     auto newEnv = env;
     if (left->hasNonOpVariable(env))

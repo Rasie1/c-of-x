@@ -7,7 +7,7 @@
 
 
 
-bool Equals::holds(ExpPtrArg e, Environment* env) const
+bool Equals::holds(ExpPtrArg e, const Environment& env) const
 {
     return *value == *e;
 }
@@ -30,7 +30,7 @@ std::string Equals::show() const
 
 const std::string Equals::defaultName = "eq";
 
-ExpPtr Equals::intersect(ExpPtrArg other, Environment* env)
+ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 {
     if (typeid(*this) == typeid(*other))
     {
@@ -53,7 +53,7 @@ Equality::Equality()
 
 bool operateHelper(ExpPtrArg first,
                    ExpPtrArg second,
-                   Environment*& env)
+                   Environment& env)
 {
     auto lvalue = first;
     auto rvalue = second;
@@ -63,7 +63,7 @@ bool operateHelper(ExpPtrArg first,
     if (typeid(*lvalue) == typeid(Identifier))
     {
         auto id = s_cast<Identifier>(lvalue);
-        env->addEqual(id, rvalue);
+        env.addEqual(id, rvalue);
 
         return true;
     }
@@ -79,7 +79,7 @@ bool operateHelper(ExpPtrArg first,
 
 ExpPtr Equality::operate(ExpPtrArg first,
                          ExpPtrArg second,
-                         Environment*& env) const
+                         Environment& env) const
 
 {
     auto envl = env;
@@ -103,7 +103,7 @@ ExpPtr Equality::operate(ExpPtrArg first,
 //    // How recursion was implemented
 //    auto operation = d_cast<Operation>(rvalue);
 //    if (operation && d_cast<Lambda>(operation->op))
-//        env->addEqual(lvalue, rvalue);
+//        env.addEqual(lvalue, rvalue);
 
 }
 

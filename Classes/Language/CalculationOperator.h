@@ -10,7 +10,7 @@ public:
 
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
-                   Environment*& env) const override;
+                   Environment& env) const override;
 
 //    std::string show() const override;
 
@@ -18,5 +18,5 @@ public:
 //                        ExpPtr& right,
 //                        ExpPtr& lvalue,
 //                        ExpPtr& rvalue,
-//                        Environment*& env) override;
+//                        Environment& env) override;
 };

@@ -5,8 +5,9 @@
 #include "Any.h"
 #include "Identifier.h"
 
-ExpPtr Function::intersect(ExpPtrArg other, Environment *env)
+ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
 {
+    auto env = envc;
     ExpPtr val;
     if (typeid(*other) == typeid(Equals))
     {

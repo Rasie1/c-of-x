@@ -14,7 +14,7 @@ CalculationOperator::CalculationOperator(bool isRightAssociative, int priority)
 
 ExpPtr CalculationOperator::operate(ExpPtrArg first,
                                     ExpPtrArg second,
-                                    Environment*& env) const
+                                    Environment& env) const
 {
     ExpPtr l, r;
     l = Identifier::unwrapIfId(first, env);

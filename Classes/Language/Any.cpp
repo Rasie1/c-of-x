@@ -8,7 +8,7 @@ std::string Any::show() const
 const std::string Any::defaultName = "_";
 
 
-ExpPtr Any::intersect(ExpPtrArg other, Environment *env)
+ExpPtr Any::intersect(ExpPtrArg other, const Environment& env)
 {
     return other;
 }

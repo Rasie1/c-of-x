@@ -22,15 +22,15 @@ std::string Identifier::show() const
     return name;
 }
 
-bool Identifier::hasNonOpVariable(Environment* env) const
+bool Identifier::hasNonOpVariable(const Environment& env) const
 {
-    return d_cast<Any>(env->getEqual(std::const_pointer_cast<Expression>(shared_from_this()))) != nullptr;
+    return d_cast<Any>(env.getEqual(std::const_pointer_cast<Expression>(shared_from_this()))) != nullptr;
 }
 
-ExpPtr Identifier::unwrapIfId(ExpPtrArg e, Environment* env)
+ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
 {
     if (d_cast<Identifier>(e))
-        return env->getEqual(e);
+        return env.getEqual(e);
     else
         return e;
 }

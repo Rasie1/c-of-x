@@ -14,19 +14,19 @@ public:
 
     Expression();
 
-    virtual ExpPtr eval(Environment*& env) const = 0;
+    virtual ExpPtr eval(Environment& env) const = 0;
 
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
-                        Environment*& env);
+                        Environment& env);
 
     virtual bool operator==(const Expression& other) const;
     bool         operator< (const Expression& other) const;
-    virtual ExpPtr intersect(ExpPtrArg other, Environment* env);
+    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
 
     virtual std::string show() const;
     virtual size_t      hash() const;
-    virtual bool hasNonOpVariable(Environment* env) const;
+    virtual bool hasNonOpVariable(const Environment& env) const;
 };
 
 typedef Expression::ExpPtr ExpPtr;

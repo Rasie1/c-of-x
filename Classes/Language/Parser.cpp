@@ -19,13 +19,11 @@
 
 using namespace std;
 
-ExpPtr Parser::parse(const string& s, Environment* env)
+ExpPtr Parser::parse(const string& s, Environment& env)
 {
     size_t i = 0;
     return parse(s, i, s.size(), env);
 }
-
-
 
 static constexpr bool isOperatorCharacter(char c)
 {
@@ -79,13 +77,13 @@ static constexpr bool shouldSkipCharacter(char c)
     return c < '!';
 }
 
-bool isOperator(ExpPtr e, Environment* env)
+bool isOperator(ExpPtr e, Environment& env)
 {
     if (d_cast<Operator>(e))
         return true;
     if (d_cast<Identifier>(e))
     {
-        auto value = env->getEqual(e);
+        auto value = env.getEqual(e);
         return d_cast<Operator>(value) != nullptr;
     }
     return false;
@@ -95,7 +93,7 @@ bool isOperator(ExpPtr e, Environment* env)
 bool isBreakingSequence(const std::string& s,
                         size_t start,
                         size_t end,
-                        Environment* env)
+                        Environment& env)
 {
     return isOperatorCharacter(s[start]);
 }
@@ -103,7 +101,7 @@ bool isBreakingSequence(const std::string& s,
 ExpPtr Parser::parseName(const std::string& s,
                          size_t start,
                          size_t end,
-                         Environment* env)
+                         Environment& env)
 {
     if (s[start] >= '0' && s[start] <= '9')
     {
@@ -139,7 +137,7 @@ ExpPtr Parser::parseName(const std::string& s,
 
 void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
                    std::deque<ExpPtr>& q,
-                   Environment* env)
+                   Environment& env)
 {
     ExpPtr left;
     ExpPtr right;
@@ -195,7 +193,7 @@ void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
 ExpPtr Parser::parse(const std::string& s,
                      size_t& i,
                      size_t n,
-                     Environment* env)
+                     Environment& env)
 {
     ExpPtr ret = nullptr;
 
@@ -268,10 +266,10 @@ ExpPtr Parser::parse(const std::string& s,
 
                 auto op = d_cast<Operator>(e);
                 if (!op)
-                    op = d_cast<Operator>(env->getEqual(e));
+                    op = d_cast<Operator>(env.getEqual(e));
 
                 while (!operatorStack.empty() &&
-                       env->compareOperators(op, operatorStack.top()))
+                       env.compareOperators(op, operatorStack.top()))
                     makeOperation(operatorStack, q, env);
 
                 operatorStack.push(op);
@@ -304,11 +302,11 @@ ExpPtr Parser::parse(const std::string& s,
 ExpPtr Parser::parseFile(const std::string& filename)
 {
     Environment env;
-    auto exp = parseFile(filename, &env);
+    auto exp = parseFile(filename, env);
     return exp;
 }
 
-ExpPtr Parser::parseFile(const std::string& filename, Environment* env)
+ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
 {
     std::ifstream ifs(filename);
     std::string content((std::istreambuf_iterator<char>(ifs)),
@@ -318,7 +316,7 @@ ExpPtr Parser::parseFile(const std::string& filename, Environment* env)
 }
 
 std::vector<Parser::Token> Parser::split(const std::string& s,
-                                         Environment* env)
+                                         Environment& env)
 {
     std::vector<Token> ret;
 

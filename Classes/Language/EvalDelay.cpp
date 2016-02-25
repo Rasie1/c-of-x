@@ -1,7 +1,7 @@
 #include "EvalDelay.h"
 #include "Application.h"
 
-ExpPtr EvalDelay::apply(ExpPtrArg e, Environment*& env) const
+ExpPtr EvalDelay::apply(ExpPtrArg e, Environment& env) const
 {
     return e;
 }

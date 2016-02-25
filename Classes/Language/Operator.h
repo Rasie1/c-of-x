@@ -8,7 +8,7 @@ public:
 
     virtual ExpPtr operate(ExpPtrArg first,
                            ExpPtrArg second,
-                           Environment*& env) const = 0;
+                           Environment& env) const = 0;
 
     bool isRightAssociative;
     int priority;
@@ -20,7 +20,7 @@ public:
                         ExpPtr& right,
                         ExpPtr& lvalue,
                         ExpPtr& rvalue,
-                        Environment*& env);
+                        Environment& env);
 
     virtual std::string show() const;
 private:

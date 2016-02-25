@@ -12,7 +12,7 @@ Lambda::Lambda()
 
 ExpPtr Lambda::operate(ExpPtrArg first,
                        ExpPtrArg second,
-                       Environment*& env) const
+                       Environment& env) const
 {
     auto ret = make_ptr<Closure>(first, second, env, 1);
     return ret;
@@ -29,7 +29,7 @@ bool Lambda::unwind(ExpPtr& left,
                     ExpPtr& right,
                     ExpPtr& lvalue,
                     ExpPtr& rvalue,
-                    Environment*& env)
+                    Environment& env)
 {
     return false;
 }

@@ -7,7 +7,7 @@
 
 ExpPtr Mutation::operate(ExpPtrArg first,
                                ExpPtrArg second,
-                               Environment*& env) const
+                               Environment& env) const
 {
     throw std::logic_error("Mutate is still in TODO state");
     return second;

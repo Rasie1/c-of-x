@@ -5,6 +5,7 @@
 #include "Addition.h"
 #include "Identifier.h"
 #include "TypeError.h"
+#include "Environment.h"
 
 Subtraction::Subtraction()
     : CalculationOperator(false, 5)
@@ -39,7 +40,7 @@ bool Subtraction::unwind(ExpPtr& left,
                          ExpPtr& right,
                          ExpPtr& lvalue,
                          ExpPtr& rvalue,
-                         Environment*& env)
+                         Environment& env)
 {
     auto newEnv = env;
     if (left->hasNonOpVariable(env))

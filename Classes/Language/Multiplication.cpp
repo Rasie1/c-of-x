@@ -10,7 +10,7 @@ Multiplication::Multiplication()
 
 ExpPtr Multiplication::operate(ExpPtrArg first,
                                ExpPtrArg second,
-                               Environment*& env) const
+                               Environment& env) const
 {
     auto firstInteger  = d_cast<Integer>(first ->eval(env));
     auto secondInteger = d_cast<Integer>(second->eval(env));

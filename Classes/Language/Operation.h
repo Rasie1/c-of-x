@@ -9,14 +9,14 @@ public:
               ExpPtrArg left,
               ExpPtrArg right);
 
-    ExpPtr eval(Environment*& env) const override;
+    ExpPtr eval(Environment& env) const override;
     std::string show() const override;
     bool unwind(ExpPtr& lvalue,
                 ExpPtr& rvalue,
-                Environment*& env);
+                Environment& env);
 
-    ExpPtr intersect(ExpPtrArg other, Environment *env);
-    bool hasNonOpVariable(Environment* env) const;
+    ExpPtr intersect(ExpPtrArg other, const Environment& env);
+    bool hasNonOpVariable(const Environment& env) const;
 
     bool operator==(const Expression& other) const override;
 

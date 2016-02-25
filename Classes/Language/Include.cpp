@@ -4,7 +4,7 @@
 #include "Environment.h"
 #include "Error.h"
 
-ExpPtr Include::apply(ExpPtrArg e, Environment*& env) const
+ExpPtr Include::apply(ExpPtrArg e, Environment& env) const
 {
     auto str = d_cast<String>(e);
     if (!str)

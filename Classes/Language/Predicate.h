@@ -6,7 +6,7 @@ class Predicate : public Function
 public:
     Predicate() {}
 
-    ExpPtr apply(ExpPtrArg e, Environment*& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
 
-    virtual bool holds(ExpPtrArg e, Environment* env) const = 0;
+    virtual bool holds(ExpPtrArg e, const Environment& env) const = 0;
 };

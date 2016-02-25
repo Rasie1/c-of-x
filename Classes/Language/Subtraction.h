@@ -14,7 +14,7 @@ public:
                         ExpPtr& right,
                         ExpPtr& lvalue,
                         ExpPtr& rvalue,
-                        Environment*& env) override;
+                        Environment& env) override;
 
     static const std::string defaultName;
 };

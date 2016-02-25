@@ -6,20 +6,20 @@
 #include "Void.h"
 #include "Any.h"
 
-ExpPtr Predicate::apply(ExpPtrArg e, Environment*& env) const
+ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 {
     if (typeid(*e) == typeid(Identifier))
     {
         auto id = s_cast<Identifier>(e);
         ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
-        env->add(id, x);
+        env.add(id, x);
 
-        auto expr = env->getEqual(id);
+        auto expr = env.getEqual(id);
 
         if (d_cast<Any>(expr) || holds(expr, env))
             return e;
 
-        auto ret = env->intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
+        auto ret = env.intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
 
         return ret;
     }

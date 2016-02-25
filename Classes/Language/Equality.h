@@ -9,7 +9,7 @@ public:
 
     ExpPtr operate(ExpPtrArg  first,
                    ExpPtrArg  second,
-                   Environment*& env) const override;
+                   Environment& env) const override;
 
     std::string show() const override;
 
@@ -21,11 +21,11 @@ class Equals : public Predicate
 {
 public:
     Equals(ExpPtrArg e) : value(e) {}
-    bool holds(ExpPtrArg e, Environment* env) const override;
+    bool holds(ExpPtrArg e, const Environment& env) const override;
 
     ExpPtr value;
 
-    ExpPtr intersect(ExpPtrArg other, Environment* env) override;
+    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;

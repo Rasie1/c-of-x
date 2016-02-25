@@ -130,7 +130,7 @@ ExpPtr Union::make(const std::vector<ExpPtr>& exps)
 
 ExpPtr Union::operate(ExpPtrArg first,
                       ExpPtrArg second,
-                      Environment*& env) const
+                      Environment& env) const
 {
     auto l = first->eval(env);
     auto r = second->eval(env);

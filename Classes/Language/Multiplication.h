@@ -10,7 +10,7 @@ public:
 
     ExpPtr operate(ExpPtrArg  first,
                    ExpPtrArg  second,
-                   Environment*& env) const override;
+                   Environment& env) const override;
 
     std::string show() const override;
 

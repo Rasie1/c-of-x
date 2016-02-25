@@ -11,7 +11,7 @@ Then::Then()
 
 ExpPtr Then::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment*& env) const
+                     Environment& env) const
 {
     auto l = first->eval(env);
     if (d_cast<Void>(l))
@@ -31,7 +31,7 @@ bool Then::unwind(ExpPtr& left,
                   ExpPtr& right,
                   ExpPtr& lvalue,
                   ExpPtr& rvalue,
-                  Environment*& env)
+                  Environment& env)
 {
     return false;
 }

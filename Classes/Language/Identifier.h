@@ -11,9 +11,9 @@ public:
     bool operator==(const Expression& other) const override;
     std::string show() const override;
 
-    bool hasNonOpVariable(Environment* env) const;
+    bool hasNonOpVariable(const Environment& env) const;
 
-    static ExpPtr unwrapIfId(ExpPtrArg e, Environment* env);
+    static ExpPtr unwrapIfId(ExpPtrArg e, const Environment& env);
 
     std::string name;
 };

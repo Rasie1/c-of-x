@@ -27,8 +27,8 @@ public:
 
     void add(ExpPtrArg key, ExpPtrArg predicate);
     void addEqual(ExpPtrArg key, ExpPtrArg value);
-    ExpPtr get(ExpPtrArg key);
-    ExpPtr getEqual(ExpPtrArg key);
+    ExpPtr get(ExpPtrArg key) const;
+    ExpPtr getEqual(ExpPtrArg key) const;
     ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
     void clear();
 
