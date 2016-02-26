@@ -164,29 +164,13 @@ void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
     }
     else
     {
+        auto id = make_ptr<Identifier>("0");
         // Unary operator case
-        auto body = make_ptr<Operation>(
-                    op,
-                    right,
-                    make_ptr<Integer>(0)); // should get type
-        q.push_back(body); //and take default value of the type
+        auto body = make_ptr<Operation>(op, right, id);
 
-        /*
-        // if it's operator and one expression
-        auto variableName = "snd";
-        auto body = make_ptr<Operation>(
-                    op,
-                    make_ptr<Variable>(variableName),
-                    right);
-        auto lambdaApp = make_ptr<Operation>(
-                    make_ptr<Application>(),
-                    make_ptr<Lambda>(),
-                    make_ptr<Variable>(variableName));
-        auto lambda = make_ptr<Operation>(
-                    make_ptr<Application>(),
-                    lambdaApp,
-                    body);
-        q.push_back(lambda);*/
+        auto closure = Lambda().operate(id, body, env);
+        q.push_back(closure); //and take default value of the type
+
     }
 }
 

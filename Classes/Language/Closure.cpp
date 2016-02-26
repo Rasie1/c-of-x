@@ -61,13 +61,13 @@ std::string Closure::show() const
 
 bool Closure::operator==(const Expression& other) const
 {
-    try
+    if (typeid(other) == typeid(const Closure))
     {
-        auto x = dynamic_cast<const Closure&>(other);
-        return x.body == body && x.argument == argument && x.env == env;
+        auto& x = static_cast<const Closure&>(other);
+        return x.body == body &&
+               x.argument == argument &&
+               x.env == env;
     }
-    catch (std::bad_cast&)
-    {
+    else
         return false;
-    }
 }
