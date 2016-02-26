@@ -79,16 +79,12 @@ static constexpr bool shouldSkipCharacter(char c)
 
 bool isOperator(ExpPtr e, Environment& env)
 {
+    e = Identifier::unwrapIfId(e, env);
     if (d_cast<Operator>(e))
         return true;
-    if (d_cast<Identifier>(e))
-    {
-        auto value = env.getEqual(e);
-        return d_cast<Operator>(value) != nullptr;
-    }
-    return false;
+    else
+        return false;
 }
-
 
 bool isBreakingSequence(const std::string& s,
                         size_t start,
@@ -151,12 +147,13 @@ void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
         left = q.back();
         q.pop_back();
 
-        // "Preprocessor" handling (#)
-        auto variable = d_cast<Identifier>(left);
+        // Handle force-eval operator
         bool evalForce = false;
-        if (variable)
+        if (typeid(*left) == typeid(Identifier))
+        {
+            auto variable = s_cast<Identifier>(left);
             evalForce = variable->name == "#";
-
+        }
         if (evalForce)
             q.push_back(right->eval(env));
         else
@@ -169,7 +166,7 @@ void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
         auto body = make_ptr<Operation>(op, right, id);
 
         auto closure = Lambda().operate(id, body, env);
-        q.push_back(closure); //and take default value of the type
+        q.push_back(closure);
 
     }
 }
