@@ -22,6 +22,8 @@ public:
                         ExpPtr& rvalue,
                         Environment& env);
 
+    virtual ExpPtr partialApply(ExpPtrArg e, Environment& env);
+
     virtual std::string show() const;
 private:
 };

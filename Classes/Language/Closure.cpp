@@ -10,7 +10,7 @@ Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,
                  const Environment& env,
                  int envSize)
-    : body(body),//Identifier::unwrapIfId(body, env)),
+    : body(body),
       argument(argument),
       env(env),
       envSize(envSize)
@@ -20,7 +20,6 @@ Closure::Closure(ExpPtrArg argument,
 
 Closure::~Closure()
 {
-    // delete envSize elements
 }
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const

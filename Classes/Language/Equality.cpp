@@ -51,9 +51,9 @@ Equality::Equality()
 
 }
 
-bool operateHelper(ExpPtrArg first,
-                   ExpPtrArg second,
-                   Environment& env)
+static bool operateHelper(ExpPtrArg first,
+                          ExpPtrArg second,
+                          Environment& env)
 {
     auto lvalue = first;
     auto rvalue = second;
@@ -143,3 +143,8 @@ std::string Equality::show() const
 }
 
 const std::string Equality::defaultName = "=";
+
+ExpPtr Equality::partialApply(ExpPtrArg e, Environment& env)
+{
+     return make_ptr<Equals>(e);
+}

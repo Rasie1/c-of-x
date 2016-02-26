@@ -37,6 +37,13 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
     if (typeid(*this) == typeid(*other))
     {
         auto p = s_cast<LessThan>(other);
+        if (typeid(*value) == typeid(Integer) &&
+            typeid(*(p->value)) == typeid(Integer))
+        {
+            auto v1 = s_cast<Integer>(value);
+            auto v2 = s_cast<Integer>(p->value);
+            return make_ptr<LessThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
+        }
         return make_ptr<Void>();
 //        return make_ptr<LessThan>(make_ptr<Integer>(value));
     }
@@ -49,9 +56,9 @@ Less::Less()
 
 }
 
-bool operateHelper(ExpPtrArg first,
-                   ExpPtrArg second,
-                   Environment& env)
+static bool operateHelper(ExpPtrArg first,
+                          ExpPtrArg second,
+                          Environment& env)
 {
     auto lvalue = first;
     auto rvalue = second;
@@ -99,7 +106,7 @@ ExpPtr Less::operate(ExpPtrArg first,
     auto envr = env;
 #ifdef DEBUG_EVAL
     DEBUG_INDENTATION;
-    std::cout << "Equality: (" << first->show() << ") = (" << second->show() << ")"
+    std::cout << "Less: (" << first->show() << ") < (" << second->show() << ")"
               << std::endl;
     DEBUG_INDENTATION;
     std::cout << "L R:" << std::endl;

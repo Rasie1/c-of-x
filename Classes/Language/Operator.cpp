@@ -1,5 +1,7 @@
 #include "Operator.h"
-#include <string>
+#include "Lambda.h"
+#include "Identifier.h"
+#include "Operation.h"
 
 Operator::Operator(bool isRightAssociative, int priority)
     : isRightAssociative(isRightAssociative),
@@ -35,4 +37,14 @@ bool Operator::operator==(const Expression& other) const
 //    {
 //        return false;
 //    }
+}
+
+ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env)
+{
+    auto id = make_ptr<Identifier>(e->show());
+    auto th = s_cast<Operator>(shared_from_this());
+    auto body = make_ptr<Operation>(th, e, id);
+
+    auto closure = Lambda().operate(id, body, env);
+    return closure;
 }

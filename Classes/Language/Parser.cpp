@@ -161,13 +161,8 @@ void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
     }
     else
     {
-        auto id = make_ptr<Identifier>("0");
-        // Unary operator case
-        auto body = make_ptr<Operation>(op, right, id);
-
-        auto closure = Lambda().operate(id, body, env);
-        q.push_back(closure);
-
+        auto pa = op->partialApply(right, env);
+        q.push_back(pa);
     }
 }
 
