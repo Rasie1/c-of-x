@@ -10,7 +10,7 @@ Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,
                  const Environment& env,
                  int envSize)
-    : body(body),
+    : body(Identifier::unwrapIfId(body, env)),
       argument(argument),
       env(env),
       envSize(envSize)
@@ -30,21 +30,18 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, newEnv));
     newEnv.erase(lvalue);
-
-    auto variable = d_cast<Identifier>(lvalue);
-    auto value = d_cast<DataType>(lvalue);
-
-    if (variable)
+;
+    if (typeid(*lvalue) == typeid(Identifier))
     {
-        newEnv.addEqual(variable, e);
+        newEnv.addEqual(lvalue, Identifier::unwrapIfId(e, envc));
         auto evaluated = rvalue->eval(newEnv);
-        if (d_cast<Identifier>(evaluated))
-            evaluated = newEnv.getEqual(evaluated);
+        evaluated = Identifier::unwrapIfId(evaluated, newEnv);
+
         return evaluated;
     }
-    else if (value)
+    else if (std::shared_ptr<DataType> lvalue = d_cast<DataType>(lvalue))
     {
-        if (*value == *e)
+        if (*lvalue == *e)
         {
             return rvalue->eval(newEnv);
         }
@@ -64,11 +61,10 @@ std::string Closure::show() const
 
 bool Closure::operator==(const Expression& other) const
 {
-    throw 0; // todo: implement env eq test
     try
     {
         auto x = dynamic_cast<const Closure&>(other);
-        return x.body == body && x.argument == argument;
+        return x.body == body && x.argument == argument && x.env == env;
     }
     catch (std::bad_cast&)
     {

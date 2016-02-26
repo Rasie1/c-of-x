@@ -36,6 +36,8 @@ public:
     bool compareOperators(const std::shared_ptr<Operator>& first,
                           const std::shared_ptr<Operator>& second);
 
+    bool operator==(const Environment& other) const;
+
 private:
     void addDefaultVariables();
 

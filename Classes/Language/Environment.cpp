@@ -91,6 +91,12 @@ void Environment::addEqual(ExpPtrArg key, ExpPtrArg value)
     add(key, make_ptr<Equals>(value));
 }
 
+
+bool Environment::operator==(const Environment& other) const
+{
+    return data == other.data;
+}
+
 void Environment::addDefaultVariables()
 {
     addEqual(make_ptr<Identifier>(Void           ::defaultName), make_ptr<Void>());
