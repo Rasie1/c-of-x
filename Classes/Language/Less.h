@@ -2,21 +2,6 @@
 #include "Predicate.h"
 #include "Operator.h"
 
-class Less : public Operator
-{
-public:
-    Less();
-
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
-                   Environment& env) const override;
-
-    std::string show() const override;
-
-    static const std::string defaultName;
-};
-
-
 class LessThan : public Predicate
 {
 public:
@@ -31,3 +16,19 @@ public:
     std::string show() const;
     static const std::string defaultName;
 };
+
+class Less : public Operator
+{
+public:
+    Less();
+
+    ExpPtr operate(ExpPtrArg  first,
+                   ExpPtrArg  second,
+                   Environment& env) const override;
+    ExpPtr partialApply(ExpPtrArg e, Environment& env) const override;
+
+    std::string show() const override;
+
+    static const std::string defaultName;
+};
+

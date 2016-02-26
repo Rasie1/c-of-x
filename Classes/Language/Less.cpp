@@ -11,6 +11,12 @@
 
 bool LessThan::holds(ExpPtrArg e, const Environment& env) const
 {
+    if (typeid(*e) == typeid(Integer))
+    {
+        auto v1 = s_cast<Integer>(value);
+        auto v2 = s_cast<Integer>(e);
+        return v2->value < v1->value;
+    }
     return *value == *e;
 }
 
@@ -69,18 +75,6 @@ static bool operateHelper(ExpPtrArg first,
     {
         auto id = s_cast<Identifier>(lvalue);
 
-        // For recursion
-        if (typeid(*rvalue) == typeid(Operation))
-        {
-            auto operation = s_cast<Operation>(rvalue);
-            if (operation && (typeid(*(operation->op)) == typeid(Lambda)))
-            {
-                auto newEnv = env;
-                newEnv.addEqual(id, rvalue);
-                env.addEqual(id, rvalue->eval(newEnv));
-                return true;
-            }
-        }
 
         rvalue = Identifier::unwrapIfId(rvalue, env);
 
@@ -102,39 +96,16 @@ ExpPtr Less::operate(ExpPtrArg first,
                      Environment& env) const
 
 {
-    auto envl = env;
-    auto envr = env;
-#ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
-    std::cout << "Less: (" << first->show() << ") < (" << second->show() << ")"
-              << std::endl;
-    DEBUG_INDENTATION;
-    std::cout << "L R:" << std::endl;
-    DEBUG_INDENT_INCR;
-#endif
-    auto l = operateHelper(first, second, envl);
-#ifdef DEBUG_EVAL
-    DEBUG_INDENT_DECR;
-    DEBUG_INDENTATION;
-    std::cout << "R L:" << std::endl;
-    DEBUG_INDENT_INCR;
-#endif
-    auto r = operateHelper(second, first, envr);
-#ifdef DEBUG_EVAL
-    DEBUG_INDENT_DECR;
-#endif
+    auto f = s_cast<LessThan>(partialApply(second, env));
+
+    return f->apply(first, env);
+
+
+    auto l = LessThan(second).holds(Identifier::unwrapIfId(first, env), env);
 
     ExpPtr ret;
     if (l)
-    {
-        env = envl;
         ret = first;
-    }
-    else if (r)
-    {
-        env = envr;
-        ret = second;
-    }
     else
         return make_ptr<Void>();
 
@@ -148,3 +119,8 @@ std::string Less::show() const
 }
 
 const std::string Less::defaultName = "<";
+
+ExpPtr Less::partialApply(ExpPtrArg e, Environment& env) const
+{
+     return make_ptr<LessThan>(e);
+}

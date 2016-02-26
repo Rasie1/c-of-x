@@ -133,7 +133,6 @@ ExpPtr Equality::operate(ExpPtrArg first,
     else
         return make_ptr<Void>();
 
-
     return ret;
 }
 
@@ -144,7 +143,7 @@ std::string Equality::show() const
 
 const std::string Equality::defaultName = "=";
 
-ExpPtr Equality::partialApply(ExpPtrArg e, Environment& env)
+ExpPtr Equality::partialApply(ExpPtrArg e, Environment& env) const
 {
      return make_ptr<Equals>(e);
 }

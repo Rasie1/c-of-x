@@ -39,11 +39,11 @@ bool Operator::operator==(const Expression& other) const
 //    }
 }
 
-ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env)
+ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env) const
 {
     auto id = make_ptr<Identifier>(e->show());
-    auto th = s_cast<Operator>(shared_from_this());
-    auto body = make_ptr<Operation>(th, e, id);
+    auto th = s_cast<const Operator>(shared_from_this());
+    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(th), e, id);
 
     auto closure = Lambda().operate(id, body, env);
     return closure;
