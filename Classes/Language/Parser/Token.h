@@ -1,9 +1,17 @@
 #pragma once
 #include <string>
 
+enum TokenTypeId
+{
+    None = 0,
+    Tabulation,
+    LineBreak,
+    Space
+};
+
 struct Token
 {
-    std::string name;
-    bool attachedToL = false;
-    bool attachedToR = false;
+    std::string s;
+    TokenTypeId t;
+    int tabulationAmount = 0;
 };

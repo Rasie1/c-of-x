@@ -10,12 +10,15 @@ file(GLOB SRC_LANG . Classes/Language/*.cpp Classes/Language/Parser/*.cpp)
 file(GLOB INC_LANG . Classes/Language/*.h Classes/Language/Parser)
 
 
+enable_testing()
+add_subdirectory(Tests)
+add_test (NAME MyTest COMMAND Tests)
 
 
-find_package (Boost 1.55 REQUIRED COMPONENTS)
-if (Boost_FOUND)
-  include_directories (SYSTEM ${Boost_INCLUDE_DIR})
-endif ()
+#find_package (Boost 1.55 REQUIRED COMPONENTS)
+#if (Boost_FOUND)
+#  include_directories (SYSTEM ${Boost_INCLUDE_DIR})
+#endif ()
 
 
 
