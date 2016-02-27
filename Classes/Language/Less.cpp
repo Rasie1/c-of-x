@@ -56,39 +56,15 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), value, other);
 }
 
+ExpPtr LessThan::end()
+{
+    return value;
+}
+
 Less::Less()
     : Operator(true, 2)
 {
 
-}
-
-static bool operateHelper(ExpPtrArg first,
-                          ExpPtrArg second,
-                          Environment& env)
-{
-    auto lvalue = first;
-    auto rvalue = second;
-    if (typeid(*lvalue) != typeid(Identifier))
-        while (lvalue->unwind(lvalue, rvalue, env));
-
-    if (typeid(*lvalue) == typeid(Identifier))
-    {
-        auto id = s_cast<Identifier>(lvalue);
-
-
-        rvalue = Identifier::unwrapIfId(rvalue, env);
-
-        env.addEqual(id, rvalue->eval(env));
-        return true;
-    }
-    else
-    {
-        auto le = first->eval(env);
-        auto re = second->eval(env);
-        re = Identifier::unwrapIfId(re, env);
-
-        return *le == *re;
-    }
 }
 
 ExpPtr Less::operate(ExpPtrArg first,
@@ -99,18 +75,6 @@ ExpPtr Less::operate(ExpPtrArg first,
     auto f = s_cast<LessThan>(partialApply(second, env));
 
     return f->apply(first, env);
-
-
-    auto l = LessThan(second).holds(Identifier::unwrapIfId(first, env), env);
-
-    ExpPtr ret;
-    if (l)
-        ret = first;
-    else
-        return make_ptr<Void>();
-
-
-    return ret;
 }
 
 std::string Less::show() const

@@ -22,7 +22,7 @@ std::string Identifier::show() const
     return name;
 }
 
-bool Identifier::hasNonOpVariable(const Environment& env) const
+bool Identifier::hasFreeVariables(const Environment& env) const
 {
     return d_cast<Any>(env.getEqual(std::const_pointer_cast<Expression>(shared_from_this()))) != nullptr;
 }

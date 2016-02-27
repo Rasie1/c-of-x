@@ -18,3 +18,8 @@ std::string Integer::show() const
 {
     return std::to_string(value);
 }
+
+ExpPtr Integer::next()
+{
+    return make_ptr<Integer>(value + 1);
+}

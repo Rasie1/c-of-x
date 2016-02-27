@@ -21,12 +21,13 @@ public:
                         Environment& env);
 
     virtual bool operator==(const Expression& other) const;
+    // used for hash() comparison
     bool         operator< (const Expression& other) const;
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
 
     virtual std::string show() const;
     virtual size_t      hash() const;
-    virtual bool hasNonOpVariable(const Environment& env) const;
+    virtual bool hasFreeVariables(const Environment& env) const;
 };
 
 typedef Expression::ExpPtr ExpPtr;

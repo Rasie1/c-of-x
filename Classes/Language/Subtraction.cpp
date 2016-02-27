@@ -43,9 +43,9 @@ bool Subtraction::unwind(ExpPtr& left,
                          Environment& env)
 {
     auto newEnv = env;
-    if (left->hasNonOpVariable(env))
+    if (left->hasFreeVariables(env))
     {
-        if (right->hasNonOpVariable(env))
+        if (right->hasFreeVariables(env))
             return false;
         lvalue = left;
         rvalue = make_ptr<Operation>(
@@ -54,7 +54,7 @@ bool Subtraction::unwind(ExpPtr& left,
                     right);
         return true;
     }
-    else if (right->hasNonOpVariable(env))
+    else if (right->hasFreeVariables(env))
     {
         lvalue = right;
         rvalue = make_ptr<Operation>(

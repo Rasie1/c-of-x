@@ -33,7 +33,7 @@ std::string Expression::show() const
     return "expr";
 }
 
-bool Expression::hasNonOpVariable(const Environment& env) const
+bool Expression::hasFreeVariables(const Environment& env) const
 {
     return false;
 }

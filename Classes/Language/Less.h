@@ -1,8 +1,11 @@
 #pragma once
 #include "Predicate.h"
 #include "Operator.h"
+#include "Iterable.h"
 
-class LessThan : public Predicate
+class LessThan :
+        public Predicate,
+        public RangeEnd
 {
 public:
     LessThan(ExpPtrArg e) : value(e) {}
@@ -15,6 +18,8 @@ public:
 
     std::string show() const;
     static const std::string defaultName;
+
+    ExpPtr end() override;
 };
 
 class Less : public Operator

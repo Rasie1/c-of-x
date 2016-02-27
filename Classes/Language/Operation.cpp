@@ -59,9 +59,9 @@ bool Operation::unwind(ExpPtr& lvalue,
                       env);
 }
 
-bool Operation::hasNonOpVariable(const Environment& env) const
+bool Operation::hasFreeVariables(const Environment& env) const
 {
-    return left->hasNonOpVariable(env) || right->hasNonOpVariable(env);
+    return left->hasFreeVariables(env) || right->hasFreeVariables(env);
 }
 
 ExpPtr Operation::intersect(ExpPtrArg other, const Environment& envc)

@@ -16,7 +16,7 @@ public:
                 Environment& env);
 
     ExpPtr intersect(ExpPtrArg other, const Environment& env);
-    bool hasNonOpVariable(const Environment& env) const;
+    bool hasFreeVariables(const Environment& env) const;
 
     bool operator==(const Expression& other) const override;
 
