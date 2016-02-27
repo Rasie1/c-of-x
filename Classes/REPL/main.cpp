@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Parser.h"
+#include "Parser/Parser.h"
 #include "REPL.h"
 
 int main(int argc, char* argv[])
@@ -11,7 +11,8 @@ int main(int argc, char* argv[])
     }
     else
     {
-        std::cout << Parser().parseFile(argv[1])->show();
+        Environment env;
+        std::cout << Parser().parseFile(argv[1], env)->show();
     }
 
     return 0;

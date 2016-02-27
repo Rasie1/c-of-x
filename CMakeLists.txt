@@ -6,8 +6,8 @@ cmake_minimum_required(VERSION 3.0)
 
 file(GLOB SRC_REPL . Classes/REPL/*.cpp)
 file(GLOB INC_REPL ./Classes/Language Classes/Language/*.h)
-file(GLOB SRC_LANG . Classes/Language/*.cpp)
-file(GLOB INC_LANG . Classes/Language/*.h)
+file(GLOB SRC_LANG . Classes/Language/*.cpp Classes/Language/Parser/*.cpp)
+file(GLOB INC_LANG . Classes/Language/*.h Classes/Language/Parser)
 
 
 

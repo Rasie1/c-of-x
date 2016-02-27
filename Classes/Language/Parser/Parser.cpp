@@ -1,4 +1,4 @@
-#include "Parser.h"
+#include "Parser/Parser.h"
 #include <sstream>
 #include <string>
 #include <stack>
@@ -77,7 +77,7 @@ static constexpr bool shouldSkipCharacter(char c)
     return c < '!';
 }
 
-bool isOperator(ExpPtr e, Environment& env)
+static bool isOperator(ExpPtr e, Environment& env)
 {
     e = Identifier::unwrapIfId(e, env);
     if (d_cast<Operator>(e))
@@ -86,7 +86,7 @@ bool isOperator(ExpPtr e, Environment& env)
         return false;
 }
 
-bool isBreakingSequence(const std::string& s,
+static bool isBreakingSequence(const std::string& s,
                         size_t start,
                         size_t end,
                         Environment& env)
@@ -131,9 +131,9 @@ ExpPtr Parser::parseName(const std::string& s,
     throw 0;
 }
 
-void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
-                   std::deque<ExpPtr>& q,
-                   Environment& env)
+static void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
+                          std::deque<ExpPtr>& q,
+                          Environment& env)
 {
     ExpPtr left;
     ExpPtr right;
@@ -275,13 +275,6 @@ ExpPtr Parser::parse(const std::string& s,
     return ret;
 }
 
-ExpPtr Parser::parseFile(const std::string& filename)
-{
-    Environment env;
-    auto exp = parseFile(filename, env);
-    return exp;
-}
-
 ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
 {
     std::ifstream ifs(filename);
@@ -289,21 +282,4 @@ ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
                         (std::istreambuf_iterator<char>()   ));
     auto newEnv = env;
     return Parser::parse(content, env)->eval(newEnv);
-}
-
-std::vector<Parser::Token> Parser::split(const std::string& s,
-                                         Environment& env)
-{
-    std::vector<Token> ret;
-
-    bool parsingName = false;
-    bool applicationFlag = false;
-    auto currentNameStart = s.begin();
-    for (auto c = s.begin(); c != s.end(); c++)
-    {
-        if (shouldSkipCharacter(*c))
-        {
-            continue;
-        }
-    }
 }
