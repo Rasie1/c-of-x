@@ -53,7 +53,7 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
         return make_ptr<Void>();
 //        return make_ptr<LessThan>(make_ptr<Integer>(value));
     }
-    return make_ptr<Operation>(make_ptr<Intersection>(), value, other);
+    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
 ExpPtr LessThan::end()
