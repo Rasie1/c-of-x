@@ -24,7 +24,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     left = Identifier::unwrapIfId(first, env);
 
     left = left->eval(env);
-    right = second;
+    right = second->eval(env);
 
     auto calculate = [&env](ExpPtrArg l, ExpPtrArg r) -> ExpPtr
     {

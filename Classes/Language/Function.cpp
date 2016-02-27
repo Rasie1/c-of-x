@@ -12,7 +12,8 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
     if (typeid(*other) == typeid(Equals))
     {
         auto eq = s_cast<Equals>(other);
-        return apply(eq->value, env);
+        auto ev = eq->value;//->eval(env);
+        return apply(ev, env);
     }
     else
     {
