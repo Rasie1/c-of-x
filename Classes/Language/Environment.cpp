@@ -24,6 +24,7 @@
 #include "Any.h"
 #include "Equality.h"
 #include "Less.h"
+#include "More.h"
 
 #include <vector>
 
@@ -118,6 +119,7 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>());
     addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>());
     addEqual(make_ptr<Identifier>(Less           ::defaultName), make_ptr<Less>());
+    addEqual(make_ptr<Identifier>(More           ::defaultName), make_ptr<More>());
     addEqual(make_ptr<Identifier>(Any            ::defaultName), make_ptr<Any>());
     addEqual(make_ptr<Identifier>(PrintInfo      ::defaultName), make_ptr<PrintInfo>());
 }
