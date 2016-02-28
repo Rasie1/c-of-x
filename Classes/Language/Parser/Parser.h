@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "Token.h"
+#include "Parser/Token.h"
 
 class Expression;
 typedef std::shared_ptr<Expression> ExpPtr;

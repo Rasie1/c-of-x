@@ -1,12 +1,16 @@
 #pragma once
 #include <string>
 
-enum TokenTypeId
+enum class TokenTypeId
 {
-    None = 0,
+    Identifier = 0,
+    Data,
     Tabulation,
     LineBreak,
-    Space
+    OpeningBrace,
+    ClosingBrace,
+    Comma,
+    NoSpace
 };
 
 struct Token
