@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <memory>
-#include <vector>
 #include <typeinfo>
 #include "DebugHelpers.h"
 
@@ -15,6 +14,7 @@ public:
     Expression();
 
     virtual ExpPtr eval(Environment& env) const = 0;
+    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
 
     virtual bool unwind(ExpPtr& lvalue,
                         ExpPtr& rvalue,
@@ -23,10 +23,10 @@ public:
     virtual bool operator==(const Expression& other) const;
     // used for hash() comparison
     bool         operator< (const Expression& other) const;
-    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
 
     virtual std::string show() const;
     virtual size_t      hash() const;
+
     virtual bool hasFreeVariables(const Environment& env) const;
 };
 

@@ -63,15 +63,15 @@ void displayHelp()
 bool REPL::command(const std::string& s)
 {
     if (s == "")
-        return 1;
+        return true;
     if (s == "-load")
         loadFile("");//todo: add arg
     else if (s == "-clear")
         env.clear();
     else if (s == "-h" || s == "-help")
         displayHelp();
-    else
-        return 0;
+
+    return false;
 }
 
 void REPL::loadFile(const std::string& s)

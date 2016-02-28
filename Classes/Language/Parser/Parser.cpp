@@ -59,9 +59,9 @@ static constexpr bool isOperatorCharacter(char c)
 static constexpr bool isNameCharacter(char c)
 {
     return
-            c >= 'a' && c <= 'z' ||
-            c >= 'A' && c <= 'Z' ||
-            c >= '0' && c <= '9'
+            (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+            (c >= '0' && c <= '9')
             ;
 }
 
@@ -109,12 +109,16 @@ ExpPtr Parser::parseName(const std::string& s,
         {
             number = stoll(ss);
         }
-        catch (std::exception&)
+        catch (std::invalid_argument&)
+        {
+            return make_ptr<ParseError>(ss);
+        }
+        catch (std::out_of_range&)
         {
             return make_ptr<ParseError>(ss);
         }
 
-        return make_ptr<Integer>(stoll(ss));
+        return make_ptr<Integer>(number);
     }
     if (isNameCharacter(s[start]))
     {

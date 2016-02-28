@@ -63,9 +63,9 @@ std::vector<std::string> Lexer::defaultSplittingSequences()
 static constexpr bool isNameCharacter(char c)
 {
     return
-            c >= 'a' && c <= 'z' ||
-            c >= 'A' && c <= 'Z' ||
-            c >= '0' && c <= '9'
+            (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+            (c >= '0' && c <= '9')
             ;
 }
 
@@ -80,6 +80,7 @@ bool Lexer::isSplittingPrefix(const std::string &s) const
     {
         //std::mismatch(i->begin(), i->end(), s);
     }
+    return false;
 }
 
 std::vector<Token> Lexer::split(const std::string &s) const

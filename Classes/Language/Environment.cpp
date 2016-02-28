@@ -130,14 +130,12 @@ bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
     int firstValue = 0, secondValue = 1;
     bool isFirstRightAssociative = false;
 
-    auto env = this;
-
     firstValue = first->priority;
     isFirstRightAssociative = first->isRightAssociative;
     secondValue = second->priority;
 
-    return firstValue < secondValue ||
-           !isFirstRightAssociative && (firstValue <= secondValue);
+    return (firstValue < secondValue) ||
+           (!isFirstRightAssociative && (firstValue <= secondValue));
 }
 
 ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)

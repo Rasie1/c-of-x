@@ -12,6 +12,8 @@ bool Integer::operator==(const Expression& other) const
 {
     if (typeid(other) == typeid(*this))
         return value == static_cast<const Integer&>(other).value;
+    else
+        return false;
 }
 
 std::string Integer::show() const
