@@ -6,6 +6,7 @@ class REPL
 {
 public:
     void start();
+    void loadFile(const std::string& s);
 private:
     Environment env;
     Parser parser;

@@ -56,17 +56,26 @@ void displayHelp()
     cout << "Help commands :" << endl <<
             "-q -quit      : quit" << endl <<
             "-clear        : clear environment" << endl <<
-            "-h -help      : this message" << endl;
+            "-h -help      : this message" << endl <<
+            "-load         : open and evaluate file" << endl;
 }
 
 bool REPL::command(const std::string& s)
 {
     if (s == "")
         return 1;
+    if (s == "-load")
+        loadFile("");//todo: add arg
     else if (s == "-clear")
         env.clear();
     else if (s == "-h" || s == "-help")
         displayHelp();
     else
         return 0;
+}
+
+void REPL::loadFile(const std::string& s)
+{
+    auto expression = parser.parseFile(s, env);
+    auto evaluated = expression->eval(env);
 }

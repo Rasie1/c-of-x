@@ -43,11 +43,20 @@ std::vector<std::string> Lexer::defaultSplittingSequences()
     ret.push_back("->");
     ret.push_back("<-");
     ret.push_back("=>");
+    ret.push_back("=<");
     ret.push_back("<=");
     ret.push_back(">=");
     ret.push_back("<=>");
     ret.push_back("++");
     ret.push_back("--");
+
+    ret.push_back("+=");
+    ret.push_back("-=");
+    ret.push_back("*=");
+    ret.push_back("/=");
+    ret.push_back("|=");
+    ret.push_back("&=");
+
     return ret;
 }
 
