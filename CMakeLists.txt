@@ -14,14 +14,8 @@ enable_testing()
 add_subdirectory(Tests)
 add_test (NAME MyTest COMMAND Tests)
 
-
-find_package (Boost 1.55 REQUIRED COMPONENTS)
-if (Boost_FOUND)
-  include_directories (SYSTEM ${Boost_INCLUDE_DIR})
-endif ()
-
-
-
+find_package (Boost COMPONENTS program_options REQUIRED)
+include_directories (SYSTEM ${Boost_INCLUDE_DIR})
 
 include_directories(${INC_LANG})
 include_directories(${INC_REPL})

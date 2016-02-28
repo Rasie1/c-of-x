@@ -1,19 +1,53 @@
 #include <iostream>
+#include <string>
+#include <boost/program_options.hpp>
 #include "Parser/Parser.h"
 #include "REPL.h"
 
 int main(int argc, char* argv[])
 {
-    if (argc == 1)
+    try
     {
-        REPL repl;
-        repl.loadFile("preload.txt");
-        repl.start();
+        boost::program_options::options_description desc("Allowed options");
+        desc.add_options()
+                ("help", "produce help message")
+                ("no-preload", "prevent from loading preload.txt")
+                ("file", boost::program_options::value<std::string>(), "evaluate code from file");
+        boost::program_options::variables_map vm;
+        boost::program_options::store(
+                    boost::program_options::parse_command_line(argc, argv, desc),
+                    vm);
+        boost::program_options::notify(vm);
+
+        if (vm.count("help"))
+        {
+            std::cout << desc << "\n";
+            return 1;
+        }
+
+        if (vm.count("file"))
+        {
+            auto file = vm["file"].as<std::string>();
+            Environment env;
+            std::cout << Parser().parseFile(file, env)->show() << std::endl;
+        }
+        else
+        {
+            REPL repl;
+            if (!(vm.count("no-preload")))
+                  repl.loadFile("preload.txt");
+            repl.start();
+        }
     }
-    else
+    catch(std::exception& e)
     {
-        Environment env;
-        std::cout << Parser().parseFile(argv[1], env)->show();
+        std::cerr << "Error: " << e.what() << std::endl;
+        return -1;
+    }
+    catch(...)
+    {
+        std::cerr << "Unknown error!" << std::endl;
+        return -1;
     }
 
     return 0;
