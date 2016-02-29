@@ -283,8 +283,14 @@ ExpPtr Parser::parse(const std::string& s,
 ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
 {
     std::ifstream ifs(filename);
-    std::string content((std::istreambuf_iterator<char>(ifs)),
-                        (std::istreambuf_iterator<char>()   ));
-    auto newEnv = env;
-    return Parser::parse(content, env)->eval(newEnv);
+//    std::string content((std::istreambuf_iterator<char>(ifs)),
+//                        (std::istreambuf_iterator<char>()   ));
+    std::string line;
+    ExpPtr e;
+    while (std::getline(ifs, line))
+    {
+        e = Parser::parse(line, env)->eval(env);
+    }
+
+    return e;
 }
