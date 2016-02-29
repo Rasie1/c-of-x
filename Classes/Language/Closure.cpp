@@ -29,7 +29,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, newEnv));
     newEnv.erase(lvalue);
-;
+
     if (typeid(*lvalue) == typeid(Identifier))
     {
         newEnv.addEqual(lvalue, Identifier::unwrapIfId(e, envc));

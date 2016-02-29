@@ -79,7 +79,7 @@ ExpPtr Less::operate(ExpPtrArg first,
 
 std::string Less::show() const
 {
-    return Equality::defaultName;
+    return Less::defaultName;
 }
 
 const std::string Less::defaultName = "<";

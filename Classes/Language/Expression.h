@@ -32,6 +32,7 @@ public:
 
 typedef Expression::ExpPtr ExpPtr;
 typedef Expression::ExpPtr ExpPtrArg;
+
 template <class T, class... Args>
 constexpr auto make_ptr(Args&&... args)
  -> decltype(std::make_shared<T>(std::forward<Args>(args)...))

@@ -24,3 +24,8 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
             return apply(val, env);
     }
 }
+
+ExpPtr Function::reverse() const
+{
+    return make_ptr<Void>();
+}

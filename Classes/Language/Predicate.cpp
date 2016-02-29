@@ -30,3 +30,9 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 
     return ret;
 }
+
+ExpPtr Predicate::reverse() const
+{
+    // kind of dangerous
+    return std::const_pointer_cast<Expression>(shared_from_this());
+}

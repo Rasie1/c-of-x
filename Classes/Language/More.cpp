@@ -78,7 +78,7 @@ ExpPtr More::operate(ExpPtrArg first,
 
 std::string More::show() const
 {
-    return Equality::defaultName;
+    return More::defaultName;
 }
 
 const std::string More::defaultName = ">";
