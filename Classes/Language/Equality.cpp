@@ -5,6 +5,7 @@
 #include "Intersection.h"
 #include "Void.h"
 #include "Lambda.h"
+#include "Application.h"
 
 
 bool Equals::holds(ExpPtrArg e, const Environment& env) const
@@ -55,10 +56,26 @@ static bool operateHelper(ExpPtrArg first,
                           ExpPtrArg second,
                           Environment& env)
 {
-    auto lvalue = first;
+
+
+
+    auto lvalue = Identifier::unwrapIfId(first, env);
     auto rvalue = second;
-    if (typeid(*lvalue) != typeid(Identifier))
-        while (lvalue->unwind(lvalue, rvalue, env));
+
+    lvalue->unapplyVariables(rvalue, env);
+//    if (typeid(*lvalue) != typeid(Identifier))
+//        while (lvalue->unwind(lvalue, rvalue, env));
+
+//    while (true)
+//    {
+//        if (typeid(*lvalue) == typeid(Operation))
+//        {
+//            if
+//        }
+//        else
+//            break
+//    }
+    return true;
 
     if (typeid(*lvalue) == typeid(Identifier))
     {
@@ -114,7 +131,7 @@ ExpPtr Equality::operate(ExpPtrArg first,
     std::cout << "R L:" << std::endl;
     DEBUG_INDENT_INCR;
 #endif
-    auto r = operateHelper(second, first, envr);
+//    auto r = operateHelper(second, first, envr);
 #ifdef DEBUG_EVAL
     DEBUG_INDENT_DECR;
 #endif
@@ -125,11 +142,11 @@ ExpPtr Equality::operate(ExpPtrArg first,
         env = envl;
         ret = first;
     }
-    else if (r)
-    {
-        env = envr;
-        ret = second;
-    }
+//    else if (r)
+//    {
+//        env = envr;
+//        ret = second;
+//    }
     else
         return make_ptr<Void>();
 

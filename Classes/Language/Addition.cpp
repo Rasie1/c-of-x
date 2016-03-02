@@ -64,3 +64,26 @@ bool Addition::unwind(ExpPtr& left,
     }
     return false;
 }
+
+void Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+    auto lId = typeid(*l) == typeid(Identifier);
+    auto rId = typeid(*r) == typeid(Identifier);
+
+    if (lId && !rId)
+    {
+        env.addEqual(l, e);
+    }
+    else if (!lId && rId)
+    {
+        env.addEqual(r, e);
+    }
+    else if (rId && lId)
+    {
+        throw "todo";
+    }
+    else if (!rId && !lId)
+    {
+        throw "nope";
+    }
+}

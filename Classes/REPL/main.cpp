@@ -42,11 +42,13 @@ int main(int argc, char* argv[])
     catch(std::exception& e)
     {
         std::cerr << "Error: " << e.what() << std::endl;
+        throw e;
         return -1;
     }
     catch(...)
     {
         std::cerr << "Unknown error!" << std::endl;
+        throw;
         return -1;
     }
 

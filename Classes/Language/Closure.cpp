@@ -28,6 +28,10 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
     ExpPtr lvalue = argument;
     ExpPtr rvalue = body;
     while (lvalue->unwind(lvalue, rvalue, newEnv));
+
+    // need some new way of unwinding
+    // sin x - it get's inside somehow. Will think about this tommorow
+
     newEnv.erase(lvalue);
 
     if (typeid(*lvalue) == typeid(Identifier))

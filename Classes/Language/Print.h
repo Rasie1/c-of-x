@@ -22,3 +22,14 @@ public:
     virtual std::string show() const;
     static const std::string defaultName;
 };
+
+class PrintEnv : public Function
+{
+public:
+    PrintEnv() {}
+
+    ExpPtr apply(ExpPtrArg e,
+                 Environment& env) const override;
+    virtual std::string show() const;
+    static const std::string defaultName;
+};

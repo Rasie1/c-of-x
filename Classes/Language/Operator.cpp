@@ -48,3 +48,8 @@ ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env) const
     auto closure = Lambda().operate(id, body, env);
     return closure;
 }
+
+void Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+
+}

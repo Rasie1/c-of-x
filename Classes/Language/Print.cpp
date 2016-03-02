@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Environment.h"
 #include "Identifier.h"
+#include "Void.h"
 
 ExpPtr Print::apply(ExpPtrArg e, Environment& env) const
 {
@@ -46,3 +47,17 @@ std::string PrintInfo::show() const
 }
 
 const std::string PrintInfo::defaultName = "info";
+
+
+ExpPtr PrintEnv::apply(ExpPtrArg e, Environment& env) const
+{
+    std::cout << env.show();
+    return make_ptr<Void>();
+}
+
+std::string PrintEnv::show() const
+{
+    return defaultName;
+}
+
+const std::string PrintEnv::defaultName = "printenv";

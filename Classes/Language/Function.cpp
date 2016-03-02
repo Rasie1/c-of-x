@@ -29,3 +29,9 @@ ExpPtr Function::reverse() const
 {
     return make_ptr<Void>();
 }
+
+//void Function::unapplyVariables(ExpPtrArg e, Environment& env) const
+//{
+//    auto r = s_cast<Function>(reverse());
+//    return r->apply(e, env);
+//}

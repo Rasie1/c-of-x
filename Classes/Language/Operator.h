@@ -16,6 +16,8 @@ public:
 
     virtual bool operator==(const Expression& other) const override;
 
+    virtual void unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const;
+
     virtual bool unwind(ExpPtr& left,
                         ExpPtr& right,
                         ExpPtr& lvalue,

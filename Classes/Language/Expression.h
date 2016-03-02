@@ -28,6 +28,7 @@ public:
     virtual size_t      hash() const;
 
     virtual bool hasFreeVariables(const Environment& env) const;
+    virtual void unapplyVariables(ExpPtrArg e, Environment& env) const;
 };
 
 typedef Expression::ExpPtr ExpPtr;

@@ -16,6 +16,8 @@ public:
                         ExpPtr& rvalue,
                         Environment& env) override;
 
+    void unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
+
     std::string show() const override;
 private:
 };

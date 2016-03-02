@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <vector>
 #include "Environment.h"
 #include "Lambda.h"
 #include "Operation.h"
@@ -8,7 +9,7 @@
 #include "Union.h"
 #include "Void.h"
 #include "Any.h"
-#include <vector>
+#include "Closure.h"
 
 Application::Application()
     : Operator(false, 10)
@@ -88,3 +89,22 @@ bool Application::unwind(ExpPtr& left,
     return true;
 }
 
+void Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+    auto lId = typeid(*l) == typeid(Identifier);
+    auto rId = typeid(*r) == typeid(Identifier);
+
+    if (lId)
+    {
+        auto closure = Lambda().operate(r, e, env);
+//        auto closure = make_ptr<Closure>(r, e, env);
+        env.addEqual(l, closure);
+    }
+    else
+    {
+        auto closure = Lambda().operate(r, e, env);
+//        auto closure = make_ptr<Closure>(r, e, env);
+        l->unapplyVariables(closure, env);
+    }
+
+}

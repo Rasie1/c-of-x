@@ -122,6 +122,7 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(More           ::defaultName), make_ptr<More>());
     addEqual(make_ptr<Identifier>(Any            ::defaultName), make_ptr<Any>());
     addEqual(make_ptr<Identifier>(PrintInfo      ::defaultName), make_ptr<PrintInfo>());
+    addEqual(make_ptr<Identifier>(PrintEnv       ::defaultName), make_ptr<PrintEnv>());
 }
 
 bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
@@ -144,5 +145,17 @@ ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
 
     auto lp = (typeid(*l) == typeid(Identifier)) ? get(l) : l;
     auto rp = (typeid(*r) == typeid(Identifier)) ? get(r) : r;
+
     return Intersection().operate(lp, rp, env);
+}
+
+std::string Environment::show() const
+{
+    std::string ret = "";
+    for (auto &x : data)
+    {
+        ret += x.first->show() + " |--> " + x.second->show() + "\n";
+    }
+
+    return ret;
 }

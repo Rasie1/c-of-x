@@ -10,6 +10,8 @@ public:
 
     std::string show() const override;
 
+    void unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
+
     virtual bool unwind(ExpPtr& left,
                         ExpPtr& right,
                         ExpPtr& lvalue,
