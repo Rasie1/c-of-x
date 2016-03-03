@@ -91,19 +91,14 @@ bool Application::unwind(ExpPtr& left,
 
 void Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
-    auto lId = typeid(*l) == typeid(Identifier);
-    auto rId = typeid(*r) == typeid(Identifier);
-
-    if (lId)
+    if (typeid(*l) == typeid(Identifier))
     {
         auto closure = Lambda().operate(r, e, env);
-//        auto closure = make_ptr<Closure>(r, e, env);
         env.addEqual(l, closure);
     }
     else
     {
-        auto closure = Lambda().operate(r, e, env);
-//        auto closure = make_ptr<Closure>(r, e, env);
+        auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
         l->unapplyVariables(closure, env);
     }
 
