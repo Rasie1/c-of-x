@@ -10,6 +10,8 @@ class Expression : public std::enable_shared_from_this<Expression>
 public:
     typedef std::shared_ptr<Expression> ExpPtr;
     typedef const ExpPtr& ExpPtrArg;
+    typedef std::shared_ptr<const Expression> CExpPtr;
+    typedef const CExpPtr& CExpPtrArg;
 
     Expression();
 
@@ -33,6 +35,8 @@ public:
 
 typedef Expression::ExpPtr ExpPtr;
 typedef Expression::ExpPtr ExpPtrArg;
+typedef Expression::CExpPtr CExpPtr;
+typedef Expression::CExpPtr CExpPtrArg;
 
 template <class T, class... Args>
 constexpr auto make_ptr(Args&&... args)

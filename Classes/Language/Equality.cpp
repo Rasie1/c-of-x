@@ -56,13 +56,14 @@ static bool operateHelper(ExpPtrArg first,
                           ExpPtrArg second,
                           Environment& env)
 {
-
-
-
-    auto lvalue = Identifier::unwrapIfId(first, env);
+    auto lvalue = first;//Identifier::unwrapIfId(first, env);
     auto rvalue = second;
 
     lvalue->unapplyVariables(rvalue, env);
+#ifdef DEBUG_EVAL
+    DEBUG_INDENTATION;
+    std::cout << "unapplied: (" << lvalue->show() << ") = (" << rvalue->show() << ")" << std::endl;
+#endif
 //    if (typeid(*lvalue) != typeid(Identifier))
 //        while (lvalue->unwind(lvalue, rvalue, env));
 

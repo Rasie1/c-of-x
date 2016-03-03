@@ -39,7 +39,7 @@ void Environment::clear()
     addDefaultVariables();
 }
 
-ExpPtr Environment::getEqual(ExpPtrArg key) const
+ExpPtr Environment::getEqual(CExpPtrArg key) const
 {
     auto value = get(key);
 
@@ -49,7 +49,7 @@ ExpPtr Environment::getEqual(ExpPtrArg key) const
         return make_ptr<Any>();
 }
 
-ExpPtr Environment::get(ExpPtrArg key) const
+ExpPtr Environment::get(CExpPtrArg key) const
 {
 #ifdef DEBUG_EVAL
     DEBUG_INDENTATION;
@@ -71,24 +71,25 @@ ExpPtr Environment::get(ExpPtrArg key) const
     return ret;
 }
 
-void Environment::erase(ExpPtrArg e)
+void Environment::erase(CExpPtrArg e)
 {
     data.erase(e);
 }
 
-void Environment::add(ExpPtrArg key, ExpPtrArg value)
+void Environment::add(CExpPtrArg key, ExpPtrArg value)
 {
     DEBUG_INDENTATION;
     std::cout << "ENV ADD: " << key->show() << std::endl;
     get(key);
     DEBUG_INDENTATION;
     std::cout << "    NEW: " << value->show() << std::endl;
-    data[key] = intersect(get(key), value);
+    auto constKey = std::const_pointer_cast<Expression>(get(key));
+    data[key] = intersect(constKey, value);
     DEBUG_INDENTATION;
     std::cout << "    RET: " << data[key]->show() << std::endl;
 }
 
-void Environment::addEqual(ExpPtrArg key, ExpPtrArg value)
+void Environment::addEqual(CExpPtrArg key, ExpPtrArg value)
 {
     add(key, make_ptr<Equals>(value));
 }
