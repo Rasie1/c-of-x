@@ -50,7 +50,7 @@ ExpPtr Expression::intersect(ExpPtrArg& other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-void Expression::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Expression::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-
+    return false;
 }

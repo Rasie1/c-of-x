@@ -9,6 +9,7 @@
 #include "Union.h"
 #include "Void.h"
 #include "Any.h"
+#include "Quote.h"
 #include "Closure.h"
 
 Application::Application()
@@ -25,7 +26,10 @@ ExpPtr Application::operate(ExpPtrArg first,
     left = Identifier::unwrapIfId(first, env);
 
     left = left->eval(env);
-    right = second->eval(env);
+    if (typeid(*left) == typeid(Quote))
+        right = second;
+    else
+        right = second->eval(env);
 
     auto calculate = [&env](ExpPtrArg l, ExpPtrArg r) -> ExpPtr
     {
@@ -89,17 +93,39 @@ bool Application::unwind(ExpPtr& left,
     return true;
 }
 
-void Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
     if (typeid(*l) == typeid(Identifier))
     {
-        auto closure = Lambda().operate(r, e, env);
-        env.addEqual(l, closure);
+        auto lvalue = env.get(l);
+        if (typeid(*lvalue) == typeid(Any))
+        {
+            auto closure = Lambda().operate(r, e, env);
+            env.addEqual(l, closure);
+
+            return true;
+        }
     }
     else
     {
         auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
-        l->unapplyVariables(closure, env);
+        return l->unapplyVariables(closure, env);
     }
 
+
+    return true;
+
+    if (typeid(*l) == typeid(Identifier))
+    {
+        auto closure = Lambda().operate(r, e, env);
+//        env.addEqual(l, closure);
+        env.add(l, closure);
+
+        return true;
+    }
+    else
+    {
+        auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
+        return l->unapplyVariables(closure, env);
+    }
 }

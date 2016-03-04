@@ -85,7 +85,7 @@ bool Operation::operator==(const Expression& other) const
     }
 }
 
-void Operation::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Operation::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    op->unapplyVariables(e, this->left, this->right, env);
+    return op->unapplyVariables(e, this->left, this->right, env);
 }

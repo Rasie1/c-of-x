@@ -59,61 +59,18 @@ static bool operateHelper(ExpPtrArg first,
     auto lvalue = first;//Identifier::unwrapIfId(first, env);
     auto rvalue = second;
 
-    lvalue->unapplyVariables(rvalue, env);
+    auto ret = lvalue->unapplyVariables(rvalue, env);
 #ifdef DEBUG_EVAL
     DEBUG_INDENTATION;
-    std::cout << "unapplied: (" << lvalue->show() << ") = (" << rvalue->show() << ")" << std::endl;
+    std::cout << "unapplied: (" << lvalue->show() << ") : (" << rvalue->show() << ")" << std::endl;
 #endif
-//    if (typeid(*lvalue) != typeid(Identifier))
-//        while (lvalue->unwind(lvalue, rvalue, env));
 
-//    while (true)
-//    {
-//        if (typeid(*lvalue) == typeid(Operation))
-//        {
-//            if
-//        }
-//        else
-//            break
-//    }
-    return true;
-
-    if (typeid(*lvalue) == typeid(Identifier))
-    {
-        auto id = s_cast<Identifier>(lvalue);
-
-        // For recursion
-        if (typeid(*rvalue) == typeid(Operation))
-        {
-            auto operation = s_cast<Operation>(rvalue);
-            if (operation && (typeid(*(operation->op)) == typeid(Lambda)))
-            {
-                auto newEnv = env;
-                newEnv.addEqual(id, rvalue);
-                env.addEqual(id, rvalue->eval(newEnv));
-                return true;
-            }
-        }
-
-        rvalue = Identifier::unwrapIfId(rvalue, env);
-
-        env.addEqual(id, rvalue->eval(env));
-        return true;
-    }
-    else
-    {
-        auto le = first->eval(env);
-        auto re = second->eval(env);
-        re = Identifier::unwrapIfId(re, env);
-
-        return *le == *re;
-    }
+    return ret;
 }
 
 ExpPtr Equality::operate(ExpPtrArg first,
                          ExpPtrArg second,
                          Environment& env) const
-
 {
     auto envl = env;
     auto envr = env;
@@ -132,7 +89,7 @@ ExpPtr Equality::operate(ExpPtrArg first,
     std::cout << "R L:" << std::endl;
     DEBUG_INDENT_INCR;
 #endif
-//    auto r = operateHelper(second, first, envr);
+    auto r = operateHelper(second, first, envr);
 #ifdef DEBUG_EVAL
     DEBUG_INDENT_DECR;
 #endif
@@ -143,11 +100,11 @@ ExpPtr Equality::operate(ExpPtrArg first,
         env = envl;
         ret = first;
     }
-//    else if (r)
-//    {
-//        env = envr;
-//        ret = second;
-//    }
+    else if (r)
+    {
+        env = envr;
+        ret = second;
+    }
     else
         return make_ptr<Void>();
 

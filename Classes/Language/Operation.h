@@ -17,7 +17,7 @@ public:
 
     ExpPtr intersect(ExpPtrArg other, const Environment& env);
     bool hasFreeVariables(const Environment& env) const;
-    void unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
 
     bool operator==(const Expression& other) const override;
 

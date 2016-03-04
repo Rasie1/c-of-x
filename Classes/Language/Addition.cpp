@@ -65,25 +65,29 @@ bool Addition::unwind(ExpPtr& left,
     return false;
 }
 
-void Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
     auto lId = typeid(*l) == typeid(Identifier);
     auto rId = typeid(*r) == typeid(Identifier);
 
     if (lId && !rId)
     {
-        env.addEqual(l, e);
+        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, r);
+        l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
-        env.addEqual(r, e);
+        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, l);
+        r->unapplyVariables(value, env);
     }
     else if (rId && lId)
     {
-        throw "todo";
+        // can check if both values support addition
     }
     else if (!rId && !lId)
     {
-        throw "nope";
+        throw "nope"; //eval and add?
     }
+
+    return true;
 }

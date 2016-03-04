@@ -17,7 +17,7 @@
 #include "Then.h"
 #include "Union.h"
 #include "Intersection.h"
-#include "EvalDelay.h"
+#include "Quote.h"
 #include "EvalForce.h"
 #include "IntegerType.h"
 #include "Operation.h"
@@ -53,7 +53,7 @@ ExpPtr Environment::get(CExpPtrArg key) const
 {
 #ifdef DEBUG_EVAL
     DEBUG_INDENTATION;
-    std::cout << "ENV GET: (" << key->show() << ") = (";
+    std::cout << "ENV GET: (" << key->show() << ") : (";
 #endif
 
     auto x = data.find(key);
@@ -105,8 +105,8 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(Void           ::defaultName), make_ptr<Void>());
     addEqual(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>());
     addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>());
-    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>());
-    addEqual(make_ptr<Identifier>(EvalDelay      ::defaultName), make_ptr<EvalDelay>());
+//    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>());
+    addEqual(make_ptr<Identifier>(Quote          ::defaultName), make_ptr<Quote>());
     addEqual(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>());
     addEqual(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>());
     addEqual(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>());
@@ -116,9 +116,8 @@ void Environment::addDefaultVariables()
     //addEqual(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>());
     addEqual(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>());
     //addEqual(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>());
-    //addEqual(make_ptr<Identifier>(Assignment     ::defaultName), make_ptr<Assignment>());
     addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>());
-    addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>());
+//    addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>());
     addEqual(make_ptr<Identifier>(Less           ::defaultName), make_ptr<Less>());
     addEqual(make_ptr<Identifier>(More           ::defaultName), make_ptr<More>());
     addEqual(make_ptr<Identifier>(Any            ::defaultName), make_ptr<Any>());

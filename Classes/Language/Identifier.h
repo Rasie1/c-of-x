@@ -14,7 +14,7 @@ public:
     bool hasFreeVariables(const Environment& env) const;
 
     static ExpPtr unwrapIfId(ExpPtrArg e, const Environment& env);
-    void unapplyVariables(ExpPtrArg e, Environment& env) const;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) const;
 
     std::string name;
 };

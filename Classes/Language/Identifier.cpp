@@ -35,7 +35,9 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
         return e;
 }
 
-void Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
     env.addEqual(shared_from_this(), e);
+
+    return true;
 }

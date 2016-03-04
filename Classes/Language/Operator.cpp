@@ -49,7 +49,7 @@ ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env) const
     return closure;
 }
 
-void Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
-
+    return false;
 }
