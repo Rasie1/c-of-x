@@ -19,7 +19,7 @@ bool Identifier::operator==(const Expression& other) const
 
 std::string Identifier::show() const
 {
-    return "\'" + name;
+    return /*"\'" + */name;
 }
 
 bool Identifier::hasFreeVariables(const Environment& env) const

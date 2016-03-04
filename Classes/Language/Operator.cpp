@@ -26,7 +26,7 @@ bool Operator::unwind(ExpPtr& left,
 
 bool Operator::operator==(const Expression& other) const
 {
-    return false;
+    return typeid(*this) == typeid(other);
 //    throw 0; // todo
 //    try
 //    {

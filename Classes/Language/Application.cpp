@@ -97,7 +97,13 @@ bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
 {
     if (typeid(*l) == typeid(Identifier))
     {
-        auto lvalue = env.get(l);
+        auto lvalue = env.getEqual(l);
+        if (typeid(*lvalue) == typeid(Quote))
+        {
+            auto q = s_cast<Quote>(lvalue);
+            auto qe = s_cast<QuotedExpression>(q->apply(r, env));
+            return qe->unapplyVariables(e, env);
+        }
         if (typeid(*lvalue) == typeid(Any))
         {
             auto closure = Lambda().operate(r, e, env);
@@ -105,6 +111,11 @@ bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
 
             return true;
         }
+        else if (std::shared_ptr<ReversibleFunction> f = d_cast<ReversibleFunction>(lvalue))
+        {
+            return f->unapplyVariables(e, r, env);
+        }
+        return false;
     }
     else
     {

@@ -14,7 +14,7 @@ public:
     int priority;
     const std::string name;
 
-    virtual bool operator==(const Expression& other) const override;
+    bool operator==(const Expression& other) const override;
 
     virtual bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const;
 

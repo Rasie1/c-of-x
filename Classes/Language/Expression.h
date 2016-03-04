@@ -23,6 +23,7 @@ public:
                         Environment& env);
 
     virtual bool operator==(const Expression& other) const;
+    virtual bool operator!=(const Expression& other) const { return !(*this == other); }
     // used for hash() comparison
     bool         operator< (const Expression& other) const;
 

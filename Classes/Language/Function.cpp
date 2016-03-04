@@ -25,13 +25,13 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
     }
 }
 
-ExpPtr Function::reverse() const
-{
-    return make_ptr<Void>();
-}
-
 //void Function::unapplyVariables(ExpPtrArg e, Environment& env) const
 //{
 //    auto r = s_cast<Function>(reverse());
 //    return r->apply(e, env);
 //}
+
+bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environment& env) const
+{
+    return reverse()->apply(arg, env)->unapplyVariables(e, env);
+}
