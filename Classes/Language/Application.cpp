@@ -17,16 +17,39 @@ Application::Application()
 {
 }
 
+bool isExpressionQuoted(ExpPtrArg left, Environment& env)
+{
+    if (checkType<Quote>(left))
+        return true;
+    if (checkType<Closure>(left))
+    {
+        auto cl = s_cast<Closure>(left);
+        if (checkType<Operation>(cl->argument))
+        {
+            auto op = s_cast<Operation>(cl->argument);
+            if (checkType<Application>(op->op))
+            {
+                if (checkType<Quote>(Identifier::unwrapIfId(op->left, env)))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 ExpPtr Application::operate(ExpPtrArg first,
                             ExpPtrArg second,
                             Environment& env) const
 {
-    ExpPtr ret, left, right;
+    ExpPtr left, right;
 
     left = Identifier::unwrapIfId(first, env);
 
     left = left->eval(env);
-    if (checkType<Quote>(left))
+    if (isExpressionQuoted(left, env))
         right = second;
     else
         right = second->eval(env);

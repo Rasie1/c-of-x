@@ -132,10 +132,10 @@ ExpPtr Union::operate(ExpPtrArg first,
                       ExpPtrArg second,
                       Environment& env) const
 {
-    auto l = first->eval(env);
-    auto r = second->eval(env);
+//    auto l = first->eval(env);
+//    auto r = second->eval(env);
 
-    return make({l, r});
+    return make({first, second});
 }
 
 std::string Union::show() const

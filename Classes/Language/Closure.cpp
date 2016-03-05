@@ -22,35 +22,14 @@ Closure::~Closure()
 {
 }
 
-ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
+ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 {
     auto newEnv = this->env;
-    ExpPtr lvalue = argument;
-    ExpPtr rvalue = body;
-    while (lvalue->unwind(lvalue, rvalue, newEnv));
 
-    // need some new way of unwinding
-    // sin x - it get's inside somehow. Will think about this tommorow
+    this->argument->unapplyVariables(e, newEnv);
+    auto evaluated = body->eval(newEnv);
 
-    newEnv.erase(lvalue);
-
-    if (checkType<Identifier>(lvalue))
-    {
-        newEnv.addEqual(lvalue, Identifier::unwrapIfId(e, envc));
-        auto evaluated = rvalue->eval(newEnv);
-        evaluated = Identifier::unwrapIfId(evaluated, newEnv);
-
-        return evaluated;
-    }
-    else if (std::shared_ptr<DataType> lvalue = d_cast<DataType>(lvalue))
-    {
-        if (*lvalue == *e)
-            return rvalue->eval(newEnv);
-        else
-            return make_ptr<Void>();
-    }
-    else
-        return make_ptr<ErrorWithMessage>("Incorrect argument definition");
+    return Identifier::unwrapIfId(evaluated, newEnv);
 }
 
 std::string Closure::show() const
