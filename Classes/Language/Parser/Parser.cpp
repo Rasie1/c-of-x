@@ -154,7 +154,7 @@ static void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
 
         // Handle force-eval operator
         bool evalForce = false;
-        if (typeid(*left) == typeid(Identifier))
+        if (checkType<Identifier>(left))
         {
             auto variable = s_cast<Identifier>(left);
             evalForce = variable->name == "#";

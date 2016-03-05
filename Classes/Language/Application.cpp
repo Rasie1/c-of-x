@@ -26,7 +26,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     left = Identifier::unwrapIfId(first, env);
 
     left = left->eval(env);
-    if (typeid(*left) == typeid(Quote))
+    if (checkType<Quote>(left))
         right = second;
     else
         right = second->eval(env);

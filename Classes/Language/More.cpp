@@ -11,7 +11,7 @@
 
 bool MoreThan::holds(ExpPtrArg e, const Environment& env) const
 {
-    if (typeid(*e) == typeid(Integer))
+    if (checkType<Integer>(e))
     {
         auto v1 = s_cast<Integer>(value);
         auto v2 = s_cast<Integer>(e);
@@ -40,11 +40,10 @@ const std::string MoreThan::defaultName = "moreThan";
 
 ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (typeid(*this) == typeid(*other))
+    if (checkType<MoreThan>(other))
     {
         auto p = s_cast<MoreThan>(other);
-        if (typeid(*value) == typeid(Integer) &&
-            typeid(*(p->value)) == typeid(Integer))
+        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);

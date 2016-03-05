@@ -11,7 +11,7 @@
 
 bool LessThan::holds(ExpPtrArg e, const Environment& env) const
 {
-    if (typeid(*e) == typeid(Integer))
+    if (checkType<Integer>(e))
     {
         auto v1 = s_cast<Integer>(value);
         auto v2 = s_cast<Integer>(e);
@@ -40,11 +40,10 @@ const std::string LessThan::defaultName = "lessThan";
 
 ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (typeid(*this) == typeid(*other))
+    if (checkType<LessThan>(other))
     {
         auto p = s_cast<LessThan>(other);
-        if (typeid(*value) == typeid(Integer) &&
-            typeid(*(p->value)) == typeid(Integer))
+        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);

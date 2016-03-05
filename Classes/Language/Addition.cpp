@@ -67,8 +67,8 @@ bool Addition::unwind(ExpPtr& left,
 
 bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
-    auto lId = typeid(*l) == typeid(Identifier);
-    auto rId = typeid(*r) == typeid(Identifier);
+    auto lId = checkType<Identifier>(l);
+    auto rId = checkType<Identifier>(r);
 
     if (lId && !rId)
     {

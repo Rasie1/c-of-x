@@ -25,16 +25,15 @@ const std::string QuotedExpression::defaultName = "\'";
 
 bool QuotedExpression::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    if (typeid(*(this->e)) == typeid(Operation) &&
-        typeid(*e)         == typeid(Operation))
+    if (checkType<Operation>(this->e) && checkType<Operation>(e))
     {
         auto l = s_cast<Operation>(this->e);
         auto r = s_cast<Operation>(e);
 
         auto rl = Identifier::unwrapIfId(r->left, env);
-        if (typeid(*rl) == typeid(Quote))
+        if (checkType<Quote>(rl))
         {
-            if (typeid(*(r->right)) == typeid(Operation))
+            if (checkType<Operation>(r->right))
                 r = s_cast<Operation>(r->right);
             else
                 return this->e->unapplyVariables(r, env);

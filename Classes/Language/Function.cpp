@@ -9,7 +9,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
 {
     auto env = envc;
     ExpPtr val;
-    if (typeid(*other) == typeid(Equals))
+    if (checkType<Equals>(other))
     {
         auto eq = s_cast<Equals>(other);
         auto ev = eq->value;//->eval(env);
@@ -18,7 +18,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
     else
     {
         auto val = Identifier::unwrapIfId(other, env);
-        if (typeid(*val) == typeid(Any))
+        if (checkType<Any>(val))
             return make_ptr<Void>();
         else
             return apply(val, env);

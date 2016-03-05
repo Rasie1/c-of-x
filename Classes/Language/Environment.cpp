@@ -43,7 +43,7 @@ ExpPtr Environment::getEqual(CExpPtrArg key) const
 {
     auto value = get(key);
 
-    if (typeid(*value) == typeid(Equals))
+    if (checkType<Equals>(value))
         return s_cast<Equals>(value)->value;
     else
         return make_ptr<Any>();
@@ -143,8 +143,8 @@ ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
 {
     auto env = *this;
 
-    auto lp = (typeid(*l) == typeid(Identifier)) ? get(l) : l;
-    auto rp = (typeid(*r) == typeid(Identifier)) ? get(r) : r;
+    auto lp = checkType<Identifier>(l) ? get(l) : l;
+    auto rp = checkType<Identifier>(r) ? get(r) : r;
 
     return Intersection().operate(lp, rp, env);
 }
@@ -153,9 +153,7 @@ std::string Environment::show() const
 {
     std::string ret = "";
     for (auto &x : data)
-    {
         ret += x.first->show() + " |--> " + x.second->show() + "\n";
-    }
 
     return ret;
 }

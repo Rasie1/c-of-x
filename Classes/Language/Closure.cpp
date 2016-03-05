@@ -34,7 +34,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
 
     newEnv.erase(lvalue);
 
-    if (typeid(*lvalue) == typeid(Identifier))
+    if (checkType<Identifier>(lvalue))
     {
         newEnv.addEqual(lvalue, Identifier::unwrapIfId(e, envc));
         auto evaluated = rvalue->eval(newEnv);
@@ -45,13 +45,9 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& envc) const
     else if (std::shared_ptr<DataType> lvalue = d_cast<DataType>(lvalue))
     {
         if (*lvalue == *e)
-        {
             return rvalue->eval(newEnv);
-        }
         else
-        {
             return make_ptr<Void>();
-        }
     }
     else
         return make_ptr<ErrorWithMessage>("Incorrect argument definition");

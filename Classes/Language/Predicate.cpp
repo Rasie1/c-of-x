@@ -8,7 +8,7 @@
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 {
-    if (typeid(*e) == typeid(Identifier))
+    if (checkType<Identifier>(e))
     {
         auto id = s_cast<Identifier>(e);
         ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());

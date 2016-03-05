@@ -33,7 +33,7 @@ const std::string Equals::defaultName = "eq";
 
 ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (typeid(*this) == typeid(*other))
+    if (checkType<Equals>(other))
     {
         auto p = s_cast<Equals>(other);
         auto& l = *value;

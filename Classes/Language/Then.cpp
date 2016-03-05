@@ -14,7 +14,7 @@ ExpPtr Then::operate(ExpPtrArg first,
                      Environment& env) const
 {
     auto l = first->eval(env);
-    if (typeid(*l) == typeid(Void))
+    if (checkType<Void>(l))
         return l;
 
     return second->eval(env);
