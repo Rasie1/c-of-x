@@ -29,7 +29,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
     this->argument->unapplyVariables(e, newEnv);
     auto evaluated = body->eval(newEnv);
 
-    return Identifier::unwrapIfId(evaluated, newEnv);
+    return Identifier::unwrapIfId(evaluated, newEnv); // costyl
 }
 
 std::string Closure::show() const

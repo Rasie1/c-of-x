@@ -129,7 +129,11 @@ bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
         }
         if (typeid(*lvalue) == typeid(Any))
         {
-            auto closure = Lambda().operate(r, e, env);
+            // for recursion to work
+            auto newEnv = env;
+            newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e));
+            auto closure = Lambda().operate(r, e, newEnv);
+
             env.addEqual(l, closure);
 
             return true;
@@ -146,20 +150,5 @@ bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
         return l->unapplyVariables(closure, env);
     }
 
-
     return true;
-
-    if (typeid(*l) == typeid(Identifier))
-    {
-        auto closure = Lambda().operate(r, e, env);
-//        env.addEqual(l, closure);
-        env.add(l, closure);
-
-        return true;
-    }
-    else
-    {
-        auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
-        return l->unapplyVariables(closure, env);
-    }
 }
