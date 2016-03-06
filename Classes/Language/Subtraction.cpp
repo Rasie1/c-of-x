@@ -34,3 +34,30 @@ std::string Subtraction::show() const
 }
 
 const std::string Subtraction::defaultName = "-";
+bool Subtraction::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+    auto lId = checkType<Identifier>(l);
+    auto rId = checkType<Identifier>(r);
+
+    if (lId && !rId)
+    {
+        auto value = make_ptr<Operation>(make_ptr<Addition>(), e, r);
+        l->unapplyVariables(value, env);
+    }
+    else if (!lId && rId)
+    {
+        auto value = make_ptr<Operation>(make_ptr<Addition>(), e, l);
+        r->unapplyVariables(value, env);
+    }
+    else if (rId && lId)
+    {
+        // can check if both values support addition
+    }
+    else if (!rId && !lId)
+    {
+        // possible there is still operations
+        throw "nope"; //eval and add?
+    }
+
+    return true;
+}
