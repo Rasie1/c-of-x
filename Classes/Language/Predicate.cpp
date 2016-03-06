@@ -16,7 +16,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 
         auto expr = env.getEqual(id);
 
-        auto ret = env.intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
+        //auto ret = env.intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
         // it gets Any because right now it's "int" and isn't equal to anything
 
         // some expressions should be intersected at first, other should be iterated
@@ -28,7 +28,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 //            return e;
 
 
-        return ret;
+        return expr;
     }
 
     auto expr = e->eval(env);

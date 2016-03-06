@@ -25,6 +25,7 @@
 #include "Equality.h"
 #include "Less.h"
 #include "More.h"
+#include "ValueInSet.h"
 
 #include <vector>
 
@@ -45,8 +46,10 @@ ExpPtr Environment::getEqual(CExpPtrArg key) const
 
     if (checkType<Equals>(value))
         return s_cast<Equals>(value)->value;
+    else if (checkType<Any>(value))
+        return value;
     else
-        return make_ptr<Any>();
+        return make_ptr<ValueInSet>(value);
 }
 
 ExpPtr Environment::get(CExpPtrArg key) const
