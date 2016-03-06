@@ -24,13 +24,3 @@ std::string Lambda::show() const
 }
 
 const std::string Lambda::defaultName = "\\";
-
-bool Lambda::unwind(ExpPtr& left,
-                    ExpPtr& right,
-                    ExpPtr& lvalue,
-                    ExpPtr& rvalue,
-                    Environment& env)
-{
-    return false;
-}
-

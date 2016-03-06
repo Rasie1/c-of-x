@@ -16,10 +16,17 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 
         auto expr = env.getEqual(id);
 
-        if (d_cast<Any>(expr) || holds(expr, env))
-            return e;
-
         auto ret = env.intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
+        // it gets Any because right now it's "int" and isn't equal to anything
+
+        // some expressions should be intersected at first, other should be iterated
+        // to be more effective
+
+        // not sure if "any" here is appropriate:
+
+//        if (d_cast<Any>(expr) || holds(expr, env))
+//            return e;
+
 
         return ret;
     }

@@ -26,12 +26,3 @@ std::string Then::show() const
 }
 
 const std::string Then::defaultName = "~";
-
-bool Then::unwind(ExpPtr& left,
-                  ExpPtr& right,
-                  ExpPtr& lvalue,
-                  ExpPtr& rvalue,
-                  Environment& env)
-{
-    return false;
-}

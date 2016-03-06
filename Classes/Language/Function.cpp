@@ -4,25 +4,44 @@
 #include "Equality.h"
 #include "Any.h"
 #include "Identifier.h"
+#include "String.h"
 
-ExpPtr Function::intersect(ExpPtrArg other, const Environment& envc)
+ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
-    auto env = envc;
-    ExpPtr val;
-    if (checkType<Equals>(other))
+    auto val = Identifier::unwrapIfId(other, env);
+    if (checkType<Any>(val))
+    {
+        return make_ptr<String>("lolo");
+    }
+    if (checkType<Equals>(val))
     {
         auto eq = s_cast<Equals>(other);
         auto ev = eq->value;//->eval(env);
-        return apply(ev, env);
+        auto envc = env;
+        auto ret = apply(ev, envc);
+        return ret;
     }
-    else
-    {
-        auto val = Identifier::unwrapIfId(other, env);
-        if (checkType<Any>(val))
-            return make_ptr<Void>();
-        else
-            return apply(val, env);
-    }
+
+    auto ret = make_ptr<String>("Wrong argument");
+
+    return ret;
+
+//    auto env = envc;
+//    ExpPtr val;
+//    if (checkType<Equals>(other))
+//    {
+//        auto eq = s_cast<Equals>(other);
+//        auto ev = eq->value;//->eval(env);
+//        return apply(ev, env);
+//    }
+//    else
+//    {
+//        auto val = Identifier::unwrapIfId(other, env);
+//        if (checkType<Any>(val))
+//            return make_ptr<Any>();
+//        else
+//            return apply(val, env);
+//    }
 }
 
 //void Function::unapplyVariables(ExpPtrArg e, Environment& env) const

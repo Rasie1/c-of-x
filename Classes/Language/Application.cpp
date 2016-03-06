@@ -103,19 +103,6 @@ std::string Application::show() const
     return "";
 }
 
-bool Application::unwind(ExpPtr& left,
-                         ExpPtr& right,
-                         ExpPtr& lvalue,
-                         ExpPtr& rvalue,
-                         Environment& env)
-{
-    lvalue = left;
-    rvalue = make_ptr<Operation>(make_ptr<Lambda>(),
-                                 right,
-                                 rvalue);
-    return true;
-}
-
 bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
     if (typeid(*l) == typeid(Identifier))

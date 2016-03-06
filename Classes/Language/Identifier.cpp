@@ -4,6 +4,7 @@
 #include <list>
 #include "Error.h"
 #include "Any.h"
+#include "Void.h"
 
 bool Identifier::operator==(const Expression& other) const
 {
@@ -37,6 +38,8 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
 
 bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
+    if (checkType<Void>(e))
+        return false;
     env.addEqual(shared_from_this(), e);
 
     return true;

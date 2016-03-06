@@ -35,36 +35,6 @@ std::string Addition::show() const
 
 const std::string Addition::defaultName = "+";
 
-bool Addition::unwind(ExpPtr& left,
-                      ExpPtr& right,
-                      ExpPtr& lvalue,
-                      ExpPtr& rvalue,
-                      Environment& env)
-{
-    auto newEnv = env;
-    if (left->hasFreeVariables(env))
-    {
-        if (right->hasFreeVariables(env))
-            return false;
-        lvalue = left;
-        rvalue = make_ptr<Operation>(
-                    make_ptr<Subtraction>(),
-                    rvalue,
-                    right);
-        return true;
-    }
-    else if (right->hasFreeVariables(env))
-    {
-        lvalue = right;
-        rvalue = make_ptr<Operation>(
-                    make_ptr<Subtraction>(),
-                    rvalue,
-                    left);
-        return true;
-    }
-    return false;
-}
-
 bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
 {
     auto lId = checkType<Identifier>(l);

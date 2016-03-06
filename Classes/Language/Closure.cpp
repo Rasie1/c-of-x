@@ -26,7 +26,10 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 {
     auto newEnv = this->env;
 
-    this->argument->unapplyVariables(e, newEnv);
+    auto fits = this->argument->unapplyVariables(e, newEnv);
+    if (!fits)
+        return make_ptr<Void>();
+
     auto evaluated = body->eval(newEnv);
 
     return Identifier::unwrapIfId(evaluated, newEnv); // costyl

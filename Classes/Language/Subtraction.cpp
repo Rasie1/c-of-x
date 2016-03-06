@@ -34,34 +34,3 @@ std::string Subtraction::show() const
 }
 
 const std::string Subtraction::defaultName = "-";
-
-
-bool Subtraction::unwind(ExpPtr& left,
-                         ExpPtr& right,
-                         ExpPtr& lvalue,
-                         ExpPtr& rvalue,
-                         Environment& env)
-{
-    auto newEnv = env;
-    if (left->hasFreeVariables(env))
-    {
-        if (right->hasFreeVariables(env))
-            return false;
-        lvalue = left;
-        rvalue = make_ptr<Operation>(
-                    make_ptr<Addition>(),
-                    rvalue,
-                    right);
-        return true;
-    }
-    else if (right->hasFreeVariables(env))
-    {
-        lvalue = right;
-        rvalue = make_ptr<Operation>(
-                    make_ptr<Subtraction>(),
-                    left,
-                    rvalue);
-        return true;
-    }
-    return false;
-}

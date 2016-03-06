@@ -48,17 +48,6 @@ std::string Operation::show() const
             ")";
 }
 
-bool Operation::unwind(ExpPtr& lvalue,
-                       ExpPtr& rvalue,
-                       Environment& env)
-{
-    return op->unwind(left,
-                      right,
-                      lvalue,
-                      rvalue,
-                      env);
-}
-
 bool Operation::hasFreeVariables(const Environment& env) const
 {
     return left->hasFreeVariables(env) || right->hasFreeVariables(env);

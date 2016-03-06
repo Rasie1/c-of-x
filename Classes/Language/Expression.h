@@ -18,10 +18,6 @@ public:
     virtual ExpPtr eval(Environment& env) const = 0;
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
 
-    virtual bool unwind(ExpPtr& lvalue,
-                        ExpPtr& rvalue,
-                        Environment& env);
-
     virtual bool operator==(const Expression& other) const;
     virtual bool operator!=(const Expression& other) const { return !(*this == other); }
     // used for hash() comparison

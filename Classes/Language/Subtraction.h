@@ -10,11 +10,5 @@ public:
 
     std::string show() const override;
 
-    virtual bool unwind(ExpPtr& left,
-                        ExpPtr& right,
-                        ExpPtr& lvalue,
-                        ExpPtr& rvalue,
-                        Environment& env) override;
-
     static const std::string defaultName;
 };

@@ -15,28 +15,9 @@ std::string Operator::show() const
     return "op";
 }
 
-bool Operator::unwind(ExpPtr& left,
-                      ExpPtr& right,
-                      ExpPtr& lvalue,
-                      ExpPtr& rvalue,
-                      Environment& env)
-{
-    return false;
-}
-
 bool Operator::operator==(const Expression& other) const
 {
     return typeid(*this) == typeid(other);
-//    throw 0; // todo
-//    try
-//    {
-//        auto x = dynamic_cast<const Operator&>(other);
-//        return x.op == op && x.left == left && x.right == right;
-//    }
-//    catch (std::bad_cast&)
-//    {
-//        return false;
-//    }
 }
 
 ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env) const

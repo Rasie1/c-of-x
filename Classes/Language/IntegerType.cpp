@@ -7,7 +7,9 @@
 bool IntegerType::holds(ExpPtrArg e, const Environment& env) const
 {
     auto envc = env;
-    return typeid(*(Identifier::unwrapIfId(e->eval(envc), envc))) == typeid(Integer);
+    auto value = Identifier::unwrapIfId(e->eval(envc), envc);
+    auto ret = typeid(*value) == typeid(Integer);
+    return ret;
 }
 
 std::string IntegerType::show() const

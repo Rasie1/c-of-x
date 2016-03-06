@@ -11,9 +11,6 @@ public:
 
     ExpPtr eval(Environment& env) const override;
     std::string show() const override;
-    bool unwind(ExpPtr& lvalue,
-                ExpPtr& rvalue,
-                Environment& env);
 
     ExpPtr intersect(ExpPtrArg other, const Environment& env);
     bool hasFreeVariables(const Environment& env) const;

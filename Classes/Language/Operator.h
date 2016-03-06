@@ -18,12 +18,6 @@ public:
 
     virtual bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const;
 
-    virtual bool unwind(ExpPtr& left,
-                        ExpPtr& right,
-                        ExpPtr& lvalue,
-                        ExpPtr& rvalue,
-                        Environment& env);
-
     virtual ExpPtr partialApply(ExpPtrArg e, Environment& env) const;
 
     virtual std::string show() const;
