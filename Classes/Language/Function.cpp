@@ -13,7 +13,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         return val;
     if (checkType<Any>(val))
     {
-        return make_ptr<String>("lolo");
+        return make_ptr<String>("lolo"); // return not lolo, but ValueOfSet([function return type]);
     }
     if (checkType<Equals>(val))
     {

@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE ParserTests
+#define BOOST_TEST_MODULE LanguageTests
 #include <boost/test/unit_test.hpp>
 
 int testOfTests(int i, int j)
