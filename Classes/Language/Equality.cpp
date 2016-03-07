@@ -43,11 +43,11 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
         else
             return make_ptr<Void>();
     }
-    return make_ptr<Operation>(make_ptr<Intersection>(), value, other);
+    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
 Equality::Equality()
-    : Operator(true, 2)
+    : Operator(true, 1)
 {
 
 }
@@ -62,7 +62,7 @@ static bool operateHelper(ExpPtrArg first,
     auto ret = lvalue->unapplyVariables(rvalue, env);
 #ifdef DEBUG_EVAL
     DEBUG_INDENTATION;
-    std::cout << "unapplied: (" << lvalue->show() << ") : (" << rvalue->show() << ")" << std::endl;
+    std::cout << "unapplied: (" << lvalue->show() << ") = (" << rvalue->show() << ")" << std::endl;
 #endif
 
     return ret;
@@ -83,13 +83,13 @@ ExpPtr Equality::operate(ExpPtrArg first,
     DEBUG_INDENT_INCR;
 #endif
     auto l = operateHelper(first, second, envl);
-#ifdef DEBUG_EVAL
-    DEBUG_INDENT_DECR;
-    DEBUG_INDENTATION;
-    std::cout << "R L:" << std::endl;
-    DEBUG_INDENT_INCR;
-#endif
-    auto r = operateHelper(second, first, envr);
+//#ifdef DEBUG_EVAL
+//    DEBUG_INDENT_DECR;
+//    DEBUG_INDENTATION;
+//    std::cout << "R L:" << std::endl;
+//    DEBUG_INDENT_INCR;
+//#endif
+//    auto r = operateHelper(second, first, envr);
 #ifdef DEBUG_EVAL
     DEBUG_INDENT_DECR;
 #endif
@@ -100,11 +100,11 @@ ExpPtr Equality::operate(ExpPtrArg first,
         env = envl;
         ret = first;
     }
-    else if (r)
-    {
-        env = envr;
-        ret = second;
-    }
+//    else if (r)
+//    {
+//        env = envr;
+//        ret = second;
+//    }
     else
         return make_ptr<Void>();
 

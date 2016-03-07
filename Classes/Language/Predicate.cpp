@@ -28,7 +28,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 //            return e;
 
 
-        return expr;
+        return id;
     }
 
     auto expr = e->eval(env);

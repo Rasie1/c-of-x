@@ -9,6 +9,8 @@
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
     auto val = Identifier::unwrapIfId(other, env);
+    if (typeid(*this) == typeid(*val))
+        return val;
     if (checkType<Any>(val))
     {
         return make_ptr<String>("lolo");
@@ -19,7 +21,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         auto ev = eq->value;//->eval(env);
         auto envc = env;
         auto ret = apply(ev, envc);
-        return ret;
+        return make_ptr<Equals>(ret);
     }
 
     auto ret = make_ptr<String>("Wrong argument");
