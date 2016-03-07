@@ -21,38 +21,21 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         auto ev = eq->value;//->eval(env);
         auto envc = env;
         auto ret = apply(ev, envc);
+        if (checkType<Void>(ret))
+            return ret;
         return make_ptr<Equals>(ret);
     }
 
     auto ret = make_ptr<String>("Wrong argument");
 
     return ret;
-
-//    auto env = envc;
-//    ExpPtr val;
-//    if (checkType<Equals>(other))
-//    {
-//        auto eq = s_cast<Equals>(other);
-//        auto ev = eq->value;//->eval(env);
-//        return apply(ev, env);
-//    }
-//    else
-//    {
-//        auto val = Identifier::unwrapIfId(other, env);
-//        if (checkType<Any>(val))
-//            return make_ptr<Any>();
-//        else
-//            return apply(val, env);
-//    }
 }
-
-//void Function::unapplyVariables(ExpPtrArg e, Environment& env) const
-//{
-//    auto r = s_cast<Function>(reverse());
-//    return r->apply(e, env);
-//}
 
 bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environment& env) const
 {
-    return reverse()->apply(arg, env)->unapplyVariables(e, env);
+    auto reversed = reverse()->apply(arg, env);
+
+    auto ret = reversed->unapplyVariables(e, env);
+
+    return ret;
 }

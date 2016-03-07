@@ -48,6 +48,8 @@ ExpPtr Environment::getEqual(CExpPtrArg key) const
         return s_cast<Equals>(value)->value;
     else if (checkType<Any>(value))
         return value;
+    else if (checkType<Void>(value))
+        return value;
     else
         return make_ptr<ValueInSet>(value);
 }
