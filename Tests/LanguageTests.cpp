@@ -6,12 +6,24 @@
 #include "Void.h"
 #include "Parser.h"
 #include "Integer.h"
+#include "Then.h"
 
 BOOST_AUTO_TEST_CASE(newVariable)
 {
     Environment env;
     auto x = env.getEqual(make_ptr<Identifier>("x"));
     BOOST_CHECK(checkType<Any>(x));
+}
+
+BOOST_AUTO_TEST_CASE(assignment)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x = 0", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_CHECK(s_cast<Integer>(x)->value == 0);
 }
 
 BOOST_AUTO_TEST_CASE(identityFunction)
@@ -49,14 +61,18 @@ BOOST_AUTO_TEST_CASE(typedArgument)
     BOOST_CHECK(d_cast<Integer>(applied)->value == 1);
 }
 
-BOOST_AUTO_TEST_CASE(unapplyPlus)
+BOOST_AUTO_TEST_CASE(then)
 {
     Environment env;
     Parser p;
-    auto parsed = p.parse("x + 2 = 0", env);
-    parsed->eval(env);
-    auto x = env.getEqual(make_ptr<Identifier>("x"));
-    BOOST_CHECK(d_cast<Integer>(x)->value == -2);
+    auto then = Then::defaultName;
+
+    auto x = p.parse("0 " + then + " 1", env)->eval(env);
+    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_CHECK(s_cast<Integer>(x)->value == 1);
+
+    auto y = p.parse("(0 > 1) " + then + " 1", env)->eval(env);
+    BOOST_CHECK(checkType<Void>(y));
 }
 
 BOOST_AUTO_TEST_CASE(moreThan)
@@ -66,11 +82,21 @@ BOOST_AUTO_TEST_CASE(moreThan)
     p.parse("x > 10", env)->eval(env);
     auto applied0 = p.parse("x = 100", env)->eval(env);
     BOOST_CHECK(checkType<Identifier>(applied0));
-    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    auto x = env.getEqual(make_ptr<Identifier>("x"))->eval(env);
     BOOST_CHECK(d_cast<Integer>(x)->value == 100);
 
     p.parse("y > 10", env)->eval(env);
     auto applied1 = p.parse("y = 0", env)->eval(env);
     BOOST_CHECK(checkType<Void>(applied1));
+}
+
+BOOST_AUTO_TEST_CASE(unapplyPlus)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x + 2 = 0", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_CHECK(d_cast<Integer>(x)->value == -2);
 }
 
