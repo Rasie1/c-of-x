@@ -14,7 +14,8 @@ ExpPtr Lambda::operate(ExpPtrArg first,
                        ExpPtrArg second,
                        Environment& env) const
 {
-    auto ret = make_ptr<Closure>(first, second, env, 1);
+    auto newEnv = env;
+    auto ret = make_ptr<Closure>(first->eval(newEnv), second, newEnv, 1);
     return ret;
 }
 

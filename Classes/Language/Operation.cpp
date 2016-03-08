@@ -22,11 +22,11 @@ ExpPtr Operation::eval(Environment& env) const
 
     // debug-only
     DEBUG_PRINT_OP(op);
-    auto l = d_cast<Identifier>(left) ? env.getEqual(left) : left;
-    if (d_cast<Any>(l))
+    auto l = d_cast<Identifier>(left) ? env.get(left) : left;
+    if (checkType<Any>(l))
         l = left;
-    auto r = d_cast<Identifier>(right) ? env.getEqual(right) : right;
-    if (d_cast<Any>(r))
+    auto r = d_cast<Identifier>(right) ? env.get(right) : right;
+    if (checkType<Any>(r))
         r = right;
     DEBUG_PRINT_LT(l);
     DEBUG_PRINT_RT(r);

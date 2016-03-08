@@ -37,7 +37,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 
 std::string Closure::show() const
 {
-    return "[|" + argument->show() + " => " + body->show() + "|]";
+    return "closure[" + argument->show() + " => " + body->show() + "]";
 }
 
 bool Closure::operator==(const Expression& other) const
@@ -45,9 +45,9 @@ bool Closure::operator==(const Expression& other) const
     if (typeid(other) == typeid(const Closure))
     {
         auto& x = static_cast<const Closure&>(other);
-        return x.body == body &&
+        return x.body     == body &&
                x.argument == argument &&
-               x.env == env;
+               x.env      == env;
     }
     else
         return false;

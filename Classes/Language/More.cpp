@@ -50,7 +50,10 @@ ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
             return make_ptr<MoreThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
         return make_ptr<Void>();
-//        return make_ptr<MoreThan>(make_ptr<Integer>(value));
+    }
+    if (checkType<Integer>(other))
+    {
+        return shared_from_this();
     }
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
