@@ -55,7 +55,7 @@ constexpr auto d_cast(Args&&... args)
     return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
 }
 template <class T>
-constexpr bool checkType(ExpPtrArg e)
+constexpr bool checkType(const std::shared_ptr<const Expression>& e)
 {
     return typeid(*e) == typeid(T);
 }

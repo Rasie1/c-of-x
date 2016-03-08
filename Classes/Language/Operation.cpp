@@ -6,7 +6,7 @@
 #include "Any.h"
 #include "Intersection.h"
 
-Operation::Operation(const std::shared_ptr<Operator>& op,
+Operation::Operation(const std::shared_ptr<const Operator>& op,
                      ExpPtrArg left,
                      ExpPtrArg right)
     : op(op),

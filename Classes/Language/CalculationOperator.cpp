@@ -6,6 +6,7 @@
 #include "TypeError.h"
 #include "Environment.h"
 #include "Union.h"
+#include "Any.h"
 
 CalculationOperator::CalculationOperator(bool isRightAssociative, int priority)
     : Operator(isRightAssociative, priority)
@@ -22,6 +23,9 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     auto left  = l->eval(env);
     auto right = r->eval(env);
 
+    if (checkType<Any>(left) || checkType<Any>(right))
+        return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
+
     // Handle indetermenism
     auto operationLeft  = d_cast<Operation>(left);
     auto operationRight = d_cast<Operation>(right);
@@ -29,8 +33,8 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     std::vector<ExpPtr> expressions;
     expressions.reserve(4);
 
-    if (operationLeft && d_cast<Union>(operationLeft->op))
-        if (operationRight && d_cast<Union>(operationRight->op))
+    if (operationLeft && checkType<Union>(operationLeft->op))
+        if (operationRight && checkType<Union>(operationRight->op))
         {
             expressions.push_back(calculate(operationLeft->left,
                                             operationRight->left));
@@ -46,7 +50,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
             expressions.push_back(calculate(operationLeft->left, right));
             expressions.push_back(calculate(operationLeft->right, right));
         }
-    else if (operationRight && d_cast<Union>(operationRight->op))
+    else if (operationRight && checkType<Union>(operationRight->op))
     {
         expressions.push_back(calculate(left, operationRight->left));
         expressions.push_back(calculate(left, operationRight->right));

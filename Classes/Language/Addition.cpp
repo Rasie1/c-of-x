@@ -5,6 +5,7 @@
 #include "Identifier.h"
 #include "TypeError.h"
 #include "Environment.h"
+#include "Any.h"
 
 Addition::Addition()
     : CalculationOperator(false, 5)
@@ -13,7 +14,7 @@ Addition::Addition()
 
 ExpPtr Addition::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    if (typeid(*l) == typeid(Integer) && typeid(*r) == typeid(Integer))
+    if (checkType<Integer>(l) && checkType<Integer>(r))
     {
         auto firstInteger  = s_cast<Integer>(l);
         auto secondInteger = s_cast<Integer>(r);

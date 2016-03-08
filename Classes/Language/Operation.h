@@ -5,7 +5,7 @@ class Operator;
 class Operation : public Expression
 {
 public:
-    Operation(const std::shared_ptr<Operator>& op,
+    Operation(const std::shared_ptr<const Operator>& op,
               ExpPtrArg left,
               ExpPtrArg right);
 
@@ -18,7 +18,7 @@ public:
 
     bool operator==(const Expression& other) const override;
 
-    std::shared_ptr<Operator> op;
+    const std::shared_ptr<const Operator> op;
     ExpPtr left;
     ExpPtr right;
 };

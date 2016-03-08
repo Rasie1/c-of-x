@@ -44,7 +44,7 @@ std::list<ExpPtr> unroll(ExpPtrArg x)
     auto op = d_cast<Operation>(x);
     if (op != nullptr)
     {
-        if (d_cast<Union>(op->op) != nullptr)
+        if (checkType<Union>(op->op))
         {
             std::list<ExpPtr> ret;
             ret.splice(ret.begin(), unroll(op->left));
