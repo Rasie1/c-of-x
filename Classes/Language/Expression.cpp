@@ -5,6 +5,7 @@
 #include "Operation.h"
 #include "Environment.h"
 #include "Intersection.h"
+#include "Union.h"
 #include "Void.h"
 
 Expression::Expression()
@@ -41,6 +42,11 @@ bool Expression::hasFreeVariables(const Environment& env) const
 ExpPtr Expression::intersect(ExpPtrArg& other, const Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+}
+
+ExpPtr Expression::unionize(ExpPtrArg& other, const Environment& env)
+{
+    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
 bool Expression::unapplyVariables(ExpPtrArg e, Environment& env) const

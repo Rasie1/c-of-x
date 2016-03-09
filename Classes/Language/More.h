@@ -14,6 +14,7 @@ public:
     ExpPtr value;
 
     ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
+    ExpPtr unionize(ExpPtrArg other, const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;

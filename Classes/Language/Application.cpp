@@ -45,54 +45,61 @@ ExpPtr Application::operate(ExpPtrArg first,
                             Environment& env) const
 {
     ExpPtr left, right;
-
-    left = Identifier::unwrapIfId(first, env);
-    left = left->eval(env);
+    left = Identifier::unwrapIfId(first, env)->eval(env);
     if (isExpressionQuoted(left, env))
         right = second;
     else
         right = second->eval(env);
 
-    auto calculate = [&env](ExpPtrArg l, ExpPtrArg r) -> ExpPtr
-    {
-        auto function = d_cast<Function>(l);
-        if (!function)
-            return make_ptr<ErrorWithMessage>("Not a function");
-        return function->apply(r, env);
-    };
-
-    auto operationLeft  = d_cast<Operation>(left);
-    auto operationRight = d_cast<Operation>(right);
+    if (checkType<Any>(left) || checkType<Any>(right))
+        return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
 
     std::vector<ExpPtr> expressions;
-    expressions.reserve(4);
 
-    if (operationLeft && checkType<Union>(operationLeft->op))
-        if (operationRight && checkType<Union>(operationRight->op))
-        {
-            expressions.push_back(calculate(operationLeft->left,
-                                            operationRight->left));
-            expressions.push_back(calculate(operationLeft->left,
-                                            operationRight->right));
-            expressions.push_back(calculate(operationLeft->right,
-                                            operationRight->left));
-            expressions.push_back(calculate(operationLeft->right,
-                                            operationRight->right));
-        }
-        else
-        {
-            expressions.push_back(calculate(operationLeft->left, right));
-            expressions.push_back(calculate(operationLeft->right, right));
-        }
-    else if (operationRight && checkType<Union>(operationRight->op))
+    bool lUnion = false;
+    bool rUnion = false;
+
+    if (checkType<Operation>(left))
+        lUnion = checkType<Union>(s_cast<Operation>(left)->op);
+    if (checkType<Operation>(right))
+        rUnion = checkType<Union>(s_cast<Operation>(right)->op);
+
+    if (!lUnion && !rUnion)
     {
-        expressions.push_back(calculate(left, operationRight->left));
-        expressions.push_back(calculate(left, operationRight->right));
+        auto function = d_cast<Function>(left);
+        if (!function)
+            return make_ptr<ErrorWithMessage>("Not a function");
+        expressions.push_back(function->apply(right, env));
+    }
+    else if (lUnion && !rUnion)
+    {
+        auto operation = s_cast<Operation>(left);
+        auto opl = operation->left;
+        auto opr = operation->right;
+        expressions.push_back(operate(opl, right, env));
+        expressions.push_back(operate(opr, right, env));
+    }
+    else if (rUnion && !lUnion)
+    {
+        auto operation = s_cast<Operation>(right);
+        auto opl = operation->left;
+        auto opr = operation->right;
+        expressions.push_back(operate(left, opl, env));
+        expressions.push_back(operate(left, opr, env));
     }
     else
-        return calculate(left, right);
-
-
+    {
+        auto operationl = s_cast<Operation>(left);
+        auto operationr = s_cast<Operation>(right);
+        auto ll = operationl->left;
+        auto lr = operationl->right;
+        auto rl = operationr->left;
+        auto rr = operationr->right;
+        expressions.push_back(operate(ll, rl, env));
+        expressions.push_back(operate(ll, rr, env));
+        expressions.push_back(operate(lr, rl, env));
+        expressions.push_back(operate(lr, rr, env));
+    }
 
     return Union::make(std::begin(expressions), std::end(expressions));
 }

@@ -50,7 +50,36 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
             return make_ptr<LessThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
         return make_ptr<Void>();
-//        return make_ptr<LessThan>(make_ptr<Integer>(value));
+    }
+    else if (checkType<Equals>(other))
+    {
+        auto p = s_cast<Equals>(other);
+        if (checkType<Integer>(p->value))
+        {
+            auto eqvalue = s_cast<Integer>(p->value)->value;
+            auto thvalue = s_cast<Integer>(this->value)->value;
+            if (thvalue > eqvalue)
+                return p;
+            else
+                return make_ptr<Void>();
+        }
+    }
+
+    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+}
+
+ExpPtr LessThan::unionize(ExpPtrArg other, const Environment& env)
+{
+    if (checkType<LessThan>(other))
+    {
+        auto p = s_cast<LessThan>(other);
+        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
+        {
+            auto v1 = s_cast<Integer>(value);
+            auto v2 = s_cast<Integer>(p->value);
+            return make_ptr<LessThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
+        }
+        return make_ptr<Void>();
     }
 
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);

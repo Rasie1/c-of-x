@@ -47,13 +47,39 @@ ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);
-            return make_ptr<MoreThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
+            return make_ptr<MoreThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
         }
         return make_ptr<Void>();
     }
-    if (checkType<Integer>(other))
+    else if (checkType<Equals>(other))
     {
-        return shared_from_this();
+        auto p = s_cast<Equals>(other);
+        if (checkType<Integer>(p->value))
+        {
+            auto eqvalue = s_cast<Integer>(p->value)->value;
+            auto thvalue = s_cast<Integer>(this->value)->value;
+            if (thvalue < eqvalue)
+                return p;
+            else
+                return make_ptr<Void>();
+        }
+    }
+
+    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+}
+
+ExpPtr MoreThan::unionize(ExpPtrArg other, const Environment& env)
+{
+    if (checkType<MoreThan>(other))
+    {
+        auto p = s_cast<MoreThan>(other);
+        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
+        {
+            auto v1 = s_cast<Integer>(value);
+            auto v2 = s_cast<Integer>(p->value);
+            return make_ptr<MoreThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
+        }
+        return make_ptr<Void>();
     }
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }

@@ -75,6 +75,24 @@ BOOST_AUTO_TEST_CASE(then)
     BOOST_CHECK(checkType<Void>(y));
 }
 
+//BOOST_AUTO_TEST_CASE(unionPlus)
+//{
+//    Environment env;
+//    Parser p;
+//    auto applied0 = p.parse("(1|2) + 1", env)->eval(env);
+//    auto applied1 = p.parse("(1|2) + (10|20)", env)->eval(env);
+//    auto applied2 = p.parse("(1|2|3|4) + (100|200|300)", env)->eval(env);
+
+    // not determined in which order they will come, will come up with this
+    // test later
+
+//    BOOST_CHECK(d_cast<Operation>(x)->value == 100);
+
+//    p.parse("y > 10", env)->eval(env);
+//    auto applied1 = p.parse("y = 0", env)->eval(env);
+//    BOOST_CHECK(checkType<Void>(applied1));
+//}
+
 BOOST_AUTO_TEST_CASE(moreThan)
 {
     Environment env;
