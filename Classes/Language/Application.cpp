@@ -11,6 +11,7 @@
 #include "Any.h"
 #include "Quote.h"
 #include "Closure.h"
+#include "Equality.h"
 
 Application::Application()
     : Operator(false, 10)
@@ -66,10 +67,20 @@ ExpPtr Application::operate(ExpPtrArg first,
 
     if (!lUnion && !rUnion)
     {
-        auto function = d_cast<Function>(left);
-        if (!function)
-            return make_ptr<ErrorWithMessage>("Not a function");
-        expressions.push_back(function->apply(right, env));
+//        if (checkType<Equals>(left) && checkType<Equals>(right))
+//        {
+//            auto eq = s_cast<Equals>(left);
+//            auto eq = s_cast<Equals>(left);
+//            left = eq->value;
+
+//        }
+//        else
+        {
+            auto function = d_cast<Function>(left);
+            if (!function)
+                return make_ptr<ErrorWithMessage>("Not a function");
+            expressions.push_back(function->apply(right, env));
+        }
     }
     else if (lUnion && !rUnion)
     {

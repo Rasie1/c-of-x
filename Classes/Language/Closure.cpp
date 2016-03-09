@@ -24,9 +24,10 @@ Closure::~Closure()
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 {
+    auto value = Identifier::unwrapIfId(e, env);
     auto newEnv = this->env;
 
-    auto fits = this->argument->unapplyVariables(e, newEnv);
+    auto fits = this->argument->unapplyVariables(value, newEnv);
     if (!fits)
         return make_ptr<Void>();
 
@@ -37,7 +38,7 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 
 std::string Closure::show() const
 {
-    return "closure[" + argument->show() + " => " + body->show() + "]";
+    return "closure[" + argument->show() + " -> " + body->show() + "]";
 }
 
 bool Closure::operator==(const Expression& other) const

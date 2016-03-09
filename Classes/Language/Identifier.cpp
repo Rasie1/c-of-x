@@ -38,7 +38,7 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
 
 bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    auto value = Identifier::unwrapIfId(e, env);
+    auto value = Identifier::unwrapIfId(e, env)->eval(env);
     if (checkType<Void>(value))
         return false;
 
