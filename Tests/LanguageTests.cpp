@@ -37,8 +37,17 @@ BOOST_AUTO_TEST_CASE(identityFunction)
     auto i = env.getEqual(make_ptr<Identifier>("i"));
     auto applied0 = p.parse("i 5", env)->eval(env);
     BOOST_CHECK(d_cast<Integer>(applied0)->value == 5);
-    auto applied1 = p.parse("i x", env)->eval(env);
-    BOOST_CHECK(applied1->show() == "x");
+}
+
+BOOST_AUTO_TEST_CASE(indirection)
+{
+    Environment env;
+    Parser p;
+    p.parse("i x = x", env)->eval(env);
+    p.parse("x = 5", env)->eval(env);
+    auto parsed = p.parse("i x", env)->eval(env);
+    auto result = Identifier::unwrapIfId(parsed, env);
+    BOOST_CHECK(d_cast<Integer>(result)->value == 5);
 }
 
 BOOST_AUTO_TEST_CASE(twoArgumentFunction)
