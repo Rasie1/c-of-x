@@ -38,10 +38,11 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
 
 bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    if (checkType<Void>(e))
+    auto value = Identifier::unwrapIfId(e, env);
+    if (checkType<Void>(value))
         return false;
 
-    env.addEqual(shared_from_this(), e);
+    env.addEqual(shared_from_this(), value);
 
     auto intersection = env.getEqual(shared_from_this());
     if (checkType<Void>(intersection))

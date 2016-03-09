@@ -47,7 +47,6 @@ ExpPtr Application::operate(ExpPtrArg first,
     ExpPtr left, right;
 
     left = Identifier::unwrapIfId(first, env);
-
     left = left->eval(env);
     if (isExpressionQuoted(left, env))
         right = second;
@@ -57,10 +56,8 @@ ExpPtr Application::operate(ExpPtrArg first,
     auto calculate = [&env](ExpPtrArg l, ExpPtrArg r) -> ExpPtr
     {
         auto function = d_cast<Function>(l);
-
         if (!function)
             return make_ptr<ErrorWithMessage>("Not a function");
-
         return function->apply(r, env);
     };
 
@@ -95,7 +92,9 @@ ExpPtr Application::operate(ExpPtrArg first,
     else
         return calculate(left, right);
 
-    return Union::make(expressions);
+
+
+    return Union::make(std::begin(expressions), std::end(expressions));
 }
 
 std::string Application::show() const
