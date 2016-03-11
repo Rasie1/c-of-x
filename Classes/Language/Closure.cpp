@@ -8,12 +8,10 @@
 
 Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,
-                 const Environment& env,
-                 int envSize)
+                 const Environment& env)
     : body(body),
       argument(argument),
-      env(env),
-      envSize(envSize)
+      env(env)
 {
 
 }

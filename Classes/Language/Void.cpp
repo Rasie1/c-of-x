@@ -1,5 +1,11 @@
 #include "Void.h"
 
+
+ExpPtr Void::intersect(ExpPtrArg other, const Environment& env)
+{
+    return shared_from_this();
+}
+
 std::string Void::show() const
 {
     return defaultName;

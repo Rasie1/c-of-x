@@ -9,8 +9,7 @@ class Closure : public Function
 public:
     Closure(ExpPtrArg argument,
             ExpPtrArg body,
-            const Environment& env,
-            int envSize = 0);
+            const Environment& env);
     ~Closure();
 
     ExpPtr apply(ExpPtrArg e, Environment& env) const override;

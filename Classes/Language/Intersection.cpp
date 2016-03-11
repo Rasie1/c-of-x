@@ -18,6 +18,11 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     auto lr = l->intersect(r, env);
     auto rl = r->intersect(l, env);
 
+    if (*lr != Operation(make_ptr<Intersection>(), l, r));
+        return lr;
+    if (*rl != Operation(make_ptr<Intersection>(), r, l));
+        return rl;
+
     return lr;
 
 //    if (*rl == *lr)
