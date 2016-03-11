@@ -1,7 +1,9 @@
 #pragma once
 #include "Expression.h"
+#include "DebugPrinter.h"
 #include <map>
 //#include <unordered_map>
+#include <iostream>
 
 struct ExpPtrLess
 {
@@ -20,10 +22,11 @@ struct ExpPtrLess
 //};
 
 class Operator;
+class DebugPrinter;
 class Environment
 {
 public:
-    Environment();
+    Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
 
     void add(CExpPtrArg key, ExpPtrArg predicate);
     void addEqual(CExpPtrArg key, ExpPtrArg value);
@@ -32,6 +35,11 @@ public:
     ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
     void erase(CExpPtrArg e);
     void clear();
+
+    void increaseDebugIndentation();
+    void decreaseDebugIndentation();
+    void toggleDebugPrint();
+    void debugPrint(const std::string& s, bool shouldIndent = false) const;
 
     bool compareOperators(const std::shared_ptr<Operator>& first,
                           const std::shared_ptr<Operator>& second);
@@ -45,6 +53,5 @@ private:
     //std::unordered_map<ExpPtr, ExpPtr, ExpPtrHash, ExpPtrLess> data;
     std::map<CExpPtr, ExpPtr, ExpPtrLess> data;
 
+    std::shared_ptr<DebugPrinter> debugPrinter;
 };
-
-

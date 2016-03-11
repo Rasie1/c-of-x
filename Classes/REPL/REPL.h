@@ -5,7 +5,10 @@
 class REPL
 {
 public:
+    REPL();
+
     void start();
+    void toggleDebugPrint();
     void loadFile(const std::string& s);
 private:
     Environment env;

@@ -20,21 +20,17 @@ ExpPtr Operation::eval(Environment& env) const
 {
     ExpPtr ret;
 
-    // debug-only
-    DEBUG_PRINT_OP(op);
-    auto l = d_cast<Identifier>(left) ? env.get(left) : left;
-    if (checkType<Any>(l))
-        l = left;
-    auto r = d_cast<Identifier>(right) ? env.get(right) : right;
-    if (checkType<Any>(r))
-        r = right;
-    DEBUG_PRINT_LT(l);
-    DEBUG_PRINT_RT(r);
-    // /debug-only
+    env.debugPrint("OPERATION: " + this->op->show() + '\n', true);
 
+    env.debugPrint("SND: " + this->right->show() + '\n', true);
+    env.debugPrint("FST: " + this->left->show() + '\n', true);
+
+
+    env.increaseDebugIndentation();
     ret = op->operate(left, right, env);
+    env.decreaseDebugIndentation();
 
-    DEBUG_PRINT_RS(ret);
+    env.debugPrint("RES: " + ret->show() + '\n', true);
 
     return ret;
 }

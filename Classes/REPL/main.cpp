@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
         if (vm.count("file"))
         {
             auto file = vm["file"].as<std::string>();
-            Environment env;
+            Environment env(std::make_shared<DebugPrinter>(&std::cout));
             std::cout << Parser().parseFile(file, env)->show() << std::endl;
         }
         else

@@ -28,8 +28,10 @@
 #include "ValueInSet.h"
 
 #include <vector>
+#include <fstream>
 
-Environment::Environment()
+Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
+    debugPrinter(debugPrinter)
 {
     addDefaultVariables();
 }
@@ -56,10 +58,7 @@ ExpPtr Environment::getEqual(CExpPtrArg key) const
 
 ExpPtr Environment::get(CExpPtrArg key) const
 {
-#ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
-    std::cout << "ENV GET: (" << key->show() << ") : (";
-#endif
+    debugPrint("ENV GET: (" + key->show() + ") : (", true);
 
     auto x = data.find(key);
 
@@ -69,11 +68,19 @@ ExpPtr Environment::get(CExpPtrArg key) const
     else
         ret = x->second;
 
+    debugPrint(ret->show() + ") + \n", false);
 
-#ifdef DEBUG_EVAL
-    std::cout << ret->show() << ")" << std::endl;
-#endif
     return ret;
+}
+
+void Environment::debugPrint(const std::string& s, bool shouldIndent) const
+{
+    debugPrinter->debugPrint(s, shouldIndent);
+}
+
+void Environment::toggleDebugPrint()
+{
+    debugPrinter->toggleDebugPrint();
 }
 
 void Environment::erase(CExpPtrArg e)
@@ -83,15 +90,12 @@ void Environment::erase(CExpPtrArg e)
 
 void Environment::add(CExpPtrArg key, ExpPtrArg value)
 {
-    DEBUG_INDENTATION;
-    std::cout << "ENV ADD: " << key->show() << std::endl;
+    debugPrint("ENV ADD: " + key->show() + "\n", true);
     get(key);
-    DEBUG_INDENTATION;
-    std::cout << "    NEW: " << value->show() << std::endl;
+    debugPrint("    NEW: " + value->show() + "\n", true);
     auto constKey = std::const_pointer_cast<Expression>(get(key));
     data[key] = intersect(constKey, value);
-    DEBUG_INDENTATION;
-    std::cout << "    RET: " << data[key]->show() << std::endl;
+    debugPrint("    RET: " + data[key]->show() + "\n", true);
 }
 
 void Environment::addEqual(CExpPtrArg key, ExpPtrArg value)
@@ -161,4 +165,15 @@ std::string Environment::show() const
         ret += x.first->show() + " |--> " + x.second->show() + "\n";
 
     return ret;
+}
+
+
+void Environment::increaseDebugIndentation()
+{
+    debugPrinter->increaseDebugIndentation();
+}
+
+void Environment::decreaseDebugIndentation()
+{
+    debugPrinter->decreaseDebugIndentation();
 }

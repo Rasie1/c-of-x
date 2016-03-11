@@ -60,10 +60,8 @@ static bool operateHelper(ExpPtrArg first,
     auto rvalue = second;
 
     auto ret = lvalue->unapplyVariables(rvalue, env);
-#ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
-    std::cout << "unapplied: (" << lvalue->show() << ") = (" << rvalue->show() << ")" << std::endl;
-#endif
+
+    env.debugPrint("unapplied: (" + lvalue->show() + ") = (" + rvalue->show() + ")", true);
 
     return ret;
 }
@@ -74,25 +72,11 @@ ExpPtr Equality::operate(ExpPtrArg first,
 {
     auto envl = env;
     auto envr = env;
-#ifdef DEBUG_EVAL
-    DEBUG_INDENTATION;
-    std::cout << "Equality: (" << first->show() << ") = (" << second->show() << ")"
-              << std::endl;
-    DEBUG_INDENTATION;
-    std::cout << "L R:" << std::endl;
-    DEBUG_INDENT_INCR;
-#endif
+    env.debugPrint("Equality: (" + first->show() + ") = (" + second->show() + ")\n", true);
+    env.debugPrint("L R:\n", true);
+    env.increaseDebugIndentation();
     auto l = operateHelper(first, second, envl);
-//#ifdef DEBUG_EVAL
-//    DEBUG_INDENT_DECR;
-//    DEBUG_INDENTATION;
-//    std::cout << "R L:" << std::endl;
-//    DEBUG_INDENT_INCR;
-//#endif
-//    auto r = operateHelper(second, first, envr);
-#ifdef DEBUG_EVAL
-    DEBUG_INDENT_DECR;
-#endif
+    env.decreaseDebugIndentation();
 
     ExpPtr ret;
     if (l)

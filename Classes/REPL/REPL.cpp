@@ -7,6 +7,12 @@
 
 using namespace std;
 
+REPL::REPL() :
+    env(make_ptr<DebugPrinter>(&std::cout))
+{
+
+}
+
 void REPL::start()
 {
     cout << "Welcome to c(x), type -h to get help" << endl;
@@ -35,11 +41,8 @@ void REPL::start()
                 continue;
             }
 
-            //cout << expression->show() << " =" << endl;
-            DEBUG_LINEBREAK;
             auto evaluated = expression->eval(env);
             cout << evaluated->show() << endl;
-            DEBUG_LINEBREAK;
         }
     }
 
@@ -57,6 +60,7 @@ void displayHelp()
             "-q -quit      : quit" << endl <<
             "-clear        : clear environment" << endl <<
             "-h -help      : this message" << endl <<
+            "-debugprint   : toggle debug print (disabled by default)" << endl <<
             "-load         : open and evaluate file" << endl;
 }
 
@@ -70,8 +74,15 @@ bool REPL::command(const std::string& s)
         env.clear();
     else if (s == "-h" || s == "-help")
         displayHelp();
+    else if (s == "-debugprint")
+        toggleDebugPrint();
 
     return false;
+}
+
+void REPL::toggleDebugPrint()
+{
+    env.toggleDebugPrint();
 }
 
 void REPL::loadFile(const std::string& s)
