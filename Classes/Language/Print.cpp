@@ -10,13 +10,9 @@ ExpPtr Print::apply(ExpPtrArg e, Environment& env) const
     arg = Identifier::unwrapIfId(e, env);
     auto evaluated = arg->eval(env);
 
-#ifdef DEBUG_EVAL
-    std::cout << "stdout: [";
-#endif
+    env.debugPrint("stdout: [", false);
     std::cout << Identifier::unwrapIfId(evaluated, env)->show();
-#ifdef DEBUG_EVAL
-    std::cout << "]" << std::endl;
-#endif
+    env.debugPrint("]\n", false);
     return evaluated;
 }
 

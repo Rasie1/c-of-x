@@ -68,7 +68,7 @@ ExpPtr Environment::get(CExpPtrArg key) const
     else
         ret = x->second;
 
-    debugPrint(ret->show() + ") + \n", false);
+    debugPrint(ret->show() + ")\n", false);
 
     return ret;
 }

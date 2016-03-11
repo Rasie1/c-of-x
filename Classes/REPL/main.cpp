@@ -12,6 +12,7 @@ int main(int argc, char* argv[])
         desc.add_options()
                 ("help", "produce help message")
                 ("no-preload", "prevent from loading preload.txt")
+                ("debug-print", "enable debug output of calculations")
                 ("file", boost::program_options::value<std::string>(), "evaluate code from file");
         boost::program_options::variables_map vm;
         boost::program_options::store(
@@ -28,7 +29,7 @@ int main(int argc, char* argv[])
         if (vm.count("file"))
         {
             auto file = vm["file"].as<std::string>();
-            Environment env(std::make_shared<DebugPrinter>(&std::cout));
+            Environment env;
             std::cout << Parser().parseFile(file, env)->show() << std::endl;
         }
         else
@@ -36,6 +37,8 @@ int main(int argc, char* argv[])
             REPL repl;
             if (!(vm.count("no-preload")))
                   repl.loadFile("preload.txt");
+            if ((vm.count("debug-print")))
+                  repl.toggleDebugPrint();
             repl.start();
         }
     }
