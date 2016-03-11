@@ -15,7 +15,12 @@ ExpPtr Lambda::operate(ExpPtrArg first,
                        Environment& env) const
 {
     auto newEnv = env;
-    auto ret = make_ptr<Closure>(first->eval(newEnv), second, newEnv);
+    auto arg = first->eval(newEnv);
+    newEnv.erase(arg);
+    arg = first->eval(newEnv); // not really good. Should detect bound variables
+                               // and erase them
+    auto body = second;
+    auto ret = make_ptr<Closure>(arg, body, newEnv);
     return ret;
 }
 
