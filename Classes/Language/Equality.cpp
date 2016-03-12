@@ -39,7 +39,7 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
         auto& l = *value;
         auto& r = *(p->value);
         if (l == r)
-            return value;
+            return shared_from_this();
         else
             return make_ptr<Void>();
     }
