@@ -1,19 +1,14 @@
 #pragma once
-#include "Function.h"
-#include "Integer.h"
-#include "Operator.h"
+#include "CalculationOperator.h"
 
-class Multiplication : public Operator
+class Multiplication : public CalculationOperator
 {
 public:
     Multiplication();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
-                   Environment& env) const override;
+    ExpPtr calculate(ExpPtrArg l, ExpPtrArg r) const override;
+    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
 
     std::string show() const override;
-
     static const std::string defaultName;
 };
-

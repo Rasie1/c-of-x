@@ -122,7 +122,7 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>());
     addEqual(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>());
     addEqual(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>());
-    //addEqual(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>());
+    addEqual(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>());
     addEqual(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>());
     //addEqual(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>());
     addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>());

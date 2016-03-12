@@ -1,26 +1,60 @@
 #include "Multiplication.h"
-#include <string>
 #include "Operation.h"
+#include "Integer.h"
+#include "Subtraction.h"
+#include "Identifier.h"
+#include "TypeError.h"
+#include "Environment.h"
+#include "Any.h"
 
 Multiplication::Multiplication()
-    : Operator(false, 7)
+    : CalculationOperator(false, 7)
 {
 
 }
 
-ExpPtr Multiplication::operate(ExpPtrArg first,
-                               ExpPtrArg second,
-                               Environment& env) const
+ExpPtr Multiplication::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    auto firstInteger  = d_cast<Integer>(first ->eval(env));
-    auto secondInteger = d_cast<Integer>(second->eval(env));
+    if (checkType<Integer>(l) && checkType<Integer>(r))
+    {
+        auto firstInteger  = s_cast<Integer>(l);
+        auto secondInteger = s_cast<Integer>(r);
+        return make_ptr<Integer>(firstInteger->value * secondInteger->value);
+    }
+    else
+    {
+        auto operation = make_ptr<Operation>(make_ptr<Multiplication>(), l, r);
+        return make_ptr<TypeError>(operation,
+                                   make_ptr<Identifier>("arguments of type integer"),
+                                   make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
+    }
+}
 
-    if (firstInteger && secondInteger)
-        return make_ptr<Integer>(firstInteger->value *
-                                         secondInteger->value);
-    return make_ptr<Operation>(make_ptr<Multiplication>(),
-                                       first,
-                                       second);
+bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+    auto lId = checkType<Identifier>(l);
+    auto rId = checkType<Identifier>(r);
+
+    if (lId && !rId)
+    {
+//        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, r);
+//        l->unapplyVariables(value, env);
+    }
+    else if (!lId && rId)
+    {
+//        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, l);
+//        r->unapplyVariables(value, env);
+    }
+    else if (rId && lId)
+    {
+        // can check if both values support addition
+    }
+    else if (!rId && !lId)
+    {
+        throw "nope"; //eval and add?
+    }
+
+    return true;
 }
 
 std::string Multiplication::show() const
