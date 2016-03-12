@@ -96,7 +96,7 @@ Person = abstract
          construct $ money : default 0  // constructor generation
                      skill : default 0
          has think : void -> string, const
-             skill : int, private
+             skill : int
              money : int
 
 Student = Person
@@ -117,6 +117,11 @@ Worker::think() = "b"                   // separated implementation
 ...
 
 WIP README PART
+
+tell about "has", tell about polymorphism
+
+
+...
 
 ...
 
