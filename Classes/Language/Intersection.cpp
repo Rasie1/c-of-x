@@ -12,8 +12,8 @@ ExpPtr Intersection::operate(ExpPtrArg first,
                              ExpPtrArg second,
                              Environment& env) const
 {
-    auto l = first->eval(env);
-    auto r = second->eval(env);
+    auto l = Identifier::unwrapIfId(first, env)->eval(env);
+    auto r = Identifier::unwrapIfId(second, env)->eval(env);
 
     auto lr = l->intersect(r, env);
 

@@ -5,6 +5,8 @@
 #include "Any.h"
 #include "Identifier.h"
 #include "String.h"
+#include "Operation.h"
+#include "Intersection.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
@@ -26,9 +28,9 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         return make_ptr<Equals>(ret);
     }
 
-    auto ret = make_ptr<String>("Wrong argument");
-
-    return ret;
+    return make_ptr<Operation>(make_ptr<Intersection>(),
+                               shared_from_this(),
+                               other);
 }
 
 bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environment& env) const

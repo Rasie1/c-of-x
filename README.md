@@ -2,7 +2,7 @@ Warning: this document is under heavy development right now.
 
 # Welcome to c(x)
 
-This is an experimental programmable programming language that was designed with the idea to maintain excessive expressiveness while being comfortable to use and easy to read. The language meets object-oriented, functional and logical programming paradigms and provides endless possibilities to invent new ways of solving all kinds of problems.
+This is an experimental programmable programming language that was designed with the idea to deliver excessive expressiveness while being comfortable to use and easy to read. The language meets object-oriented, functional and logical programming paradigms and provides endless possibilities to invent new ways of solving all kinds of problems.
 
 We have:
 
@@ -14,11 +14,9 @@ We have:
 
 + Optional purity, safety and totality checking
 
-+ Pattern matching and expression unwinding
++ Pattern matching and expression unapplying
 
 + Powerful macro system and evaluation control
-
-+ Pointer arithmetics and memory control
 
 + Interactive development features
 
@@ -36,9 +34,8 @@ x < 10       // x is now an intersection of three sets:
              // integers, positive numbers and numbers < 10
              // Let's check it
 
-if 0 < int x < 10 
-   then print "true"
-   else print "not printed"
+if 0 < int x < 10 then print "true"
+                  else print "not printed"
 ```
 Things you may have noticed:
 
@@ -56,16 +53,16 @@ print x-1 // What gets printed is "12345"
 ```
 How is that? We didn't know what exactly "x" was!
 
-This is indeterminism. You can remember SQL languages: their variables can hold multiple values. In this language, the only thing we know of "x" is that it's between 0 and 4. Thanks for "int" being iterable, we can run "print" function on every possible value of "x".
+This is indeterminism. You can remember SQL languages: their variables can hold multiple values. In this language, the only thing we know of "x" is that it's between 2 and 6. Thanks for "int" being iterable, we can run "print" function on every possible value of "x".
 
-Don't confuse "x" with sets. Sets are containers holding multiple values, and "x" is just a value that can be equal to either one or another value of the set it belongs to.
+Don't confuse "x" with a set. Sets are containers holding multiple values, and "x" is just a value that can be equal to either one or another value of the set it belongs to.
 
 Next, some more syntactic sugar:
 
 ```scala
 xs = ^x  // Operator for constructing set from indeterministic values.
      (x%2 = 0) => x
-         // Yeah, that was lambda-expression as type. "xs" now holds
+         // Yes, that was lambda-expression as type. "xs" now holds
          // only even values
 
          // Call an overloaded "print" function
@@ -77,7 +74,7 @@ As you can see, here we just intersect a set with an anonymous function. That ma
 
 Writing operators without spaces increases operator precedence and reduces need for parentheses: "2+2 \* 2 = 8" and "2 + 2\*2 = 6"
 
-Who the heck are those "delimiter", "terminator"? Argument names. They are optional and can be used for changing order of arguments and separating expressions (reducing number of parentheses)
+Who are those "delimiter", "terminator"? Argument names. They are optional and can be used for changing order of arguments and separating expressions (reducing number of parentheses)
 
 Let's take a look at how this "print" may be defined:
 
@@ -95,24 +92,25 @@ print xs         : iterable
 Let's observe how this language is object-oriented:
 
 ```scala
-Person = abstract
-         construct money skill
-         has money : int = 0
-             skill : int = 0
-             think : void -> string, virtual
+Person = abstract                       
+         construct $ money : default 0  // constructor generation
+                     skill : default 0
+         has think : void -> string, const
+             skill : int, private
+             money : int
 
 Student = Person
-          has study() = knowledge++
+          has study() = skill++
               think() : override
                       = "a"
 
 Worker = Person
-         has work()  = money += skill
+         has work () = money += skill
              think() : override
-                     = "b"
 
-Scientist = Worker, Student
-            has think = Worker::think 
+Worker::think() = "b"                   // separated implementation
+
+
 ```
 
 
@@ -128,7 +126,7 @@ f (x + 10) = x
 print f(15)    //Writing calls like that increases precedence
     //stdout: 5
 ```
-This is called unwinding. You can do this for every function if you define the "opposite" operation. As you may have notices, the "opposite" operation for constructing types is just unwrapping the value from type. You can define the language to solve even differential equations involving this syntax.
+This is called unapplying. You can do this for every function if you define the "opposite" operation. As you may have notices, the "opposite" operation for constructing types is just unwrapping the value from type. You can define the language to solve even differential equations involving this syntax.
 
 Some functions are irreversible:
 
