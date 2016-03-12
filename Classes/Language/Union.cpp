@@ -132,13 +132,12 @@ ExpPtr Union::operate(ExpPtrArg first,
                       ExpPtrArg second,
                       Environment& env) const
 {
-//    auto l = first->eval(env);
-//    auto r = second->eval(env);
+    auto l = first->eval(env);
+    auto r = second->eval(env);
 
-    auto x = {first, second};
+
+    auto x = {l, r};
     return make(std::begin(x), std::end(x));
-
-//    return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), first, second);
 }
 
 std::string Union::show() const
