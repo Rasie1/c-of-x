@@ -4,6 +4,7 @@
 #include "Environment.h"
 #include "Operation.h"
 #include "Intersection.h"
+#include "Union.h"
 #include "Void.h"
 #include "Lambda.h"
 #include "Integer.h"
@@ -43,7 +44,7 @@ ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
     if (checkType<MoreThan>(other))
     {
         auto p = s_cast<MoreThan>(other);
-        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
+        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);
@@ -73,15 +74,14 @@ ExpPtr MoreThan::unionize(ExpPtrArg other, const Environment& env)
     if (checkType<MoreThan>(other))
     {
         auto p = s_cast<MoreThan>(other);
-        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
+        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);
             return make_ptr<MoreThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
-        return make_ptr<Void>();
     }
-    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
 ExpPtr MoreThan::begin()

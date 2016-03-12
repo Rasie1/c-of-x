@@ -29,7 +29,7 @@ std::string Equals::show() const
     return defaultName + "(" + value->show() + ")";
 }
 
-const std::string Equals::defaultName = "eq";
+const std::string Equals::defaultName = "=";
 
 ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 {

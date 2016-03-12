@@ -94,6 +94,7 @@ void Environment::add(CExpPtrArg key, ExpPtrArg value)
     get(key);
     debugPrint("    NEW: " + value->show() + "\n", true);
     auto constKey = std::const_pointer_cast<Expression>(get(key));
+//    if (checkType<Operation>(value)
     data[key] = intersect(constKey, value);
     debugPrint("    RET: " + data[key]->show() + "\n", true);
 }

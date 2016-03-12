@@ -16,7 +16,6 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     auto r = second->eval(env);
 
     auto lr = l->intersect(r, env);
-    auto rl = r->intersect(l, env);
 
     bool lf = false;
     bool rf = false;
@@ -29,6 +28,8 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     if (!lf)
         return lr;
 
+    auto rl = r->intersect(l, env);
+
     if (checkType<Operation>(rl))
     {
         auto op = s_cast<Operation>(rl)->op;
@@ -39,11 +40,6 @@ ExpPtr Intersection::operate(ExpPtrArg first,
         return rl;
 
     return lr;
-
-//    if (*rl == *lr)
-//        return lr;
-//    else
-//        return make_ptr<Void>();
 }
 
 std::string Intersection::show() const

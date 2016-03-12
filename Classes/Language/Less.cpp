@@ -7,6 +7,7 @@
 #include "Void.h"
 #include "Lambda.h"
 #include "Integer.h"
+#include "Union.h"
 
 
 bool LessThan::holds(ExpPtrArg e, const Environment& env) const
@@ -43,7 +44,7 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
     if (checkType<LessThan>(other))
     {
         auto p = s_cast<LessThan>(other);
-        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
+        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);
@@ -73,16 +74,15 @@ ExpPtr LessThan::unionize(ExpPtrArg other, const Environment& env)
     if (checkType<LessThan>(other))
     {
         auto p = s_cast<LessThan>(other);
-        if (checkType<Integer>(value) && checkType<Identifier>(p->value))
+        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             auto v1 = s_cast<Integer>(value);
             auto v2 = s_cast<Integer>(p->value);
             return make_ptr<LessThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
         }
-        return make_ptr<Void>();
     }
 
-    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
 ExpPtr LessThan::end()

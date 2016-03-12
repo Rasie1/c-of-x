@@ -135,9 +135,37 @@ ExpPtr Union::operate(ExpPtrArg first,
     auto l = first->eval(env);
     auto r = second->eval(env);
 
+    auto lr = l->unionize(r, env);
 
-    auto x = {l, r};
-    return make(std::begin(x), std::end(x));
+    bool lf = false;
+    bool rf = false;
+    if (checkType<Operation>(lr))
+    {
+        auto op = s_cast<Operation>(lr)->op;
+        if (checkType<Union>(op))
+            lf = true;
+    }
+    if (!lf)
+        return lr;
+
+    auto rl = r->unionize(l, env);
+
+    if (checkType<Operation>(rl))
+    {
+        auto op = s_cast<Operation>(rl)->op;
+        if (checkType<Union>(op))
+            rf = true;
+    }
+    if (!rf)
+        return rl;
+
+    return lr;
+//    auto l = first->eval(env);
+//    auto r = second->eval(env);
+
+
+//    auto x = {l, r};
+//    return make(std::begin(x), std::end(x));
 }
 
 std::string Union::show() const
