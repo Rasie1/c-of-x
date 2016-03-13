@@ -42,7 +42,7 @@ void REPL::start()
             }
 
             auto evaluated = expression->eval(env);
-            cout << evaluated->show() << endl;
+            cout << endl << "evaluated: " << evaluated->show() << endl;
         }
     }
 

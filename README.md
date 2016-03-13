@@ -128,7 +128,7 @@ tell about "has", tell about polymorphism
 
 ```scala
 f (x + 10) = x
-print f(15)    //Writing calls like that increases precedence
+print f(15)    //Writing operations w/o spaces increases precedence
     //stdout: 5
 ```
 This is called unapplying. You can do this for every function if you define the "opposite" operation. As you may have notices, the "opposite" operation for constructing types is just unwrapping the value from type. You can define the language to solve even differential equations involving this syntax.
