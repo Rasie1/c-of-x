@@ -156,3 +156,33 @@ bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
 
     return true;
 }
+
+
+
+
+
+
+ReverseApplication::ReverseApplication()
+    : Operator(false, 10)
+{
+}
+
+ExpPtr ReverseApplication::operate(ExpPtrArg first,
+                            ExpPtrArg second,
+                            Environment& env) const
+{
+    return proxy.operate(second, first, env);
+}
+
+std::string ReverseApplication::show() const
+{
+    return ReverseApplication::defaultName;
+}
+
+const std::string ReverseApplication::defaultName = ":";
+
+bool ReverseApplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+    return proxy.unapplyVariables(e, r, l, env);
+}
+
