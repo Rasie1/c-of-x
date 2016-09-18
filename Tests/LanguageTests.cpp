@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(assignment)
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
     BOOST_CHECK(checkType<Integer>(x));
-    BOOST_CHECK(s_cast<Integer>(x)->value == 0);
+    BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 0);
 }
 
 BOOST_AUTO_TEST_CASE(identityFunction)
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(identityFunction)
     BOOST_CHECK(checkType<Any>(x));
     auto i = env.getEqual(make_ptr<Identifier>("i"));
     auto applied0 = p.parse("i 5", env)->eval(env);
-    BOOST_CHECK(d_cast<Integer>(applied0)->value == 5);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 5);
 }
 
 BOOST_AUTO_TEST_CASE(indirection)
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(indirection)
     p.parse("x = 5", env)->eval(env);
     auto parsed = p.parse("i x", env)->eval(env);
     auto result = Identifier::unwrapIfId(parsed, env);
-    BOOST_CHECK(d_cast<Integer>(result)->value == 5);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(result)->value, 5);
 }
 
 BOOST_AUTO_TEST_CASE(twoArgumentFunction)
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(twoArgumentFunction)
     auto parsed = p.parse("plus  x y = x + y", env);
     parsed->eval(env);
     auto applied = p.parse("plus 1 2", env)->eval(env);
-    BOOST_CHECK(d_cast<Integer>(applied)->value == 3);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, 3);
 }
 
 BOOST_AUTO_TEST_CASE(typedArgument)
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(typedArgument)
     auto parsed = p.parse("f (int x) = x + 1", env);
     parsed->eval(env);
     auto applied = p.parse("f 0", env)->eval(env);
-    BOOST_CHECK(d_cast<Integer>(applied)->value == 1);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, 1);
 }
 
 BOOST_AUTO_TEST_CASE(then)
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(then)
 
     auto x = p.parse("0 " + then + " 1", env)->eval(env);
     BOOST_CHECK(checkType<Integer>(x));
-    BOOST_CHECK(s_cast<Integer>(x)->value == 1);
+    BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 1);
 
     auto y = p.parse("(0 > 1) " + then + " 1", env)->eval(env);
     BOOST_CHECK(checkType<Void>(y));
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(moreThan)
     auto applied0 = p.parse("x = 100", env)->eval(env);
     BOOST_CHECK(checkType<Identifier>(applied0));
     auto x = env.getEqual(make_ptr<Identifier>("x"))->eval(env);
-    BOOST_CHECK(d_cast<Integer>(x)->value == 100);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 100);
 
     p.parse("y > 10", env)->eval(env);
     auto applied1 = p.parse("y = 0", env)->eval(env);
@@ -124,6 +124,16 @@ BOOST_AUTO_TEST_CASE(unapplyPlus)
     auto parsed = p.parse("x + 2 = 0", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
-    BOOST_CHECK(d_cast<Integer>(x)->value == -2);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, -2);
+}
+
+BOOST_AUTO_TEST_CASE(reverseApplication)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x = 2 : (+3) : (+4)", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 9);
 }
 
