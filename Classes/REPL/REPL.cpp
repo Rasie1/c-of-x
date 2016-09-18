@@ -18,7 +18,7 @@ void REPL::start()
 {
     cout << "Welcome to c(x), type -h to get help" << endl;
 
-    AutoCompleter completer;
+    addCompletionNames();
 
     while (true)
     {
@@ -49,6 +49,15 @@ void REPL::start()
     }
 
     cout << "Quitting REPL" << endl;
+}
+
+void REPL::addCompletionNames()
+{
+    completer.names.push_back("-quit");
+    completer.names.push_back("-clear");
+    completer.names.push_back("-help");
+    completer.names.push_back("-debugprint");
+    completer.names.push_back("-load");
 }
 
 bool REPL::shouldExit(const std::string& s)

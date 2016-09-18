@@ -25,7 +25,6 @@ char **fileman_completion (const char*, int, int);
    on filenames if not. */
 void initialize_readline()
 {
-
     /* Allow conditional parsing of the ~/.inputrc file. */
     rl_readline_name = "&";
 
