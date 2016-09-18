@@ -20,6 +20,17 @@ We have:
 
 + Interactive development features
 
+# Installation
+
+```
+sudo apt-get install libreadline-dev
+mkdir build
+cd build
+cmake ..
+make
+```
+
+
 
 Let's begin with features we've been considering. 
 

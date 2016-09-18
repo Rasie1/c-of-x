@@ -4,6 +4,7 @@
 #include "Expression.h"
 #include "ExceptionParseError.h"
 #include "Void.h"
+#include "AutoCompleter.h"
 
 using namespace std;
 
@@ -17,12 +18,13 @@ void REPL::start()
 {
     cout << "Welcome to c(x), type -h to get help" << endl;
 
+    AutoCompleter completer;
+
     while (true)
     {
         string instruction;
-        cout << "&>";
 
-        getline(cin, instruction);
+        instruction = completer.readline();
 
         if (shouldExit(instruction))
             break;
@@ -90,3 +92,4 @@ void REPL::loadFile(const std::string& s)
     auto expression = parser.parseFile(s, env);
     auto evaluated = expression->eval(env);
 }
+
