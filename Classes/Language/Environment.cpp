@@ -134,6 +134,7 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(PrintInfo      ::defaultName), make_ptr<PrintInfo>());
     addEqual(make_ptr<Identifier>(PrintEnv       ::defaultName), make_ptr<PrintEnv>());
     addEqual(make_ptr<Identifier>(ReverseApplication::defaultName), make_ptr<ReverseApplication>());
+    addEqual(make_ptr<Identifier>(LowPriorityApplication::defaultName), make_ptr<LowPriorityApplication>());
 }
 
 bool Environment::compareOperators(const std::shared_ptr<Operator>& first,

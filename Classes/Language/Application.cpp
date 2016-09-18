@@ -186,3 +186,30 @@ bool ReverseApplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r,
     return proxy.unapplyVariables(e, r, l, env);
 }
 
+
+
+
+LowPriorityApplication::LowPriorityApplication()
+    : Operator(false, 0)
+{
+}
+
+ExpPtr LowPriorityApplication::operate(ExpPtrArg first,
+                            ExpPtrArg second,
+                            Environment& env) const
+{
+    return proxy.operate(first, second, env);
+}
+
+std::string LowPriorityApplication::show() const
+{
+    return LowPriorityApplication::defaultName;
+}
+
+const std::string LowPriorityApplication::defaultName = "$";
+
+bool LowPriorityApplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+{
+    return proxy.unapplyVariables(e, l, r, env);
+}
+
