@@ -4,6 +4,7 @@
 #include <map>
 //#include <unordered_map>
 #include <iostream>
+#include <vector>
 
 struct ExpPtrLess
 {
@@ -46,6 +47,8 @@ public:
 
     std::string show() const;
     bool operator==(const Environment& other) const;
+
+    std::vector<std::string> getKeys() const;
 
 private:
     void addDefaultVariables();

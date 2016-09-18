@@ -104,6 +104,19 @@ void Environment::addEqual(CExpPtrArg key, ExpPtrArg value)
     add(key, make_ptr<Equals>(value));
 }
 
+std::vector<std::string> Environment::getKeys() const
+{
+    std::vector<std::string> ret;
+    ret.reserve(data.size());
+
+    for (auto &x : data)
+        if (checkType<const Identifier>(x.first))
+        {
+            ret.push_back(s_cast<const Identifier>(x.first)->name);
+        }
+
+    return ret;
+}
 
 bool Environment::operator==(const Environment& other) const
 {

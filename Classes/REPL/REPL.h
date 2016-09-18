@@ -18,6 +18,6 @@ private:
 
     bool command(const std::string& s);
     bool shouldExit(const std::string& s);
-    void addCompletionNames();
+    void formCompletionNames();
 };
 

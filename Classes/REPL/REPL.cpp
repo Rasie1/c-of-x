@@ -18,10 +18,10 @@ void REPL::start()
 {
     cout << "Welcome to c(x), type -h to get help" << endl;
 
-    addCompletionNames();
 
     while (true)
     {
+        formCompletionNames();
         string instruction;
 
         instruction = completer.readline();
@@ -51,8 +51,9 @@ void REPL::start()
     cout << "Quitting REPL" << endl;
 }
 
-void REPL::addCompletionNames()
+void REPL::formCompletionNames()
 {
+    completer.names = env.getKeys();
     completer.names.push_back("-quit");
     completer.names.push_back("-clear");
     completer.names.push_back("-help");

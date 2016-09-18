@@ -69,13 +69,7 @@ char **fileman_completion(const char * text, int start, int end)
 {
     char **matches;
 
-    matches = (char **)NULL;
-
-    /* If this word is at the start of the line, then it is a command
-       to complete.  Otherwise it is the name of a file in the current
-       directory. */
-    if (start == 0)
-        matches = rl_completion_matches(text, command_generator);
+    matches = rl_completion_matches(text, command_generator);
 
     return (matches);
 }
