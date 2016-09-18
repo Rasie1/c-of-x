@@ -25,3 +25,10 @@ add_executable(${PROJECT_NAME} ${SRC_REPL} ${INC_REPL})
 
 target_link_libraries(${PROJECT_NAME} LanguageLib)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+
+# copy standard modules into build directory
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+configure_file(Modules/prelude.txt
+               "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/prelude.txt"
+               COPYONLY)
