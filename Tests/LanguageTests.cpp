@@ -137,3 +137,29 @@ BOOST_AUTO_TEST_CASE(reverseApplication)
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 9);
 }
 
+
+BOOST_AUTO_TEST_CASE(typedVariables)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("int x = 0", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
+
+    parsed = p.parse("y : int = 0", env);
+    parsed->eval(env);
+    auto y = env.getEqual(make_ptr<Identifier>("y"));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
+
+    parsed = p.parse("int (x0 = 0)", env);
+    parsed->eval(env);
+    auto x0 = env.getEqual(make_ptr<Identifier>("x0"));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
+
+    parsed = p.parse("(int x1) = 0", env);
+    parsed->eval(env);
+    auto x1 = env.getEqual(make_ptr<Identifier>("x1"));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
+}
+
