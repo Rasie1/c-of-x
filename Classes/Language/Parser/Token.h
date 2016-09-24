@@ -9,6 +9,11 @@ namespace Tokens
         std::string name;
     };
 
+    struct Data
+    {
+
+    };
+
     struct IntegerData
     {
 
@@ -39,12 +44,12 @@ namespace Tokens
         size_t size;
     };
 
-    struct OpeningBrace
+    struct Opening
     {
 
     };
 
-    struct ClosingBrace
+    struct Closing
     {
 
     };
@@ -57,8 +62,8 @@ namespace Tokens
         IntegerData,
         FloatData,
         StringData,
-        OpeningBrace,
-        ClosingBrace
+        Opening,
+        Closing
     >;
 }
 

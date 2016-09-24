@@ -310,7 +310,51 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
          currentTokenIt != end;
          currentTokenIt++)
     {
+        auto& currentToken = *currentTokenIt;
         ExpPtr e;
+        if (currentToken.type() == typeid(Tokens::Identifier))
+        {
+            // id
+        }
+        else if (currentToken.type() == typeid(Tokens::Opening))
+        {
+
+        }
+        else if (currentToken.type() == typeid(Tokens::Data))
+        {
+
+        }
+        else
+        {
+            e = make_ptr<ParseError>("Unable to parse expression");
+            return e;
+        }
+
+        if (isOperator(e, env))
+        {
+            applicationFlag = false;
+
+            auto op = d_cast<Operator>(e);
+            if (!op)
+                op = d_cast<Operator>(env.getEqual(e));
+
+            while (!operatorStack.empty() &&
+                   env.compareOperators(op, operatorStack.top()))
+                makeOperation(operatorStack, q, env);
+
+            operatorStack.push(op);
+        }
+        else
+        {
+            q.push_back(e);
+            if (applicationFlag)
+            {
+                operatorStack.push(make_ptr<Application>());
+                makeOperation(operatorStack, q, env);
+            }
+
+            applicationFlag = true;
+        }
 
     }
 
