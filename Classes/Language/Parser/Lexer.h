@@ -5,11 +5,14 @@
 class Lexer
 {
 public:
-    std::vector<Token> split(const std::string& s) const;
+    void tokenize(const std::string& s);
 
+    void addSplittingSequence(const std::string& s);
+    void removeSplittingSequence(const std::string& s);
+
+    std::vector<Token> getTokens();
+private:
+    std::vector<Token> parsedTokens;
     std::vector<std::string> splittingSequences;
-
-    bool isSplittingPrefix(const std::string& s) const;
-
-    static std::vector<std::string> defaultSplittingSequences();
+    std::vector<size_t> previousLineIndentationPoints;
 };

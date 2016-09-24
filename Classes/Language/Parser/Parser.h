@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "Parser/Token.h"
+#include "Parser/Lexer.h"
 
 class Expression;
 typedef std::shared_ptr<Expression> ExpPtr;
@@ -22,5 +23,6 @@ private:
                      size_t i,
                      size_t n,
                      Environment& env);
+    Lexer lexer;
 };
 

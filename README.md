@@ -71,8 +71,8 @@ Don't confuse "x" with a set. Sets are containers holding multiple values, and "
 Next, some more syntactic sugar:
 
 ```scala
-xs = ^x  // Operator for constructing set from indeterministic values.
-     (x%2 = 0) => x
+xs = {x} // Operator for constructing set from indeterministic values.
+     (x%2 = 0) -> x
          // Yes, that was lambda-expression as type. "xs" now holds
          // only even values
 
@@ -129,7 +129,7 @@ Worker::think() = "b"                   // separated implementation
 
 WIP README PART
 
-tell about "has", tell about polymorphism
+todo: tell about "has", tell about polymorphism
 
 
 ...

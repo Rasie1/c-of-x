@@ -163,3 +163,6 @@ BOOST_AUTO_TEST_CASE(typedVariables)
     BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
 }
 
+// recursion test
+// re x y = (((x < 11) \ (0)) | ((x > 10) \ (re (x - 1) (print x))) ) x
+

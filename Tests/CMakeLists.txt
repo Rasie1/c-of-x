@@ -15,3 +15,23 @@ target_link_libraries(LanguageTests
                       ${Boost_SYSTEM_LIBRARY}
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       )
+
+add_definitions(-DBOOST_TEST_DYN_LINK)
+file(GLOB SRC_TESTS . LexerTests.cpp)
+add_executable(LexerTests ${SRC_TESTS})
+target_link_libraries(LexerTests
+                      LanguageLib
+                      ${Boost_FILESYSTEM_LIBRARY}
+                      ${Boost_SYSTEM_LIBRARY}
+                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                      )
+
+add_definitions(-DBOOST_TEST_DYN_LINK)
+file(GLOB SRC_TESTS . ParserTests.cpp)
+add_executable(ParserTests ${SRC_TESTS})
+target_link_libraries(ParserTests
+                      LanguageLib
+                      ${Boost_FILESYSTEM_LIBRARY}
+                      ${Boost_SYSTEM_LIBRARY}
+                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                      )

@@ -12,6 +12,8 @@ file(GLOB INC_LANG . Classes/Language Classes/Language/Parser)
 
 enable_testing()
 add_subdirectory(Tests)
+add_test(NAME LexerTests COMMAND LexerTests)
+add_test(NAME ParserTests COMMAND ParserTests)
 add_test(NAME LanguageTests COMMAND LanguageTests)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
