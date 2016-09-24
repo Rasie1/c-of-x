@@ -26,6 +26,7 @@ ExpPtr Parser::parse(const string& s, Environment& env)
     return parse(s, i, s.size(), env);
 }
 
+
 static constexpr bool isOperatorCharacter(char c)
 {
     return  c == '\'' ||
@@ -293,4 +294,33 @@ ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
     }
 
     return e;
+}
+
+ExpPtr Parser::parse(const vector<Token>::iterator& begin,
+                     const vector<Token>::iterator& end,
+                     Environment& env)
+{
+    ExpPtr ret = nullptr;
+
+    std::stack<std::shared_ptr<Operator>> operatorStack;
+    std::deque<ExpPtr> q;
+    bool applicationFlag = false;
+
+    for (auto currentTokenIt = begin;
+         currentTokenIt != end;
+         currentTokenIt++)
+    {
+        ExpPtr e;
+
+    }
+
+    while (!operatorStack.empty())
+        makeOperation(operatorStack, q, env);
+
+    if (!q.empty())
+        ret = q.front();
+    if (!ret)
+        ret = make_ptr<Void>();
+
+    return ret;
 }

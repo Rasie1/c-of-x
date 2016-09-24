@@ -71,48 +71,67 @@ void Lexer::tokenize(const std::string& input)
          ++currentCharacterIndex)
     {
         char currentCharacter = input[currentCharacterIndex];
+        bool shouldMove = false;
+        size_t moveDistance = 0;
+
         if (currentCharacter == ' ')
         {
             if (parsingId)
-                parsedTokens.push_back(Token{TokenTypeId::Identifier,
-                                             input.substr(0, currentCharacterIndex)});
-            tokenize(input.substr(currentCharacterIndex + 1, string::npos));
-            return;
+                parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+            shouldMove = true;
+            moveDistance = 1;
         }
-
-        parsingId = true;
-
-        { // Split with splittingSequences
-            bool shouldSplit;
-            size_t splitTokenSize;
-            tie(shouldSplit, splitTokenSize) = shouldSplitWithSequence(input.substr(currentCharacterIndex,
-                                                                                    string::npos),
-                                                                       splittingSequences);
-            if (shouldSplit)
+        else if (currentCharacter == '\n')
+        {
+            if (parsingId)
+                parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+            if (true)
             {
-                parsedTokens.push_back(Token{TokenTypeId::Identifier,
-                                             input.substr(0, currentCharacterIndex)});
-                parsedTokens.push_back(Token{TokenTypeId::Identifier,
-                                             input.substr(currentCharacterIndex, splitTokenSize)});
-
-                tokenize(input.substr(currentCharacterIndex + splitTokenSize,
-                                      string::npos));
-                return;
+                parsedTokens.push_back(Tokens::LineBreak());
+                previousLineIndentationPoints = currentLineIndentationPoints;
+                currentLineIndentationPoints.clear();
             }
+            shouldMove = true;
+            moveDistance = 1;
+        }
+        else
+        {
+            parsingId = true;
+
+            { // Split with splittingSequences
+                bool shouldSplit;
+                size_t splitTokenSize;
+                tie(shouldSplit, splitTokenSize) = shouldSplitWithSequence(input.substr(currentCharacterIndex,
+                                                                                        string::npos),
+                                                                           splittingSequences);
+                if (shouldSplit)
+                {
+                    parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+                    parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, splitTokenSize)});
+                    shouldMove = true;
+                    moveDistance = splitTokenSize;
+                }
+            }
+        }
+        if (shouldMove)
+        {
+            tokenize(input.substr(currentCharacterIndex + moveDistance,
+                                  string::npos));
+            return;
         }
     }
     if (parsingId)
-       parsedTokens.push_back(Token{TokenTypeId::Identifier, input});
+        parsedTokens.push_back(Tokens::Identifier{input});
 }
 
 void Lexer::addSplittingSequence(const std::string& s)
 {
-
+    // todo: insert it so it won't be matched after prefix string
+    splittingSequences.push_back(s);
 }
 
 void Lexer::removeSplittingSequence(const std::string& s)
 {
-
 }
 
 //static constexpr bool isNameCharacter(char c)

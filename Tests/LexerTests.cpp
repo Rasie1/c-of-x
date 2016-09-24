@@ -3,6 +3,10 @@
 #include <iostream>
 #include "Parser/Lexer.h"
 
+using namespace boost;
+using namespace std;
+using namespace Tokens;
+
 BOOST_AUTO_TEST_CASE(OneIdentifier)
 {
     Lexer l;
@@ -11,9 +15,9 @@ BOOST_AUTO_TEST_CASE(OneIdentifier)
 
     BOOST_REQUIRE_EQUAL(tokens.size(), 1);
 
-    auto id = tokens[0];
-    BOOST_CHECK(id.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(id.s, "one");
+    BOOST_CHECK(tokens[0].type() == typeid(Identifier));
+    auto id = get<Identifier>(tokens[0]);
+    BOOST_CHECK_EQUAL(id.name, "one");
 }
 
 BOOST_AUTO_TEST_CASE(IdentifierWithSpaces)
@@ -24,9 +28,9 @@ BOOST_AUTO_TEST_CASE(IdentifierWithSpaces)
 
     BOOST_REQUIRE_EQUAL(tokens.size(), 1);
 
-    auto id = tokens[0];
-    BOOST_CHECK(id.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(id.s, "id");
+    BOOST_CHECK(tokens[0].type() == typeid(Identifier));
+    auto id = get<Identifier>(tokens[0]);
+    BOOST_CHECK_EQUAL(id.name, "id");
 }
 
 BOOST_AUTO_TEST_CASE(TwoIdentifiers)
@@ -37,12 +41,13 @@ BOOST_AUTO_TEST_CASE(TwoIdentifiers)
 
     BOOST_REQUIRE_EQUAL(tokens.size(), 2);
 
-    auto f = tokens[0];
-    auto x = tokens[1];
-    BOOST_CHECK(f.t == TokenTypeId::Identifier);
-    BOOST_CHECK(x.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(f.s, "f");
-    BOOST_CHECK_EQUAL(x.s, "x");
+    BOOST_CHECK(tokens[0].type() == typeid(Identifier));
+    auto f = get<Identifier>(tokens[0]);
+    BOOST_CHECK_EQUAL(f.name, "f");
+
+    BOOST_CHECK(tokens[1].type() == typeid(Identifier));
+    auto x = get<Identifier>(tokens[1]);
+    BOOST_CHECK_EQUAL(x.name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(ManyIdentifiers)
@@ -62,27 +67,38 @@ BOOST_AUTO_TEST_CASE(ManyIdentifiers)
     auto sd = tokens[6];
     auto d = tokens[7];
     auto da = tokens[8];
-    BOOST_CHECK(asdf.t == TokenTypeId::Identifier);
-    BOOST_CHECK(sa.t == TokenTypeId::Identifier);
-    BOOST_CHECK(fdf.t == TokenTypeId::Identifier);
-    BOOST_CHECK(as.t == TokenTypeId::Identifier);
-    BOOST_CHECK(sdf.t == TokenTypeId::Identifier);
-    BOOST_CHECK(a.t == TokenTypeId::Identifier);
-    BOOST_CHECK(sd.t == TokenTypeId::Identifier);
-    BOOST_CHECK(d.t == TokenTypeId::Identifier);
-    BOOST_CHECK(da.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(asdf.s, "asdf");
-    BOOST_CHECK_EQUAL(sa.s, "sa");
-    BOOST_CHECK_EQUAL(fdf.s, "fdf");
-    BOOST_CHECK_EQUAL(as.s, "as");
-    BOOST_CHECK_EQUAL(sdf.s, "sdf");
-    BOOST_CHECK_EQUAL(a.s, "a");
-    BOOST_CHECK_EQUAL(sd.s, "sd");
-    BOOST_CHECK_EQUAL(d.s, "d");
-    BOOST_CHECK_EQUAL(da.s, "da");
+    BOOST_CHECK(asdf.type() == typeid(Identifier));
+    BOOST_CHECK(sa.type() == typeid(Identifier));
+    BOOST_CHECK(fdf.type() == typeid(Identifier));
+    BOOST_CHECK(as.type() == typeid(Identifier));
+    BOOST_CHECK(sdf.type() == typeid(Identifier));
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(sd.type() == typeid(Identifier));
+    BOOST_CHECK(d.type() == typeid(Identifier));
+    BOOST_CHECK(da.type() == typeid(Identifier));
+
+    auto asdfId = get<Identifier>(tokens[0]);
+    auto saId = get<Identifier>(tokens[1]);
+    auto fdfId = get<Identifier>(tokens[2]);
+    auto asId = get<Identifier>(tokens[3]);
+    auto sdfId = get<Identifier>(tokens[4]);
+    auto aId = get<Identifier>(tokens[5]);
+    auto sdId = get<Identifier>(tokens[6]);
+    auto dId = get<Identifier>(tokens[7]);
+    auto daId = get<Identifier>(tokens[8]);
+
+    BOOST_CHECK_EQUAL(asdfId.name, "asdf");
+    BOOST_CHECK_EQUAL(saId.name, "sa");
+    BOOST_CHECK_EQUAL(fdfId.name, "fdf");
+    BOOST_CHECK_EQUAL(asId.name, "as");
+    BOOST_CHECK_EQUAL(sdfId.name, "sdf");
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(sdId.name, "sd");
+    BOOST_CHECK_EQUAL(dId.name, "d");
+    BOOST_CHECK_EQUAL(daId.name, "da");
 }
 
-BOOST_AUTO_TEST_CASE(LineBreak)
+BOOST_AUTO_TEST_CASE(SimpleLineBreak)
 {
     Lexer l;
     l.tokenize("a\nb");
@@ -93,11 +109,13 @@ BOOST_AUTO_TEST_CASE(LineBreak)
     auto a = tokens[0];
     auto n = tokens[1];
     auto b = tokens[2];
-    BOOST_CHECK(a.t == TokenTypeId::Identifier);
-    BOOST_CHECK(n.t == TokenTypeId::LineBreak);
-    BOOST_CHECK(b.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(a.s, "a");
-    BOOST_CHECK_EQUAL(b.s, "b");
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto aId = get<Identifier>(tokens[0]);
+    auto bId = get<Identifier>(tokens[2]);
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
 }
 
 BOOST_AUTO_TEST_CASE(DoubleLineBreakNegation)
@@ -111,11 +129,13 @@ BOOST_AUTO_TEST_CASE(DoubleLineBreakNegation)
     auto a = tokens[0];
     auto n = tokens[1];
     auto b = tokens[2];
-    BOOST_CHECK(a.t == TokenTypeId::Identifier);
-    BOOST_CHECK(n.t == TokenTypeId::LineBreak);
-    BOOST_CHECK(b.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(a.s, "a");
-    BOOST_CHECK_EQUAL(b.s, "b");
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto aId = get<Identifier>(tokens[0]);
+    auto bId = get<Identifier>(tokens[2]);
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
 }
 
 BOOST_AUTO_TEST_CASE(LineBreakNegationWithIndentation)
@@ -129,11 +149,13 @@ BOOST_AUTO_TEST_CASE(LineBreakNegationWithIndentation)
     auto a = tokens[0];
     auto n = tokens[1];
     auto b = tokens[2];
-    BOOST_CHECK(a.t == TokenTypeId::Identifier);
-    BOOST_CHECK(n.t == TokenTypeId::LineBreak);
-    BOOST_CHECK(b.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(a.s, "a");
-    BOOST_CHECK_EQUAL(b.s, "b");
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto aId = get<Identifier>(tokens[0]);
+    auto bId = get<Identifier>(tokens[2]);
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
 }
 
 BOOST_AUTO_TEST_CASE(XPlusY)
@@ -147,12 +169,15 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     auto x = tokens[0];
     auto p = tokens[1];
     auto y = tokens[2];
-    BOOST_CHECK(x.t == TokenTypeId::Identifier);
-    BOOST_CHECK(p.t == TokenTypeId::Identifier);
-    BOOST_CHECK(y.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(x.s, "x");
-    BOOST_CHECK_EQUAL(p.s, "+");
-    BOOST_CHECK_EQUAL(y.s, "y");
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    BOOST_CHECK(p.type() == typeid(Identifier));
+    BOOST_CHECK(y.type() == typeid(Identifier));
+    auto xId = get<Identifier>(tokens[0]);
+    auto pId = get<Identifier>(tokens[1]);
+    auto yId = get<Identifier>(tokens[2]);
+    BOOST_CHECK_EQUAL(xId.name, "x");
+    BOOST_CHECK_EQUAL(pId.name, "+");
+    BOOST_CHECK_EQUAL(yId.name, "y");
 }
 
 BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
@@ -168,14 +193,17 @@ BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
     auto p = tokens[2];
     auto ns2 = tokens[3];
     auto y = tokens[4];
-    BOOST_CHECK(x.t == TokenTypeId::Identifier);
-    BOOST_CHECK(ns1.t == TokenTypeId::NoSpace);
-    BOOST_CHECK(p.t == TokenTypeId::Identifier);
-    BOOST_CHECK(ns2.t == TokenTypeId::NoSpace);
-    BOOST_CHECK(y.t == TokenTypeId::Identifier);
-    BOOST_CHECK_EQUAL(x.s, "x");
-    BOOST_CHECK_EQUAL(p.s, "+");
-    BOOST_CHECK_EQUAL(y.s, "y");
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+    BOOST_CHECK(p.type() == typeid(Identifier));
+    BOOST_CHECK(ns2.type() == typeid(NoSpace));
+    BOOST_CHECK(y.type() == typeid(Identifier));
+    auto xId = get<Identifier>(tokens[0]);
+    auto pId = get<Identifier>(tokens[2]);
+    auto yId = get<Identifier>(tokens[4]);
+    BOOST_CHECK_EQUAL(xId.name, "x");
+    BOOST_CHECK_EQUAL(pId.name, "+");
+    BOOST_CHECK_EQUAL(yId.name, "y");
 }
 
 BOOST_AUTO_TEST_CASE(Indentation1)
@@ -188,12 +216,14 @@ BOOST_AUTO_TEST_CASE(Indentation1)
 
     auto f = tokens[0];
     auto n = tokens[1];
-    auto x = tokens[2];
-    auto t = tokens[3];
-    BOOST_CHECK(f.t == TokenTypeId::Identifier);
-    BOOST_CHECK(n.t == TokenTypeId::LineBreak);
-    BOOST_CHECK(x.t == TokenTypeId::Identifier);
-    BOOST_CHECK(t.t == TokenTypeId::Tabulation);
-    BOOST_CHECK_EQUAL(f.s, "f");
-    BOOST_CHECK_EQUAL(x.s, "x");
+    auto t = tokens[2];
+    auto x = tokens[3];
+    BOOST_CHECK(f.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    auto fId = get<Identifier>(tokens[0]);
+    auto xId = get<Identifier>(tokens[3]);
+    BOOST_CHECK_EQUAL(fId.name, "f");
+    BOOST_CHECK_EQUAL(xId.name, "x");
 }
