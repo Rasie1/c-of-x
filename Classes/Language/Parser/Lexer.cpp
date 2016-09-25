@@ -108,6 +108,28 @@ bool Lexer::tokenize(const std::string& input)
                 moveDistance = 1;
             }
         }
+        else if (currentCharacter == '(')
+        {
+            if (parsingId)
+            {
+                parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+                parsedTokens.push_back(Tokens::NoSpace());
+            }
+            parsedTokens.push_back(Tokens::Opening());
+            shouldMove = true;
+            moveDistance = 1;
+        }
+        else if (currentCharacter == ')')
+        {
+            if (parsingId)
+            {
+                parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+            }
+            parsedTokens.push_back(Tokens::Closing());
+            shouldMove = true;
+            moveDistance = 1;
+            //todo : NoSpace case
+        }
         else if (currentCharacter == ' ')
         {
             if (parsingId)

@@ -314,15 +314,32 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         ExpPtr e;
         if (currentToken.type() == typeid(Tokens::Identifier))
         {
-            // id
+            e = make_ptr<Identifier>(get<Tokens::Identifier>(currentToken).name);
         }
         else if (currentToken.type() == typeid(Tokens::Opening))
         {
-
+            auto newEnd = begin;
+            while (newEnd != end)
+            {
+                auto currentToken = *newEnd;
+                if (currentToken.type() == typeid(Tokens::Closing)) // todo: case with wrong brackets
+                {
+                    e = parse(next(begin), newEnd, env);
+                }
+            }
+            if (newEnd == end)
+            {
+                e = make_ptr<ParseError>("Unable to parse expression: no matching parentheses");
+                return e;
+            }
         }
         else if (currentToken.type() == typeid(Tokens::StringData))
         {
-
+            e = make_ptr<String>(get<Tokens::StringData>(currentToken).data);
+        }
+        else if (currentToken.type() == typeid(Tokens::IntegerData))
+        {
+            e = make_ptr<Integer>(get<Tokens::IntegerData>(currentToken).data);
         }
         else
         {
