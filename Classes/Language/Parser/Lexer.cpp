@@ -176,8 +176,13 @@ bool Lexer::tokenize(const std::string& input)
                                                                                         string::npos),
                                                                            splittingSequences))
         {
-            parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+            if (parsingId)
+            {
+                parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+                parsedTokens.push_back(Tokens::NoSpace());
+            }
             parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
+            // todo: no space case
             shouldMove = true;
             moveDistance = *splitTokenSize;
         }

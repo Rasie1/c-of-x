@@ -50,6 +50,25 @@ BOOST_AUTO_TEST_CASE(TwoIdentifiers)
     BOOST_CHECK_EQUAL(x.name, "x");
 }
 
+BOOST_AUTO_TEST_CASE(SimpleBracesTest)
+{
+    Lexer l;
+    l.tokenize("(f x)");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 4);
+
+    BOOST_CHECK(tokens[0].type() == typeid(Opening));
+    BOOST_CHECK(tokens[3].type() == typeid(Closing));
+    BOOST_CHECK(tokens[1].type() == typeid(Identifier));
+    auto f = get<Identifier>(tokens[1]);
+    BOOST_CHECK_EQUAL(f.name, "f");
+
+    BOOST_CHECK(tokens[2].type() == typeid(Identifier));
+    auto x = get<Identifier>(tokens[2]);
+    BOOST_CHECK_EQUAL(x.name, "x");
+}
+
 BOOST_AUTO_TEST_CASE(ManyIdentifiers)
 {
     Lexer l;

@@ -53,6 +53,15 @@ BOOST_AUTO_TEST_CASE(SimpleBracesTest)
     BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
 }
 
+BOOST_AUTO_TEST_CASE(VoidTest)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("()", env);
+
+    BOOST_CHECK(checkType<Void>(parsed));
+}
+
 BOOST_AUTO_TEST_CASE(BracesTest)
 {
     Environment env;
@@ -118,6 +127,7 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     Environment env;
     Parser p;
     auto parsed = p.parse("x + y", env);
+    std::cout << parsed->show() << std::endl;
 
     BOOST_CHECK(checkType<Operation>(parsed));
     auto op = s_cast<Operation>(parsed);
@@ -134,7 +144,6 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     Parser p;
     auto parsed = p.parse("1 + 2", env);
 
-
     BOOST_CHECK(checkType<Operation>(parsed));
     auto op = s_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Addition>(op->op));
@@ -144,11 +153,11 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 2);
 }
 
-//BOOST_AUTO_TEST_CASE(HighPriorityUsage)
-//{
-//    Environment env;
-//    Parser p;
-//    auto parsed = p.parse("f 2+3 sin(x)", env);
+BOOST_AUTO_TEST_CASE(HighPriorityUsage)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f 2+3 sin(x)", env);
 
-//    BOOST_CHECK(checkType<Identifier>(parsed));
-//}
+    BOOST_CHECK(checkType<Identifier>(parsed));
+}

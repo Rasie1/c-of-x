@@ -12,19 +12,11 @@ class Parser
 {
 public:
     ExpPtr parse(const std::string& s, Environment& env);
-    ExpPtr parse(const std::vector<Token>::iterator& begin,
-                 const std::vector<Token>::iterator& end,
-                 Environment& env);
     ExpPtr parseFile(const std::string& filename,
                      Environment& env);
 private:
-    ExpPtr parse(const std::string& s,
-                 size_t& i,
-                 size_t n,
+    ExpPtr parse(const std::vector<Token>::iterator& begin,
+                 const std::vector<Token>::iterator& end,
                  Environment& env);
-    ExpPtr parseName(const std::string& s,
-                     size_t i,
-                     size_t n,
-                     Environment& env);
     Lexer lexer;
 };
