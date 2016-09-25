@@ -1,12 +1,139 @@
 #define BOOST_TEST_MODULE ParserTests
 #include <boost/test/unit_test.hpp>
+#include <iostream>
+#include "Environment.h"
+#include "Identifier.h"
+#include "Operation.h"
+#include "Application.h"
+#include "Any.h"
+#include "Void.h"
+#include "Parser.h"
+#include "Integer.h"
+#include "Then.h"
+#include "Addition.h"
 
-int testOfTests2(int i, int j)
+BOOST_AUTO_TEST_CASE(VariableTest)
 {
-    return i + j;
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x", env);
+
+    BOOST_CHECK(checkType<Identifier>(parsed));
+    auto x = s_cast<Identifier>(parsed);
+    BOOST_CHECK_EQUAL(x->name, "x");
 }
 
-BOOST_AUTO_TEST_CASE(universeInOrder2)
+BOOST_AUTO_TEST_CASE(ApplicationTest)
 {
-    BOOST_CHECK(testOfTests2(2, 2) == 4);
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f x", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(op->op));
+    BOOST_CHECK(checkType<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
 }
+
+BOOST_AUTO_TEST_CASE(BracesTest)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("g (f x)", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(op->op));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "g");
+
+
+    auto f_x = s_cast<Operation>(op->right);
+    BOOST_CHECK(checkType<Application>(f_x->op));
+    BOOST_CHECK(checkType<Identifier>(f_x->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(f_x->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
+}
+
+BOOST_AUTO_TEST_CASE(MultipleApplication)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f x y (a b) z", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+
+    auto f_x_y_oa_bc_z = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(f_x_y_oa_bc_z->op));
+    BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc_z->left));
+    BOOST_CHECK(checkType<Identifier>(f_x_y_oa_bc_z->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
+
+    auto f_x_y_oa_bc = s_cast<Operation>(f_x_y_oa_bc_z->left);
+    BOOST_CHECK(checkType<Application>(f_x_y_oa_bc->op));
+    BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->left));
+    BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->right));
+
+    auto f_x_y = s_cast<Operation>(f_x_y_oa_bc->left);
+    BOOST_CHECK(checkType<Application>(f_x_y->op));
+    BOOST_CHECK(checkType<Operation>(f_x_y->left));
+    BOOST_CHECK(checkType<Identifier>(f_x_y->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y->right)->name, "y");
+
+    auto a_b = s_cast<Operation>(f_x_y_oa_bc->right);
+    BOOST_CHECK(checkType<Application>(a_b->op));
+    BOOST_CHECK(checkType<Identifier>(a_b->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->left)->name, "a");
+    BOOST_CHECK(checkType<Identifier>(a_b->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->right)->name, "b");
+
+    auto f_x = s_cast<Operation>(f_x_y->left);
+    BOOST_CHECK(checkType<Application>(f_x->op));
+    BOOST_CHECK(checkType<Identifier>(f_x->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(f_x->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
+}
+
+BOOST_AUTO_TEST_CASE(XPlusY)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x + y", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Addition>(op->op));
+    BOOST_CHECK(checkType<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "x");
+    BOOST_CHECK(checkType<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "y");
+}
+
+BOOST_AUTO_TEST_CASE(NumbersOperation)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("1 + 2", env);
+
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Addition>(op->op));
+    BOOST_CHECK(checkType<Integer>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 1);
+    BOOST_CHECK(checkType<Integer>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 2);
+}
+
+//BOOST_AUTO_TEST_CASE(HighPriorityUsage)
+//{
+//    Environment env;
+//    Parser p;
+//    auto parsed = p.parse("f 2+3 sin(x)", env);
+
+//    BOOST_CHECK(checkType<Identifier>(parsed));
+//}
