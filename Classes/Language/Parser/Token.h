@@ -11,7 +11,7 @@ namespace Tokens
 
     struct IntegerData
     {
-
+        int data;
     };
 
     struct FloatData

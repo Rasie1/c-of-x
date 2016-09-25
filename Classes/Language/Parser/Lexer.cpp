@@ -85,10 +85,25 @@ bool Lexer::tokenize(const std::string& input)
                 parsedTokens.push_back(Tokens::StringData{input.substr(1,
                                                                        currentCharacterIndex - 1)});
                 if (currentCharacterIndex + 1 < input.size() &&
-                    input[currentCharacterIndex + 1] != ' '  &&
-                    input[currentCharacterIndex + 1] != '\n')
+                    (input[currentCharacterIndex + 1] != ' '  ||
+                    input[currentCharacterIndex + 1] != '\n'))
                     parsedTokens.push_back((Tokens::NoSpace()));
 
+                shouldMove = true;
+                moveDistance = 1;
+            }
+        }
+        else if (parsingNumber)
+        {
+            if (!(currentCharacter >= '0' && currentCharacter <= '9'))
+            {
+                parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(0, currentCharacterIndex))});
+                parsedTokens.push_back(Tokens::NoSpace());
+                shouldMove = true;
+            }
+            else if (currentCharacter == ' ' || currentCharacter == '\n')
+            {
+                parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(0, currentCharacterIndex))});
                 shouldMove = true;
                 moveDistance = 1;
             }
@@ -126,6 +141,14 @@ bool Lexer::tokenize(const std::string& input)
                 parsingString = true;
             }
         }
+        else if (currentCharacter >= '0' && currentCharacter <= '9')
+        {
+            if (!parsingId)
+            {
+                // no space case?
+                parsingNumber = true;
+            }
+        }
         else
         {
             parsingId = true;
@@ -153,6 +176,8 @@ bool Lexer::tokenize(const std::string& input)
     }
     if (parsingId)
         parsedTokens.push_back(Tokens::Identifier{input});
+    if (parsingNumber)
+        parsedTokens.push_back(Tokens::IntegerData{stoi(input)});
     if (parsingString)
         return false; // todo: more information
 

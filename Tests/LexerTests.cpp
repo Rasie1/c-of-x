@@ -242,6 +242,20 @@ BOOST_AUTO_TEST_CASE(SimpleString)
     BOOST_CHECK_EQUAL(st.data, "abc");
 }
 
+BOOST_AUTO_TEST_CASE(SimpleInt)
+{
+    Lexer l;
+    l.tokenize("123");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+
+    auto s = tokens[0];
+    BOOST_CHECK(s.type() == typeid(IntegerData));
+    auto st = get<IntegerData>(tokens[0]);
+    BOOST_CHECK_EQUAL(st.data, 123);
+}
+
 BOOST_AUTO_TEST_CASE(StringApplied)
 {
     Lexer l;
@@ -259,6 +273,25 @@ BOOST_AUTO_TEST_CASE(StringApplied)
     BOOST_CHECK(s.type() == typeid(StringData));
     auto st = get<StringData>(tokens[1]);
     BOOST_CHECK_EQUAL(st.data, "abc");
+}
+
+BOOST_AUTO_TEST_CASE(IntApplied)
+{
+    Lexer l;
+    l.tokenize("f 0");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 2);
+
+    auto ft = tokens[0];
+    BOOST_CHECK(ft.type() == typeid(Identifier));
+    auto f = get<Identifier>(tokens[0]);
+    BOOST_CHECK_EQUAL(f.name, "f");
+
+    auto s = tokens[1];
+    BOOST_CHECK(s.type() == typeid(IntegerData));
+    auto st = get<IntegerData>(tokens[1]);
+    BOOST_CHECK_EQUAL(st.data, 0);
 }
 
 BOOST_AUTO_TEST_CASE(EmptyString)
@@ -300,4 +333,25 @@ BOOST_AUTO_TEST_CASE(StringNoSpaces)
     BOOST_CHECK_EQUAL(xId.name, "f");
     BOOST_CHECK_EQUAL(pId.data, "abc");
     BOOST_CHECK_EQUAL(yId.name, "g");
+}
+
+BOOST_AUTO_TEST_CASE(IntNoSpaces)
+{
+    Lexer l;
+    l.tokenize("450g");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+
+    auto i = tokens[0];
+    auto ns1 = tokens[1];
+    auto g = tokens[2];
+
+    BOOST_CHECK(i.type() == typeid(IntegerData));
+    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+    BOOST_CHECK(g.type() == typeid(Identifier));
+    auto id = get<Identifier>(tokens[2]);
+    auto integer = get<IntegerData>(tokens[0]);
+    BOOST_CHECK_EQUAL(id.name, "g");
+    BOOST_CHECK_EQUAL(integer.data, 450);
 }
