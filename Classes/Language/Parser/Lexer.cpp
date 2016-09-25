@@ -217,3 +217,11 @@ void Lexer::addSplittingSequence(const std::string& s)
 void Lexer::removeSplittingSequence(const std::string& s)
 {
 }
+
+void Lexer::clear()
+{
+    distanceFromLineBreak = 0;
+    parsedTokens.clear();
+    previousLineIndentationPoints.clear();
+    currentLineIndentationPoints.clear();
+}

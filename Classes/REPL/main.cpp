@@ -42,13 +42,13 @@ int main(int argc, char* argv[])
             repl.start();
         }
     }
-    catch(std::exception& e)
+    catch (std::exception& e)
     {
         std::cerr << "Error: " << e.what() << std::endl;
         throw e;
         return -1;
     }
-    catch(...)
+    catch (...)
     {
         std::cerr << "Unknown error!" << std::endl;
         throw;

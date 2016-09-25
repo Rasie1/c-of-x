@@ -127,7 +127,6 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     Environment env;
     Parser p;
     auto parsed = p.parse("x + y", env);
-    std::cout << parsed->show() << std::endl;
 
     BOOST_CHECK(checkType<Operation>(parsed));
     auto op = s_cast<Operation>(parsed);
@@ -143,6 +142,7 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     Environment env;
     Parser p;
     auto parsed = p.parse("1 + 2", env);
+    std::cout << parsed->show() << std::endl;
 
     BOOST_CHECK(checkType<Operation>(parsed));
     auto op = s_cast<Operation>(parsed);
@@ -153,11 +153,9 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 2);
 }
 
-BOOST_AUTO_TEST_CASE(HighPriorityUsage)
-{
-    Environment env;
-    Parser p;
-    auto parsed = p.parse("f 2+3 sin(x)", env);
-
-    BOOST_CHECK(checkType<Identifier>(parsed));
-}
+//BOOST_AUTO_TEST_CASE(HighPriorityUsage)
+//{
+//    Environment env;
+//    Parser p;
+//    auto parsed = p.parse("f 2+3 sin(x)", env);
+//}

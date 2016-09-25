@@ -24,12 +24,15 @@ ExpPtr Parser::parse(const string& s, Environment& env)
 {
     lexer.tokenize(s);
     auto tokens = lexer.getTokens();
+    lexer.clear();
 
     return parse(begin(tokens), end(tokens), env);
 }
 
 static bool isOperator(ExpPtr e, Environment& env)
 {
+    if (!e)
+        return false;
     e = Identifier::unwrapIfId(e, env);
     if (d_cast<Operator>(e))
         return true;
@@ -93,7 +96,12 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
 {
     cout << "Parsing ";
     for (auto i = begin; i != end; ++i)
-        cout << "<" << i->type().name() << ">";
+    {
+        cout << "<" << i->type().name();
+        if (i->type() == typeid(Tokens::Identifier))
+            cout << ":" << get<Tokens::Identifier>(*i).name;
+        cout << ">";
+    }
     cout << endl;
     ExpPtr ret = nullptr;
 
@@ -106,7 +114,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
          currentTokenIt++)
     {
         auto& currentToken = *currentTokenIt;
-        ExpPtr e;
+        ExpPtr e = nullptr;
         if (currentToken.type() == typeid(Tokens::Identifier))
         {
             e = make_ptr<Identifier>(get<Tokens::Identifier>(currentToken).name);
@@ -148,7 +156,11 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
             return e;
         }
 
-        if (checkType<Identifier>(e) && isOperator(e, env))
+        if (!e)
+        {
+
+        }
+        else if (isOperator(e, env))
         {
             applicationFlag = false;
 
@@ -179,7 +191,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         makeOperation(operatorStack, q, env);
 
     if (!q.empty())
-        ret = q.front(); //wtf
+        ret = q.front();
     if (!ret)
         ret = make_ptr<Void>();
 

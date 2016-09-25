@@ -10,6 +10,7 @@ public:
 
     void addSplittingSequence(const std::string& s);
     void removeSplittingSequence(const std::string& s);
+    void clear();
 
     std::vector<Token> getTokens();
 private:
