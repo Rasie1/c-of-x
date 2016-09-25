@@ -227,3 +227,77 @@ BOOST_AUTO_TEST_CASE(Indentation1)
     BOOST_CHECK_EQUAL(fId.name, "f");
     BOOST_CHECK_EQUAL(xId.name, "x");
 }
+
+BOOST_AUTO_TEST_CASE(SimpleString)
+{
+    Lexer l;
+    l.tokenize("\"abc\"");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+
+    auto s = tokens[0];
+    BOOST_CHECK(s.type() == typeid(StringData));
+    auto st = get<StringData>(tokens[0]);
+    BOOST_CHECK_EQUAL(st.data, "abc");
+}
+
+BOOST_AUTO_TEST_CASE(StringApplied)
+{
+    Lexer l;
+    l.tokenize("f \"abc\"");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 2);
+
+    auto ft = tokens[0];
+    BOOST_CHECK(ft.type() == typeid(Identifier));
+    auto f = get<Identifier>(tokens[0]);
+    BOOST_CHECK_EQUAL(f.name, "f");
+
+    auto s = tokens[1];
+    BOOST_CHECK(s.type() == typeid(StringData));
+    auto st = get<StringData>(tokens[1]);
+    BOOST_CHECK_EQUAL(st.data, "abc");
+}
+
+BOOST_AUTO_TEST_CASE(EmptyString)
+{
+    Lexer l;
+    l.tokenize("\"\"");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+
+    auto s = tokens[0];
+    BOOST_CHECK(s.type() == typeid(StringData));
+    auto st = get<StringData>(tokens[0]);
+    BOOST_CHECK_EQUAL(st.data, "");
+}
+
+BOOST_AUTO_TEST_CASE(StringNoSpaces)
+{
+    Lexer l;
+    l.tokenize("f\"abc\"g");
+    auto tokens = l.getTokens();
+
+    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
+
+    auto x = tokens[0];
+    auto ns1 = tokens[1];
+    auto p = tokens[2];
+    auto ns2 = tokens[3];
+    auto y = tokens[4];
+
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+    BOOST_CHECK(p.type() == typeid(StringData));
+    BOOST_CHECK(ns2.type() == typeid(NoSpace));
+    BOOST_CHECK(y.type() == typeid(Identifier));
+    auto xId = get<Identifier>(tokens[0]);
+    auto pId = get<StringData>(tokens[2]);
+    auto yId = get<Identifier>(tokens[4]);
+    BOOST_CHECK_EQUAL(xId.name, "f");
+    BOOST_CHECK_EQUAL(pId.data, "abc");
+    BOOST_CHECK_EQUAL(yId.name, "g");
+}

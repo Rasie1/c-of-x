@@ -63,9 +63,11 @@ static tuple<bool, size_t> shouldSplitWithSequence(const std::string& input,
     return make_tuple(false, 0);
 }
 
-void Lexer::tokenize(const std::string& input)
+bool Lexer::tokenize(const std::string& input)
 {
     bool parsingId = false;
+    bool parsingString = false;
+    bool parsingNumber = false;
     for (size_t currentCharacterIndex = 0;
          currentCharacterIndex < input.size();
          ++currentCharacterIndex)
@@ -73,8 +75,25 @@ void Lexer::tokenize(const std::string& input)
         char currentCharacter = input[currentCharacterIndex];
         bool shouldMove = false;
         size_t moveDistance = 0;
+//        cout << "{" << currentCharacter << "}" << endl;
 
-        if (currentCharacter == ' ')
+        if (parsingString)
+        {
+            if (currentCharacter == '\"')
+            {
+
+                parsedTokens.push_back(Tokens::StringData{input.substr(1,
+                                                                       currentCharacterIndex - 1)});
+                if (currentCharacterIndex + 1 < input.size() &&
+                    input[currentCharacterIndex + 1] != ' '  &&
+                    input[currentCharacterIndex + 1] != '\n')
+                    parsedTokens.push_back((Tokens::NoSpace()));
+
+                shouldMove = true;
+                moveDistance = 1;
+            }
+        }
+        else if (currentCharacter == ' ')
         {
             if (parsingId)
                 parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
@@ -93,6 +112,19 @@ void Lexer::tokenize(const std::string& input)
             }
             shouldMove = true;
             moveDistance = 1;
+        }
+        else if (currentCharacter == '\"')
+        {
+            if (parsingId)
+            {
+                parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+                parsedTokens.push_back(Tokens::NoSpace());
+                shouldMove = true;
+            }
+            else
+            {
+                parsingString = true;
+            }
         }
         else
         {
@@ -115,13 +147,16 @@ void Lexer::tokenize(const std::string& input)
         }
         if (shouldMove)
         {
-            tokenize(input.substr(currentCharacterIndex + moveDistance,
-                                  string::npos));
-            return;
+            return tokenize(input.substr(currentCharacterIndex + moveDistance,
+                                         string::npos));
         }
     }
     if (parsingId)
         parsedTokens.push_back(Tokens::Identifier{input});
+    if (parsingString)
+        return false; // todo: more information
+
+    return true;
 }
 
 void Lexer::addSplittingSequence(const std::string& s)

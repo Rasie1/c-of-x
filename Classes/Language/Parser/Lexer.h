@@ -6,7 +6,7 @@
 class Lexer
 {
 public:
-    void tokenize(const std::string& s);
+    bool tokenize(const std::string& s);
 
     void addSplittingSequence(const std::string& s);
     void removeSplittingSequence(const std::string& s);

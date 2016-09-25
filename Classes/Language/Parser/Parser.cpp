@@ -320,7 +320,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         {
 
         }
-        else if (currentToken.type() == typeid(Tokens::Data))
+        else if (currentToken.type() == typeid(Tokens::StringData))
         {
 
         }

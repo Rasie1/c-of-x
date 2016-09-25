@@ -9,11 +9,6 @@ namespace Tokens
         std::string name;
     };
 
-    struct Data
-    {
-
-    };
-
     struct IntegerData
     {
 
@@ -26,7 +21,7 @@ namespace Tokens
 
     struct StringData
     {
-
+        std::string data;
     };
 
     struct LineBreak
