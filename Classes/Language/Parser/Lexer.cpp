@@ -91,8 +91,8 @@ bool Lexer::tokenize(const std::string& input)
                 parsedTokens.push_back(Tokens::StringData{input.substr(1,
                                                                        currentCharacterIndex - 1)});
                 if (currentCharacterIndex + 1 < input.size() &&
-                    (input[currentCharacterIndex + 1] != ' '  ||
-                    input[currentCharacterIndex + 1] != '\n'))
+                    (input[currentCharacterIndex + 1] != ' ' &&
+                     input[currentCharacterIndex + 1] != '\n'))
                     parsedTokens.push_back((Tokens::NoSpace()));
 
                 shouldMove = true;
@@ -134,7 +134,10 @@ bool Lexer::tokenize(const std::string& input)
             parsedTokens.push_back(Tokens::Closing());
             shouldMove = true;
             moveDistance = 1;
-            //todo : NoSpace case
+            if (currentCharacterIndex + moveDistance < input.size() &&
+                (input[currentCharacterIndex + moveDistance] != ' ' &&
+                 input[currentCharacterIndex + moveDistance] != '\n'))
+                parsedTokens.push_back((Tokens::NoSpace()));
         }
         else if (currentCharacter == ' ')
         {
@@ -187,9 +190,14 @@ bool Lexer::tokenize(const std::string& input)
                 parsedTokens.push_back(Tokens::NoSpace());
             }
             parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
-            // todo: no space case
+
             shouldMove = true;
             moveDistance = *splitTokenSize;
+
+            if (currentCharacterIndex + moveDistance < input.size() &&
+                (input[currentCharacterIndex + moveDistance] != ' ' &&
+                 input[currentCharacterIndex + moveDistance] != '\n'))
+                parsedTokens.push_back((Tokens::NoSpace()));
         }
         else if (isIdentifierCharacter(currentCharacter))
         {

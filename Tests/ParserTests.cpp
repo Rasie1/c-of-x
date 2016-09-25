@@ -153,9 +153,9 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 2);
 }
 
-//BOOST_AUTO_TEST_CASE(HighPriorityUsage)
-//{
-//    Environment env;
-//    Parser p;
-//    auto parsed = p.parse("f 2+3 sin(x)", env);
-//}
+BOOST_AUTO_TEST_CASE(HighPriorityUsage)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f 2+3 sin(x)", env);
+}

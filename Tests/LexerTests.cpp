@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(OneIdentifier)
     l.tokenize("one");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+    BOOST_CHECK_EQUAL(tokens.size(), 1);
 
     BOOST_CHECK(tokens[0].type() == typeid(Identifier));
     auto id = get<Identifier>(tokens[0]);
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(IdentifierWithSpaces)
     l.tokenize(" id ");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+    BOOST_CHECK_EQUAL(tokens.size(), 1);
 
     BOOST_CHECK(tokens[0].type() == typeid(Identifier));
     auto id = get<Identifier>(tokens[0]);
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(TwoIdentifiers)
     l.tokenize("f x");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 2);
+    BOOST_CHECK_EQUAL(tokens.size(), 2);
 
     BOOST_CHECK(tokens[0].type() == typeid(Identifier));
     auto f = get<Identifier>(tokens[0]);
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(SimpleBracesTest)
     l.tokenize("(f x)");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 4);
+    BOOST_CHECK_EQUAL(tokens.size(), 4);
 
     BOOST_CHECK(tokens[0].type() == typeid(Opening));
     BOOST_CHECK(tokens[3].type() == typeid(Closing));
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(ManyIdentifiers)
     l.tokenize("asdf sa fdf as  sdf a   sd  d da       ");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 9);
+    BOOST_CHECK_EQUAL(tokens.size(), 9);
 
     auto asdf = tokens[0];
     auto sa = tokens[1];
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(SimpleLineBreak)
     l.tokenize("a\nb");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+    BOOST_CHECK_EQUAL(tokens.size(), 3);
 
     auto a = tokens[0];
     auto n = tokens[1];
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(SimpleLineBreak)
 //    l.tokenize("a\n\nb");
 //    auto tokens = l.getTokens();
 
-//    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+//    BOOST_CHECK_EQUAL(tokens.size(), 3);
 
 //    auto a = tokens[0];
 //    auto n = tokens[1];
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(SimpleLineBreak)
 //    l.tokenize("a\n    \n\n            \nb");
 //    auto tokens = l.getTokens();
 
-//    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+//    BOOST_CHECK_EQUAL(tokens.size(), 3);
 
 //    auto a = tokens[0];
 //    auto n = tokens[1];
@@ -183,7 +183,9 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     l.tokenize("x + y");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+
+
+    BOOST_CHECK_EQUAL(tokens.size(), 3);
 
     auto x = tokens[0];
     auto p = tokens[1];
@@ -199,31 +201,31 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     BOOST_CHECK_EQUAL(yId.name, "y");
 }
 
-//BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
-//{
-//    Lexer l;
-//    l.tokenize("x+y");
-//    auto tokens = l.getTokens();
+BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
+{
+    Lexer l;
+    l.tokenize("x+y");
+    auto tokens = l.getTokens();
 
-//    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
+    BOOST_CHECK_EQUAL(tokens.size(), 5);
 
-//    auto x = tokens[0];
-//    auto ns1 = tokens[1];
-//    auto p = tokens[2];
-//    auto ns2 = tokens[3];
-//    auto y = tokens[4];
-//    BOOST_CHECK(x.type() == typeid(Identifier));
-//    BOOST_CHECK(ns1.type() == typeid(NoSpace));
-//    BOOST_CHECK(p.type() == typeid(Identifier));
-//    BOOST_CHECK(ns2.type() == typeid(NoSpace));
-//    BOOST_CHECK(y.type() == typeid(Identifier));
-//    auto xId = get<Identifier>(tokens[0]);
-//    auto pId = get<Identifier>(tokens[2]);
-//    auto yId = get<Identifier>(tokens[4]);
-//    BOOST_CHECK_EQUAL(xId.name, "x");
-//    BOOST_CHECK_EQUAL(pId.name, "+");
-//    BOOST_CHECK_EQUAL(yId.name, "y");
-//}
+    auto x = tokens[0];
+    auto ns1 = tokens[1];
+    auto p = tokens[2];
+    auto ns2 = tokens[3];
+    auto y = tokens[4];
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+    BOOST_CHECK(p.type() == typeid(Identifier));
+    BOOST_CHECK(ns2.type() == typeid(NoSpace));
+    BOOST_CHECK(y.type() == typeid(Identifier));
+    auto xId = get<Identifier>(tokens[0]);
+    auto pId = get<Identifier>(tokens[2]);
+    auto yId = get<Identifier>(tokens[4]);
+    BOOST_CHECK_EQUAL(xId.name, "x");
+    BOOST_CHECK_EQUAL(pId.name, "+");
+    BOOST_CHECK_EQUAL(yId.name, "y");
+}
 
 //BOOST_AUTO_TEST_CASE(Indentation1)
 //{
@@ -231,7 +233,7 @@ BOOST_AUTO_TEST_CASE(XPlusY)
 //    l.tokenize("f\n    x");
 //    auto tokens = l.getTokens();
 
-//    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
+//    BOOST_CHECK_EQUAL(tokens.size(), 5);
 
 //    auto f = tokens[0];
 //    auto n = tokens[1];
@@ -253,7 +255,7 @@ BOOST_AUTO_TEST_CASE(SimpleString)
     l.tokenize("\"abc\"");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+    BOOST_CHECK_EQUAL(tokens.size(), 1);
 
     auto s = tokens[0];
     BOOST_CHECK(s.type() == typeid(StringData));
@@ -267,7 +269,7 @@ BOOST_AUTO_TEST_CASE(SimpleInt)
     l.tokenize("123");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+    BOOST_CHECK_EQUAL(tokens.size(), 1);
 
     auto s = tokens[0];
     BOOST_CHECK(s.type() == typeid(IntegerData));
@@ -281,7 +283,7 @@ BOOST_AUTO_TEST_CASE(StringApplied)
     l.tokenize("f \"abc\"");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 2);
+    BOOST_CHECK_EQUAL(tokens.size(), 2);
 
     auto ft = tokens[0];
     BOOST_CHECK(ft.type() == typeid(Identifier));
@@ -300,7 +302,7 @@ BOOST_AUTO_TEST_CASE(IntApplied)
     l.tokenize("f 0");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 2);
+    BOOST_CHECK_EQUAL(tokens.size(), 2);
 
     auto ft = tokens[0];
     BOOST_CHECK(ft.type() == typeid(Identifier));
@@ -319,7 +321,7 @@ BOOST_AUTO_TEST_CASE(EmptyString)
     l.tokenize("\"\"");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 1);
+    BOOST_CHECK_EQUAL(tokens.size(), 1);
 
     auto s = tokens[0];
     BOOST_CHECK(s.type() == typeid(StringData));
@@ -333,7 +335,7 @@ BOOST_AUTO_TEST_CASE(StringNoSpaces)
     l.tokenize("f\"abc\"g");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
+    BOOST_CHECK_EQUAL(tokens.size(), 5);
 
     auto x = tokens[0];
     auto ns1 = tokens[1];
@@ -360,7 +362,7 @@ BOOST_AUTO_TEST_CASE(IntNoSpaces)
     l.tokenize("450g");
     auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+    BOOST_CHECK_EQUAL(tokens.size(), 3);
 
     auto i = tokens[0];
     auto ns1 = tokens[1];
