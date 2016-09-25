@@ -5,8 +5,10 @@
 #include <iterator>
 #include <tuple>
 #include <iostream>
+#include <boost/optional.hpp>
 
 using namespace std;
+using namespace boost;
 
 static constexpr bool isOperatorCharacter(char c)
 {
@@ -43,11 +45,11 @@ std::vector<Token> Lexer::getTokens()
     return parsedTokens;
 }
 
-static tuple<bool, size_t> shouldSplitWithSequence(const std::string& input,
-                                    const vector<string>& splittingSequences)
+static optional<size_t> shouldSplitWithSequence(const std::string& input,
+                                                const vector<string>& splittingSequences)
 {
     if (isOperatorCharacter(input[0]))
-        return make_tuple(true, 1);
+        return make_optional((size_t)1);
     for (auto& currentSplittingSequence : splittingSequences)
     {
         auto res = mismatch(currentSplittingSequence.begin(),
@@ -56,11 +58,10 @@ static tuple<bool, size_t> shouldSplitWithSequence(const std::string& input,
 
         if (res.first == input.end())
         {
-            return make_tuple(true, currentSplittingSequence.size());
+            return make_optional(currentSplittingSequence.size());
         }
     }
-
-    return make_tuple(false, 0);
+    return none;
 }
 
 bool Lexer::tokenize(const std::string& input)
@@ -171,31 +172,27 @@ bool Lexer::tokenize(const std::string& input)
                 parsingNumber = true;
             }
         }
-        else
-        {
-            parsingId = true;
-
-            { // Split with splittingSequences
-                bool shouldSplit;
-                size_t splitTokenSize;
-                tie(shouldSplit, splitTokenSize) = shouldSplitWithSequence(input.substr(currentCharacterIndex,
+        else if (optional<size_t> splitTokenSize = shouldSplitWithSequence(input.substr(currentCharacterIndex,
                                                                                         string::npos),
-                                                                           splittingSequences);
-                if (shouldSplit)
-                {
-                    parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
-                    parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, splitTokenSize)});
-                    shouldMove = true;
-                    moveDistance = splitTokenSize;
-                }
-            }
+                                                                           splittingSequences))
+        {
+            parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+            parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
+            shouldMove = true;
+            moveDistance = *splitTokenSize;
         }
+        else if (currentCharacter >= 'a' && currentCharacter <= 'z')
+        {
+            if (parsingId == false)
+                parsingId = true;
+        }
+
         if (shouldMove)
         {
             return tokenize(input.substr(currentCharacterIndex + moveDistance,
                                          string::npos));
         }
-    }
+    } // end while
     if (parsingId)
         parsedTokens.push_back(Tokens::Identifier{input});
     if (parsingNumber)

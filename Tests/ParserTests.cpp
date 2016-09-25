@@ -38,6 +38,21 @@ BOOST_AUTO_TEST_CASE(ApplicationTest)
     BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
 }
 
+BOOST_AUTO_TEST_CASE(SimpleBracesTest)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("(f x)", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(op->op));
+    BOOST_CHECK(checkType<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+}
+
 BOOST_AUTO_TEST_CASE(BracesTest)
 {
     Environment env;

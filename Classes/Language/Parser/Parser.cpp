@@ -22,6 +22,11 @@ using namespace std;
 
 ExpPtr Parser::parse(const string& s, Environment& env)
 {
+    lexer.tokenize(s);
+    auto tokens = lexer.getTokens();
+
+    return parse(begin(tokens), end(tokens), env);
+
     size_t i = 0;
     return parse(s, i, s.size(), env);
 }
@@ -318,14 +323,17 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         }
         else if (currentToken.type() == typeid(Tokens::Opening))
         {
-            auto newEnd = begin;
+            auto newEnd = next(currentTokenIt);
             while (newEnd != end)
             {
                 auto currentToken = *newEnd;
                 if (currentToken.type() == typeid(Tokens::Closing)) // todo: case with wrong brackets
                 {
-                    e = parse(next(begin), newEnd, env);
+                    e = parse(next(currentTokenIt), newEnd, env);
+                    currentTokenIt = newEnd;
+                    break;
                 }
+                std::advance(newEnd, 1);
             }
             if (newEnd == end)
             {
@@ -379,7 +387,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         makeOperation(operatorStack, q, env);
 
     if (!q.empty())
-        ret = q.front();
+        ret = q.front(); //wtf
     if (!ret)
         ret = make_ptr<Void>();
 
