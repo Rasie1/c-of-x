@@ -6,9 +6,15 @@
 #include <tuple>
 #include <iostream>
 #include <boost/optional.hpp>
+#include <cctype>
 
 using namespace std;
 using namespace boost;
+
+static constexpr bool isIdentifierCharacter(char c)
+{
+    return isalnum(c);
+}
 
 static constexpr bool isOperatorCharacter(char c)
 {
@@ -96,7 +102,7 @@ bool Lexer::tokenize(const std::string& input)
         }
         else if (parsingNumber)
         {
-            if (!(currentCharacter >= '0' && currentCharacter <= '9'))
+            if (!isdigit(currentCharacter))
             {
                 parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(0, currentCharacterIndex))});
                 parsedTokens.push_back(Tokens::NoSpace());
@@ -164,7 +170,7 @@ bool Lexer::tokenize(const std::string& input)
                 parsingString = true;
             }
         }
-        else if (currentCharacter >= '0' && currentCharacter <= '9')
+        else if (isdigit(currentCharacter))
         {
             if (!parsingId)
             {
@@ -186,10 +192,12 @@ bool Lexer::tokenize(const std::string& input)
             shouldMove = true;
             moveDistance = *splitTokenSize;
         }
-        else if (currentCharacter >= 'a' && currentCharacter <= 'z')
+        else if (isIdentifierCharacter(currentCharacter))
         {
             if (parsingId == false)
+            {
                 parsingId = true;
+            }
         }
 
         if (shouldMove)

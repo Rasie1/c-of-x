@@ -137,45 +137,45 @@ BOOST_AUTO_TEST_CASE(SimpleLineBreak)
     BOOST_CHECK_EQUAL(bId.name, "b");
 }
 
-BOOST_AUTO_TEST_CASE(DoubleLineBreakNegation)
-{
-    Lexer l;
-    l.tokenize("a\n\nb");
-    auto tokens = l.getTokens();
+//BOOST_AUTO_TEST_CASE(DoubleLineBreakNegation)
+//{
+//    Lexer l;
+//    l.tokenize("a\n\nb");
+//    auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+//    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
 
-    auto a = tokens[0];
-    auto n = tokens[1];
-    auto b = tokens[2];
-    BOOST_CHECK(a.type() == typeid(Identifier));
-    BOOST_CHECK(n.type() == typeid(LineBreak));
-    BOOST_CHECK(b.type() == typeid(Identifier));
-    auto aId = get<Identifier>(tokens[0]);
-    auto bId = get<Identifier>(tokens[2]);
-    BOOST_CHECK_EQUAL(aId.name, "a");
-    BOOST_CHECK_EQUAL(bId.name, "b");
-}
+//    auto a = tokens[0];
+//    auto n = tokens[1];
+//    auto b = tokens[2];
+//    BOOST_CHECK(a.type() == typeid(Identifier));
+//    BOOST_CHECK(n.type() == typeid(LineBreak));
+//    BOOST_CHECK(b.type() == typeid(Identifier));
+//    auto aId = get<Identifier>(tokens[0]);
+//    auto bId = get<Identifier>(tokens[2]);
+//    BOOST_CHECK_EQUAL(aId.name, "a");
+//    BOOST_CHECK_EQUAL(bId.name, "b");
+//}
 
-BOOST_AUTO_TEST_CASE(LineBreakNegationWithIndentation)
-{
-    Lexer l;
-    l.tokenize("a\n    \n\n            \nb");
-    auto tokens = l.getTokens();
+//BOOST_AUTO_TEST_CASE(LineBreakNegationWithIndentation)
+//{
+//    Lexer l;
+//    l.tokenize("a\n    \n\n            \nb");
+//    auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
+//    BOOST_REQUIRE_EQUAL(tokens.size(), 3);
 
-    auto a = tokens[0];
-    auto n = tokens[1];
-    auto b = tokens[2];
-    BOOST_CHECK(a.type() == typeid(Identifier));
-    BOOST_CHECK(n.type() == typeid(LineBreak));
-    BOOST_CHECK(b.type() == typeid(Identifier));
-    auto aId = get<Identifier>(tokens[0]);
-    auto bId = get<Identifier>(tokens[2]);
-    BOOST_CHECK_EQUAL(aId.name, "a");
-    BOOST_CHECK_EQUAL(bId.name, "b");
-}
+//    auto a = tokens[0];
+//    auto n = tokens[1];
+//    auto b = tokens[2];
+//    BOOST_CHECK(a.type() == typeid(Identifier));
+//    BOOST_CHECK(n.type() == typeid(LineBreak));
+//    BOOST_CHECK(b.type() == typeid(Identifier));
+//    auto aId = get<Identifier>(tokens[0]);
+//    auto bId = get<Identifier>(tokens[2]);
+//    BOOST_CHECK_EQUAL(aId.name, "a");
+//    BOOST_CHECK_EQUAL(bId.name, "b");
+//}
 
 BOOST_AUTO_TEST_CASE(XPlusY)
 {
@@ -199,53 +199,53 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     BOOST_CHECK_EQUAL(yId.name, "y");
 }
 
-BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
-{
-    Lexer l;
-    l.tokenize("x+y");
-    auto tokens = l.getTokens();
+//BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
+//{
+//    Lexer l;
+//    l.tokenize("x+y");
+//    auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
+//    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
 
-    auto x = tokens[0];
-    auto ns1 = tokens[1];
-    auto p = tokens[2];
-    auto ns2 = tokens[3];
-    auto y = tokens[4];
-    BOOST_CHECK(x.type() == typeid(Identifier));
-    BOOST_CHECK(ns1.type() == typeid(NoSpace));
-    BOOST_CHECK(p.type() == typeid(Identifier));
-    BOOST_CHECK(ns2.type() == typeid(NoSpace));
-    BOOST_CHECK(y.type() == typeid(Identifier));
-    auto xId = get<Identifier>(tokens[0]);
-    auto pId = get<Identifier>(tokens[2]);
-    auto yId = get<Identifier>(tokens[4]);
-    BOOST_CHECK_EQUAL(xId.name, "x");
-    BOOST_CHECK_EQUAL(pId.name, "+");
-    BOOST_CHECK_EQUAL(yId.name, "y");
-}
+//    auto x = tokens[0];
+//    auto ns1 = tokens[1];
+//    auto p = tokens[2];
+//    auto ns2 = tokens[3];
+//    auto y = tokens[4];
+//    BOOST_CHECK(x.type() == typeid(Identifier));
+//    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+//    BOOST_CHECK(p.type() == typeid(Identifier));
+//    BOOST_CHECK(ns2.type() == typeid(NoSpace));
+//    BOOST_CHECK(y.type() == typeid(Identifier));
+//    auto xId = get<Identifier>(tokens[0]);
+//    auto pId = get<Identifier>(tokens[2]);
+//    auto yId = get<Identifier>(tokens[4]);
+//    BOOST_CHECK_EQUAL(xId.name, "x");
+//    BOOST_CHECK_EQUAL(pId.name, "+");
+//    BOOST_CHECK_EQUAL(yId.name, "y");
+//}
 
-BOOST_AUTO_TEST_CASE(Indentation1)
-{
-    Lexer l;
-    l.tokenize("f\n    x");
-    auto tokens = l.getTokens();
+//BOOST_AUTO_TEST_CASE(Indentation1)
+//{
+//    Lexer l;
+//    l.tokenize("f\n    x");
+//    auto tokens = l.getTokens();
 
-    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
+//    BOOST_REQUIRE_EQUAL(tokens.size(), 5);
 
-    auto f = tokens[0];
-    auto n = tokens[1];
-    auto t = tokens[2];
-    auto x = tokens[3];
-    BOOST_CHECK(f.type() == typeid(Identifier));
-    BOOST_CHECK(n.type() == typeid(LineBreak));
-    BOOST_CHECK(t.type() == typeid(Tabulation));
-    BOOST_CHECK(x.type() == typeid(Identifier));
-    auto fId = get<Identifier>(tokens[0]);
-    auto xId = get<Identifier>(tokens[3]);
-    BOOST_CHECK_EQUAL(fId.name, "f");
-    BOOST_CHECK_EQUAL(xId.name, "x");
-}
+//    auto f = tokens[0];
+//    auto n = tokens[1];
+//    auto t = tokens[2];
+//    auto x = tokens[3];
+//    BOOST_CHECK(f.type() == typeid(Identifier));
+//    BOOST_CHECK(n.type() == typeid(LineBreak));
+//    BOOST_CHECK(t.type() == typeid(Tabulation));
+//    BOOST_CHECK(x.type() == typeid(Identifier));
+//    auto fId = get<Identifier>(tokens[0]);
+//    auto xId = get<Identifier>(tokens[3]);
+//    BOOST_CHECK_EQUAL(fId.name, "f");
+//    BOOST_CHECK_EQUAL(xId.name, "x");
+//}
 
 BOOST_AUTO_TEST_CASE(SimpleString)
 {
