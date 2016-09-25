@@ -82,7 +82,6 @@ bool Lexer::tokenize(const std::string& input)
         char currentCharacter = input[currentCharacterIndex];
         bool shouldMove = false;
         size_t moveDistance = 0;
-//        cout << "{" << currentCharacter << "}" << endl;
 
         if (parsingString)
         {

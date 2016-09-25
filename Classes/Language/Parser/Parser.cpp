@@ -94,15 +94,6 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
                      const vector<Token>::iterator& end,
                      Environment& env)
 {
-    cout << "Parsing ";
-    for (auto i = begin; i != end; ++i)
-    {
-        cout << "<" << i->type().name();
-        if (i->type() == typeid(Tokens::Identifier))
-            cout << ":" << get<Tokens::Identifier>(*i).name;
-        cout << ">";
-    }
-    cout << endl;
     ExpPtr ret = nullptr;
 
     std::stack<std::shared_ptr<Operator>> operatorStack;
