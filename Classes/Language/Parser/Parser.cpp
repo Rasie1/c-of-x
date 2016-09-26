@@ -116,8 +116,12 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
             while (newEnd != end)
             {
                 auto currentToken = *newEnd;
-                if (currentToken.type() == typeid(Tokens::Closing)) // todo: case with wrong brackets
+                if (currentToken.type() == typeid(Tokens::Closing))
                 {
+                    if (false) // todo: case with wrong brackets
+                    {
+                        return make_ptr<ParseError>("Parentheses mismatch");
+                    }
                     e = parse(next(currentTokenIt), newEnd, env);
                     currentTokenIt = newEnd;
                     break;
@@ -126,9 +130,12 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
             }
             if (newEnd == end)
             {
-                e = make_ptr<ParseError>("Unable to parse expression: no matching parentheses");
-                return e;
+                return make_ptr<ParseError>("No matching parentheses");
             }
+        }
+        else if (currentToken.type() == typeid(Tokens::Closing))
+        {
+            return make_ptr<ParseError>("Unexepected parentheses");
         }
         else if (currentToken.type() == typeid(Tokens::StringData))
         {
@@ -143,7 +150,8 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         }
         else
         {
-            e = make_ptr<ParseError>("Unable to parse expression");
+            e = make_ptr<ParseError>(
+                std::string("Unexpected token of type ") + currentToken.type().name());
             return e;
         }
 

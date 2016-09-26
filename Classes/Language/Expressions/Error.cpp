@@ -7,5 +7,5 @@ std::string Error::show() const
 
 std::string ErrorWithMessage::show() const
 {
-    return "(Error: " + message + ")";
+    return "Error \"" + message + "\"";
 }

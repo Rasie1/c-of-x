@@ -166,3 +166,12 @@ BOOST_AUTO_TEST_CASE(typedVariables)
 // recursion test
 // re x y = (((x < 11) \ (0)) | ((x > 10) \ (re (x - 1) (print x))) ) x
 
+//BOOST_AUTO_TEST_CASE(simpleMacroMatch)
+//{
+//    Environment env;
+//    Parser p;
+
+//    auto parsed = p.parse("token ('x) = 0", env);
+//    parsed->eval(env);
+//}
+
