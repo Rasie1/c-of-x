@@ -8,7 +8,7 @@
 #include "Any.h"
 
 Multiplication::Multiplication()
-    : CalculationOperator(false, 7)
+    : CalculationOperator(false, 7, true)
 {
 
 }

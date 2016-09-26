@@ -8,7 +8,7 @@
 #include "Any.h"
 
 Addition::Addition()
-    : CalculationOperator(false, 5)
+    : CalculationOperator(false, 5, true)
 {
 }
 

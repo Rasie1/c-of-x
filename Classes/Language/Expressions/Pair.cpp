@@ -2,7 +2,7 @@
 #include "Operation.h"
 
 Pair::Pair()
-    : Operator(true, 0)
+    : Operator(true, 0, true)
 {
 
 }

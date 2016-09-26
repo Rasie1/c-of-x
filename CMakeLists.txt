@@ -22,10 +22,14 @@ add_test(NAME LexerTests COMMAND LexerTests)
 add_test(NAME ParserTests COMMAND ParserTests)
 add_test(NAME LanguageTests COMMAND LanguageTests)
 
+
+
+
+
+
+
 find_package(Boost COMPONENTS program_options REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-
-
 
 include(FindPackageHandleStandardArgs)
 if (Readline_INCLUDE_DIR)

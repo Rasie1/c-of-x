@@ -3,10 +3,11 @@
 #include "Identifier.h"
 #include "Operation.h"
 
-Operator::Operator(bool isRightAssociative, int priority)
+Operator::Operator(bool isRightAssociative, int priority, bool splitting)
     : isRightAssociative(isRightAssociative),
       priority(priority),
-      name("op")
+      name("op"),
+      splitting(splitting)
 {
 }
 

@@ -21,4 +21,4 @@ std::string Mutation::show() const
     return Mutation::defaultName;
 }
 
-const std::string Mutation::defaultName = "\%";
+const std::string Mutation::defaultName = "<-";

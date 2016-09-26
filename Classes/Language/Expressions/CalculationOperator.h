@@ -4,7 +4,7 @@
 class CalculationOperator : public Operator
 {
 public:
-    CalculationOperator(bool isRightAssociative, int priority);
+    CalculationOperator(bool isRightAssociative, int priority, bool splitting);
 
     virtual ExpPtr calculate(ExpPtrArg l, ExpPtrArg r) const = 0;
 

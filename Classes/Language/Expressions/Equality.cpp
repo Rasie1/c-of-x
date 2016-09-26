@@ -47,7 +47,7 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 }
 
 Equality::Equality()
-    : Operator(true, 1)
+    : Operator(true, 1, true)
 {
 
 }

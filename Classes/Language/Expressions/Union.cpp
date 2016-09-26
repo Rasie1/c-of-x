@@ -6,7 +6,7 @@
 #include <list>
 
 Union::Union()
-    : Operator(false, 4)
+    : Operator(false, 4, true)
 {
 }
 

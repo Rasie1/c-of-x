@@ -8,7 +8,7 @@
 #include "Environment.h"
 
 Subtraction::Subtraction()
-    : CalculationOperator(false, 5)
+    : CalculationOperator(false, 5, true)
 {
 }
 

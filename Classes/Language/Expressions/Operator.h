@@ -4,7 +4,7 @@
 class Operator : public DataType
 {
 public:
-    Operator(bool isRightAssociative = false, int priority = 5);
+    Operator(bool isRightAssociative = false, int priority = 5, bool splitting = false);
 
     virtual ExpPtr operate(ExpPtrArg first,
                            ExpPtrArg second,
@@ -13,6 +13,7 @@ public:
     bool isRightAssociative;
     int priority;
     const std::string name;
+    bool splitting;
 
     bool operator==(const Expression& other) const override;
 

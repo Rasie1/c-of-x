@@ -6,7 +6,7 @@
 #include "Operation.h"
 
 Lambda::Lambda()
-    : Operator(true, 2)
+    : Operator(true, 2, true)
 {
 }
 
@@ -29,4 +29,4 @@ std::string Lambda::show() const
     return Lambda::defaultName;
 }
 
-const std::string Lambda::defaultName = "\\";
+const std::string Lambda::defaultName = "\\"; // later: "->"

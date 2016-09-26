@@ -396,14 +396,28 @@ BOOST_AUTO_TEST_CASE(Parentheses)
     BOOST_CHECK(tokens[8].type() == typeid(Closing));
     BOOST_CHECK(tokens[9].type() == typeid(Identifier));
     auto e0 = get<Identifier>(tokens[0]);
-    auto e1 = get<NoSpace>(tokens[1]);
-    auto e2 = get<Opening>(tokens[2]);
-    auto e3 = get<Identifier>(tokens[3]);
-    auto e4 = get<Closing>(tokens[4]);
-    auto e5 = get<Opening>(tokens[5]);
-    auto e6 = get<Identifier>(tokens[6]);
-    auto e7 = get<Identifier>(tokens[7]);
-    auto e8 = get<Closing>(tokens[8]);
-    auto e9 = get<Identifier>(tokens[9]);
     BOOST_CHECK_EQUAL(e0.name, "f");
+}
+
+BOOST_AUTO_TEST_CASE(noSpacesNestedFunction)
+{
+    Lexer l;
+    l.tokenize("f(f(f(x)))");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 13);
+
+    BOOST_CHECK(tokens[0].type() == typeid(Identifier));
+    BOOST_CHECK(tokens[1].type() == typeid(NoSpace));
+    BOOST_CHECK(tokens[2].type() == typeid(Opening));
+    BOOST_CHECK(tokens[3].type() == typeid(Identifier));
+    BOOST_CHECK(tokens[4].type() == typeid(NoSpace));
+    BOOST_CHECK(tokens[5].type() == typeid(Opening));
+    BOOST_CHECK(tokens[6].type() == typeid(Identifier));
+    BOOST_CHECK(tokens[7].type() == typeid(NoSpace));
+    BOOST_CHECK(tokens[8].type() == typeid(Opening));
+    BOOST_CHECK(tokens[9].type() == typeid(Identifier));
+    BOOST_CHECK(tokens[10].type() == typeid(Closing));
+    BOOST_CHECK(tokens[11].type() == typeid(Closing));
+    BOOST_CHECK(tokens[12].type() == typeid(Closing));
 }

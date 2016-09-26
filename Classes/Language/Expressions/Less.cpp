@@ -91,7 +91,7 @@ ExpPtr LessThan::end()
 }
 
 Less::Less()
-    : Operator(true, 2)
+    : Operator(true, 2, true)
 {
 
 }

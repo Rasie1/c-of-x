@@ -4,7 +4,7 @@
 #include "Void.h"
 
 Intersection::Intersection()
-    : Operator(false, 4)
+    : Operator(false, 4, true)
 {
 }
 

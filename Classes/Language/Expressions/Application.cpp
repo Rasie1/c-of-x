@@ -14,7 +14,7 @@
 #include "Equality.h"
 
 Application::Application()
-    : Operator(false, 10)
+    : Operator(false, 10, true)
 {
 }
 

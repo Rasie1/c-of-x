@@ -9,8 +9,8 @@
 #include "Any.h"
 #include <vector>
 
-CalculationOperator::CalculationOperator(bool isRightAssociative, int priority)
-    : Operator(isRightAssociative, priority)
+CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, bool splitting)
+    : Operator(isRightAssociative, priority, splitting)
 {
 }
 

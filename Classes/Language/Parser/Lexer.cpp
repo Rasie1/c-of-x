@@ -87,7 +87,6 @@ bool Lexer::tokenize(const std::string& input)
         {
             if (currentCharacter == '\"')
             {
-
                 parsedTokens.push_back(Tokens::StringData{input.substr(1,
                                                                        currentCharacterIndex - 1)});
                 if (currentCharacterIndex + 1 < input.size() &&

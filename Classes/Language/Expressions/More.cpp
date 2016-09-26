@@ -90,7 +90,7 @@ ExpPtr MoreThan::begin()
 }
 
 More::More()
-    : Operator(true, 2)
+    : Operator(true, 2, true)
 {
 
 }

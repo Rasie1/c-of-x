@@ -5,7 +5,7 @@
 #include "Void.h"
 
 Then::Then()
-    : Operator(true, 3)
+    : Operator(true, 3, true)
 {
 }
 
@@ -25,4 +25,4 @@ std::string Then::show() const
     return Then::defaultName;
 }
 
-const std::string Then::defaultName = "~";// "=>", later
+const std::string Then::defaultName = "~"; // later: "=>"
