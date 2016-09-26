@@ -1,6 +1,6 @@
 #pragma once
 #include "Environment.h"
-#include "Parser/Parser.h"
+#include "Parser.h"
 #include "AutoCompleter.h"
 
 class REPL

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <boost/program_options.hpp>
-#include "Parser/Parser.h"
+#include "Parser.h"
 #include "REPL.h"
 
 int main(int argc, char* argv[])

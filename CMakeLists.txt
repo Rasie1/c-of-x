@@ -4,11 +4,17 @@ project(${PROJECT_NAME})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -g -Wall")
 cmake_minimum_required(VERSION 3.0)
 
-file(GLOB SRC_REPL . Classes/REPL/*.cpp)
-file(GLOB INC_REPL ./Classes/Language)
-file(GLOB SRC_LANG . Classes/Language/*.cpp Classes/Language/Parser/*.cpp)
-file(GLOB INC_LANG . Classes/Language Classes/Language/Parser)
+file(GLOB_RECURSE SRC_REPL . Classes/REPL/*.cpp)
+file(GLOB_RECURSE SRC_LANG . Classes/Language/*.cpp)
 
+set(INC_LANG ./Classes/Language/System
+             ./Classes/Language/Parser
+             ./Classes/Language/Expressions)
+set(INC_REPL ./Classes/REPL)
+
+set(INCLUDES ${INC_LANG} ${INC_REPL})
+
+include_directories(${INCLUDES})
 
 enable_testing()
 add_subdirectory(Tests)
@@ -57,12 +63,8 @@ endif()
 
 
 
-
-include_directories(${INC_LANG})
-include_directories(${INC_REPL})
-
 add_library(LanguageLib ${SRC_LANG})
-add_executable(${PROJECT_NAME} ${SRC_REPL} ${INC_REPL})
+add_executable(${PROJECT_NAME} ${SRC_REPL}) #why inc_repl is here
 
 target_link_libraries(${PROJECT_NAME} LanguageLib)
 target_link_libraries(${PROJECT_NAME} readline)
