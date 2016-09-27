@@ -46,7 +46,7 @@ make
 
 To run interpreter, execute `Language` binary.
 
-To run tests, execute `ctest` command from `build` directory.
+To run tests, execute `ctest` from `build` directory.
 
 ## Some examples
 
@@ -61,23 +61,6 @@ Human = Creature
         has numberOfHands = 2
 
 you : Human
-```
-
-```scala
-Controller:getFile x:Guid : HttpResponse =
-    if file then HttpResponse 200 file:toString
-            else HttpResponse 404
-       where file = databaseClient:getFile x
-```
-
-```scala
-World = has gravity:Real
-
-Body = has position = (x, y) : (Real, Real)
-           velocity, friction : Real
-           update world =
-               position <- position + (velocity, velocity)
-               velocity <-(velocity + world:gravity) * friction 
 ```
 
 ## Thanks for visiting!
