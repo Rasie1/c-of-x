@@ -63,6 +63,8 @@ Human = Creature
 you : Human
 ```
 
+Be aware, not all features are implemented and it will be a long time until you can run the code above.
+
 ## Thanks for visiting!
 
 More examples and introductions will appear here soon. If you are interested, check back shortly.
