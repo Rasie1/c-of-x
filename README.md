@@ -55,7 +55,7 @@ Natural = Integer, (> 0)
 Even x = 
     x :mod: 2 = 0
 
-Creature = has numberOfHands : Odd, Natural
+Creature = has numberOfHands : Even, Natural
 
 Human = Creature
         has numberOfHands = 2
