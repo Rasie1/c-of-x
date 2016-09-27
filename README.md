@@ -8,9 +8,9 @@ The language specification, introduction and core ideas design are still under d
 
 The language is aimed to:
 
-+ Provide an ability to express maximum level of abstraction as one can think of
++ 
 
-+ Safety
++ Provide an ability to express maximum level of abstraction as one can think of
 
 + Be easily writeable, readable and maintanable
 
@@ -32,9 +32,9 @@ The language is intended to have:
 
 + Interactive development features
 
-# Installation
+## Build & Run
 
-Run following steps in terminal (note: you should have C++17 compiler available):
+Run following steps in terminal to compile the language (note: you should have C++17 compiler available):
 
 ```
 sudo apt-get install libreadline-dev
@@ -44,4 +44,42 @@ cmake ..
 make
 ```
 
-Examples and introduction will appear here soon. Thanks for visiting!
+To run interpreter, execute `Language` binary.
+
+To run tests, execute `ctest` command from `build` directory.
+
+## Some examples
+
+```scala
+Natural = Integer, (> 0)
+Even x = 
+    x :mod: 2 = 0
+
+Creature = has numberOfHands : Odd, Natural
+
+Human = Creature
+        has numberOfHands = 2
+
+you : Human
+```
+
+```scala
+Controller:getFile x:Guid : HttpResponse =
+    if file then HttpResponse 200 file:toString
+            else HttpResponse 404
+       where file = databaseClient:getFile x
+```
+
+```scala
+World = has gravity:Real
+
+Body = has position = (x, y) : (Real, Real)
+           velocity, friction : Real
+           update world =
+               position <- position + (velocity, velocity)
+               velocity <-(velocity + world:gravity) * friction 
+```
+
+## Thanks for visiting!
+
+More examples and introductions will appear here soon. If you are interested, check back shortly.

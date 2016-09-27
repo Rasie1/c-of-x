@@ -1,5 +1,7 @@
 # Lexical Structure
 
+## Introduction
+
 Lexical analyzer is intended to have more complex structure than it is common. It have to gather some information from the language enviroment to provide new features.
  
 Also, the language is indentation-sensitive and uses different indentation levels to express different things, that are determined by strict set of rules and it is dependent on data from previous lines.
@@ -26,9 +28,9 @@ Identifier can be any sequence of characters.
 
 ### Literal
 
-+ Integer Literal ```123```, ```-12```, ```00```
-+ String Literal ```"myString"```, ```""```
-+ Floating Point Literal ```123.0```, ```.043```, ```25.```
++ Integer Literal `123`, `-12`, `00`
++ String Literal `"myString"`, `""`
++ Floating Point Literal `123.0`, `.043`, `25.`
 
 ### Tabulations
 
@@ -97,10 +99,10 @@ Cases when No-Space token is included between tokens (todo: need common name for
 
 There are multiple kinds of opening braces:
 
-+ Parenthesis ```(abc)```, ```()```
-+ Brackets ```[1, 2, 3]```
-+ Curly braces ```{1, 2, 3}```
-+ Tags ```<myIdentifier>abc</myIdentifier>``` - those can hold any identifier inside and basically mean function application
++ Parenthesis `(abc)`, `()`
++ Brackets `[1, 2, 3]`
++ Curly braces `{1, 2, 3}`
++ Tags `<myIdentifier>abc</myIdentifier>` - those can hold any identifier inside and basically mean function application
 
 ### Comments
 
