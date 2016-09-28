@@ -4,17 +4,9 @@ Warning: this document is under heavy development right now.
 
 This is an experimental programmable programming language that was designed with the idea to deliver excessive expressiveness while being comfortable to use and easy to read. The language meets object-oriented, functional and logical programming paradigms and provides endless possibilities to invent new ways of solving all kinds of problems.
 
-The language specification, introduction and core ideas design are still under development and will be available shortly.
+*Warning: the language specification and core ideas design are still under development and will be available soon.*
 
-The language is aimed to:
-
-+ 
-
-+ Provide an ability to express maximum level of abstraction as one can think of
-
-+ Be easily writeable, readable and maintanable
-
-+ Have minimalistic core syntax, that can be extended in-place by user to have any syntactic sugar
+This language is aimed to give user an ability to safely express his (her) thoughts at any level of abstraction and describe any relations between objects, while staying as much easy to read, learn and write as possible.
 
 The language is intended to have:
 
@@ -29,6 +21,8 @@ The language is intended to have:
 + Pattern matching and expression unapplying
 
 + Powerful macro system and evaluation control
+
++ Minimalistic core syntax, that can be extended in-place by user to have any syntactic sugar
 
 + Interactive development features
 
