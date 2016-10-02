@@ -47,14 +47,16 @@ ExpPtr Application::operate(ExpPtrArg first,
 {
     ExpPtr left, right;
     left = Identifier::unwrapIfId(first, env)->eval(env);
-    if (isExpressionQuoted(left, env))
+    //if (isExpressionQuoted(left, env))
         right = second;
-    else
-        right = second->eval(env);
+    //else
+    //    right = second->eval(env);
 
-    // why
     if (checkType<Any>(left) || checkType<Any>(right))
         return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
+
+
+    // Next comes union stuff that will be replaced later
 
     std::vector<ExpPtr> expressions;
 

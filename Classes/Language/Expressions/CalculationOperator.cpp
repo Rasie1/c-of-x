@@ -29,6 +29,8 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
         return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
 
 
+    // Next comes union stuff that will be replaced later
+
     std::vector<ExpPtr> expressions;
 
     bool lUnion = false;

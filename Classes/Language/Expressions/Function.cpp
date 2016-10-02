@@ -12,22 +12,19 @@
 // I'm not really sure if it is correct, but now it fits everything
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
-    auto val = Identifier::unwrapIfId(other, env);
-    if (typeid(*this) == typeid(*val))
-        return val;
-    if (checkType<Any>(val))
+    auto newEnv = env;
+    auto otherEvaluated = other->eval(newEnv);
+    auto value = Identifier::unwrapIfId(otherEvaluated, newEnv);
+
+    if (checkType<Equals>(value))
     {
-        return make_ptr<String>("todo"); // todo: return ValueOfSet([function return type]);
-    }
-    if (checkType<Equals>(val))
-    {
-        auto eq = s_cast<Equals>(other);
-        auto ev = eq->value;//->eval(env);
-        auto envc = env;
-        auto ret = apply(ev, envc);
-        if (checkType<Void>(ret))
-            return ret;
-        return make_ptr<Equals>(ret);
+        auto eq = s_cast<Equals>(value);
+        auto exactValue = eq->value;
+        auto envCopy = env;
+        auto applied = apply(exactValue, envCopy);
+        if (checkType<Void>(applied))
+            return applied;
+        return make_ptr<Equals>(applied);
     }
 
     return make_ptr<Operation>(make_ptr<Intersection>(),
