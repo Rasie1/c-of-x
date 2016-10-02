@@ -12,9 +12,7 @@
 // I'm not really sure if it is correct, but now it fits everything
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
-    auto newEnv = env;
-    auto otherEvaluated = other->eval(newEnv);
-    auto value = Identifier::unwrapIfId(otherEvaluated, newEnv);
+    auto value = Identifier::unwrapIfId(other, env);
 
     if (checkType<Equals>(value))
     {
