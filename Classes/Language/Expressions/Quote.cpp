@@ -25,6 +25,7 @@ const std::string QuotedExpression::defaultName = "\'";
 
 bool QuotedExpression::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
+    return this->e->unapplyVariables(e, env);
     if (checkType<Operation>(this->e) && checkType<Operation>(e))
     {
         auto l = s_cast<Operation>(this->e);

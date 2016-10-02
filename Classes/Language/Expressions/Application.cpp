@@ -47,10 +47,10 @@ ExpPtr Application::operate(ExpPtrArg first,
 {
     ExpPtr left, right;
     left = Identifier::unwrapIfId(first, env)->eval(env);
-    //if (isExpressionQuoted(left, env))
+    if (isExpressionQuoted(left, env))
         right = second;
-    //else
-    //    right = second->eval(env);
+    else
+        right = second->eval(env);
 
     if (checkType<Any>(left) || checkType<Any>(right))
         return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);

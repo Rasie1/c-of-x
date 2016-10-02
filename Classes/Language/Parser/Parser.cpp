@@ -113,18 +113,27 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         else if (currentToken.type() == typeid(Tokens::Opening))
         {
             auto newEnd = next(currentTokenIt);
+            int parsingParenthesisDepth = 1;
             while (newEnd != end)
             {
                 auto currentToken = *newEnd;
                 if (currentToken.type() == typeid(Tokens::Closing))
                 {
+                    parsingParenthesisDepth--;
                     if (false) // todo: case with wrong brackets
                     {
                         return make_ptr<ParseError>("Parentheses mismatch");
                     }
-                    e = parse(next(currentTokenIt), newEnd, env);
-                    currentTokenIt = newEnd;
-                    break;
+                    if (parsingParenthesisDepth == 0)
+                    {
+                        e = parse(next(currentTokenIt), newEnd, env);
+                        currentTokenIt = newEnd;
+                        break;
+                    }
+                }
+                else if (currentToken.type() == typeid(Tokens::Opening))
+                {
+                    parsingParenthesisDepth++;
                 }
                 std::advance(newEnd, 1);
             }

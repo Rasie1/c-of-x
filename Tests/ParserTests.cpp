@@ -122,6 +122,46 @@ BOOST_AUTO_TEST_CASE(MultipleApplication)
     BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
 }
 
+BOOST_AUTO_TEST_CASE(ParenthesesParse)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("(f x y (( (a) ((b)))) (((z))))", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+
+    auto f_x_y_oa_bc_z = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(f_x_y_oa_bc_z->op));
+    BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc_z->left));
+    BOOST_CHECK(checkType<Identifier>(f_x_y_oa_bc_z->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
+
+    auto f_x_y_oa_bc = s_cast<Operation>(f_x_y_oa_bc_z->left);
+    BOOST_CHECK(checkType<Application>(f_x_y_oa_bc->op));
+    BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->left));
+    BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->right));
+
+    auto f_x_y = s_cast<Operation>(f_x_y_oa_bc->left);
+    BOOST_CHECK(checkType<Application>(f_x_y->op));
+    BOOST_CHECK(checkType<Operation>(f_x_y->left));
+    BOOST_CHECK(checkType<Identifier>(f_x_y->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y->right)->name, "y");
+
+    auto a_b = s_cast<Operation>(f_x_y_oa_bc->right);
+    BOOST_CHECK(checkType<Application>(a_b->op));
+    BOOST_CHECK(checkType<Identifier>(a_b->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->left)->name, "a");
+    BOOST_CHECK(checkType<Identifier>(a_b->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->right)->name, "b");
+
+    auto f_x = s_cast<Operation>(f_x_y->left);
+    BOOST_CHECK(checkType<Application>(f_x->op));
+    BOOST_CHECK(checkType<Identifier>(f_x->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(f_x->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
+}
+
 BOOST_AUTO_TEST_CASE(XPlusY)
 {
     Environment env;

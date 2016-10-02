@@ -166,41 +166,41 @@ BOOST_AUTO_TEST_CASE(typedVariables)
 // recursion test
 // re x y = (((x < 11) \ (0)) | ((x > 10) \ (re (x - 1) (print x))) ) x
 
-//BOOST_AUTO_TEST_CASE(simpleMacroMatch)
-//{
-//    Environment env;
-//    Parser p;
+BOOST_AUTO_TEST_CASE(simpleMacroMatch)
+{
+    Environment env;
+    Parser p;
 
-//    auto parsed = p.parse("token ('x) = 0", env);
-//    parsed->eval(env);
-//    parsed = p.parse("token c", env);
-//    auto c = parsed->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "c");
+    auto parsed = p.parse("token ('x) = 0", env);
+    parsed->eval(env);
+    parsed = p.parse("token c", env);
+    auto c = parsed->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "c");
 
-//}
+}
 
-//BOOST_AUTO_TEST_CASE(functionMacroMatch)
-//{
-//    Environment env;
-//    Parser p;
+BOOST_AUTO_TEST_CASE(functionMacroMatch)
+{
+    Environment env;
+    Parser p;
 
-//    p.parse("identity x = x", env)->eval(env);
-//    p.parse("token ('(f x)) = f", env)->eval(env);
-//    auto parsed = p.parse("token (identity x)", env);
-//    auto c = parsed->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "identity");
-//}
+    p.parse("identity x = x", env)->eval(env);
+    p.parse("token ('(f x)) = f", env)->eval(env);
+    auto parsed = p.parse("token (identity x)", env);
+    auto c = parsed->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "identity");
+}
 
-//BOOST_AUTO_TEST_CASE(plusMacroMatch)
-//{
-//    Environment env;
-//    Parser p;
+BOOST_AUTO_TEST_CASE(plusMacroMatch)
+{
+    Environment env;
+    Parser p;
 
-//    p.parse("plustest ('(x + y)) = x * 10 + y", env)->eval(env);
-//    auto parsed = p.parse("plustest(2 + 3)", env);
-//    auto c = parsed->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 23);
-//}
+    p.parse("plustest ('(x + y)) = x * 10 + y", env)->eval(env);
+    auto parsed = p.parse("plustest(2 + 3)", env);
+    auto c = parsed->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 23);
+}
 
 BOOST_AUTO_TEST_CASE(partialPlus)
 {
