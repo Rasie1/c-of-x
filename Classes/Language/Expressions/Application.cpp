@@ -52,6 +52,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     else
         right = second->eval(env);
 
+    // why
     if (checkType<Any>(left) || checkType<Any>(right))
         return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
 

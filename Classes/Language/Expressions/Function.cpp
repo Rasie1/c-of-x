@@ -8,6 +8,8 @@
 #include "Operation.h"
 #include "Intersection.h"
 
+// For some reason, here intersection of function and argument gives us a result.
+// I'm not really sure if it is correct, but now it fits everything
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
     auto val = Identifier::unwrapIfId(other, env);
@@ -15,7 +17,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         return val;
     if (checkType<Any>(val))
     {
-        return make_ptr<String>("lolo"); // todo: return not lolo, but ValueOfSet([function return type]);
+        return make_ptr<String>("todo"); // todo: return ValueOfSet([function return type]);
     }
     if (checkType<Equals>(val))
     {
