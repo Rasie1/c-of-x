@@ -72,5 +72,24 @@ bool Operation::operator==(const Expression& other) const
 
 bool Operation::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
+    if (typeid(*this) == typeid(e))
+    {
+        std::cout << "match" << std::endl;
+    }
+
+    /*bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
+    {
+        auto value = Identifier::unwrapIfId(e, env)->eval(env);
+        if (checkType<Void>(value))
+            return false;
+
+        env.addEqual(shared_from_this(), value);
+
+        auto intersection = env.getEqual(shared_from_this());
+        if (checkType<Void>(intersection))
+            return false;
+
+        return true;
+    }*/
     return op->unapplyVariables(e, this->left, this->right, env);
 }

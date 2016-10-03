@@ -171,11 +171,29 @@ BOOST_AUTO_TEST_CASE(simpleMacroMatch)
     Environment env;
     Parser p;
 
+    auto parsed = p.parse("f ('(1 + 2)) = 4", env);
+    parsed->eval(env);
+    parsed = p.parse("f (1 + 2)", env);
+    auto c = parsed->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 4);
+    parsed = p.parse("f (1 + 3)", env);
+    c = parsed->eval(env);
+    BOOST_CHECK(checkType<Void>(c));
+    parsed = p.parse("f 3", env);
+    c = parsed->eval(env);
+    BOOST_CHECK(checkType<Void>(c));
+}
+
+BOOST_AUTO_TEST_CASE(simpleMacroMatchVariable)
+{
+    Environment env;
+    Parser p;
+
     auto parsed = p.parse("token ('x) = 0", env);
     parsed->eval(env);
     parsed = p.parse("token c", env);
     auto c = parsed->eval(env);
-    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "c");
+    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 0);
 
 }
 

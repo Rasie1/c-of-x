@@ -18,13 +18,15 @@ Application::Application()
 {
 }
 
-bool isExpressionQuoted(ExpPtrArg left, Environment& env)
+static bool isExpressionQuoted(ExpPtrArg left, Environment& env)
 {
     if (checkType<Quote>(left))
         return true;
     if (checkType<Closure>(left))
     {
         auto cl = s_cast<Closure>(left);
+        if (checkType<QuotedExpression>(cl->argument))
+            return true;
         if (checkType<Operation>(cl->argument))
         {
             auto op = s_cast<Operation>(cl->argument);
@@ -37,6 +39,8 @@ bool isExpressionQuoted(ExpPtrArg left, Environment& env)
             }
         }
     }
+    if (checkType<QuotedExpression>(left))
+        return true;
 
     return false;
 }
@@ -123,7 +127,10 @@ std::string Application::show() const
     return "";
 }
 
-bool Application::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Application::unapplyVariables(ExpPtrArg e,
+                                   ExpPtrArg l,
+                                   ExpPtrArg r,
+                                   Environment &env) const
 {
     if (checkType<Identifier>(l))
     {
@@ -184,7 +191,10 @@ std::string ReverseApplication::show() const
 
 const std::string ReverseApplication::defaultName = ":";
 
-bool ReverseApplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool ReverseApplication::unapplyVariables(ExpPtrArg e,
+                                          ExpPtrArg l,
+                                          ExpPtrArg r,
+                                          Environment &env) const
 {
     return proxy.unapplyVariables(e, r, l, env);
 }
@@ -198,8 +208,8 @@ LowPriorityApplication::LowPriorityApplication()
 }
 
 ExpPtr LowPriorityApplication::operate(ExpPtrArg first,
-                            ExpPtrArg second,
-                            Environment& env) const
+                                       ExpPtrArg second,
+                                       Environment& env) const
 {
     return proxy.operate(first, second, env);
 }
@@ -211,7 +221,10 @@ std::string LowPriorityApplication::show() const
 
 const std::string LowPriorityApplication::defaultName = "$";
 
-bool LowPriorityApplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool LowPriorityApplication::unapplyVariables(ExpPtrArg e,
+                                              ExpPtrArg l,
+                                              ExpPtrArg r,
+                                              Environment &env) const
 {
     return proxy.unapplyVariables(e, l, r, env);
 }
