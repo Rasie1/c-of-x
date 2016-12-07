@@ -5,6 +5,9 @@
 #include "Error.h"
 #include "Identifier.h"
 #include "Void.h"
+#include "Quote.h"
+#include "Operation.h"
+#include "Application.h"
 
 Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,
@@ -20,6 +23,26 @@ Closure::~Closure()
 {
 }
 
+
+static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
+{
+    if (checkType<QuotedExpression>(e))
+        return true;
+    if (checkType<Operation>(e))
+    {
+        auto op = s_cast<Operation>(e);
+        if (checkType<Application>(op->op))
+        {
+            if (checkType<Quote>(Identifier::unwrapIfId(op->left, env))) // really?
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
 ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 {
     auto value = Identifier::unwrapIfId(e, env);
@@ -31,7 +54,13 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 
     auto evaluated = body->eval(newEnv);
 
-    return Identifier::unwrapIfId(evaluated, newEnv); // costyl
+//    if (isExpressionQuoted(argument, env))
+//    {
+//        env = newEnv; // not correct, it should affect only bound variables
+//        return evaluated;
+//    }
+//    else
+        return Identifier::unwrapIfId(evaluated, newEnv);
 }
 
 std::string Closure::show() const

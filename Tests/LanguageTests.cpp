@@ -124,6 +124,7 @@ BOOST_AUTO_TEST_CASE(unapplyPlus)
     auto parsed = p.parse("x + 2 = 0", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, -2);
 }
 

@@ -21,34 +21,45 @@ void REPL::start()
 
     while (true)
     {
-        formCompletionNames();
-        string instruction;
+//        try
+//        {
+            formCompletionNames();
+            string instruction;
 
-        instruction = completer.readline();
+            instruction = completer.readline();
 
-        if (shouldExit(instruction))
-            break;
-        else if (command(instruction))
-            continue;
-        else
-        {
-            ExpPtr expression;
-            try
-            {
-                expression = parser.parse(instruction, env);
-            }
-            catch(ExceptionParseError& e)
-            {
-                cout << "Parse error: " << e.s << endl;
+            if (shouldExit(instruction))
+                break;
+            else if (command(instruction))
                 continue;
-            }
+            else
+            {
+                ExpPtr expression;
+                try
+                {
+                    expression = parser.parse(instruction, env);
+                }
+                catch(ExceptionParseError& e)
+                {
+                    cout << "Parse error: " << e.s << endl;
+                    continue;
+                }
 
-            auto evaluated = expression->eval(env);
-            cout << endl << "evaluated: " << evaluated->show() << endl;
-        }
+                auto evaluated = expression->eval(env);
+                cout << endl << "evaluated: " << evaluated->show() << endl;
+            }
+//        }
+//        catch (std::exception& e)
+//        {
+//            std::cerr << "Error: " << e.what() << std::endl;
+//        }
+//        catch (...)
+//        {
+//            std::cerr << "Unknown error!" << std::endl;
+//        }
     }
 
-    cout << "Quitting REPL" << endl;
+    std::cout << "Quitting REPL" << endl;
 }
 
 void REPL::formCompletionNames()
@@ -99,6 +110,7 @@ void REPL::toggleDebugPrint()
 
 void REPL::loadFile(const std::string& s)
 {
+    cout << "Loading file: " << s << endl;
     auto expression = parser.parseFile(s, env);
     auto evaluated = expression->eval(env);
 }

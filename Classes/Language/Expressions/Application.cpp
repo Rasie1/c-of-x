@@ -132,7 +132,10 @@ bool Application::unapplyVariables(ExpPtrArg e,
                                    ExpPtrArg r,
                                    Environment &env) const
 {
-    if (checkType<Identifier>(l))
+    auto lId = checkType<Identifier>(l);
+    auto rId = checkType<Identifier>(r);
+
+    if (lId)
     {
         auto lvalue = env.getEqual(l);
         if (checkType<Quote>(lvalue))

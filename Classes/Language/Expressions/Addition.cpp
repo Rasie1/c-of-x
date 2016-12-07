@@ -44,29 +44,19 @@ bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environme
     if (lId && !rId)
     {
         auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, r);
-        l->unapplyVariables(value, env);
+        return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
         auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, l);
-        r->unapplyVariables(value, env);
+        return r->unapplyVariables(value, env);
     }
-    else if (rId && lId)
+    else if (checkType<Operation>(e))
     {
-        // can check if both values support addition
-//        throw std::runtime_error("Not Implemented: Addition unapply third case");
+        auto op = s_cast<Operation>(e);
+        if (checkType<Addition>(op->op))
+            return op->left->unapplyVariables(l, env)
+                && op->right->unapplyVariables(r, env);
     }
-    else if (!rId && !lId)
-    {
-        if (checkType<Operation>(e))
-        {
-            auto op = s_cast<Operation>(e);
-            if (checkType<Addition>(op->op))
-                return op->left->unapplyVariables(l, env)
-                    && op->right->unapplyVariables(r, env);
-        }
-        return false;
-    }
-
-    return true;
+    return false;
 }
