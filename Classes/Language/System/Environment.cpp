@@ -88,20 +88,23 @@ void Environment::erase(CExpPtrArg e)
     data.erase(e);
 }
 
-void Environment::add(CExpPtrArg key, ExpPtrArg value)
+void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
     debugPrint("ENV ADD: " + key->show() + "\n", true);
     get(key);
     debugPrint("    NEW: " + value->show() + "\n", true);
     auto constKey = std::const_pointer_cast<Expression>(get(key));
 //    if (checkType<Operation>(value)
-    data[key] = intersect(constKey, value);
+//    if (excluding)
+        data[key] = intersect(constKey, value);
+//    else
+//        data[key].
     debugPrint("    RET: " + data[key]->show() + "\n", true);
 }
 
-void Environment::addEqual(CExpPtrArg key, ExpPtrArg value)
+void Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
-    add(key, make_ptr<Equals>(value));
+    add(key, make_ptr<Equals>(value), excluding);
 }
 
 std::vector<std::string> Environment::getKeys() const
@@ -125,29 +128,29 @@ bool Environment::operator==(const Environment& other) const
 
 void Environment::addDefaultVariables()
 {
-    addEqual(make_ptr<Identifier>(Void           ::defaultName), make_ptr<Void>());
-    addEqual(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>());
-    addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>());
-//    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>());
-    addEqual(make_ptr<Identifier>(Quote          ::defaultName), make_ptr<Quote>());
-    addEqual(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>());
-    addEqual(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>());
-    addEqual(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>());
-    addEqual(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>());
-    addEqual(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>());
-    addEqual(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>());
-    addEqual(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>());
-    addEqual(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>());
-    //addEqual(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>());
-    addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>());
-//    addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>());
-    addEqual(make_ptr<Identifier>(Less           ::defaultName), make_ptr<Less>());
-    addEqual(make_ptr<Identifier>(More           ::defaultName), make_ptr<More>());
-    addEqual(make_ptr<Identifier>(Any            ::defaultName), make_ptr<Any>());
-    addEqual(make_ptr<Identifier>(PrintInfo      ::defaultName), make_ptr<PrintInfo>());
-    addEqual(make_ptr<Identifier>(PrintEnv       ::defaultName), make_ptr<PrintEnv>());
-    addEqual(make_ptr<Identifier>(ReverseApplication::defaultName), make_ptr<ReverseApplication>());
-    addEqual(make_ptr<Identifier>(LowPriorityApplication::defaultName), make_ptr<LowPriorityApplication>());
+    addEqual(make_ptr<Identifier>(Void           ::defaultName), make_ptr<Void>(), true);
+    addEqual(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>(), true);
+    addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>(), true);
+//    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>(), true);
+    addEqual(make_ptr<Identifier>(Quote          ::defaultName), make_ptr<Quote>(), true);
+    addEqual(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>(), true);
+    addEqual(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>(), true);
+    addEqual(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>(), true);
+    addEqual(make_ptr<Identifier>(Union          ::defaultName), make_ptr<Union>(), true);
+    addEqual(make_ptr<Identifier>(IntegerType    ::defaultName), make_ptr<IntegerType>(), true);
+    addEqual(make_ptr<Identifier>(Intersection   ::defaultName), make_ptr<Intersection>(), true);
+    addEqual(make_ptr<Identifier>(Mutation       ::defaultName), make_ptr<Mutation>(), true);
+    addEqual(make_ptr<Identifier>(Subtraction    ::defaultName), make_ptr<Subtraction>(), true);
+    //addEqual(make_ptr<Identifier>(Multiplication ::defaultName), make_ptr<Multiplication>(), true);
+    addEqual(make_ptr<Identifier>(Equality       ::defaultName), make_ptr<Equality>(), true);
+//    addEqual(make_ptr<Identifier>(Pair           ::defaultName), make_ptr<Pair>(), true);
+    addEqual(make_ptr<Identifier>(Less           ::defaultName), make_ptr<Less>(), true);
+    addEqual(make_ptr<Identifier>(More           ::defaultName), make_ptr<More>(), true);
+    addEqual(make_ptr<Identifier>(Any            ::defaultName), make_ptr<Any>(), true);
+    addEqual(make_ptr<Identifier>(PrintInfo      ::defaultName), make_ptr<PrintInfo>(), true);
+    addEqual(make_ptr<Identifier>(PrintEnv       ::defaultName), make_ptr<PrintEnv>(), true);
+    addEqual(make_ptr<Identifier>(ReverseApplication::defaultName), make_ptr<ReverseApplication>(), true);
+    addEqual(make_ptr<Identifier>(LowPriorityApplication::defaultName), make_ptr<LowPriorityApplication>(), true);
 }
 
 bool Environment::compareOperators(const std::shared_ptr<Operator>& first,

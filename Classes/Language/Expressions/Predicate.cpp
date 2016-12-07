@@ -12,7 +12,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
     {
         auto id = s_cast<Identifier>(e);
         ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
-        env.add(id, x);
+        env.add(id, x, true);
 
         auto expr = env.getEqual(id);
 

@@ -12,3 +12,4 @@ public:
 
     virtual bool holds(ExpPtrArg e, const Environment& env) const = 0;
 };
+

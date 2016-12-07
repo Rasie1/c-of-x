@@ -42,7 +42,7 @@ bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
     if (checkType<Void>(value))
         return false;
 
-    env.addEqual(shared_from_this(), value);
+    env.addEqual(shared_from_this(), value, true);
 
     auto intersection = env.getEqual(shared_from_this());
     if (checkType<Void>(intersection))

@@ -29,8 +29,8 @@ class Environment
 public:
     Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
 
-    void add(CExpPtrArg key, ExpPtrArg predicate);
-    void addEqual(CExpPtrArg key, ExpPtrArg value);
+    void add(CExpPtrArg key, ExpPtrArg predicate, bool excluding);
+    void addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding);
     ExpPtr get(CExpPtrArg key) const;
     ExpPtr getEqual(CExpPtrArg key) const;
     ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
