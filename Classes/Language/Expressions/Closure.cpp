@@ -50,7 +50,9 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 
     auto fits = this->argument->unapplyVariables(value, newEnv);
     if (!fits)
+    {
         return make_ptr<Void>();
+    }
 
     auto evaluated = body->eval(newEnv);
 

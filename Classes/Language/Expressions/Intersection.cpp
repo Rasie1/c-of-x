@@ -2,6 +2,7 @@
 #include "Operation.h"
 #include "Identifier.h"
 #include "Void.h"
+#include "Environment.h"
 
 Intersection::Intersection()
     : Operator(false, 4, true)
@@ -12,6 +13,11 @@ ExpPtr Intersection::operate(ExpPtrArg first,
                              ExpPtrArg second,
                              Environment& env) const
 {
+    env.debugPrint("Intersecting operation\n");
+    env.increaseDebugIndentation();
+    env.debugPrint("FST: " + first->show() + "\n");
+    env.debugPrint("SND: " + second->show() + "\n");
+    env.decreaseDebugIndentation();
     auto l = Identifier::unwrapIfId(first, env)->eval(env);
     auto r = Identifier::unwrapIfId(second, env)->eval(env);
 

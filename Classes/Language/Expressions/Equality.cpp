@@ -61,7 +61,7 @@ static bool operateHelper(ExpPtrArg first,
 
     auto ret = lvalue->unapplyVariables(rvalue, env);
 
-    env.debugPrint("unapplied: (" + lvalue->show() + ") = (" + rvalue->show() + ")", true);
+    env.debugPrint("unapplied: (" + lvalue->show() + ") = (" + rvalue->show() + ")\n", true);
 
     return ret;
 }
@@ -71,7 +71,7 @@ ExpPtr Equality::operate(ExpPtrArg first,
                          Environment& env) const
 {
     auto envl = env;
-    auto envr = env;
+//    auto envr = env;
     env.debugPrint("Equality: (" + first->show() + ") = (" + second->show() + ")\n", true);
     env.debugPrint("L R:\n", true);
     env.increaseDebugIndentation();
@@ -90,7 +90,9 @@ ExpPtr Equality::operate(ExpPtrArg first,
 //        ret = second;
 //    }
     else
+    {
         return make_ptr<Void>();
+    }
 
     return ret;
 }

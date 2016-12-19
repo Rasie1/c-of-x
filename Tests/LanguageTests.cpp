@@ -198,28 +198,28 @@ BOOST_AUTO_TEST_CASE(simpleMacroMatchVariable)
 
 }
 
-BOOST_AUTO_TEST_CASE(functionMacroMatch)
-{
-    Environment env;
-    Parser p;
+//BOOST_AUTO_TEST_CASE(functionMacroMatch)
+//{
+//    Environment env;
+//    Parser p;
 
-    p.parse("identity x = x", env)->eval(env);
-    p.parse("token ('(f x)) = f", env)->eval(env);
-    auto parsed = p.parse("token (identity x)", env);
-    auto c = parsed->eval(env);
-    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "identity");
-}
+//    p.parse("identity x = x", env)->eval(env);
+//    p.parse("token ('(f x)) = f", env)->eval(env);
+//    auto parsed = p.parse("token (identity x)", env);
+//    auto c = parsed->eval(env);
+//    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "identity");
+//}
 
-BOOST_AUTO_TEST_CASE(plusMacroMatch)
-{
-    Environment env;
-    Parser p;
+//BOOST_AUTO_TEST_CASE(plusMacroMatch)
+//{
+//    Environment env;
+//    Parser p;
 
-    p.parse("plustest ('(x + y)) = x * 10 + y", env)->eval(env);
-    auto parsed = p.parse("plustest(2 + 3)", env);
-    auto c = parsed->eval(env);
-    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 23);
-}
+//    p.parse("plustest ('(x + y)) = x * 10 + y", env)->eval(env);
+//    auto parsed = p.parse("plustest(2 + 3)", env);
+//    auto c = parsed->eval(env);
+//    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 23);
+//}
 
 BOOST_AUTO_TEST_CASE(partialPlus)
 {

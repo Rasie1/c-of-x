@@ -42,18 +42,30 @@ void Environment::clear()
     addDefaultVariables();
 }
 
-ExpPtr Environment::getEqual(CExpPtrArg key) const
+static ExpPtr unwrapEqual(ExpPtrArg value)
 {
-    auto value = get(key);
-
     if (checkType<Equals>(value))
         return s_cast<Equals>(value)->value;
     else if (checkType<Any>(value))
         return value;
+    else if (checkType<Operation>(value) && checkType<Union>(s_cast<Operation>(value)->op))
+    {
+        auto operation = s_cast<Operation>(value);
+        auto l = unwrapEqual(operation->left);
+        auto r = unwrapEqual(operation->right);
+        return make_ptr<Operation>(make_ptr<Union>(), l, r);
+    }
     else if (checkType<Void>(value))
         return value;
     else
         return make_ptr<ValueInSet>(value);
+}
+
+ExpPtr Environment::getEqual(CExpPtrArg key) const
+{
+    auto value = get(key);
+
+    return unwrapEqual(value);
 }
 
 ExpPtr Environment::get(CExpPtrArg key) const
@@ -88,23 +100,24 @@ void Environment::erase(CExpPtrArg e)
     data.erase(e);
 }
 
-void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
+ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
     debugPrint("ENV ADD: " + key->show() + "\n", true);
     get(key);
     debugPrint("    NEW: " + value->show() + "\n", true);
     auto constKey = std::const_pointer_cast<Expression>(get(key));
 //    if (checkType<Operation>(value)
-//    if (excluding)
+    if (!excluding && data.find(key) != data.end())
+        data[key] = make_ptr<Operation>(make_ptr<Union>(), data[key], value);
+    else
         data[key] = intersect(constKey, value);
-//    else
-//        data[key].
     debugPrint("    RET: " + data[key]->show() + "\n", true);
+    return data[key];
 }
 
-void Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
+ExpPtr Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
-    add(key, make_ptr<Equals>(value), excluding);
+    return add(key, make_ptr<Equals>(value), excluding);
 }
 
 std::vector<std::string> Environment::getKeys() const

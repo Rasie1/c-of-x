@@ -144,21 +144,21 @@ bool Application::unapplyVariables(ExpPtrArg e,
             auto qe = s_cast<QuotedExpression>(q->apply(r, env));
             return qe->unapplyVariables(e, env);
         }
-        if (checkType<Any>(lvalue))
-        {
-            // for recursion to work
-            auto newEnv = env;
-            newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
-            auto closure = Lambda().operate(r, e, newEnv);
-
-            env.addEqual(l, closure, false);
-
-            return true;
-        }
-        else if (std::shared_ptr<ReversibleFunction> f = d_cast<ReversibleFunction>(lvalue))
+        if (std::shared_ptr<ReversibleFunction> f = d_cast<ReversibleFunction>(lvalue))
         {
             return f->unapplyVariables(e, r, env);
         }
+//        if (checkType<Any>(lvalue))
+//        {
+            // for recursion to work
+            auto newEnv = env;
+                newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
+            auto closure = Lambda().operate(r, e, newEnv);
+
+            auto ret = env.addEqual(l, closure, false);
+
+            return !checkType<Void>(ret);
+//        }
         return false;
     }
     else

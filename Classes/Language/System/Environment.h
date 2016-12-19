@@ -29,8 +29,8 @@ class Environment
 public:
     Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
 
-    void add(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
-    void addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
+    ExpPtr add(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
+    ExpPtr addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
     ExpPtr get(CExpPtrArg key) const;
     ExpPtr getEqual(CExpPtrArg key) const;
     ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
@@ -40,7 +40,7 @@ public:
     void increaseDebugIndentation();
     void decreaseDebugIndentation();
     void toggleDebugPrint();
-    void debugPrint(const std::string& s, bool shouldIndent = false) const;
+    void debugPrint(const std::string& s, bool shouldIndent = true) const;
 
     bool compareOperators(const std::shared_ptr<Operator>& first,
                           const std::shared_ptr<Operator>& second);
