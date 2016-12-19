@@ -11,6 +11,7 @@
 #include "Integer.h"
 #include "Then.h"
 #include "Addition.h"
+#include "DefaultOperator.h"
 
 BOOST_AUTO_TEST_CASE(VariableTest)
 {
@@ -198,4 +199,43 @@ BOOST_AUTO_TEST_CASE(HighPriorityUsage)
     Environment env;
     Parser p;
     auto parsed = p.parse("f 2+3 sin(x)", env);
+}
+
+BOOST_AUTO_TEST_CASE(MultilineApplication)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f\n"
+                          "  x", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(op->op));
+    BOOST_CHECK(checkType<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+}
+
+BOOST_AUTO_TEST_CASE(AdditionSection)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("1 + 2\n"
+                          "    3", env);
+    std::cout << parsed->show() << std::endl;
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Addition>(op->op));
+    BOOST_CHECK(checkType<Integer>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 1);
+    BOOST_CHECK(checkType<Integer>(op->right));
+    BOOST_CHECK(checkType<Operation>(right));
+    op = s_cast<Operation>(right);
+    BOOST_CHECK(checkType<DefaultOperator>(op->op));
+    BOOST_CHECK(checkType<Integer>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 2);
+    BOOST_CHECK(checkType<Integer>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 3);
 }
