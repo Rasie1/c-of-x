@@ -1,7 +1,7 @@
 #pragma once
 #include "Predicate.h"
 
-class ValueInSet : public DataType
+class ValueInSet : public Data
 {
 public:
     ValueInSet(ExpPtrArg set) : set(set) {}

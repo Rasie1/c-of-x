@@ -9,15 +9,17 @@
 #include "Intersection.h"
 #include "Union.h"
 
-// For some reason, here intersection of function and argument gives us a result.
-// I'm not really sure if it is correct, but now it fits everything
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
     auto value = Identifier::unwrapIfId(other, env);
-
     env.debugPrint("Intersecting function:" + this->show() + "\n");
     env.debugPrint("WITH: " + other->show() + "\n");
 
+
+
+
+    // For some reason, here intersection of function and argument gives us a result.
+    // I'm not really sure if it is correct, but now it fits everything
     if (checkType<Equals>(value))
     {
         auto eq = s_cast<Equals>(value);
@@ -29,7 +31,21 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         return make_ptr<Equals>(applied);
     }
 
-    // Same thing; possibly there are incorrect cases. Needs some research
+    // Same thing; possibly there are incorrect cases. Needs some research. What I've got is:
+    // Image of intersection should be equal intersection of images of input functions
+    // Remains should be equal images of corresponding functions
+    // For example,
+    //    1..5 -> 1..5
+    //    3..7 -> 3..7
+    // is the same as
+    //    1 -> 1..5
+    //    2 -> 1..5
+    //    3 -> 3..5
+    //    4 -> 3..5
+    //    5 -> 3..5
+    //    6 -> 3..7
+    //    7 -> 3..7
+
     if (checkType<Function>(value))
     {
         return make_ptr<Operation>(make_ptr<Union>(),
@@ -37,6 +53,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
                                    other);
     }
 
+    // Otherwise, leave it inevaluated
     return make_ptr<Operation>(make_ptr<Intersection>(),
                                shared_from_this(),
                                other);

@@ -11,7 +11,7 @@ public:
     static const std::string defaultName;
 };
 
-class QuotedExpression : public DataType
+class QuotedExpression : public Data
 {
 public:
     QuotedExpression(ExpPtrArg e) : e(e) {}

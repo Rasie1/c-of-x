@@ -2,7 +2,7 @@
 #include "DataType.h"
 #include <string>
 
-class Error : public DataType
+class Error : public Data
 {
 public:
     Error() {}

@@ -2,7 +2,7 @@
 #include "DataType.h"
 #include <string>
 
-class Identifier : public DataType
+class Identifier : public Data
 {
 public:
     Identifier(const std::string& name)

@@ -35,13 +35,14 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 {
     if (checkType<Equals>(other))
     {
-        auto p = s_cast<Equals>(other);
-        auto& l = *value;
-        auto& r = *(p->value);
-        if (l == r)
-            return shared_from_this();
-        else
-            return make_ptr<Void>();
+        auto equals = s_cast<Equals>(other);
+        auto l = value;
+        auto r = equals->value;
+        return l->intersect(r, env);
+        //if (l == r)
+        //    return shared_from_this();
+        //else
+        //    return make_ptr<Void>();
     }
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }

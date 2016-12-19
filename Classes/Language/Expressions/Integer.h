@@ -2,7 +2,7 @@
 #include "DataType.h"
 #include "Iterable.h"
 class Integer :
-        public DataType,
+        public PlainData,
         public ValueInIterableSet
 {
 public:

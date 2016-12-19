@@ -1,7 +1,7 @@
 #pragma once
 #include "DataType.h"
 
-class Operator : public DataType
+class Operator : public Data
 {
 public:
     Operator(bool isRightAssociative = false, int priority = 5, bool splitting = false);

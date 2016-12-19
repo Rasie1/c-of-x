@@ -1,11 +1,23 @@
 #include "DataType.h"
+#include "Environment.h"
+#include "Void.h"
 
-ExpPtr DataType::eval(Environment& env) const
+ExpPtr Data::eval(Environment& env) const
 {
     return std::const_pointer_cast<Expression>(shared_from_this());
 }
 
-bool DataType::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Data::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
+    // why is that?
     return *this == *e;
+}
+
+
+ExpPtr PlainData::intersect(ExpPtrArg other, const Environment& env)
+{
+    if (*other == *this)
+        return other;
+    else
+        return make_ptr<Void>();
 }

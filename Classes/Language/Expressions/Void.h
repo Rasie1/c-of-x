@@ -1,7 +1,7 @@
 #pragma once
 #include "DataType.h"
 
-class Void : public DataType
+class Void : public Data
 {
 public:
     virtual std::string show() const;

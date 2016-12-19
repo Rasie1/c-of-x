@@ -2,7 +2,7 @@
 #include "DataType.h"
 #include <string>
 
-class String : public DataType
+class String : public Data
 {
 public:
     String(const std::string& value);

@@ -1,7 +1,7 @@
 #pragma once
 #include "DataType.h"
 
-class Any : public DataType
+class Any : public Data
 {
 public:
     ExpPtr intersect(ExpPtrArg other, const Environment& env) override;

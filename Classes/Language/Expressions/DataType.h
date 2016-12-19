@@ -1,7 +1,7 @@
 #pragma once
 #include "Expression.h"
 
-class DataType : public Expression
+class Data : public Expression
 {
 public:
     ExpPtr eval(Environment& env) const override;
@@ -9,4 +9,10 @@ public:
 
     virtual bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
 private:
+};
+
+class PlainData : public Data
+{
+public:
+    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
 };

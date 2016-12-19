@@ -231,8 +231,8 @@ BOOST_AUTO_TEST_CASE(AdditionSection)
     BOOST_CHECK(checkType<Integer>(op->left));
     BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 1);
     BOOST_CHECK(checkType<Integer>(op->right));
-    BOOST_CHECK(checkType<Operation>(right));
-    op = s_cast<Operation>(right);
+    BOOST_CHECK(checkType<Operation>(op->right));
+    op = s_cast<Operation>(op->right);
     BOOST_CHECK(checkType<DefaultOperator>(op->op));
     BOOST_CHECK(checkType<Integer>(op->left));
     BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 2);

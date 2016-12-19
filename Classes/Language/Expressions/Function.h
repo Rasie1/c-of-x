@@ -1,7 +1,7 @@
 #pragma once
 #include "DataType.h"
 
-class Function : public DataType
+class Function : public Data
 {
 public:
     virtual ExpPtr apply(ExpPtrArg e, Environment& env) const = 0;

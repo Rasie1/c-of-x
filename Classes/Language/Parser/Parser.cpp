@@ -17,7 +17,6 @@
 #include "Environment.h"
 #include "EvalForce.h"
 #include "Lambda.h"
-
 using namespace std;
 
 ExpPtr Parser::parse(const string& s, Environment& env)
