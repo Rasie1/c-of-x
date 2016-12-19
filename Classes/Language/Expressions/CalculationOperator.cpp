@@ -16,8 +16,10 @@ CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, 
 
 ExpPtr CalculationOperator::operate(ExpPtrArg first,
                                     ExpPtrArg second,
-                                    Environment& env) const
+                                    Environment& envOld) const
 {
+    Environment env = envOld;
+    env.defaultOperator = s_cast<const Operator>(shared_from_this());
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
     left  = left->eval(env);

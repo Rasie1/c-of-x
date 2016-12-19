@@ -50,7 +50,7 @@ public:
 
     std::vector<std::string> getKeys() const;
 
-    std::shared_ptr<Operator> defaultOperator;
+    std::shared_ptr<const Operator> defaultOperator;
 
 private:
     void addDefaultVariables();

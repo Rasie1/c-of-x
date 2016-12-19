@@ -145,6 +145,7 @@ void Environment::addDefaultVariables()
 {
     addEqual(make_ptr<Identifier>(Void           ::defaultName), make_ptr<Void>(), true);
     addEqual(make_ptr<Identifier>(DefaultOperator::defaultName), make_ptr<DefaultOperator>(), true);
+    addEqual(make_ptr<Identifier>(";"),                          make_ptr<DefaultOperator>(), true);
     addEqual(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>(), true);
     addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>(), true);
 //    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>(), true);
