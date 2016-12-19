@@ -254,3 +254,22 @@ BOOST_AUTO_TEST_CASE(partialPlus)
 //    }
 //}
 
+//BOOST_AUTO_TEST_CASE(functionOverloading)
+//{
+//    Environment env;
+//    Parser p;
+//    auto parsed = p.parse("f 1 = 1", env);
+//    parsed->eval(env);
+//    auto applied0 = p.parse("f 1", env)->eval(env);
+//    BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 1);
+//    auto applied1 = p.parse("f 2", env)->eval(env);
+//    BOOST_CHECK(d_cast<Void>(applied1));
+//    parsed = p.parse("f 2 = 2", env);
+//    parsed->eval(env);
+//    auto applied2 = p.parse("f 1", env)->eval(env);
+//    BOOST_CHECK_EQUAL(d_cast<Integer>(applied2)->value, 1);
+//    auto applied3 = p.parse("f 2", env)->eval(env);
+//    BOOST_CHECK_EQUAL(d_cast<Integer>(applied3)->value, 2);
+//    auto applied4 = p.parse("f 3", env)->eval(env);
+//    BOOST_CHECK(d_cast<Void>(applied4));
+//}
