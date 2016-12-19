@@ -26,12 +26,14 @@
 #include "Less.h"
 #include "More.h"
 #include "ValueInSet.h"
+#include "DefaultOperator.h"
 
 #include <vector>
 #include <fstream>
 
 Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
-    debugPrinter(debugPrinter)
+    debugPrinter(debugPrinter),
+    defaultOperator(make_ptr<Intersection>())
 {
     addDefaultVariables();
 }
@@ -142,6 +144,7 @@ bool Environment::operator==(const Environment& other) const
 void Environment::addDefaultVariables()
 {
     addEqual(make_ptr<Identifier>(Void           ::defaultName), make_ptr<Void>(), true);
+    addEqual(make_ptr<Identifier>(DefaultOperator::defaultName), make_ptr<DefaultOperator>(), true);
     addEqual(make_ptr<Identifier>(Lambda         ::defaultName), make_ptr<Lambda>(), true);
     addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>(), true);
 //    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>(), true);
