@@ -1,6 +1,7 @@
 ﻿#include "REPL.h"
 #include <iostream>
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include "Expression.h"
 #include "ExceptionParseError.h"
 #include "Void.h"
@@ -27,6 +28,7 @@ void REPL::start()
             string instruction;
 
             instruction = completer.readline();
+            boost::trim_right(instruction);
 
             if (shouldExit(instruction))
                 break;
