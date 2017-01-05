@@ -1,12 +1,20 @@
 *Warning: this document is under heavy development right now. *
 
-# Welcome to c(x)
+# Welcome
 
 This is an experimental programming language inspired by Haskell and C++ template metaprogramming.
 
 ## Build & Run
 
-Run following steps in terminal to compile the language (note: you should have C++17 compiler available):
+### Dependencies
+
+- C++17 compiler
+- readline
+- boost
+
+### How to build
+
+Run following steps in terminal to compile the language:
 
 ```
 sudo apt-get install libreadline-dev
@@ -15,6 +23,8 @@ cd build
 cmake ..
 make
 ```
+
+### How to run
 
 To run interpreter, execute `Language` binary.
 
