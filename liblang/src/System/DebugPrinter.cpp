@@ -1,4 +1,4 @@
-#include "DebugPrinter.h"
+#include "System/DebugPrinter.h"
 #include <iostream>
 
 static const int indentationSize = 3;
