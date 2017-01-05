@@ -4,13 +4,13 @@
 #include "Environment.h"
 #include "Identifier.h"
 #include "Operation.h"
-#include "Application.h"
-#include "Any.h"
+#include "Expressions/Application.h"
+#include "Expressions/Any.h"
 #include "Void.h"
 #include "Parser.h"
 #include "Integer.h"
 #include "Then.h"
-#include "Addition.h"
+#include "Expressions/Addition.h"
 #include "DefaultOperator.h"
 
 BOOST_AUTO_TEST_CASE(VariableTest)

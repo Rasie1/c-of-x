@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Expressions/Application.h"
 #include <vector>
 #include "Environment.h"
 #include "Lambda.h"
@@ -8,9 +8,9 @@
 #include "Identifier.h"
 #include "Union.h"
 #include "Void.h"
-#include "Any.h"
+#include "Expressions/Any.h"
 #include "Quote.h"
-#include "Closure.h"
+#include "Expressions/Closure.h"
 #include "Equality.h"
 
 Application::Application()

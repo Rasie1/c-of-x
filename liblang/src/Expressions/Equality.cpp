@@ -5,7 +5,7 @@
 #include "Intersection.h"
 #include "Void.h"
 #include "Lambda.h"
-#include "Application.h"
+#include "Expressions/Application.h"
 
 
 bool Equals::holds(ExpPtrArg e, const Environment& env) const

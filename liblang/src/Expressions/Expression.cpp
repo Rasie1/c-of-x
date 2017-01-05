@@ -1,7 +1,7 @@
-#include "Expression.h"
+#include "Expressions/Expression.h"
 #include <stdexcept>
 #include "TypeError.h"
-#include "Application.h"
+#include "Expressions/Application.h"
 #include "Operation.h"
 #include "Environment.h"
 #include "Intersection.h"

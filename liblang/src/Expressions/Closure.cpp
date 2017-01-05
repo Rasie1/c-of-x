@@ -1,4 +1,4 @@
-#include "Closure.h"
+#include "Expressions/Closure.h"
 #include <string>
 #include "Function.h"
 #include "Environment.h"
@@ -7,7 +7,7 @@
 #include "Void.h"
 #include "Quote.h"
 #include "Operation.h"
-#include "Application.h"
+#include "Expressions/Application.h"
 
 Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,

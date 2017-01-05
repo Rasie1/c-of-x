@@ -2,7 +2,7 @@
 #include <string>
 #include "Integer.h"
 #include "Operation.h"
-#include "Addition.h"
+#include "Expressions/Addition.h"
 #include "Identifier.h"
 #include "TypeError.h"
 #include "Environment.h"

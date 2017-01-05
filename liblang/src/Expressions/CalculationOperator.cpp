@@ -1,4 +1,4 @@
-#include "CalculationOperator.h"
+#include "Expressions/CalculationOperator.h"
 #include "Operation.h"
 #include "Integer.h"
 #include "Subtraction.h"
@@ -6,7 +6,7 @@
 #include "TypeError.h"
 #include "Environment.h"
 #include "Union.h"
-#include "Any.h"
+#include "Expressions/Any.h"
 #include <vector>
 
 CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, bool splitting)

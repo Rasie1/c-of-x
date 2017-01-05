@@ -35,3 +35,7 @@ target_link_libraries(ParserTests
                       ${Boost_SYSTEM_LIBRARY}
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       )
+
+add_test(lang LexerTests)
+add_test(lang ParserTests)
+add_test(lang LanguageTests)

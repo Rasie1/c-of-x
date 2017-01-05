@@ -1,11 +1,11 @@
-#include "Addition.h"
+#include "Expressions/Addition.h"
 #include "Operation.h"
 #include "Integer.h"
 #include "Subtraction.h"
 #include "Identifier.h"
 #include "TypeError.h"
 #include "Environment.h"
-#include "Any.h"
+#include "Expressions/Any.h"
 
 Addition::Addition()
     : CalculationOperator(false, 5, true)

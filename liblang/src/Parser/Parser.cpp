@@ -5,9 +5,9 @@
 #include <queue>
 #include <iostream>
 #include <fstream>
-#include "Expression.h"
+#include "Expressions/Expression.h"
 #include "Integer.h"
-#include "Application.h"
+#include "Expressions/Application.h"
 #include "ExceptionParseError.h"
 #include "Void.h"
 #include "ParseError.h"
