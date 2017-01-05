@@ -26,7 +26,7 @@ make
 
 ### How to run
 
-To run interpreter, execute `Language` binary.
+To run interpreter, execute `repl` binary.
 
 To run tests, execute `ctest` from `build` directory.
 

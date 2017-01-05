@@ -18,7 +18,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 
 
 
-    // For some reason, here intersection of function and argument gives us a result.
+    // For some reason, here intersection of function and argument gives us the result.
     // I'm not really sure if it is correct, but now it fits everything
     if (checkType<Equals>(value))
     {
