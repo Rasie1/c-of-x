@@ -1,7 +1,7 @@
 #pragma once
 #include "Expressions/Expression.h"
-#include "Function.h"
-#include "Environment.h"
+#include "Expressions/Function.h"
+#include "System/Environment.h"
 
 class Environment;
 class Closure : public Function

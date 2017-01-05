@@ -1,13 +1,13 @@
-#include "Less.h"
-#include "Equality.h"
-#include "Identifier.h"
-#include "Environment.h"
-#include "Operation.h"
-#include "Intersection.h"
-#include "Void.h"
-#include "Lambda.h"
-#include "Integer.h"
-#include "Union.h"
+#include "Expressions/Less.h"
+#include "Expressions/Equality.h"
+#include "Expressions/Identifier.h"
+#include "System/Environment.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Intersection.h"
+#include "Expressions/Void.h"
+#include "Expressions/Lambda.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Union.h"
 
 
 bool LessThan::holds(ExpPtrArg e, const Environment& env) const

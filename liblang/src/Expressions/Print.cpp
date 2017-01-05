@@ -1,8 +1,8 @@
-#include "Print.h"
+#include "Expressions/Print.h"
 #include <iostream>
-#include "Environment.h"
-#include "Identifier.h"
-#include "Void.h"
+#include "System/Environment.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Void.h"
 
 ExpPtr Print::apply(ExpPtrArg e, Environment& env) const
 {

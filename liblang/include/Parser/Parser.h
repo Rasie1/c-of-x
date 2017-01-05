@@ -2,8 +2,8 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "Token.h"
-#include "Lexer.h"
+#include "Parser/Token.h"
+#include "Parser/Lexer.h"
 
 class Expression;
 typedef std::shared_ptr<Expression> ExpPtr;

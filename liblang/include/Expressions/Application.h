@@ -1,5 +1,5 @@
 #pragma once
-#include "Operator.h"
+#include "Expressions/Operator.h"
 
 class Application : public Operator
 {

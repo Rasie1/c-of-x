@@ -1,12 +1,12 @@
 #define BOOST_TEST_MODULE LanguageTests
 #include <boost/test/unit_test.hpp>
-#include "Environment.h"
-#include "Identifier.h"
+#include "System/Environment.h"
+#include "Expressions/Identifier.h"
 #include "Expressions/Any.h"
-#include "Void.h"
-#include "Parser.h"
-#include "Integer.h"
-#include "Then.h"
+#include "Expressions/Void.h"
+#include "Parser/Parser.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Then.h"
 
 BOOST_AUTO_TEST_CASE(newVariable)
 {

@@ -1,7 +1,7 @@
 #pragma once
-#include "Operator.h"
-#include "Operation.h"
-#include "Void.h"
+#include "Expressions/Operator.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Void.h"
 
 class Union : public Operator
 {

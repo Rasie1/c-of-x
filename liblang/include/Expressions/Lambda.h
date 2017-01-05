@@ -1,6 +1,6 @@
 #pragma once
 #include "Expressions/Expression.h"
-#include "Operator.h"
+#include "Expressions/Operator.h"
 
 class Lambda : public Operator
 {

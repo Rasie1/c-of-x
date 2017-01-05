@@ -1,8 +1,8 @@
-#include "Intersection.h"
-#include "Operation.h"
-#include "Identifier.h"
-#include "Void.h"
-#include "Environment.h"
+#include "Expressions/Intersection.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Void.h"
+#include "System/Environment.h"
 
 Intersection::Intersection()
     : Operator(false, 4, true)

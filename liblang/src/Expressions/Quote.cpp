@@ -1,7 +1,7 @@
-#include "Quote.h"
+#include "Expressions/Quote.h"
 #include "Expressions/Application.h"
-#include "Operation.h"
-#include "Identifier.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Identifier.h"
 
 ExpPtr Quote::apply(ExpPtrArg e, Environment& env) const
 {

@@ -1,12 +1,12 @@
 #include "Expressions/Closure.h"
 #include <string>
-#include "Function.h"
-#include "Environment.h"
-#include "Error.h"
-#include "Identifier.h"
-#include "Void.h"
-#include "Quote.h"
-#include "Operation.h"
+#include "Expressions/Function.h"
+#include "System/Environment.h"
+#include "Expressions/Error.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Void.h"
+#include "Expressions/Quote.h"
+#include "Expressions/Operation.h"
 #include "Expressions/Application.h"
 
 Closure::Closure(ExpPtrArg argument,

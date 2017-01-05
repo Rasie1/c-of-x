@@ -1,7 +1,7 @@
 #pragma once
-#include "Predicate.h"
-#include "Operator.h"
-#include "Iterable.h"
+#include "Expressions/Predicate.h"
+#include "Expressions/Operator.h"
+#include "Expressions/Iterable.h"
 
 class LessThan :
         public Predicate,

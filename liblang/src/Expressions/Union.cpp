@@ -1,7 +1,7 @@
-#include "Union.h"
-#include "Operation.h"
-#include "Void.h"
-#include "Identifier.h"
+#include "Expressions/Union.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Void.h"
+#include "Expressions/Identifier.h"
 #include <algorithm>
 #include <list>
 

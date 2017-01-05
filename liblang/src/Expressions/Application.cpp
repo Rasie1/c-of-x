@@ -1,17 +1,17 @@
 #include "Expressions/Application.h"
 #include <vector>
-#include "Environment.h"
-#include "Lambda.h"
-#include "Operation.h"
-#include "Error.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Union.h"
-#include "Void.h"
+#include "System/Environment.h"
+#include "Expressions/Lambda.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Error.h"
+#include "Expressions/Function.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Union.h"
+#include "Expressions/Void.h"
 #include "Expressions/Any.h"
-#include "Quote.h"
+#include "Expressions/Quote.h"
 #include "Expressions/Closure.h"
-#include "Equality.h"
+#include "Expressions/Equality.h"
 
 Application::Application()
     : Operator(false, 10, true)

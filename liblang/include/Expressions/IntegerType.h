@@ -1,5 +1,5 @@
 #pragma once
-#include "Type.h"
+#include "Expressions/Type.h"
 
 class IntegerType : public Type
 {

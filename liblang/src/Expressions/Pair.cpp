@@ -1,5 +1,5 @@
-#include "Pair.h"
-#include "Operation.h"
+#include "Expressions/Pair.h"
+#include "Expressions/Operation.h"
 
 Pair::Pair()
     : Operator(true, 0, true)

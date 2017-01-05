@@ -1,10 +1,10 @@
-#include "Operation.h"
-#include "Operator.h"
-#include "Union.h"
-#include "Identifier.h"
-#include "Environment.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Operator.h"
+#include "Expressions/Union.h"
+#include "Expressions/Identifier.h"
+#include "System/Environment.h"
 #include "Expressions/Any.h"
-#include "Intersection.h"
+#include "Expressions/Intersection.h"
 
 Operation::Operation(const std::shared_ptr<const Operator>& op,
                      ExpPtrArg left,

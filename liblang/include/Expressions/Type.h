@@ -1,5 +1,5 @@
 #pragma once
-#include "Predicate.h"
+#include "Expressions/Predicate.h"
 
 class Type : public Predicate
 {

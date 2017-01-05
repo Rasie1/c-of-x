@@ -1,8 +1,8 @@
-#include "Include.h"
-#include "String.h"
-#include "Parser.h"
-#include "Environment.h"
-#include "Error.h"
+#include "Expressions/Include.h"
+#include "Expressions/String.h"
+#include "Parser/Parser.h"
+#include "System/Environment.h"
+#include "Expressions/Error.h"
 
 ExpPtr Include::apply(ExpPtrArg e, Environment& env) const
 {

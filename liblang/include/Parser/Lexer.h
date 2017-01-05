@@ -1,5 +1,5 @@
 #pragma once
-#include "Token.h"
+#include "Parser/Token.h"
 #include <vector>
 #include <string>
 

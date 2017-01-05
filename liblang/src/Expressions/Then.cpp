@@ -1,8 +1,8 @@
-#include "Then.h"
-#include "Operation.h"
-#include "Environment.h"
-#include "Identifier.h"
-#include "Void.h"
+#include "Expressions/Then.h"
+#include "Expressions/Operation.h"
+#include "System/Environment.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Void.h"
 
 Then::Then()
     : Operator(true, 3, true)

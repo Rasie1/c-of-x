@@ -1,10 +1,10 @@
-#include "Multiplication.h"
-#include "Operation.h"
-#include "Integer.h"
-#include "Subtraction.h"
-#include "Identifier.h"
-#include "TypeError.h"
-#include "Environment.h"
+#include "Expressions/Multiplication.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Subtraction.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/TypeError.h"
+#include "System/Environment.h"
 #include "Expressions/Any.h"
 
 Multiplication::Multiplication()

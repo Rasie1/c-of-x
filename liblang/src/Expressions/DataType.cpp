@@ -1,6 +1,6 @@
-#include "DataType.h"
-#include "Environment.h"
-#include "Void.h"
+#include "Expressions/DataType.h"
+#include "System/Environment.h"
+#include "Expressions/Void.h"
 
 ExpPtr Data::eval(Environment& env) const
 {

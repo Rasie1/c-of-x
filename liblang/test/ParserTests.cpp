@@ -1,17 +1,17 @@
 #define BOOST_TEST_MODULE ParserTests
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-#include "Environment.h"
-#include "Identifier.h"
-#include "Operation.h"
+#include "System/Environment.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Operation.h"
 #include "Expressions/Application.h"
 #include "Expressions/Any.h"
-#include "Void.h"
-#include "Parser.h"
-#include "Integer.h"
-#include "Then.h"
+#include "Expressions/Void.h"
+#include "Parser/Parser.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Then.h"
 #include "Expressions/Addition.h"
-#include "DefaultOperator.h"
+#include "Expressions/DefaultOperator.h"
 
 BOOST_AUTO_TEST_CASE(VariableTest)
 {

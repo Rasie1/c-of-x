@@ -1,5 +1,5 @@
 #pragma once
-#include "DataType.h"
+#include "Expressions/DataType.h"
 #include <string>
 
 class Error : public Data

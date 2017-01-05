@@ -1,8 +1,8 @@
-#include "IntegerType.h"
-#include "Integer.h"
-#include "Void.h"
-#include "Identifier.h"
-#include "Environment.h"
+#include "Expressions/IntegerType.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Void.h"
+#include "Expressions/Identifier.h"
+#include "System/Environment.h"
 
 bool IntegerType::holds(ExpPtrArg e, const Environment& env) const
 {

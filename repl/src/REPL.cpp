@@ -3,8 +3,8 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include "Expressions/Expression.h"
-#include "ExceptionParseError.h"
-#include "Void.h"
+#include "Expressions/ExceptionParseError.h"
+#include "Expressions/Void.h"
 #include "AutoCompleter.h"
 
 using namespace std;

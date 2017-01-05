@@ -1,7 +1,7 @@
-#include "Operator.h"
-#include "Lambda.h"
-#include "Identifier.h"
-#include "Operation.h"
+#include "Expressions/Operator.h"
+#include "Expressions/Lambda.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/Operation.h"
 
 Operator::Operator(bool isRightAssociative, int priority, bool splitting)
     : isRightAssociative(isRightAssociative),

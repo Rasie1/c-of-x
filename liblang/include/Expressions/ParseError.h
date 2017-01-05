@@ -1,5 +1,5 @@
 #pragma once
-#include "Error.h"
+#include "Expressions/Error.h"
 
 class ParseError : public ErrorWithMessage
 {

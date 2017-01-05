@@ -1,11 +1,11 @@
 #include "Expressions/CalculationOperator.h"
-#include "Operation.h"
-#include "Integer.h"
-#include "Subtraction.h"
-#include "Identifier.h"
-#include "TypeError.h"
-#include "Environment.h"
-#include "Union.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Subtraction.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/TypeError.h"
+#include "System/Environment.h"
+#include "Expressions/Union.h"
 #include "Expressions/Any.h"
 #include <vector>
 

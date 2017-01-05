@@ -1,8 +1,8 @@
-#include "Mutation.h"
-#include "Identifier.h"
-#include "Environment.h"
-#include "Operation.h"
-#include "Equality.h"
+#include "Expressions/Mutation.h"
+#include "Expressions/Identifier.h"
+#include "System/Environment.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Equality.h"
 
 
 ExpPtr Mutation::operate(ExpPtrArg first,

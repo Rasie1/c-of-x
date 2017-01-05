@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE LexerTests
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-#include "Lexer.h"
+#include "Parser/Lexer.h"
 
 using namespace boost;
 using namespace std;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Error.h"
+#include "Expressions/Error.h"
 #include <string>
 
 class TypeError : public Error

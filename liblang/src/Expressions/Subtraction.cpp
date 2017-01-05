@@ -1,11 +1,11 @@
-#include "Subtraction.h"
+#include "Expressions/Subtraction.h"
 #include <string>
-#include "Integer.h"
-#include "Operation.h"
+#include "Expressions/Integer.h"
+#include "Expressions/Operation.h"
 #include "Expressions/Addition.h"
-#include "Identifier.h"
-#include "TypeError.h"
-#include "Environment.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/TypeError.h"
+#include "System/Environment.h"
 
 Subtraction::Subtraction()
     : CalculationOperator(false, 5, true)

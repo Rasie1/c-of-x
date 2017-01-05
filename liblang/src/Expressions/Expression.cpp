@@ -1,12 +1,12 @@
 #include "Expressions/Expression.h"
 #include <stdexcept>
-#include "TypeError.h"
+#include "Expressions/TypeError.h"
 #include "Expressions/Application.h"
-#include "Operation.h"
-#include "Environment.h"
-#include "Intersection.h"
-#include "Union.h"
-#include "Void.h"
+#include "Expressions/Operation.h"
+#include "System/Environment.h"
+#include "Expressions/Intersection.h"
+#include "Expressions/Union.h"
+#include "Expressions/Void.h"
 
 Expression::Expression()
 {

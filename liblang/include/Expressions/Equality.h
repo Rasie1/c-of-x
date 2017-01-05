@@ -1,6 +1,6 @@
 #pragma once
-#include "Predicate.h"
-#include "Operator.h"
+#include "Expressions/Predicate.h"
+#include "Expressions/Operator.h"
 
 class Equality : public Operator
 {

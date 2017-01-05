@@ -1,4 +1,5 @@
 include_directories(include)
+include_directories(../liblang/include)
 file(GLOB_RECURSE SRC_REPL . src/*.cpp)
 
 find_package(Boost COMPONENTS program_options REQUIRED)

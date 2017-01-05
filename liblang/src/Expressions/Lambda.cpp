@@ -1,9 +1,9 @@
-#include "Lambda.h"
+#include "Expressions/Lambda.h"
 #include <iostream>
 #include "Expressions/Closure.h"
-#include "Function.h"
-#include "Environment.h"
-#include "Operation.h"
+#include "Expressions/Function.h"
+#include "System/Environment.h"
+#include "Expressions/Operation.h"
 
 Lambda::Lambda()
     : Operator(true, 2, true)

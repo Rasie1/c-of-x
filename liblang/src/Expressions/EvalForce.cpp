@@ -1,5 +1,5 @@
-#include "EvalForce.h"
-#include "TypeError.h"
+#include "Expressions/EvalForce.h"
+#include "Expressions/TypeError.h"
 
 ExpPtr EvalForce::apply(ExpPtrArg e, Environment& env) const
 {

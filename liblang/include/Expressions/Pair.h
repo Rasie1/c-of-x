@@ -1,6 +1,6 @@
 #pragma once
-#include "Function.h"
-#include "Operator.h"
+#include "Expressions/Function.h"
+#include "Expressions/Operator.h"
 
 class Pair : public Operator
 {

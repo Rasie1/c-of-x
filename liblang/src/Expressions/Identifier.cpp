@@ -1,10 +1,10 @@
-#include "Identifier.h"
-#include "Environment.h"
+#include "Expressions/Identifier.h"
+#include "System/Environment.h"
 #include <string>
 #include <list>
-#include "Error.h"
+#include "Expressions/Error.h"
 #include "Expressions/Any.h"
-#include "Void.h"
+#include "Expressions/Void.h"
 
 bool Identifier::operator==(const Expression& other) const
 {

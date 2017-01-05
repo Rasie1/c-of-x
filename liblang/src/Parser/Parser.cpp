@@ -1,4 +1,4 @@
-#include "Parser.h"
+#include "Parser/Parser.h"
 #include <sstream>
 #include <string>
 #include <stack>
@@ -6,17 +6,17 @@
 #include <iostream>
 #include <fstream>
 #include "Expressions/Expression.h"
-#include "Integer.h"
+#include "Expressions/Integer.h"
 #include "Expressions/Application.h"
-#include "ExceptionParseError.h"
-#include "Void.h"
-#include "ParseError.h"
-#include "Identifier.h"
-#include "String.h"
-#include "Operation.h"
-#include "Environment.h"
-#include "EvalForce.h"
-#include "Lambda.h"
+#include "Expressions/ExceptionParseError.h"
+#include "Expressions/Void.h"
+#include "Expressions/ParseError.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/String.h"
+#include "Expressions/Operation.h"
+#include "System/Environment.h"
+#include "Expressions/EvalForce.h"
+#include "Expressions/Lambda.h"
 using namespace std;
 
 ExpPtr Parser::parse(const string& s, Environment& env)

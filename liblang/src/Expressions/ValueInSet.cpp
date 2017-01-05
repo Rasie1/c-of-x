@@ -1,5 +1,5 @@
-#include "ValueInSet.h"
-#include "Equality.h"
+#include "Expressions/ValueInSet.h"
+#include "Expressions/Equality.h"
 
 std::string ValueInSet::show() const
 {

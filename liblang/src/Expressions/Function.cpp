@@ -1,13 +1,13 @@
-#include "Function.h"
-#include "Environment.h"
-#include "Void.h"
-#include "Equality.h"
+#include "Expressions/Function.h"
+#include "System/Environment.h"
+#include "Expressions/Void.h"
+#include "Expressions/Equality.h"
 #include "Expressions/Any.h"
-#include "Identifier.h"
-#include "String.h"
-#include "Operation.h"
-#include "Intersection.h"
-#include "Union.h"
+#include "Expressions/Identifier.h"
+#include "Expressions/String.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Intersection.h"
+#include "Expressions/Union.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
