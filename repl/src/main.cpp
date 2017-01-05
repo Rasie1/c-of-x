@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
         {
             REPL repl;
             if (!(vm.count("no-preload")))
-                  repl.loadFile("prelude.txt");
+                  repl.loadFile("prelude.lang");
             if ((vm.count("debug-print")))
                   repl.toggleDebugPrint();
             repl.start();
