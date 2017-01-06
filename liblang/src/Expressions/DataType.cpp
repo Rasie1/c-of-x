@@ -9,7 +9,7 @@ ExpPtr Data::eval(Environment& env) const
 
 bool Data::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    // why is that?
+    // TODO: why is that?
     return *this == *e;
 }
 

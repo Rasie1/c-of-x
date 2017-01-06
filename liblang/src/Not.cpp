@@ -25,6 +25,6 @@ const std::string Complement::defaultName = "!";
 
 bool Complement::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    // TODO: implement
-    return false;
+    auto complement = make_ptr<Complement>(e);
+    return this->e->unapplyVariables(complement, env);
 }
