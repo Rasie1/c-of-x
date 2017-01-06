@@ -18,6 +18,7 @@
 #include "Expressions/Union.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/Quote.h"
+#include "Expressions/Not.h"
 #include "Expressions/EvalForce.h"
 #include "Expressions/IntegerType.h"
 #include "Expressions/Operation.h"
@@ -150,6 +151,7 @@ void Environment::addDefaultVariables()
     addEqual(make_ptr<Identifier>(Then           ::defaultName), make_ptr<Then>(), true);
 //    addEqual(make_ptr<Identifier>(EvalForce      ::defaultName), make_ptr<EvalForce>(), true);
     addEqual(make_ptr<Identifier>(Quote          ::defaultName), make_ptr<Quote>(), true);
+    addEqual(make_ptr<Identifier>(Not            ::defaultName), make_ptr<Not>(), true);
     addEqual(make_ptr<Identifier>(Print          ::defaultName), make_ptr<Print>(), true);
     addEqual(make_ptr<Identifier>(Include        ::defaultName), make_ptr<Include>(), true);
     addEqual(make_ptr<Identifier>(Addition       ::defaultName), make_ptr<Addition>(), true);
