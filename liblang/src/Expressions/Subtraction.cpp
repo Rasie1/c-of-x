@@ -1,5 +1,6 @@
 #include "Expressions/Subtraction.h"
 #include <string>
+#include <stdexcept>
 #include "Expressions/Integer.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Addition.h"
@@ -42,22 +43,19 @@ bool Subtraction::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
     if (lId && !rId)
     {
         auto value = make_ptr<Operation>(make_ptr<Addition>(), e, r);
-        l->unapplyVariables(value, env);
+        return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
         auto value = make_ptr<Operation>(make_ptr<Addition>(), e, l);
-        r->unapplyVariables(value, env);
+        return r->unapplyVariables(value, env);
     }
-    else if (rId && lId)
+    else if (checkType<Operation>(e))
     {
-        // can check if both values support addition
+        auto op = s_cast<Operation>(e);
+        if (checkType<Subtraction>(op->op))
+            return op->left->unapplyVariables(l, env)
+                && op->right->unapplyVariables(r, env);
     }
-    else if (!rId && !lId)
-    {
-        // possible there is still operations
-        throw "nope"; //eval and add?
-    }
-
-    return true;
+    return false;
 }

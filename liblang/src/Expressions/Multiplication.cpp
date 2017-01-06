@@ -37,24 +37,24 @@ bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Env
 
     if (lId && !rId)
     {
-//        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, r);
-//        l->unapplyVariables(value, env);
+        throw std::logic_error("not implemented");
+        // auto value = make_ptr<Operation>(make_ptr<Division>(), e, r);
+        // return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
-//        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, l);
-//        r->unapplyVariables(value, env);
+        throw std::logic_error("not implemented");
+        // auto value = make_ptr<Operation>(make_ptr<Division>(), e, l);
+        // return r->unapplyVariables(value, env);
     }
-    else if (rId && lId)
+    else if (checkType<Operation>(e))
     {
-        // can check if both values support addition
+        auto op = s_cast<Operation>(e);
+        if (checkType<Multiplication>(op->op))
+            return op->left->unapplyVariables(l, env)
+                && op->right->unapplyVariables(r, env);
     }
-    else if (!rId && !lId)
-    {
-        throw "nope"; //eval and add?
-    }
-
-    return true;
+    return false;
 }
 
 std::string Multiplication::show() const

@@ -86,6 +86,9 @@ ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
         e = Parser::parse(line, env)->eval(env);
     }
 
+    if (e == nullptr)
+        e = make_ptr<Void>();
+
     return e;
 }
 

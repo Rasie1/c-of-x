@@ -1,5 +1,6 @@
 #include "Expressions/Expression.h"
 #include <stdexcept>
+#include <iostream>
 #include "Expressions/TypeError.h"
 #include "Expressions/Application.h"
 #include "Expressions/Operation.h"
@@ -7,6 +8,8 @@
 #include "Expressions/Intersection.h"
 #include "Expressions/Union.h"
 #include "Expressions/Void.h"
+
+using namespace std;
 
 Expression::Expression()
 {
@@ -51,5 +54,6 @@ ExpPtr Expression::unionize(ExpPtrArg& other, const Environment& env)
 
 bool Expression::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
+    // TODO: we aren't supposed to get here
     return false;
 }

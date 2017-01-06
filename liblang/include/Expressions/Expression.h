@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <typeinfo>
+#include <stdexcept>
 
 class Environment;
 class Expression : public std::enable_shared_from_this<Expression>
