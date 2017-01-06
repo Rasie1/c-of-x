@@ -377,6 +377,26 @@ BOOST_AUTO_TEST_CASE(IntNoSpaces)
     BOOST_CHECK_EQUAL(integer.data, 450);
 }
 
+BOOST_AUTO_TEST_CASE(UnaryOpNoSpace)
+{
+    Lexer l;
+    l.tokenize("!3");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 3);
+
+    BOOST_CHECK(tokens[0].type() == typeid(Identifier));
+    auto f = get<Identifier>(tokens[0]);
+    BOOST_CHECK_EQUAL(f.name, "!");
+
+    auto ns1 = tokens[1];
+    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+
+    BOOST_CHECK(tokens[2].type() == typeid(IntegerData));
+    auto x = get<IntegerData>(tokens[2]);
+    BOOST_CHECK_EQUAL(x.data, 3);
+}
+
 BOOST_AUTO_TEST_CASE(Parentheses)
 {
     Lexer l;
