@@ -3,6 +3,7 @@
 #include "Expressions/Function.h"
 #include "System/Environment.h"
 #include "Expressions/Error.h"
+#include "Expressions/Equality.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
 #include "Expressions/Quote.h"
@@ -81,4 +82,16 @@ bool Closure::operator==(const Expression& other) const
     }
     else
         return false;
+}
+
+ExpPtr Closure::codomain()
+{
+    return make_ptr<Equals>(body);
+    // TODO: not only argument. Constraints from argument should be also applied here.
+}
+
+ExpPtr Closure::domain()
+{
+    return make_ptr<Equals>(argument);
+    // TODO: not only argument. Constraints from body should be also applied here.
 }

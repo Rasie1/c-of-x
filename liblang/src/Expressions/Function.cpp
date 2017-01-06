@@ -7,6 +7,7 @@
 #include "Expressions/String.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
+#include "Expressions/ValueInSet.h"
 #include "Expressions/Union.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
@@ -51,6 +52,22 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         return make_ptr<Operation>(make_ptr<Union>(),
                                    shared_from_this(),
                                    other);
+        // auto intersectionOfArguments =
+        //     make_ptr<Operation>(make_ptr<Intersection>(),
+        //                         shared_from_this(),
+        //                         other);
+        // auto intersectionOfCodomains =
+        //     make_ptr<Operation>(make_ptr<Intersection>(),
+        //                         make_ptr<ValueInSet>(this->codomain()),
+        //                         make_ptr<ValueInSet>(other->codomain()));
+        // auto intersectionOfDomains =
+        //     make_ptr<Operation>(make_ptr<Intersection>(),
+        //                         make_ptr<ValueInSet>(this->domain()),
+        //                         make_ptr<ValueInSet>(other->domain()));
+
+
+
+
     }
 
     // Otherwise, leave it inevaluated
@@ -66,4 +83,14 @@ bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environmen
     auto ret = reversed->unapplyVariables(e, env);
 
     return ret;
+}
+
+ExpPtr Function::codomain()
+{
+    return make_ptr<Any>();
+}
+
+ExpPtr Function::domain()
+{
+    return make_ptr<Any>();
 }

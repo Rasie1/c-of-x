@@ -16,6 +16,9 @@ public:
     std::string show() const override;
     bool operator==(const Expression& other) const override;
 
+    ExpPtr codomain() override;
+    ExpPtr domain() override;
+
     ExpPtr body;
     ExpPtr argument;
 
