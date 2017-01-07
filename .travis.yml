@@ -3,27 +3,30 @@ language: cpp
 sudo: required
 dist: xenial
 
-compiler:
-  - gcc
-  - clang
-
-addons:
-  apt:
-    sources:
-    # - llvm-toolchain-precise-3.8
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5
-    # - clang-3.8
-    env: COMPILER=g++-5
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang++-3.8
 
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -y -qq lcov curl libreadline-dev libboost-all-dev
   - git clone https://github.com/skystrife/cpptoml && cd cpptoml && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
 script:
   - mkdir build && cd build && cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCOVERALLS=ON -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . && cmake --build . --target coveralls 
   - ctest
