@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/Rasie1/c-of-x.svg?branch=master)](https://travis-ci.org/Rasie1/c-of-x.svg)
+[![Coverage Status](https://coveralls.io/repos/github/Rasie1/c-of-x/badge.svg?branch=master)](https://coveralls.io/github/Rasie1/c-of-x?branch=master)
+
 *Warning: this document is under heavy development right now. *
 
 # Welcome
@@ -17,7 +20,6 @@ This is an experimental programming language inspired by Haskell and C++ templat
 Run following steps in terminal to compile the language:
 
 ```
-sudo apt-get install libreadline-dev
 mkdir build
 cd build
 cmake ..
