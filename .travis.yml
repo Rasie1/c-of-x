@@ -20,7 +20,7 @@ install:
   - git clone https://github.com/skystrife/cpptoml && cd cpptoml && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..
 script:
   - mkdir build && cd build 
-  - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCOVERALLS=ON .. 
+  - cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_BUILD_TYPE=Debug -DCOVERALLS=ON .. 
   - make 
   - make coveralls 
   - make test
