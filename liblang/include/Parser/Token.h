@@ -16,7 +16,7 @@ namespace Tokens
 
     struct FloatData
     {
-
+        double data;
     };
 
     struct StringData
@@ -49,7 +49,7 @@ namespace Tokens
 
     };
 
-    using Token = boost::variant<
+    typedef boost::variant<
         Identifier,
         LineBreak,
         NoSpace,
@@ -59,7 +59,62 @@ namespace Tokens
         StringData,
         Opening,
         Closing
-    >;
+    > Token;
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::Identifier& x)
+    {
+        stream << "id(" << x.name << ")";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::LineBreak&/* x*/)
+    {
+        stream << "LineBreak";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::NoSpace&/* x*/)
+    {
+        stream << "NoSpace";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::Tabulation& x)
+    {
+        stream << "Tabulation(" << x.size << ")";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::IntegerData& x)
+    {
+        stream << "id(" << x.data << ")";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::FloatData& x)
+    {
+        stream << "id(" << x.data << ")";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::StringData& x)
+    {
+        stream << "id(" << x.data << ")";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::Opening&/* x*/)
+    {
+        stream << "Opening";
+        return stream;
+    }
+
+    inline std::ostream& operator<<(std::ostream& stream, const Tokens::Closing&/* x*/)
+    {
+        stream << "Closing";
+        return stream;
+    }
+
 }
 
 using Token = Tokens::Token;

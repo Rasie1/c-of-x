@@ -2,6 +2,7 @@
 #include "Expressions/Application.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Identifier.h"
+#include "Expressions/Void.h"
 
 ExpPtr Not::apply(ExpPtrArg e, Environment& env) const
 {
@@ -27,4 +28,12 @@ bool Complement::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
     auto complement = make_ptr<Complement>(e);
     return this->e->unapplyVariables(complement, env);
+}
+
+ExpPtr Complement::intersect(ExpPtrArg other, const Environment& env)
+{
+    if (*e == *other)
+        return make_ptr<Void>();
+    else
+        return shared_from_this();
 }

@@ -18,6 +18,8 @@ public:
 
     virtual std::string show() const;
     static const std::string defaultName;
+    
+    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
 
     bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
 

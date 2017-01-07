@@ -152,7 +152,7 @@ bool Application::unapplyVariables(ExpPtrArg e,
 //        {
             // for recursion to work
             auto newEnv = env;
-                newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
+            newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
             auto closure = Lambda().operate(r, e, newEnv);
 
             auto ret = env.addEqual(l, closure, false);

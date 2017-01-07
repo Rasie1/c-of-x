@@ -134,10 +134,6 @@ bool Lexer::tokenize(const std::string& input)
             parsedTokens.push_back(Tokens::Closing());
             shouldMove = true;
             moveDistance = 1;
-            if (currentCharacterIndex + moveDistance < input.size() &&
-                (input[currentCharacterIndex + moveDistance] != ' ' &&
-                 input[currentCharacterIndex + moveDistance] != '\n'))
-                parsedTokens.push_back((Tokens::NoSpace()));
         }
         else if (currentCharacter == ' ')
         {

@@ -74,6 +74,7 @@ bool Operation::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
     if (typeid(*this) == typeid(e))
     {
+        // TODO: why is this so important
         std::cout << "match" << std::endl;
     }
 

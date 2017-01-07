@@ -45,6 +45,11 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     if (!rf)
         return rl;
 
+    // TODO: make this default behaviour and remove returns for both
+    // branches (lines 40-41 and 51-52)
+    // if (!lf || !rf)
+    //     return make_ptr<Void>();
+
     return lr;
 }
 
