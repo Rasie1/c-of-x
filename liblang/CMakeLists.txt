@@ -3,10 +3,10 @@ file(GLOB_RECURSE SRC_LANG . src/*.cpp)
 
 add_library(lang ${SRC_LANG})
 
-enable_testing()
-
 add_subdirectory(test)
 
-add_test(lang LexerTests)
-add_test(lang ParserTests)
-add_test(lang LanguageTests)
+enable_testing()
+
+add_test(NAME LexerTests    COMMAND LexerTests)
+add_test(NAME ParserTests   COMMAND ParserTests)
+add_test(NAME LanguageTests COMMAND LanguageTests)
