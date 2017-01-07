@@ -247,9 +247,11 @@ BOOST_AUTO_TEST_CASE(Indentation1)
     BOOST_CHECK(t.type() == typeid(Tabulation));
     BOOST_CHECK(x.type() == typeid(Identifier));
     auto fId = get<Identifier>(tokens[0]);
+    auto tVal = get<Tabulation>(tokens[2]);
     auto xId = get<Identifier>(tokens[3]);
     BOOST_CHECK_EQUAL(fId.name, "f");
     BOOST_CHECK_EQUAL(xId.name, "x");
+    BOOST_CHECK_EQUAL(tVal.size, 1);
 }
 
 BOOST_AUTO_TEST_CASE(SimpleString)

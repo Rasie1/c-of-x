@@ -71,11 +71,25 @@ static optional<size_t> shouldSplitWithSequence(const std::string& input,
     return none;
 }
 
+static Tokens::Tabulation calculateTabulation(const std::vector<size_t>& levels, size_t current)
+{
+    int tabSize = 1;
+    for (auto& x : levels)
+    {
+        if (current >= x)
+            break;
+        tabSize++;
+    }
+
+    return Tokens::Tabulation{tabSize};
+}
+
 bool Lexer::tokenize(const std::string& input)
 {
     bool parsingId = false;
     bool parsingString = false;
     bool parsingNumber = false;
+    bool parsingIndentation = false;
     for (size_t currentCharacterIndex = 0;
          currentCharacterIndex < input.size();
          ++currentCharacterIndex)
@@ -116,6 +130,11 @@ bool Lexer::tokenize(const std::string& input)
         }
         else if (currentCharacter == '(')
         {
+            if (parsingIndentation)
+            {
+                parsedTokens.push_back(calculateTabulation(previousLineIndentationPoints,
+                                                           distanceFromLineBreak));
+            }
             if (parsingId)
             {
                 parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
@@ -139,20 +158,27 @@ bool Lexer::tokenize(const std::string& input)
         {
             if (parsingId)
                 parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
+
+            if (!parsedTokens.empty() && (parsedTokens.back().which() != 1))
+                parsingIndentation = true;
+            if (parsingIndentation)
+                distanceFromLineBreak++;
             shouldMove = true;
             moveDistance = 1;
         }
         else if (currentCharacter == '\n')
         {
+            parsingIndentation = false;
+            distanceFromLineBreak = 0;
             if (parsingId)
                 parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
 
             if (!parsedTokens.empty() && (parsedTokens.back().which() != 1))
             {
                 parsedTokens.push_back(Tokens::LineBreak());
+                previousLineIndentationPoints = currentLineIndentationPoints;
+                currentLineIndentationPoints.clear();
             }
-            previousLineIndentationPoints = currentLineIndentationPoints;
-            currentLineIndentationPoints.clear();
             shouldMove = true;
             moveDistance = 1;
         }
