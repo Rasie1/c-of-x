@@ -146,12 +146,13 @@ bool Lexer::tokenize(const std::string& input)
         {
             if (parsingId)
                 parsedTokens.push_back(Tokens::Identifier{input.substr(0, currentCharacterIndex)});
-            if (true)
+
+            if (!parsedTokens.empty() && (parsedTokens.back().which() != 1))
             {
                 parsedTokens.push_back(Tokens::LineBreak());
-                previousLineIndentationPoints = currentLineIndentationPoints;
-                currentLineIndentationPoints.clear();
             }
+            previousLineIndentationPoints = currentLineIndentationPoints;
+            currentLineIndentationPoints.clear();
             shouldMove = true;
             moveDistance = 1;
         }

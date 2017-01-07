@@ -139,10 +139,12 @@ BOOST_AUTO_TEST_CASE(SimpleLineBreak)
 
 BOOST_AUTO_TEST_CASE(DoubleLineBreakNegation)
 {
-    return; // unimplemented
     Lexer l;
     l.tokenize("a\n\nb");
     auto tokens = l.getTokens();
+
+    for (auto x : tokens)
+        cout << x << endl;
 
     BOOST_CHECK_EQUAL(tokens.size(), 3);
 
@@ -158,10 +160,9 @@ BOOST_AUTO_TEST_CASE(DoubleLineBreakNegation)
     BOOST_CHECK_EQUAL(bId.name, "b");
 }
 
+
 BOOST_AUTO_TEST_CASE(LineBreakNegationWithIndentation)
 {
-    return; // unimplemented
-
     Lexer l;
     l.tokenize("a\n    \n\n            \nb");
     auto tokens = l.getTokens();
@@ -179,6 +180,7 @@ BOOST_AUTO_TEST_CASE(LineBreakNegationWithIndentation)
     BOOST_CHECK_EQUAL(aId.name, "a");
     BOOST_CHECK_EQUAL(bId.name, "b");
 }
+
 
 BOOST_AUTO_TEST_CASE(XPlusY)
 {
@@ -229,9 +231,7 @@ BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
 }
 
 BOOST_AUTO_TEST_CASE(Indentation1)
-{
-    return; // unimplemented
- 
+{ 
     Lexer l;
     l.tokenize("f\n    x");
     auto tokens = l.getTokens();
@@ -431,9 +431,6 @@ BOOST_AUTO_TEST_CASE(noSpacesNestedFunction)
     l.tokenize("f(f(f(x)))");
     auto tokens = l.getTokens();
 
-    for (auto& x : tokens)
-        cout << x << endl;
-
     BOOST_CHECK_EQUAL(tokens.size(), 13);
 
     BOOST_CHECK(tokens[0].type() == typeid(Identifier));
@@ -449,4 +446,80 @@ BOOST_AUTO_TEST_CASE(noSpacesNestedFunction)
     BOOST_CHECK(tokens[10].type() == typeid(Closing));
     BOOST_CHECK(tokens[11].type() == typeid(Closing));
     BOOST_CHECK(tokens[12].type() == typeid(Closing));
+}
+
+BOOST_AUTO_TEST_CASE(IndentationSensivity)
+{
+    Lexer l;
+    l.tokenize("a\n  b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 4);
+
+    auto a = tokens[0];
+    auto n = tokens[1];
+    auto t = tokens[2];
+    auto b = tokens[3];
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto aId = get<Identifier>(tokens[0]);
+    auto tVal = get<Tabulation>(tokens[2]);
+    auto bId = get<Identifier>(tokens[3]);
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 1);
+}
+
+BOOST_AUTO_TEST_CASE(IndentationSensivityBigger)
+{
+    Lexer l;
+    l.tokenize("a\n      b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 4);
+
+    auto a = tokens[0];
+    auto n = tokens[1];
+    auto t = tokens[2];
+    auto b = tokens[3];
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto aId = get<Identifier>(tokens[0]);
+    auto tVal = get<Tabulation>(tokens[2]);
+    auto bId = get<Identifier>(tokens[3]);
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 1);
+}
+
+BOOST_AUTO_TEST_CASE(IndentationSensivitySecondLevel)
+{
+    Lexer l;
+    l.tokenize("abcde a\n      b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 5);
+
+    auto abcde = tokens[0];
+    auto a = tokens[1];
+    auto n = tokens[2];
+    auto t = tokens[3];
+    auto b = tokens[4];
+    BOOST_CHECK(abcde.type() == typeid(Identifier));
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto abcdeId = get<Identifier>(tokens[0]);
+    auto aId = get<Identifier>(tokens[1]);
+    auto tVal = get<Tabulation>(tokens[3]);
+    auto bId = get<Identifier>(tokens[4]);
+    BOOST_CHECK_EQUAL(abcdeId.name, "abcde");
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 2);
 }
