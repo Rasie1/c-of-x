@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE(Indentation1)
     l.tokenize("f\n    x");
     auto tokens = l.getTokens();
 
-    BOOST_CHECK_EQUAL(tokens.size(), 5);
+    BOOST_CHECK_EQUAL(tokens.size(), 4);
 
     auto f = tokens[0];
     auto n = tokens[1];
