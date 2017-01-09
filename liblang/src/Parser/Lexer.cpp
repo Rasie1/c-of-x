@@ -222,7 +222,6 @@ bool Lexer::tokenize(const std::string& input)
                                                                                         string::npos),
                                                                            splittingSequences))
         {
-            currentTokenStart = currentCharacterIndex;
             if (parsingIndentation)
                 pushIndentation();
             if (parsingId)
@@ -231,6 +230,7 @@ bool Lexer::tokenize(const std::string& input)
                 parsedTokens.push_back(Tokens::NoSpace());
             }
             parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
+            currentTokenStart = currentCharacterIndex;
 
             shouldMove = true;
             moveDistance = *splitTokenSize; //////////!!!!!!!!!!!!
