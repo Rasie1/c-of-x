@@ -109,8 +109,6 @@ bool Lexer::tokenize(const std::string& input)
     for (; currentCharacterIndex < input.size(); ++currentCharacterIndex)
     {
         char currentCharacter = input[currentCharacterIndex];
-        bool shouldMove = false;
-        size_t moveDistance = 0;
 
         if (parsingString)
         {
@@ -123,8 +121,7 @@ bool Lexer::tokenize(const std::string& input)
                      input[currentCharacterIndex + 1] != '\n'))
                     parsedTokens.push_back((Tokens::NoSpace()));
 
-                shouldMove = true;
-                moveDistance = 1;
+                parsingString = false;
             }
         }
         else if (parsingNumber)
@@ -133,13 +130,12 @@ bool Lexer::tokenize(const std::string& input)
             {
                 parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
                 parsedTokens.push_back(Tokens::NoSpace());
-                shouldMove = true;
+                parsingNumber = false;
             }
             else if (currentCharacter == ' ' || currentCharacter == '\n')
             {
                 parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
-                shouldMove = true;
-                moveDistance = 1;
+                parsingNumber = false;
             }
         }
         else if (currentCharacter == '(')
@@ -152,8 +148,7 @@ bool Lexer::tokenize(const std::string& input)
                 parsedTokens.push_back(Tokens::NoSpace());
             }
             parsedTokens.push_back(Tokens::Opening());
-            shouldMove = true;
-            moveDistance = 1;
+            parsingNumber = parsingString = false;  // !!!!!!!!! we didn't add anything
         }
         else if (currentCharacter == ')')
         {
@@ -161,18 +156,12 @@ bool Lexer::tokenize(const std::string& input)
                 pushId();
 
             parsedTokens.push_back(Tokens::Closing());
-            shouldMove = true;
-            moveDistance = 1;
+            parsingNumber = parsingString = false;  // !!!!!!!!! we didn't add anything
         }
         else if (currentCharacter == ' ')
         {
             if (parsingId)
                 pushId();
-
-            // if (!parsedTokens.empty() && (parsedTokens.back().which() != 1))
-            //     parsingIndentation = true;
-            shouldMove = true;
-            moveDistance = 1;
         }
         else if (currentCharacter == '\n')
         {
@@ -187,21 +176,18 @@ bool Lexer::tokenize(const std::string& input)
                 previousLineIndentationPoints = currentLineIndentationPoints;
                 currentLineIndentationPoints.clear();
             }
-            shouldMove = true;
-            moveDistance = 1;
+            parsingNumber = parsingString = false;
         }
         else if (currentCharacter == '\"')
         {
-            currentTokenStart = currentCharacterIndex;
             if (parsingIndentation)
                 pushIndentation();
             if (parsingId)
             {
                 pushId();
                 parsedTokens.push_back(Tokens::NoSpace());
-                shouldMove = true;
+                parsingNumber = false;
             }
-            else
             {
                 currentTokenStart = currentCharacterIndex;
                 parsingString = true;
@@ -232,8 +218,7 @@ bool Lexer::tokenize(const std::string& input)
             parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
             currentTokenStart = currentCharacterIndex;
 
-            shouldMove = true;
-            moveDistance = *splitTokenSize; //////////!!!!!!!!!!!!
+            auto moveDistance = *splitTokenSize; //////////!!!!!!!!!!!!
 
             if (currentCharacterIndex + moveDistance < input.size() &&
                 (input[currentCharacterIndex + moveDistance] != ' ' &&
@@ -251,12 +236,6 @@ bool Lexer::tokenize(const std::string& input)
             }
         }
 
-        if (shouldMove)
-        {
-            parsingId = false;
-            parsingString = false;
-            parsingNumber = false;
-        }
     } // end while
     if (parsingId)
         pushId();

@@ -343,6 +343,8 @@ BOOST_AUTO_TEST_CASE(StringNoSpaces)
     Lexer l;
     l.tokenize("f\"abc\"g");
     auto tokens = l.getTokens();
+    for (auto x : tokens)
+        cout << x << endl;
 
     BOOST_CHECK_EQUAL(tokens.size(), 5);
 
