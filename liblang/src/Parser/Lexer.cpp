@@ -76,7 +76,7 @@ static Tokens::Tabulation calculateTabulation(const std::vector<size_t>& levels,
     int tabSize = 1;
     for (auto& x : levels)
     {
-        if (current >= x)
+        if (current + 2 >= x)
             break;
         tabSize++;
     }
