@@ -495,30 +495,94 @@ BOOST_AUTO_TEST_CASE(IndentationSensivityBigger)
     BOOST_CHECK_EQUAL(tVal.size, 1);
 }
 
-// BOOST_AUTO_TEST_CASE(IndentationSensivitySecondLevel)
-// {
-//     Lexer l;
-//     l.tokenize("abcde a\n      b");
-//     auto tokens = l.getTokens();
+BOOST_AUTO_TEST_CASE(IndentationSensivitySecondLevel)
+{
+    Lexer l;
+    l.tokenize("abcde a\n      b");
+    auto tokens = l.getTokens();
 
-//     BOOST_CHECK_EQUAL(tokens.size(), 5);
+    BOOST_CHECK_EQUAL(tokens.size(), 5);
 
-//     auto abcde = tokens[0];
-//     auto a = tokens[1];
-//     auto n = tokens[2];
-//     auto t = tokens[3];
-//     auto b = tokens[4];
-//     BOOST_CHECK(abcde.type() == typeid(Identifier));
-//     BOOST_CHECK(a.type() == typeid(Identifier));
-//     BOOST_CHECK(n.type() == typeid(LineBreak));
-//     BOOST_CHECK(t.type() == typeid(Tabulation));
-//     BOOST_CHECK(b.type() == typeid(Identifier));
-//     auto abcdeId = get<Identifier>(tokens[0]);
-//     auto aId = get<Identifier>(tokens[1]);
-//     auto tVal = get<Tabulation>(tokens[3]);
-//     auto bId = get<Identifier>(tokens[4]);
-//     BOOST_CHECK_EQUAL(abcdeId.name, "abcde");
-//     BOOST_CHECK_EQUAL(aId.name, "a");
-//     BOOST_CHECK_EQUAL(bId.name, "b");
-//     BOOST_CHECK_EQUAL(tVal.size, 2);
-// }
+    auto abcde = tokens[0];
+    auto a = tokens[1];
+    auto n = tokens[2];
+    auto t = tokens[3];
+    auto b = tokens[4];
+    BOOST_CHECK(abcde.type() == typeid(Identifier));
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto abcdeId = get<Identifier>(tokens[0]);
+    auto aId = get<Identifier>(tokens[1]);
+    auto tVal = get<Tabulation>(tokens[3]);
+    auto bId = get<Identifier>(tokens[4]);
+    BOOST_CHECK_EQUAL(abcdeId.name, "abcde");
+    BOOST_CHECK_EQUAL(aId.name, "a");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 2);
+}
+
+BOOST_AUTO_TEST_CASE(IndentationSensivitySecondWithThirdLevel)
+{
+    Lexer l;
+    l.tokenize("abcde aasss fdf\n      b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 6);
+
+    auto abcde = tokens[0];
+    auto a = tokens[1];
+    auto f = tokens[2];
+    auto n = tokens[3];
+    auto t = tokens[4];
+    auto b = tokens[5];
+    BOOST_CHECK(abcde.type() == typeid(Identifier));
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(f.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto abcdeId = get<Identifier>(tokens[0]);
+    auto aId = get<Identifier>(tokens[1]);
+    auto fId = get<Identifier>(tokens[2]);
+    auto tVal = get<Tabulation>(tokens[4]);
+    auto bId = get<Identifier>(tokens[5]);
+    BOOST_CHECK_EQUAL(abcdeId.name, "abcde");
+    BOOST_CHECK_EQUAL(aId.name, "aasss");
+    BOOST_CHECK_EQUAL(fId.name, "fdf");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 2);
+}
+
+BOOST_AUTO_TEST_CASE(IndentationSensivityThirdLevel)
+{
+    Lexer l;
+    l.tokenize("abcde aaa fff\n          b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 6);
+
+    auto abcde = tokens[0];
+    auto a = tokens[1];
+    auto f = tokens[2];
+    auto n = tokens[3];
+    auto t = tokens[4];
+    auto b = tokens[5];
+    BOOST_CHECK(abcde.type() == typeid(Identifier));
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(f.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto abcdeId = get<Identifier>(tokens[0]);
+    auto aId = get<Identifier>(tokens[1]);
+    auto fId = get<Identifier>(tokens[2]);
+    auto tVal = get<Tabulation>(tokens[4]);
+    auto bId = get<Identifier>(tokens[5]);
+    BOOST_CHECK_EQUAL(abcdeId.name, "abcde");
+    BOOST_CHECK_EQUAL(aId.name, "aaa");
+    BOOST_CHECK_EQUAL(fId.name, "fff");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 3);
+}

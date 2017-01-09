@@ -73,10 +73,10 @@ static optional<size_t> shouldSplitWithSequence(const std::string& input,
 
 static Tokens::Tabulation calculateTabulation(const std::vector<size_t>& levels, size_t current)
 {
-    int tabSize = 1;
+    size_t tabSize = 1;
     for (auto& x : levels)
     {
-        if (current + 2 >= x)
+        if (current < x)
             break;
         tabSize++;
     }
@@ -106,7 +106,6 @@ bool Lexer::tokenize(const std::string& input)
         parsingId = false;
     };
     auto pushNumber = [&](){
-        cout << "-----" << input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart) << endl;
         parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
         parsingNumber = false;
     };
@@ -156,6 +155,8 @@ bool Lexer::tokenize(const std::string& input)
         }
         else if (currentCharacter == ' ')
         {
+            if (parsingId || parsingNumber)
+                currentLineIndentationPoints.push_back(currentCharacterIndex);
             if (parsingId)
                 pushId();
             if (parsingNumber)
