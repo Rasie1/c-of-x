@@ -618,3 +618,41 @@ BOOST_AUTO_TEST_CASE(IndentationSensivityFirstThirdLevel)
     BOOST_CHECK_EQUAL(bId.name, "b");
     BOOST_CHECK_EQUAL(tVal.size, 1);
 }
+
+BOOST_AUTO_TEST_CASE(IndentationSensivityNoSpaceSkip)
+{
+    Lexer l;
+    l.tokenize("a+c+e aaa fff\n  b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 14);
+
+    auto a     = tokens[0];
+    auto ns0   = tokens[1];
+    auto plus0 = tokens[2];
+    auto ns1   = tokens[3];
+    auto c     = tokens[4];
+    auto ns2   = tokens[5];
+    auto plus1 = tokens[6];
+    auto ns3   = tokens[7];
+    auto e     = tokens[8];
+    auto aaa   = tokens[9];
+    auto f     = tokens[10];
+    auto n     = tokens[11];
+    auto t     = tokens[12];
+    auto b     = tokens[13];
+    BOOST_CHECK(aaa.type() == typeid(Identifier));
+    BOOST_CHECK(f.type() == typeid(Identifier));
+    BOOST_CHECK(ns3.type() == typeid(NoSpace));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto aaaId = get<Identifier>(tokens[9]);
+    auto fId = get<Identifier>(tokens[10]);
+    auto tVal = get<Tabulation>(tokens[12]);
+    auto bId = get<Identifier>(tokens[13]);
+    BOOST_CHECK_EQUAL(aaaId.name, "aaa");
+    BOOST_CHECK_EQUAL(fId.name, "fff");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 1);
+}
