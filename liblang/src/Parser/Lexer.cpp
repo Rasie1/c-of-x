@@ -105,6 +105,10 @@ bool Lexer::tokenize(const std::string& input)
         parsedTokens.push_back(Tokens::Identifier{input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart)});
         parsingId = false;
     };
+    auto pushNumber = [&](){
+        parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
+        parsingNumber = false;
+    };
 
     for (; currentCharacterIndex < input.size(); ++currentCharacterIndex)
     {
@@ -124,20 +128,20 @@ bool Lexer::tokenize(const std::string& input)
                 parsingString = false;
             }
         }
-        else if (parsingNumber)
-        {
-            if (!isdigit(currentCharacter))
-            {
-                parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
-                parsedTokens.push_back(Tokens::NoSpace());
-                parsingNumber = false;
-            }
-            else if (currentCharacter == ' ' || currentCharacter == '\n')
-            {
-                parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
-                parsingNumber = false;
-            }
-        }
+        // else if (parsingNumber)
+        // {
+        //     if (!isdigit(currentCharacter))
+        //     {
+        //         parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
+        //         parsedTokens.push_back(Tokens::NoSpace());
+        //         parsingNumber = false;
+        //     }
+        //     else if (currentCharacter == ' ' || currentCharacter == '\n')
+        //     {
+        //         parsedTokens.push_back(Tokens::IntegerData{stoi(input.substr(currentTokenStart, currentCharacterIndex - currentTokenStart))});
+        //         parsingNumber = false;
+        //     }
+        // }
         else if (currentCharacter == '(')
         {
             if (parsingIndentation)
@@ -147,6 +151,11 @@ bool Lexer::tokenize(const std::string& input)
                 pushId();
                 parsedTokens.push_back(Tokens::NoSpace());
             }
+            if (parsingNumber)
+            {
+                pushNumber();
+                parsedTokens.push_back(Tokens::NoSpace());
+            }
             parsedTokens.push_back(Tokens::Opening());
             parsingNumber = parsingString = false;  // !!!!!!!!! we didn't add anything
         }
@@ -154,6 +163,8 @@ bool Lexer::tokenize(const std::string& input)
         {
             if (parsingId)
                 pushId();
+            if (parsingNumber)
+                pushNumber();
 
             parsedTokens.push_back(Tokens::Closing());
             parsingNumber = parsingString = false;  // !!!!!!!!! we didn't add anything
@@ -162,6 +173,8 @@ bool Lexer::tokenize(const std::string& input)
         {
             if (parsingId)
                 pushId();
+            if (parsingNumber)
+                pushNumber();
         }
         else if (currentCharacter == '\n')
         {
@@ -169,6 +182,8 @@ bool Lexer::tokenize(const std::string& input)
             lastLineStartIndex = currentCharacterIndex;
             if (parsingId)
                 pushId();
+            if (parsingNumber)
+                pushNumber();
 
             if (!parsedTokens.empty() && (parsedTokens.back().which() != 1))
             {
@@ -186,7 +201,11 @@ bool Lexer::tokenize(const std::string& input)
             {
                 pushId();
                 parsedTokens.push_back(Tokens::NoSpace());
-                parsingNumber = false;
+            }
+            if (parsingNumber)
+            {
+                pushNumber();
+                parsedTokens.push_back(Tokens::NoSpace());
             }
             {
                 currentTokenStart = currentCharacterIndex;
@@ -197,7 +216,7 @@ bool Lexer::tokenize(const std::string& input)
         {
             if (parsingIndentation)
                 pushIndentation();
-            if (!parsingId)
+            if (!parsingId && !parsingNumber)
             {
                 currentTokenStart = currentCharacterIndex;
                 // no space case?
@@ -213,6 +232,11 @@ bool Lexer::tokenize(const std::string& input)
             if (parsingId)
             {
                 pushId();
+                parsedTokens.push_back(Tokens::NoSpace());
+            }
+            if (parsingNumber)
+            {
+                pushNumber();
                 parsedTokens.push_back(Tokens::NoSpace());
             }
             parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
