@@ -12,6 +12,8 @@ BOOST_AUTO_TEST_CASE(OneIdentifier)
     Lexer l;
     l.tokenize("one");
     auto tokens = l.getTokens();
+    for (auto x : tokens)
+        cout << x <<endl;
 
     BOOST_CHECK_EQUAL(tokens.size(), 1);
 
@@ -25,6 +27,8 @@ BOOST_AUTO_TEST_CASE(IdentifierWithSpaces)
     Lexer l;
     l.tokenize(" id ");
     auto tokens = l.getTokens();
+    for (auto x : tokens)
+        cout << x <<endl;
 
     BOOST_CHECK_EQUAL(tokens.size(), 1);
 

@@ -18,5 +18,5 @@ private:
     std::vector<std::string> splittingSequences;
     std::vector<size_t> previousLineIndentationPoints;
     std::vector<size_t> currentLineIndentationPoints;
-    size_t lastLineBreakIndex = 0;
+    size_t lastLineStartIndex = 0;
 };
