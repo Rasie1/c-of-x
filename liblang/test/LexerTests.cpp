@@ -586,3 +586,35 @@ BOOST_AUTO_TEST_CASE(IndentationSensivityThirdLevel)
     BOOST_CHECK_EQUAL(bId.name, "b");
     BOOST_CHECK_EQUAL(tVal.size, 3);
 }
+
+BOOST_AUTO_TEST_CASE(IndentationSensivityFirstThirdLevel)
+{
+    Lexer l;
+    l.tokenize("abcde aaa fff\n  b");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 6);
+
+    auto abcde = tokens[0];
+    auto a = tokens[1];
+    auto f = tokens[2];
+    auto n = tokens[3];
+    auto t = tokens[4];
+    auto b = tokens[5];
+    BOOST_CHECK(abcde.type() == typeid(Identifier));
+    BOOST_CHECK(a.type() == typeid(Identifier));
+    BOOST_CHECK(f.type() == typeid(Identifier));
+    BOOST_CHECK(n.type() == typeid(LineBreak));
+    BOOST_CHECK(t.type() == typeid(Tabulation));
+    BOOST_CHECK(b.type() == typeid(Identifier));
+    auto abcdeId = get<Identifier>(tokens[0]);
+    auto aId = get<Identifier>(tokens[1]);
+    auto fId = get<Identifier>(tokens[2]);
+    auto tVal = get<Tabulation>(tokens[4]);
+    auto bId = get<Identifier>(tokens[5]);
+    BOOST_CHECK_EQUAL(abcdeId.name, "abcde");
+    BOOST_CHECK_EQUAL(aId.name, "aaa");
+    BOOST_CHECK_EQUAL(fId.name, "fff");
+    BOOST_CHECK_EQUAL(bId.name, "b");
+    BOOST_CHECK_EQUAL(tVal.size, 1);
+}
