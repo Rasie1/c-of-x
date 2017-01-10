@@ -209,28 +209,28 @@ BOOST_AUTO_TEST_CASE(simpleMacroMatchVariable)
 
 }
 
-//BOOST_AUTO_TEST_CASE(functionMacroMatch)
-//{
-//    Environment env;
-//    Parser p;
+// BOOST_AUTO_TEST_CASE(functionMacroMatch)
+// {
+//     Environment env;
+//     Parser p;
+ 
+//     p.parse("identity x = x", env)->eval(env);
+//     p.parse("token ('(f x)) = f", env)->eval(env);
+//     auto parsed = p.parse("token (identity x)", env);
+//     auto c = parsed->eval(env);
+//     BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "identity");
+// }
 
-//    p.parse("identity x = x", env)->eval(env);
-//    p.parse("token ('(f x)) = f", env)->eval(env);
-//    auto parsed = p.parse("token (identity x)", env);
-//    auto c = parsed->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Identifier>(c)->name, "identity");
-//}
-
-//BOOST_AUTO_TEST_CASE(plusMacroMatch)
-//{
-//    Environment env;
-//    Parser p;
-
-//    p.parse("plustest ('(x + y)) = x * 10 + y", env)->eval(env);
-//    auto parsed = p.parse("plustest(2 + 3)", env);
-//    auto c = parsed->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 23);
-//}
+// BOOST_AUTO_TEST_CASE(plusMacroMatch)
+// {
+//     Environment env;
+//     Parser p;
+ 
+//     p.parse("plustest ('(x + y)) = x * 10 + y", env)->eval(env);
+//     auto parsed = p.parse("plustest(2 + 3)", env);
+//     auto c = parsed->eval(env);
+//     BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 23);
+// }
 
 BOOST_AUTO_TEST_CASE(partialPlus)
 {
@@ -265,23 +265,44 @@ BOOST_AUTO_TEST_CASE(firstOrderOperator)
     }
 }
 
-// BOOST_AUTO_TEST_CASE(functionOverloading)
-// {
-//    return; //unimplemented
-//    Environment env;
-//    Parser p;
-//    auto parsed = p.parse("f 1 = 1", env);
-//    parsed->eval(env);
-//    auto applied0 = p.parse("f 1", env)->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 1);
-//    auto applied1 = p.parse("f 2", env)->eval(env);
-//    BOOST_CHECK(d_cast<Void>(applied1));
-//    parsed = p.parse("f 2 = 2", env);
-//    parsed->eval(env);
-//    auto applied2 = p.parse("f 1", env)->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Integer>(applied2)->value, 1);
-//    auto applied3 = p.parse("f 2", env)->eval(env);
-//    BOOST_CHECK_EQUAL(d_cast<Integer>(applied3)->value, 2);
-//    auto applied4 = p.parse("f 3", env)->eval(env);
-//    BOOST_CHECK(d_cast<Void>(applied4));
-// }
+BOOST_AUTO_TEST_CASE(firstOrderEquality)
+{
+    return; //unimplemented
+    Environment env;
+    Parser p;
+    {
+        auto parsed = p.parse("(=) x 0", env);
+        auto c = parsed->eval(env);
+        // BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 5);
+        auto x = env.getEqual(make_ptr<Identifier>("x"))->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
+    }
+    {
+        auto parsed = p.parse("(=) y 0", env);
+        auto c = parsed->eval(env);
+        // BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 5);
+        auto x = env.getEqual(make_ptr<Identifier>("y"))->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(functionOverloading)
+{
+    return; // unimplemented autoremoving void
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f 1 = 1", env);
+    parsed->eval(env);
+    auto applied0 = p.parse("f 1", env)->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 1);
+    auto applied1 = p.parse("f 2", env)->eval(env);
+    // BOOST_CHECK(d_cast<Void>(applied1));
+    parsed = p.parse("f 2 = 2", env);
+    parsed->eval(env);
+    auto applied2 = p.parse("f 1", env)->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied2)->value, 1);
+    auto applied3 = p.parse("f 2", env)->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied3)->value, 2);
+    auto applied4 = p.parse("f 3", env)->eval(env);
+    // BOOST_CHECK(d_cast<Void>(applied4));
+}
