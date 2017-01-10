@@ -8,6 +8,7 @@
 #include "Expressions/Lambda.h"
 #include "Expressions/Integer.h"
 #include "Expressions/Union.h"
+#include "Expressions/More.h"
 
 
 bool LessThan::holds(ExpPtrArg e, const Environment& env) const
@@ -101,7 +102,7 @@ ExpPtr Less::operate(ExpPtrArg first,
                      Environment& env) const
 
 {
-    auto f = s_cast<LessThan>(partialApply(second, env));
+    auto f = s_cast<LessThan>(partialApplyRight(second, env));
 
     return f->apply(first, env);
 }
@@ -113,7 +114,12 @@ std::string Less::show() const
 
 const std::string Less::defaultName = "<";
 
-ExpPtr Less::partialApply(ExpPtrArg e, Environment& env) const
+ExpPtr Less::partialApplyLeft(ExpPtrArg e, Environment& env) const
+{
+     return make_ptr<MoreThan>(e);
+}
+
+ExpPtr Less::partialApplyRight(ExpPtrArg e, Environment& env) const
 {
      return make_ptr<LessThan>(e);
 }

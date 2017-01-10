@@ -10,7 +10,8 @@ public:
     ExpPtr operate(ExpPtrArg  first,
                    ExpPtrArg  second,
                    Environment& env) const override;
-    ExpPtr partialApply(ExpPtrArg e, Environment& env) const override;
+    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) const override;
+    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) const override;
 
     std::string show() const override;
 

@@ -19,7 +19,9 @@ public:
 
     virtual bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const;
 
-    virtual ExpPtr partialApply(ExpPtrArg e, Environment& env) const;
+    virtual ExpPtr partialApplyLeft  (ExpPtrArg e, Environment& env) const;
+    virtual ExpPtr partialApplyRight (ExpPtrArg e, Environment& env) const;
+    virtual ExpPtr partialApplyNoArgs(Environment& env) const;
 
     virtual std::string show() const;
 private:

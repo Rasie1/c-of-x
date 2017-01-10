@@ -40,41 +40,6 @@ static bool isOperator(ExpPtr e, Environment& env)
         return false;
 }
 
-static void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
-                          std::deque<ExpPtr>& q,
-                          Environment& env)
-{
-    ExpPtr left;
-    ExpPtr right;
-    std::shared_ptr<Operator> op = operatorStack.top();
-    operatorStack.pop();
-
-    right = q.back();
-    q.pop_back();
-    if (!q.empty())
-    {
-        left = q.back();
-        q.pop_back();
-
-        // Handle force-eval operator
-        bool evalForce = false;
-        if (checkType<Identifier>(left))
-        {
-            auto variable = s_cast<Identifier>(left);
-            evalForce = variable->name == "#";
-        }
-        if (evalForce)
-            q.push_back(right->eval(env));
-        else
-            q.push_back(make_ptr<Operation>(op, left, right));
-    }
-    else
-    {
-        auto pa = op->partialApply(right, env);
-        q.push_back(pa);
-    }
-}
-
 ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
 {
     std::ifstream ifs(filename);
@@ -94,6 +59,45 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
     std::stack<std::shared_ptr<Operator>> operatorStack;
     std::deque<ExpPtr> q;
     bool applicationFlag = false;
+    bool operatorWasLast = false;
+
+    auto makeOperation = [&](){
+            ExpPtr left;
+        ExpPtr right;
+        std::shared_ptr<Operator> op = operatorStack.top();
+        operatorStack.pop();
+
+        if (q.empty())
+        {
+            q.push_back(op);
+        }
+
+        right = q.back();
+        q.pop_back();
+        if (!q.empty())
+        {
+            left = q.back();
+            q.pop_back();
+
+            // Handle force-eval operator
+            bool evalForce = false;
+            if (checkType<Identifier>(left))
+            {
+                auto variable = s_cast<Identifier>(left);
+                evalForce = variable->name == "#";
+            }
+            if (evalForce)
+                q.push_back(right->eval(env));
+            else
+                q.push_back(make_ptr<Operation>(op, left, right));
+        }
+        else
+        {
+            auto pa = op->partialApplyLeft(right, env);
+            q.push_back(pa);
+            operatorWasLast = false;
+        }
+    };
 
     for (auto currentTokenIt = begin;
          currentTokenIt != end;
@@ -155,7 +159,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         else if (currentToken.type() == typeid(Tokens::LineBreak))
         {
             operatorStack.push(make_ptr<DefaultOperator>());
-            makeOperation(operatorStack, q, env);
+            makeOperation();
         }
         else if (currentToken.type() == typeid(Tokens::Tabulation))
         {
@@ -181,9 +185,10 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
 
             while (!operatorStack.empty() &&
                    env.compareOperators(op, operatorStack.top()))
-                makeOperation(operatorStack, q, env);
+                makeOperation();
 
             operatorStack.push(op);
+            operatorWasLast = true;
         }
         else
         {
@@ -191,15 +196,16 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
             if (applicationFlag)
             {
                 operatorStack.push(make_ptr<Application>());
-                makeOperation(operatorStack, q, env);
+                makeOperation();
             }
 
+            operatorWasLast = false;
             applicationFlag = true;
         }
     }
 
     while (!operatorStack.empty())
-        makeOperation(operatorStack, q, env);
+        makeOperation();
 
     if (!q.empty())
         ret = q.front();

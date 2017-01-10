@@ -105,7 +105,12 @@ std::string Equality::show() const
 
 const std::string Equality::defaultName = "=";
 
-ExpPtr Equality::partialApply(ExpPtrArg e, Environment& env) const
+ExpPtr Equality::partialApplyLeft(ExpPtrArg e, Environment& env) const
+{
+     return make_ptr<Equals>(e);
+}
+
+ExpPtr Equality::partialApplyRight(ExpPtrArg e, Environment& env) const
 {
      return make_ptr<Equals>(e);
 }

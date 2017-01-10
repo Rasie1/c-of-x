@@ -21,14 +21,42 @@ bool Operator::operator==(const Expression& other) const
     return typeid(*this) == typeid(other);
 }
 
-ExpPtr Operator::partialApply(ExpPtrArg e, Environment& env) const
+ExpPtr Operator::partialApplyLeft(ExpPtrArg e, Environment& env) const
 {
-    auto id = make_ptr<Identifier>(e->show());
-    auto th = s_cast<const Operator>(shared_from_this());
-    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(th), e, id);
+    auto arg = make_ptr<Identifier>("arg");
+    auto that = s_cast<const Operator>(shared_from_this());
+    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
+                                    e, 
+                                    arg);
 
-    auto closure = Lambda().operate(id, body, env);
+    auto closure = Lambda().operate(arg, body, env);
     return closure;
+}
+
+ExpPtr Operator::partialApplyRight(ExpPtrArg e, Environment& env) const
+{
+    auto arg = make_ptr<Identifier>("arg");
+    auto that = s_cast<const Operator>(shared_from_this());
+    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
+                                    arg, 
+                                    e);
+
+    auto closure = Lambda().operate(arg, body, env);
+    return closure;
+}
+
+ExpPtr Operator::partialApplyNoArgs(Environment& env) const
+{
+    auto l = make_ptr<Identifier>("l");
+    auto r = make_ptr<Identifier>("r");
+    auto that = s_cast<const Operator>(shared_from_this());
+    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
+                                    l, 
+                                    r);
+
+    auto rUnapplied = Lambda().operate(r, body, env);
+    auto lUnapplied = Lambda().operate(l, rUnapplied, env);
+    return lUnapplied;
 }
 
 bool Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
