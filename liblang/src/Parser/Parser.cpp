@@ -5,7 +5,9 @@
 #include <queue>
 #include <iostream>
 #include <fstream>
+#include "System/Environment.h"
 #include "Expressions/Expression.h"
+#include "Expressions/DefaultOperator.h"
 #include "Expressions/Integer.h"
 #include "Expressions/Application.h"
 #include "Expressions/ExceptionParseError.h"
@@ -14,7 +16,6 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/String.h"
 #include "Expressions/Operation.h"
-#include "System/Environment.h"
 #include "Expressions/EvalForce.h"
 #include "Expressions/Lambda.h"
 using namespace std;
@@ -25,7 +26,7 @@ ExpPtr Parser::parse(const string& s, Environment& env)
     auto tokens = lexer.getTokens();
     lexer.clear();
 
-    return parse(begin(tokens), end(tokens), env);
+    return parse(begin(tokens), end(tokens), env, 0);
 }
 
 static bool isOperator(ExpPtr e, Environment& env)
@@ -77,24 +78,16 @@ static void makeOperation(std::stack<std::shared_ptr<Operator>>& operatorStack,
 ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
 {
     std::ifstream ifs(filename);
-//    std::string content((std::istreambuf_iterator<char>(ifs)),
-//                        (std::istreambuf_iterator<char>()   ));
-    std::string line;
-    ExpPtr e;
-    while (std::getline(ifs, line))
-    {
-        e = Parser::parse(line, env)->eval(env);
-    }
+    std::string content((std::istreambuf_iterator<char>(ifs)),
+                        (std::istreambuf_iterator<char>()   ));
 
-    if (e == nullptr)
-        e = make_ptr<Void>();
-
-    return e;
+    return Parser::parse(content, env)->eval(env);
 }
 
 ExpPtr Parser::parse(const vector<Token>::iterator& begin,
                      const vector<Token>::iterator& end,
-                     Environment& env)
+                     Environment& env,
+                     size_t indentation)
 {
     ExpPtr ret = nullptr;
 
@@ -128,7 +121,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
                     }
                     if (parsingParenthesisDepth == 0)
                     {
-                        e = parse(next(currentTokenIt), newEnd, env);
+                        e = parse(next(currentTokenIt), newEnd, env, 0);
                         currentTokenIt = newEnd;
                         break;
                     }
@@ -157,6 +150,14 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
             e = make_ptr<Integer>(get<Tokens::IntegerData>(currentToken).data);
         }
         else if (currentToken.type() == typeid(Tokens::NoSpace))
+        {
+        }
+        else if (currentToken.type() == typeid(Tokens::LineBreak))
+        {
+            operatorStack.push(make_ptr<DefaultOperator>());
+            makeOperation(operatorStack, q, env);
+        }
+        else if (currentToken.type() == typeid(Tokens::Tabulation))
         {
         }
         else

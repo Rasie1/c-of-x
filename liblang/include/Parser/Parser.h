@@ -17,6 +17,9 @@ public:
 private:
     ExpPtr parse(const std::vector<Token>::iterator& begin,
                  const std::vector<Token>::iterator& end,
-                 Environment& env);
+                 Environment& env,
+                 size_t indentation = 0);
     Lexer lexer;
+    std::vector<ExpPtr> previousLine;
+    std::vector<ExpPtr> currentLine;
 };
