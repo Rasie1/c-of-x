@@ -146,7 +146,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         }
         else if (currentToken.type() == typeid(Tokens::Closing))
         {
-            return make_ptr<ParseError>("Unexepected parentheses");
+            return make_ptr<ParseError>("Unexpected parentheses");
         }
         else if (currentToken.type() == typeid(Tokens::StringData))
         {

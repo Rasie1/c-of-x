@@ -195,6 +195,7 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
 
 BOOST_AUTO_TEST_CASE(HighPriorityUsage)
 {
+    return; // unimplemented
     Environment env;
     Parser p;
     auto parsed = p.parse("f 2+3 sin(x)", env);
@@ -203,7 +204,6 @@ BOOST_AUTO_TEST_CASE(HighPriorityUsage)
 BOOST_AUTO_TEST_CASE(MultilineApplication)
 {
     return; // unimplemented
-    
     Environment env;
     Parser p;
     auto parsed = p.parse("f\n"
@@ -218,10 +218,44 @@ BOOST_AUTO_TEST_CASE(MultilineApplication)
     BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
 }
 
+BOOST_AUTO_TEST_CASE(MultilineApplication2)
+{
+    return; // unimplemented
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f x\n"
+                          "  y", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(op->op));
+    BOOST_CHECK(checkType<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+}
+
+BOOST_AUTO_TEST_CASE(MultilineApplicationSeparate)
+{
+    return; // unimplemented
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f\n"
+                          "  x"
+                          "y", env);
+
+    BOOST_CHECK(checkType<Operation>(parsed));
+    auto op = s_cast<Operation>(parsed);
+    BOOST_CHECK(checkType<Application>(op->op));
+    BOOST_CHECK(checkType<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkType<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+}
+
 BOOST_AUTO_TEST_CASE(AdditionSection)
 {
     return; // unimplemented
-
     Environment env;
     Parser p;
     auto parsed = p.parse("1 + 2\n"
