@@ -250,7 +250,6 @@ BOOST_AUTO_TEST_CASE(partialPlus)
 
 BOOST_AUTO_TEST_CASE(firstOrderOperator)
 {
-    return; //unimplemented
     Environment env;
     Parser p;
     {

@@ -69,7 +69,8 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
 
         if (q.empty())
         {
-            q.push_back(op);
+            q.push_back(op->partialApplyNoArgs(env));
+            return;
         }
 
         right = q.back();
@@ -93,7 +94,8 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         }
         else
         {
-            auto pa = op->partialApplyLeft(right, env);
+            auto pa = operatorWasLast ? op->partialApplyLeft(right, env)
+                                      : op->partialApplyRight(right, env);
             q.push_back(pa);
             operatorWasLast = false;
         }

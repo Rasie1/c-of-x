@@ -54,7 +54,8 @@ ExpPtr Operator::partialApplyNoArgs(Environment& env) const
                                     l, 
                                     r);
 
-    auto rUnapplied = Lambda().operate(r, body, env);
+    // auto rUnapplied = Lambda().operate(r, body, env);
+    auto rUnapplied = make_ptr<Operation>(make_ptr<Lambda>(), r, body);
     auto lUnapplied = Lambda().operate(l, rUnapplied, env);
     return lUnapplied;
 }
