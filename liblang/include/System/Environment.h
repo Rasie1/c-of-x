@@ -52,7 +52,7 @@ public:
     std::shared_ptr<const Operator> defaultOperator;
 
 private:
-    void addDefaultVariables();
+    void addDefaultDefinitions();
 
     //std::unordered_map<ExpPtr, ExpPtr, ExpPtrHash, ExpPtrLess> data;
     std::map<CExpPtr, ExpPtr, ExpPtrLess> data;
