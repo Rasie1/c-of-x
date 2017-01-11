@@ -8,6 +8,7 @@
 #include "Expressions/Intersection.h"
 #include "Expressions/Union.h"
 #include "Expressions/Void.h"
+#include "Expressions/Not.h"
 
 using namespace std;
 
@@ -50,6 +51,11 @@ ExpPtr Expression::intersect(ExpPtrArg& other, const Environment& env)
 ExpPtr Expression::unionize(ExpPtrArg& other, const Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
+}
+
+ExpPtr Expression::complement(const Environment& env)
+{
+    return make_ptr<Complement>(shared_from_this());
 }
 
 bool Expression::unapplyVariables(ExpPtrArg e, Environment& env) const

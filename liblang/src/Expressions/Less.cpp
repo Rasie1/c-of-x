@@ -86,6 +86,11 @@ ExpPtr LessThan::unionize(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
+ExpPtr LessThan::complement(const Environment& env)
+{
+    return make_ptr<MoreThan>(value);
+}
+
 ExpPtr LessThan::end()
 {
     return value;

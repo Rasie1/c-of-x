@@ -6,7 +6,7 @@
 
 ExpPtr Not::apply(ExpPtrArg e, Environment& env) const
 {
-    return make_ptr<Complement>(e);
+    return e->complement(env);
 }
 
 std::string Not::show() const
@@ -36,4 +36,9 @@ ExpPtr Complement::intersect(ExpPtrArg other, const Environment& env)
         return make_ptr<Void>();
     else
         return shared_from_this();
+}
+
+ExpPtr Complement::complement(const Environment& env)
+{
+    return e;
 }
