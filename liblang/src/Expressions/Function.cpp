@@ -9,6 +9,7 @@
 #include "Expressions/Intersection.h"
 #include "Expressions/ValueInSet.h"
 #include "Expressions/Union.h"
+#include "Expressions/Not.h"
 
 ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 {
@@ -52,10 +53,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         return make_ptr<Operation>(make_ptr<Union>(),
                                    shared_from_this(),
                                    other);
-        // auto intersectionOfArguments =
-        //     make_ptr<Operation>(make_ptr<Intersection>(),
-        //                         shared_from_this(),
-        //                         other);
+        // todo: not sure if it even works for non-closures
         // auto intersectionOfCodomains =
         //     make_ptr<Operation>(make_ptr<Intersection>(),
         //                         make_ptr<ValueInSet>(this->codomain()),
@@ -65,9 +63,26 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
         //                         make_ptr<ValueInSet>(this->domain()),
         //                         make_ptr<ValueInSet>(other->domain()));
 
+        // auto leftDomain = 
+        //     make_ptr<Operation>(make_ptr<Intersection>(),
+        //                         make_ptr<Complement>(intersectionOfDomains),
+        //                         make_ptr<ValueInSet>(this->domain());
+        // auto rightDomain = 
+        //     make_ptr<Operation>(make_ptr<Intersection>(),
+        //                         make_ptr<Complement>(intersectionOfDomains),
+        //                         make_ptr<ValueInSet>(other->domain());
 
+        // auto intersectionClosure;
+        // auto leftClosure;
+        // auto rightClosure;
+        // // todo: here could be something about fourth case
 
-
+        // auto intersectionOfFunctions =
+        //     make_ptr<Operation>(make_ptr<Union>(),
+        //                         intersectionClosure,
+        //                         make_ptr<Operation>(make_ptr<Union>(),
+        //                                             leftClosure,
+        //                                             rightClosure));
     }
 
     // Otherwise, leave it inevaluated

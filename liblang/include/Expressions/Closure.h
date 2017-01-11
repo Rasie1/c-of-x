@@ -13,6 +13,7 @@ public:
     ~Closure();
 
     ExpPtr apply(ExpPtrArg e, Environment& env) const override;
+    // ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
     std::string show() const override;
     bool operator==(const Expression& other) const override;
 

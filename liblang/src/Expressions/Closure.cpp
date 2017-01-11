@@ -88,6 +88,7 @@ ExpPtr Closure::codomain()
 {
     return make_ptr<Equals>(body);
     // TODO: not only argument. Constraints from argument should be also applied here.
+    // TODO: environment counts as codomain as well
 }
 
 ExpPtr Closure::domain()
