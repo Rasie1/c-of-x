@@ -87,7 +87,7 @@ ExpPtr MoreThan::unionize(ExpPtrArg other, const Environment& env)
 
 ExpPtr MoreThan::complement(const Environment& env)
 {
-    return make_ptr<LessThan>(value);
+    return make_ptr<LessOrEqualThan>(value);
 }
 
 ExpPtr MoreThan::begin()
@@ -123,6 +123,122 @@ ExpPtr More::partialApplyLeft(ExpPtrArg e, Environment& env) const
 }
 
 ExpPtr More::partialApplyRight(ExpPtrArg e, Environment& env) const
+{
+     return make_ptr<MoreThan>(e);
+}
+
+bool MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
+{
+    if (checkType<Integer>(e))
+    {
+        auto v1 = s_cast<Integer>(value);
+        auto v2 = s_cast<Integer>(e);
+        return v2->value >= v1->value;
+    }
+    return *value == *e;
+}
+
+bool MoreOrEqualThan::operator==(const Expression& other) const
+{
+    if (typeid(*this) == typeid(other))
+    {
+        auto x = static_cast<const MoreOrEqualThan&>(other);
+        return value == x.value;
+    }
+    else
+        return false;
+}
+
+std::string MoreOrEqualThan::show() const
+{
+    return defaultName + "(" + value->show() + ")";
+}
+
+const std::string MoreOrEqualThan::defaultName = "moreOrEqualThan";
+
+ExpPtr MoreOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
+{
+    if (checkType<MoreOrEqualThan>(other))
+    {
+        auto p = s_cast<MoreOrEqualThan>(other);
+        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        {
+            auto v1 = s_cast<Integer>(value);
+            auto v2 = s_cast<Integer>(p->value);
+            return make_ptr<MoreOrEqualThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
+        }
+        return make_ptr<Void>();
+    }
+    else if (checkType<Equals>(other))
+    {
+        auto p = s_cast<Equals>(other);
+        if (checkType<Integer>(p->value))
+        {
+            auto eqvalue = s_cast<Integer>(p->value)->value;
+            auto thvalue = s_cast<Integer>(this->value)->value;
+            if (thvalue < eqvalue)
+                return p;
+            else
+                return make_ptr<Void>();
+        }
+    }
+
+    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+}
+
+ExpPtr MoreOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
+{
+    if (checkType<MoreOrEqualThan>(other))
+    {
+        auto p = s_cast<MoreOrEqualThan>(other);
+        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        {
+            auto v1 = s_cast<Integer>(value);
+            auto v2 = s_cast<Integer>(p->value);
+            return make_ptr<MoreOrEqualThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
+        }
+    }
+    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
+}
+
+ExpPtr MoreOrEqualThan::complement(const Environment& env)
+{
+    return make_ptr<LessThan>(value);
+}
+
+ExpPtr MoreOrEqualThan::begin()
+{
+    return value;
+}
+
+MoreOrEqual::MoreOrEqual()
+    : Operator(true, 2, true)
+{
+
+}
+
+ExpPtr MoreOrEqual::operate(ExpPtrArg first,
+                     ExpPtrArg second,
+                     Environment& env) const
+{
+    auto f = s_cast<MoreOrEqualThan>(partialApplyRight(second, env));
+
+    return f->apply(first, env);
+}
+
+std::string MoreOrEqual::show() const
+{
+    return MoreOrEqual::defaultName;
+}
+
+const std::string MoreOrEqual::defaultName = ">=";
+
+ExpPtr MoreOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env) const
+{
+     return make_ptr<LessThan>(e);
+}
+
+ExpPtr MoreOrEqual::partialApplyRight(ExpPtrArg e, Environment& env) const
 {
      return make_ptr<MoreThan>(e);
 }
