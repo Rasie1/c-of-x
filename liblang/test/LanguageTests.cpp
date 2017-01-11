@@ -7,6 +7,8 @@
 #include "Parser/Parser.h"
 #include "Expressions/Integer.h"
 #include "Expressions/Then.h"
+#include "Expressions/More.h"
+#include "Expressions/Less.h"
 
 BOOST_AUTO_TEST_CASE(newVariable)
 {
@@ -115,6 +117,14 @@ BOOST_AUTO_TEST_CASE(moreThan)
     p.parse("y > 10", env)->eval(env);
     auto applied1 = p.parse("y = 0", env)->eval(env);
     BOOST_CHECK(checkType<Void>(applied1));
+}
+
+BOOST_AUTO_TEST_CASE(DoubleNegative)
+{
+    Environment env;
+    Parser p;
+    auto x = p.parse("!(!(<3))", env)->eval(env);
+    BOOST_CHECK(checkType<LessThan>(x));
 }
 
 BOOST_AUTO_TEST_CASE(substitutionInPartialApplication)
