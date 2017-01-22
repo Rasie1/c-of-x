@@ -54,22 +54,32 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
                      Environment& env,
                      size_t indentation)
 {
+    {
+        stringstream debugOutput;
+        debugOutput << "Parsing: ";
+        std::copy(begin, end, std::ostream_iterator<Token>(debugOutput, "; "));
+        debugOutput << endl;
+        env.debugPrint(debugOutput.str());
+    }
+
     ExpPtr ret = nullptr;
 
     std::stack<std::shared_ptr<Operator>> operatorStack;
     std::deque<ExpPtr> q;
     bool applicationFlag = false;
     bool operatorWasLast = false;
+    bool expressionBegin = true;
 
     auto makeOperation = [&](){
-            ExpPtr left;
+        ExpPtr left;
         ExpPtr right;
         std::shared_ptr<Operator> op = operatorStack.top();
         operatorStack.pop();
 
-        if (q.empty())
+        if (q.empty() && expressionBegin)
         {
             q.push_back(op->partialApplyNoArgs(env));
+            // q.push_back(op);
             return;
         }
 
@@ -91,6 +101,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
                 q.push_back(right->eval(env));
             else
                 q.push_back(make_ptr<Operation>(op, left, right));
+            expressionBegin = false;
         }
         else
         {
@@ -98,6 +109,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
                                       : op->partialApplyRight(right, env);
             q.push_back(pa);
             operatorWasLast = false;
+            expressionBegin = false;
         }
     };
 

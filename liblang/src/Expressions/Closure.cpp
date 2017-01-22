@@ -6,6 +6,7 @@
 #include "Expressions/Equality.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
+#include "Expressions/Any.h"
 #include "Expressions/Quote.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Application.h"
@@ -89,6 +90,10 @@ ExpPtr Closure::codomain()
     return make_ptr<Equals>(body);
     // TODO: not only argument. Constraints from argument should be also applied here.
     // TODO: environment counts as codomain as well
+
+    // return make_ptr<Operation>(make_ptr<Application>(),
+    //                            shared_from_this(),
+    //                            make_ptr<Any>());
 }
 
 ExpPtr Closure::domain()

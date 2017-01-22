@@ -123,8 +123,14 @@ BOOST_AUTO_TEST_CASE(DoubleNegative)
 {
     Environment env;
     Parser p;
-    auto x = p.parse("!(!(<3))", env)->eval(env);
-    BOOST_CHECK(checkType<LessThan>(x));
+    {
+        auto x = p.parse("!(!(<3))", env)->eval(env);
+        BOOST_CHECK(checkType<LessThan>(x));
+    }
+    {
+        auto x = p.parse("!(!(>3))", env)->eval(env);
+        BOOST_CHECK(checkType<MoreThan>(x));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(substitutionInPartialApplication)
@@ -258,24 +264,26 @@ BOOST_AUTO_TEST_CASE(partialPlus)
     }
 }
 
+BOOST_AUTO_TEST_CASE(operatorAsNonInfix)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("(+) 3 2", env);
+    auto c = parsed->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 5);
+}
+
 BOOST_AUTO_TEST_CASE(firstOrderOperator)
 {
     Environment env;
     Parser p;
-    {
-        auto parsed = p.parse("(+) 3 2", env);
-        auto c = parsed->eval(env);
-        BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 5);
-    }
-    {
-        p.parse("f op x y = op x y", env)->eval(env);
-        auto parsed = p.parse("f (+) 2 3", env);
-        auto c = parsed->eval(env);
-        BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 5);
-    }
+    p.parse("f op x y = op x y", env)->eval(env);
+    auto parsed = p.parse("f (+) 2 3", env);
+    auto c = parsed->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 5);
 }
 
-BOOST_AUTO_TEST_CASE(firstOrderEquality)
+BOOST_AUTO_TEST_CASE(firstOrderAsNonInfix)
 {
     return; //unimplemented
     Environment env;

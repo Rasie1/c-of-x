@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/DataType.h"
+#include "Expressions/Function.h"
 
-class Operator : public Data
+class Operator : public Function
 {
 public:
     Operator(bool isRightAssociative = false, int priority = 5, bool splitting = false);
@@ -22,6 +22,8 @@ public:
     virtual ExpPtr partialApplyLeft  (ExpPtrArg e, Environment& env) const;
     virtual ExpPtr partialApplyRight (ExpPtrArg e, Environment& env) const;
     virtual ExpPtr partialApplyNoArgs(Environment& env) const;
+
+    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
 
     virtual std::string show() const;
 private:

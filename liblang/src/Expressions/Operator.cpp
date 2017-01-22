@@ -64,3 +64,8 @@ bool Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environme
 {
     return false;
 }
+
+ExpPtr Operator::apply(ExpPtrArg e, Environment& env) const
+{
+    return partialApplyRight(e, env);
+}
