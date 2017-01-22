@@ -87,17 +87,17 @@ bool Closure::operator==(const Expression& other) const
 
 ExpPtr Closure::codomain()
 {
-    return make_ptr<Equals>(body);
-    // TODO: not only argument. Constraints from argument should be also applied here.
+    // return make_ptr<Equals>(body);
+    // TODO: not only body. Constraints from argument should be also applied here.
     // TODO: environment counts as codomain as well
 
-    // return make_ptr<Operation>(make_ptr<Application>(),
-    //                            shared_from_this(),
-    //                            make_ptr<Any>());
+    return make_ptr<Operation>(make_ptr<Application>(),
+                               shared_from_this(),
+                               make_ptr<Any>());
 }
 
 ExpPtr Closure::domain()
 {
     return make_ptr<Equals>(argument);
-    // TODO: not only argument. Constraints from body should be also applied here.
+    // TODO: not only argument. Constraints from body should be also applied here. Probably.
 }

@@ -108,12 +108,18 @@ ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     debugPrint("ENV ADD: " + key->show() + "\n", true);
     get(key);
     debugPrint("    NEW: " + value->show() + "\n", true);
-    auto constKey = std::const_pointer_cast<Expression>(get(key));
+//    auto constKey = std::const_pointer_cast<Expression>(get(key));
 //    if (checkType<Operation>(value)
-    if (!excluding && data.find(key) != data.end())
-        data[key] = make_ptr<Operation>(make_ptr<Union>(), data[key], value);
+    // if (!excluding && data.find(key) != data.end())
+    //     data[key] = make_ptr<Operation>(make_ptr<Union>(), data[key], value);
+    // else
+    if (data.find(key) != data.end())
+    {
+        auto intersection = intersect(data[key], value);
+        data[key] = intersection;
+    }
     else
-        data[key] = intersect(constKey, value);
+        data[key] = value;
     debugPrint("    RET: " + data[key]->show() + "\n", true);
     return data[key];
 }

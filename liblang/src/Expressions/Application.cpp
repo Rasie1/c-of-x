@@ -83,10 +83,18 @@ ExpPtr Application::operate(ExpPtrArg first,
 //        }
 //        else
         {
-            auto function = d_cast<Function>(left);
-            if (!function)
+            
+            if (auto function = d_cast<Function>(left))
+            {
+                expressions.push_back(function->apply(right, env));
+            }
+            //                                                TODO: save env?
+            else if (auto function = d_cast<Function>(left->eval(env)))
+            {
+                expressions.push_back(function->apply(right, env));
+            }
+            else
                 return make_ptr<ErrorWithMessage>("Not a function");
-            expressions.push_back(function->apply(right, env));
         }
     }
     else if (lUnion && !rUnion)

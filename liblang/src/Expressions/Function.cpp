@@ -5,6 +5,7 @@
 #include "Expressions/Any.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/String.h"
+#include "Expressions/Closure.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/ValueInSet.h"
@@ -48,47 +49,59 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
     //    6 -> 3..7
     //    7 -> 3..7
 
-    if (checkType<Function>(value))
+    auto newEnv = env;
+    auto evaluated = value->eval(newEnv);
+
+
+    if (auto other = d_cast<Function>(evaluated))
     {
-        return make_ptr<Operation>(make_ptr<Union>(),
-                                   shared_from_this(),
-                                   other);
+        // return make_ptr<Operation>(make_ptr<Union>(),
+        //                            shared_from_this(),
+        //                            other);
         // todo: not sure if it even works for non-closures
-        // auto intersectionOfCodomains =
-        //     make_ptr<Operation>(make_ptr<Intersection>(),
-        //                         make_ptr<ValueInSet>(this->codomain()),
-        //                         make_ptr<ValueInSet>(other->codomain()));
-        // auto intersectionOfDomains =
-        //     make_ptr<Operation>(make_ptr<Intersection>(),
-        //                         make_ptr<ValueInSet>(this->domain()),
-        //                         make_ptr<ValueInSet>(other->domain()));
+        auto intersectionOfCodomains =
+            make_ptr<Operation>(make_ptr<Intersection>(),
+                                this->codomain(),
+                                other->codomain());
+        auto intersectionOfDomains =
+            make_ptr<Operation>(make_ptr<Intersection>(),
+                                this->domain(),
+                                other->domain());
 
-        // auto leftDomain = 
-        //     make_ptr<Operation>(make_ptr<Intersection>(),
-        //                         make_ptr<Complement>(intersectionOfDomains),
-        //                         make_ptr<ValueInSet>(this->domain());
-        // auto rightDomain = 
-        //     make_ptr<Operation>(make_ptr<Intersection>(),
-        //                         make_ptr<Complement>(intersectionOfDomains),
-        //                         make_ptr<ValueInSet>(other->domain());
+        auto leftDomain = 
+            make_ptr<Operation>(make_ptr<Intersection>(),
+                                make_ptr<Complement>(intersectionOfDomains),
+                                this->domain());
+        auto rightDomain = 
+            make_ptr<Operation>(make_ptr<Intersection>(),
+                                make_ptr<Complement>(intersectionOfDomains),
+                                other->domain());
 
-        // auto intersectionClosure;
-        // auto leftClosure;
-        // auto rightClosure;
+        auto intersectionClosure = 
+            make_ptr<Closure>(make_ptr<ValueInSet>(intersectionOfDomains),
+                              make_ptr<ValueInSet>(intersectionOfCodomains),
+                              newEnv);
+        auto leftClosure =
+            make_ptr<Closure>(make_ptr<ValueInSet>(leftDomain),
+                              make_ptr<ValueInSet>(this->codomain()),
+                              newEnv);
+        auto rightClosure =
+            make_ptr<Closure>(make_ptr<ValueInSet>(rightDomain),
+                              make_ptr<ValueInSet>(other->codomain()),
+                              newEnv);
         // // todo: here could be something about fourth case
 
-        // auto intersectionOfFunctions =
-        //     make_ptr<Operation>(make_ptr<Union>(),
-        //                         intersectionClosure,
-        //                         make_ptr<Operation>(make_ptr<Union>(),
-        //                                             leftClosure,
-        //                                             rightClosure));
+        auto intersectionOfFunctions =
+            make_ptr<Operation>(make_ptr<Union>(),
+                                intersectionClosure,
+                                make_ptr<Operation>(make_ptr<Union>(),
+                                                    leftClosure,
+                                                    rightClosure));
     }
 
-    // Otherwise, leave it inevaluated
     return make_ptr<Operation>(make_ptr<Intersection>(),
                                shared_from_this(),
-                               other);
+                               evaluated);
 }
 
 bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environment& env) const
