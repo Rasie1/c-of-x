@@ -97,6 +97,8 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
                                 make_ptr<Operation>(make_ptr<Union>(),
                                                     leftClosure,
                                                     rightClosure));
+
+        return intersectionOfFunctions;
     }
 
     return make_ptr<Operation>(make_ptr<Intersection>(),

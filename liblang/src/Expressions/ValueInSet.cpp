@@ -8,6 +8,6 @@ std::string ValueInSet::show() const
 
 ExpPtr ValueInSet::eval(Environment& env) const
 {
-    return make_ptr<ValueInSet>(set);
+    return set->takeValue(env);
 }
 

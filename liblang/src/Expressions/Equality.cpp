@@ -38,7 +38,7 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
         auto equals = s_cast<Equals>(other);
         auto l = value;
         auto r = equals->value;
-        return l->intersect(r, env);
+        return make_ptr<Equals>(l->intersect(r, env));
         //if (l == r)
         //    return shared_from_this();
         //else

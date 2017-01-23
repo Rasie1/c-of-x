@@ -116,6 +116,7 @@ ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     if (data.find(key) != data.end())
     {
         auto intersection = intersect(data[key], value);
+        debugPrint("    INT: " + intersection->show() + "\n", true);
         data[key] = intersection;
     }
     else

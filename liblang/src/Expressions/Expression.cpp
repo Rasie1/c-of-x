@@ -6,6 +6,7 @@
 #include "Expressions/Operation.h"
 #include "System/Environment.h"
 #include "Expressions/Intersection.h"
+#include "Expressions/ValueInSet.h"
 #include "Expressions/Union.h"
 #include "Expressions/Void.h"
 #include "Expressions/Not.h"
@@ -56,6 +57,11 @@ ExpPtr Expression::unionize(ExpPtrArg& other, const Environment& env)
 ExpPtr Expression::complement(const Environment& env)
 {
     return make_ptr<Complement>(shared_from_this());
+}
+
+ExpPtr Expression::takeValue(const Environment& env)
+{
+    return make_ptr<ValueInSet>(shared_from_this());
 }
 
 bool Expression::unapplyVariables(ExpPtrArg e, Environment& env) const
