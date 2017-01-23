@@ -102,3 +102,22 @@ ExpPtr Closure::domain()
     return make_ptr<Equals>(argument);
     // TODO: not only argument. Constraints from body should be also applied here. Probably.
 }
+
+bool Closure::unapplyVariables(ExpPtrArg e, Environment& env) const
+{
+    // this is somewhat opposite of case 
+    // f x = y ---> f = x -> y
+
+    // maybe like this
+    // x -> y = f
+    // y = f x
+
+    // or this
+    // (x -> y) a = b
+    // (x -> y) = a -> b
+    // y = (a -> b) x
+    
+    auto unapplied = body->unapplyVariables(e, env);
+
+    return unapplied;
+}

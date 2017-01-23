@@ -8,6 +8,8 @@ public:
 
     ExpPtr eval(Environment& env) const override;
 
+    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+
     virtual std::string show() const;
 
     ExpPtr set;

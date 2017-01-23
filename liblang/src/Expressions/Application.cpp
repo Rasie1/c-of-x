@@ -171,6 +171,7 @@ bool Application::unapplyVariables(ExpPtrArg e,
     }
     else
     {
+        // TODO: explain what the hell happens
         auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
         return l->unapplyVariables(closure, env);
     }
