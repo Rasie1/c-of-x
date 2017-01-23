@@ -91,9 +91,10 @@ ExpPtr Closure::codomain()
     // TODO: not only body. Constraints from argument should be also applied here.
     // TODO: environment counts as codomain as well
 
-    return make_ptr<Operation>(make_ptr<Application>(),
-                               shared_from_this(),
-                               make_ptr<Any>());
+    return make_ptr<Equals>(
+               make_ptr<Operation>(make_ptr<Application>(),
+                                   shared_from_this(),
+                                   make_ptr<Any>()));
 }
 
 ExpPtr Closure::domain()
