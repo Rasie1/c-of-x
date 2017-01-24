@@ -59,3 +59,17 @@ std::string Intersection::show() const
 }
 
 const std::string Intersection::defaultName = "&";
+
+bool Intersection::unapplyVariables(ExpPtrArg e,
+                                    ExpPtrArg l,
+                                    ExpPtrArg r,
+                                    Environment &env) const
+{
+    auto lUnapplied = l->unapplyVariables(e, env);
+    auto rUnapplied = r->unapplyVariables(e, env);
+
+    auto result = lUnapplied && rUnapplied;
+
+    return result;
+}
+

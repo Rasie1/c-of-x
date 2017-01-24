@@ -14,6 +14,8 @@ public:
 
     std::string show() const override;
 
+    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
+
     template<class It>
     static ExpPtr make(const It& begin, const It& end)
     {

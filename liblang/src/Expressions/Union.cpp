@@ -174,3 +174,23 @@ std::string Union::show() const
 }
 
 const std::string Union::defaultName = "|";
+
+bool Union::unapplyVariables(ExpPtrArg e,
+                             ExpPtrArg l,
+                             ExpPtrArg r,
+                             Environment &env) const
+{
+    // TODO: when adding to env, we should union branches and not intersect
+    // this is not accessible right now and most likely I'll have to add
+    // flag to every unapply call
+
+    // Or, better way could be returning new env value somehow
+
+    auto lUnapplied = l->unapplyVariables(e, env);
+    auto rUnapplied = r->unapplyVariables(e, env);
+
+    auto result = lUnapplied || rUnapplied;
+
+    return result;
+}
+
