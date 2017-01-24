@@ -3,6 +3,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
+#include "System/Environment.h"
 
 ExpPtr Not::apply(ExpPtrArg e, Environment& env) const
 {
@@ -26,8 +27,9 @@ const std::string Complement::defaultName = "!";
 
 bool Complement::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    auto complement = make_ptr<Complement>(e);
-    return this->e->unapplyVariables(complement, env);
+    auto newEnv = env;
+    auto result = this->e->unapplyVariables(e, newEnv);
+    return !result;
 }
 
 ExpPtr Complement::intersect(ExpPtrArg other, const Environment& env)

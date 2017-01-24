@@ -338,3 +338,15 @@ BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
     auto applied2 = p.parse("f 3", env)->eval(env);
     BOOST_CHECK(checkType<Void>(applied2));
 }
+
+BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f (!1) = 3", env);
+    parsed->eval(env);
+    auto applied0 = p.parse("f 2", env)->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 3);
+    auto applied2 = p.parse("f 1", env)->eval(env);
+    BOOST_CHECK(checkType<Void>(applied2));
+}
