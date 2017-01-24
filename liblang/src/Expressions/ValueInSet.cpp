@@ -1,5 +1,7 @@
 #include "Expressions/ValueInSet.h"
 #include "Expressions/Equality.h"
+#include "Expressions/Application.h"
+#include "Expressions/Identifier.h"
 
 std::string ValueInSet::show() const
 {
@@ -8,8 +10,9 @@ std::string ValueInSet::show() const
 
 bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    // TODO: something more
-    return *this == *e;
+    // TODO: prove that there will be no shadowing problems
+    auto id = make_ptr<Identifier>("id"); 
+    return Application().unapplyVariables(e, set, id, env);
 }
 
 ExpPtr ValueInSet::eval(Environment& env) const
