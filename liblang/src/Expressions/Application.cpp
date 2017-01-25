@@ -151,10 +151,9 @@ bool Application::unapplyVariables(ExpPtrArg e,
         }
         if (auto f = d_cast<ReversibleFunction>(lvalue))
         {
-            // TODO: this thing should not come as separate function
-            // and this code probably should be not here
-            // return f->unapplyVariables(
-            return f->unapplyVariables(e, r, env);
+            auto reversed = f->reverse()->apply(r, env);
+
+            return reversed->unapplyVariables(e, env);
         }
 //        if (checkType<Any>(lvalue))
 //        {

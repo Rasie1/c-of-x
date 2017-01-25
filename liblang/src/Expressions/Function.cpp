@@ -106,18 +106,9 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
                                evaluated);
 }
 
-bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environment& env) const
-{
-    auto reversed = reverse()->apply(arg, env);
-
-    auto ret = reversed->unapplyVariables(e, env);
-
-    return ret;
-}
-
 bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-
+    throw std::logic_error("AAAAAAAA");
     // TODO
     return false;
     // auto reversed = reverse()->apply(arg, env);
