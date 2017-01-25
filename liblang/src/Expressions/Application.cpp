@@ -22,14 +22,12 @@ static bool isExpressionQuoted(ExpPtrArg left, Environment& env)
 {
     if (checkType<Quote>(left))
         return true;
-    if (checkType<Closure>(left))
+    if (auto cl = d_cast<Closure>(left))
     {
-        auto cl = s_cast<Closure>(left);
         if (checkType<QuotedExpression>(cl->argument))
             return true;
-        if (checkType<Operation>(cl->argument))
+        if (auto op = d_cast<Operation>(cl->argument))
         {
-            auto op = s_cast<Operation>(cl->argument);
             if (checkType<Application>(op->op))
             {
                 if (checkType<Quote>(Identifier::unwrapIfId(op->left, env)))
@@ -67,10 +65,10 @@ ExpPtr Application::operate(ExpPtrArg first,
     bool lUnion = false;
     bool rUnion = false;
 
-    if (checkType<Operation>(left))
-        lUnion = checkType<Union>(s_cast<Operation>(left)->op);
-    if (checkType<Operation>(right))
-        rUnion = checkType<Union>(s_cast<Operation>(right)->op);
+    if (auto l = d_cast<Operation>(left))
+        lUnion = checkType<Union>(l->op);
+    if (auto r = d_cast<Operation>(right))
+        rUnion = checkType<Union>(r->op);
 
     if (!lUnion && !rUnion)
     {
@@ -146,14 +144,16 @@ bool Application::unapplyVariables(ExpPtrArg e,
     if (lId)
     {
         auto lvalue = env.getEqual(l);
-        if (checkType<Quote>(lvalue))
+        if (auto q = d_cast<Quote>(lvalue))
         {
-            auto q = s_cast<Quote>(lvalue);
             auto qe = s_cast<QuotedExpression>(q->apply(r, env));
             return qe->unapplyVariables(e, env);
         }
-        if (std::shared_ptr<ReversibleFunction> f = d_cast<ReversibleFunction>(lvalue))
+        if (auto f = d_cast<ReversibleFunction>(lvalue))
         {
+            // TODO: this thing should not come as separate function
+            // and this code probably should be not here
+            // return f->unapplyVariables(
             return f->unapplyVariables(e, r, env);
         }
 //        if (checkType<Any>(lvalue))
@@ -171,17 +171,15 @@ bool Application::unapplyVariables(ExpPtrArg e,
     }
     else
     {
-        // TODO: explain what the hell happens
+        // What happens here:
+        // We 'unapply' the application, turning right side into function
+        // For example, `f x = y ----> f = x -> y`
         auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
         return l->unapplyVariables(closure, env);
     }
 
     return true;
 }
-
-
-
-
 
 
 ReverseApplication::ReverseApplication()
@@ -210,8 +208,6 @@ bool ReverseApplication::unapplyVariables(ExpPtrArg e,
 {
     return proxy.unapplyVariables(e, r, l, env);
 }
-
-
 
 
 LowPriorityApplication::LowPriorityApplication()

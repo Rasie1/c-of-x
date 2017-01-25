@@ -115,6 +115,18 @@ bool ReversibleFunction::unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environmen
     return ret;
 }
 
+bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
+{
+
+    // TODO
+    return false;
+    // auto reversed = reverse()->apply(arg, env);
+
+    // auto ret = reversed->unapplyVariables(e, env);
+
+    // return ret;
+}
+
 ExpPtr Function::codomain()
 {
     return make_ptr<Any>();

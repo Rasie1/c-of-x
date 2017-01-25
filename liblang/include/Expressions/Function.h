@@ -15,4 +15,5 @@ class ReversibleFunction : public Function
 public:
     virtual std::shared_ptr<Function> reverse() const = 0;
     bool unapplyVariables(ExpPtrArg e, ExpPtrArg arg, Environment& env) const;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
 };
