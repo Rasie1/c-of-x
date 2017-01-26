@@ -124,7 +124,5 @@ bool Closure::unapplyVariables(ExpPtrArg e, Environment& env) const
 
 ExpPtr Closure::inverse() const
 {
-    throw std::logic_error("unimplemented");
-
-    // TODO: calculate inverse function out of arg and body
+    return make_ptr<Closure>(body, argument, env);
 }
