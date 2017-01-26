@@ -28,7 +28,7 @@ make
 
 ### How to run
 
-To run interpreter, execute `repl` binary.
+To run interpreter, execute `repl` binary which is placed in `build/repl` directory after build.
 
 To run tests, execute `ctest` from `build` directory.
 
