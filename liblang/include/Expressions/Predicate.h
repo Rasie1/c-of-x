@@ -8,7 +8,7 @@ public:
     Predicate() {}
 
     ExpPtr apply(ExpPtrArg e, Environment& env) const override;
-    ExpPtr reverse() const override;
+    ExpPtr inverse() const override;
 
     virtual bool holds(ExpPtrArg e, const Environment& env) const = 0;
 };

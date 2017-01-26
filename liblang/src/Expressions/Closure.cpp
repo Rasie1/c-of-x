@@ -122,7 +122,7 @@ bool Closure::unapplyVariables(ExpPtrArg e, Environment& env) const
     return unapplied;
 }
 
-ExpPtr Closure::reverse() const
+ExpPtr Closure::inverse() const
 {
     throw std::logic_error("unimplemented");
 

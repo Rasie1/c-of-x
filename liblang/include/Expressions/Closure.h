@@ -21,7 +21,7 @@ public:
     ExpPtr codomain() override;
     ExpPtr domain() override;
 
-    ExpPtr reverse() const override;
+    ExpPtr inverse() const override;
 
     ExpPtr body;
     ExpPtr argument;

@@ -150,9 +150,9 @@ bool Application::unapplyVariables(ExpPtrArg e,
     }
     if (auto f = d_cast<Isomorphism>(lvalue))
     {
-        auto reverse = d_cast<Morphism>(f->reverse());
-        auto reversed = reverse->apply(r, env);
-        return reversed->unapplyVariables(e, env);
+        auto inverse = d_cast<Morphism>(f->inverse());
+        auto inversed = inverse->apply(r, env);
+        return inversed->unapplyVariables(e, env);
     }
     if (lId)
     {

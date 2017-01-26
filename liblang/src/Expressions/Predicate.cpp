@@ -42,7 +42,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
     return ret;
 }
 
-ExpPtr Predicate::reverse() const
+ExpPtr Predicate::inverse() const
 {
     // kind of dangerous
     return s_cast<Morphism>(std::const_pointer_cast<Expression>(shared_from_this()));

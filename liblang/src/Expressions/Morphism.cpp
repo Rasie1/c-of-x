@@ -116,12 +116,12 @@ ExpPtr Morphism::domain()
     return make_ptr<Any>();
 }
 
-ExpPtr Morphism::reverse() const
+ExpPtr Morphism::inverse() const
 {
     return make_ptr<Void>();
 }
 
-bool Morphism::reversible() const
+bool Morphism::inversible() const
 {
     return false;
 }
@@ -131,7 +131,7 @@ bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env) const
     // throw std::logic_error("AAAAAAAA");
     // TODO
 //    return false;
-    auto reversed = d_cast<Morphism>(reverse());
+    auto reversed = d_cast<Morphism>(inverse());
     //;->apply(make_ptr<Any>(), env)->eval(env);
 
 //   auto ret = reversed->unapplyVariables(e, env);
@@ -140,7 +140,7 @@ bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env) const
     return !checkType<Void>(ret);
 }
 
-bool Isomorphism::reversible() const
+bool Isomorphism::inversible() const
 {
     return true;
 }
