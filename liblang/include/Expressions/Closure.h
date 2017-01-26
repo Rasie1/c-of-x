@@ -4,7 +4,7 @@
 #include "System/Environment.h"
 
 class Environment;
-class Closure : public Isomorphism
+class Closure : public Morphism
 {
 public:
     Closure(ExpPtrArg argument,

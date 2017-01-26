@@ -121,11 +121,6 @@ ExpPtr Morphism::inverse() const
     return make_ptr<Void>();
 }
 
-bool Morphism::inversible() const
-{
-    return false;
-}
-
 bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
     // throw std::logic_error("AAAAAAAA");
@@ -138,9 +133,4 @@ bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env) const
     auto ret = reversed->apply(e, env);
 
     return !checkType<Void>(ret);
-}
-
-bool Isomorphism::inversible() const
-{
-    return true;
 }

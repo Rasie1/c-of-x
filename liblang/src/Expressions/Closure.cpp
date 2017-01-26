@@ -126,5 +126,5 @@ ExpPtr Closure::inverse() const
 {
     throw std::logic_error("unimplemented");
 
-    // TODO: calculate reverse function out of arg and body
+    // TODO: calculate inverse function out of arg and body
 }

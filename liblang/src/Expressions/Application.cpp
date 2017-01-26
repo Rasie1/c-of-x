@@ -148,11 +148,14 @@ bool Application::unapplyVariables(ExpPtrArg e,
         auto qe = s_cast<QuotedExpression>(q->apply(r, env));
         return qe->unapplyVariables(e, env);
     }
-    if (auto f = d_cast<Isomorphism>(lvalue))
+    if (auto f = d_cast<Morphism>(lvalue))
     {
         auto inverse = d_cast<Morphism>(f->inverse());
-        auto inversed = inverse->apply(r, env);
-        return inversed->unapplyVariables(e, env);
+        if (!checkType<Void>(inverse))
+        {
+            auto inversed = inverse->apply(r, env);
+            return inversed->unapplyVariables(e, env);
+        }
     }
     if (lId)
     {

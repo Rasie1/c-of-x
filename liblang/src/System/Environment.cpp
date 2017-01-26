@@ -9,6 +9,7 @@
 #include "Expressions/Morphism.h"
 #include "Expressions/Lambda.h"
 #include "Expressions/Include.h"
+#include "Expressions/Inverse.h"
 #include "Expressions/Mutation.h"
 #include "Expressions/Print.h"
 #include "Expressions/Application.h"
@@ -167,6 +168,7 @@ void Environment::addDefaultDefinitions()
     addVariable<Not>(this);
     addVariable<Print>(this);
     addVariable<Include>(this);
+    addVariable<Inverse>(this);
     addVariable<Addition>(this);
     addVariable<Union>(this);
     addVariable<IntegerType>(this);
@@ -182,8 +184,6 @@ void Environment::addDefaultDefinitions()
     addVariable<ReverseApplication>(this);
     addVariable<LowPriorityApplication>(this);
     addEqual(make_ptr<Identifier>(";"), make_ptr<DefaultOperator>(), true);
-
-
 }
 
 bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
