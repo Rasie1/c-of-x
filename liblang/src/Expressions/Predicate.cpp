@@ -5,6 +5,7 @@
 #include "Expressions/Intersection.h"
 #include "Expressions/Void.h"
 #include "Expressions/Any.h"
+#include "Expressions/ValueInSet.h"
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 {
@@ -32,6 +33,9 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
     }
 
     auto expr = e->eval(env);
+
+    if (checkType<Any>(e))
+        return make_ptr<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
 
     auto ret = holds(expr, env) ? expr : make_ptr<Void>();
 

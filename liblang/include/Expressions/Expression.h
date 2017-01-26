@@ -19,7 +19,7 @@ public:
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
     virtual ExpPtr unionize(ExpPtrArg other, const Environment& env);
     virtual ExpPtr complement(const Environment& env);
-    virtual ExpPtr takeValue(const Environment& env);
+    virtual ExpPtr element(const Environment& env);
 
     virtual bool operator==(const Expression& other) const;
     virtual bool operator!=(const Expression& other) const { return !(*this == other); }

@@ -30,3 +30,11 @@ std::string Lambda::show() const
 }
 
 const std::string Lambda::defaultName = "\\"; // later: "=>"
+
+// bool Lambda::unapplyVariables(ExpPtrArg e,
+//                               ExpPtrArg l,
+//                               ExpPtrArg r,
+//                               Environment &env) const
+// {
+    
+// }

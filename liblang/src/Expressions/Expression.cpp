@@ -59,7 +59,7 @@ ExpPtr Expression::complement(const Environment& env)
     return make_ptr<Complement>(shared_from_this());
 }
 
-ExpPtr Expression::takeValue(const Environment& env)
+ExpPtr Expression::element(const Environment& env)
 {
     return make_ptr<ValueInSet>(shared_from_this());
 }

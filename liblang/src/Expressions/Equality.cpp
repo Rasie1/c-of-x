@@ -47,7 +47,7 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr Equals::takeValue(const Environment& env)
+ExpPtr Equals::element(const Environment& env)
 {
     return value;
 }

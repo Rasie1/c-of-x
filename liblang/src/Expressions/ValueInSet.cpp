@@ -2,6 +2,7 @@
 #include "Expressions/Equality.h"
 #include "Expressions/Application.h"
 #include "Expressions/Identifier.h"
+#include "Expressions/Any.h"
 
 std::string ValueInSet::show() const
 {
@@ -10,13 +11,22 @@ std::string ValueInSet::show() const
 
 bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    // TODO: prove that there will be no shadowing problems
-    auto id = make_ptr<Identifier>("id"); 
-    return Application().unapplyVariables(e, set, id, env);
+    auto taken = set->element(env);
+    if (auto stillValueInSet = d_cast<ValueInSet>(taken))
+    {
+        auto ret = Application().unapplyVariables(e,
+                                                  set,
+                                                  make_ptr<Any>(),
+                                                  env);
+        return ret;
+    }
+
+    return taken->unapplyVariables(e, env);
+
 }
 
 ExpPtr ValueInSet::eval(Environment& env) const
 {
-    return set->takeValue(env);
+    return set->element(env);
 }
 

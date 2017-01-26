@@ -141,43 +141,33 @@ bool Application::unapplyVariables(ExpPtrArg e,
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);
 
+    auto lvalue = lId ? env.getEqual(l) : l;
+
+    if (auto q = d_cast<Quote>(lvalue))
+    {
+        auto qe = s_cast<QuotedExpression>(q->apply(r, env));
+        return qe->unapplyVariables(e, env);
+    }
+    if (auto f = d_cast<ReversibleFunction>(lvalue))
+    {
+        auto reversed = f->reverse()->apply(r, env);
+        return reversed->unapplyVariables(e, env);
+    }
     if (lId)
     {
-        auto lvalue = env.getEqual(l);
-        if (auto q = d_cast<Quote>(lvalue))
-        {
-            auto qe = s_cast<QuotedExpression>(q->apply(r, env));
-            return qe->unapplyVariables(e, env);
-        }
-        if (auto f = d_cast<ReversibleFunction>(lvalue))
-        {
-            auto reversed = f->reverse()->apply(r, env);
+        auto newEnv = env;
+        newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
+        auto closure = Lambda().operate(r, e, newEnv);
 
-            return reversed->unapplyVariables(e, env);
-        }
-//        if (checkType<Any>(lvalue))
-//        {
-            // for recursion to work
-            auto newEnv = env;
-            newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
-            auto closure = Lambda().operate(r, e, newEnv);
+        auto ret = env.addEqual(l, closure, false);
 
-            auto ret = env.addEqual(l, closure, false);
-
-            return !checkType<Void>(ret);
-//        }
-        return false;
-    }
-    else
-    {
-        // What happens here:
-        // We 'unapply' the application, turning right side into function
-        // For example, `f x = y ----> f = x -> y`
-        auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
-        return l->unapplyVariables(closure, env);
+        return !checkType<Void>(ret);
     }
 
-    return true;
+    // Otherwise, 'unapply' the application, turning right side into function
+    // For example, `f x = y ----> f = x -> y`
+    auto closure = make_ptr<Operation>(make_ptr<Lambda>(), r, e);
+    return l->unapplyVariables(closure, env);
 }
 
 

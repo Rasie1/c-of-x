@@ -108,14 +108,14 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
 
 bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    throw std::logic_error("AAAAAAAA");
+    // throw std::logic_error("AAAAAAAA");
     // TODO
-    return false;
-    // auto reversed = reverse()->apply(arg, env);
+//    return false;
+   auto reversed = reverse()->apply(make_ptr<Any>(), env)->eval(env);
 
-    // auto ret = reversed->unapplyVariables(e, env);
+   auto ret = reversed->unapplyVariables(e, env);
 
-    // return ret;
+   return ret;
 }
 
 ExpPtr Function::codomain()
