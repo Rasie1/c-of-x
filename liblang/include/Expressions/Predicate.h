@@ -1,8 +1,8 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 
 class Predicate :
-        public ReversibleFunction
+        public Isomorphism
 {
 public:
     Predicate() {}

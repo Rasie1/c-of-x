@@ -6,7 +6,7 @@
 #include "Expressions/Multiplication.h"
 #include "Expressions/Pair.h"
 #include "Expressions/Void.h"
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "Expressions/Lambda.h"
 #include "Expressions/Include.h"
 #include "Expressions/Mutation.h"

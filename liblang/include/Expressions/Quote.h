@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 
-class Quote : public Function
+class Quote : public Morphism
 {
 public:
     Quote() {}

@@ -4,7 +4,7 @@
 #include "Expressions/Lambda.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Error.h"
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Union.h"
 #include "Expressions/Void.h"
@@ -82,12 +82,12 @@ ExpPtr Application::operate(ExpPtrArg first,
 //        else
         {
             
-            if (auto function = d_cast<Function>(left))
+            if (auto function = d_cast<Morphism>(left))
             {
                 expressions.push_back(function->apply(right, env));
             }
             //                                                TODO: save env?
-            else if (auto function = d_cast<Function>(left->eval(env)))
+            else if (auto function = d_cast<Morphism>(left->eval(env)))
             {
                 expressions.push_back(function->apply(right, env));
             }
@@ -148,9 +148,9 @@ bool Application::unapplyVariables(ExpPtrArg e,
         auto qe = s_cast<QuotedExpression>(q->apply(r, env));
         return qe->unapplyVariables(e, env);
     }
-    if (auto f = d_cast<ReversibleFunction>(lvalue))
+    if (auto f = d_cast<Isomorphism>(lvalue))
     {
-        auto reverse = d_cast<Function>(f->reverse());
+        auto reverse = d_cast<Morphism>(f->reverse());
         auto reversed = reverse->apply(r, env);
         return reversed->unapplyVariables(e, env);
     }

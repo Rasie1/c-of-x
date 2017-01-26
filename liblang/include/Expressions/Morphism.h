@@ -1,7 +1,7 @@
 #pragma once
 #include "Expressions/DataType.h"
 
-class Function : public Data
+class Morphism : public Data
 {
 public:
     virtual ExpPtr apply(ExpPtrArg e, Environment& env) const = 0;
@@ -12,7 +12,7 @@ public:
     virtual ExpPtr reverse() const;
 };
 
-class ReversibleFunction : public Function
+class Isomorphism : public Morphism
 {
 public:
     bool reversible() const override;

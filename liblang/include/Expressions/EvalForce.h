@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 
-class EvalForce : public Function
+class EvalForce : public Morphism
 {
 public:
     EvalForce() {}

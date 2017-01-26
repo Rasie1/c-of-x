@@ -1,5 +1,5 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "Expressions/Operator.h"
 
 class Pair : public Operator

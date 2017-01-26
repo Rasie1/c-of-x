@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 
-class Not : public Function
+class Not : public Morphism
 {
 public:
     Not() {}

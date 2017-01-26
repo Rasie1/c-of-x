@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 
-class Print : public Function
+class Print : public Morphism
 {
 public:
     Print() {}
@@ -12,7 +12,7 @@ public:
     static const std::string defaultName;
 };
 
-class PrintInfo : public Function
+class PrintInfo : public Morphism
 {
 public:
     PrintInfo() {}
@@ -23,7 +23,7 @@ public:
     static const std::string defaultName;
 };
 
-class PrintEnv : public Function
+class PrintEnv : public Morphism
 {
 public:
     PrintEnv() {}

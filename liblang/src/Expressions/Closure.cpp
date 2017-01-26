@@ -1,6 +1,6 @@
 #include "Expressions/Closure.h"
 #include <string>
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "System/Environment.h"
 #include "Expressions/Error.h"
 #include "Expressions/Equality.h"

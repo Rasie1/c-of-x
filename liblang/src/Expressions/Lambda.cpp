@@ -1,7 +1,7 @@
 #include "Expressions/Lambda.h"
 #include <iostream>
 #include "Expressions/Closure.h"
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "System/Environment.h"
 #include "Expressions/Operation.h"
 

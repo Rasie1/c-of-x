@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 
-class Include : public Function
+class Include : public Morphism
 {
 public:
     ExpPtr apply(ExpPtrArg e, Environment& env) const override;

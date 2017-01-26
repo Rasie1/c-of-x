@@ -1,10 +1,10 @@
 #pragma once
 #include "Expressions/Expression.h"
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "System/Environment.h"
 
 class Environment;
-class Closure : public ReversibleFunction
+class Closure : public Isomorphism
 {
 public:
     Closure(ExpPtrArg argument,

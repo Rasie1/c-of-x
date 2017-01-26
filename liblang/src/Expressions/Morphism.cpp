@@ -1,4 +1,4 @@
-#include "Expressions/Function.h"
+#include "Expressions/Morphism.h"
 #include "System/Environment.h"
 #include "Expressions/Void.h"
 #include "Expressions/Equality.h"
@@ -12,7 +12,7 @@
 #include "Expressions/Union.h"
 #include "Expressions/Not.h"
 
-ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
+ExpPtr Morphism::intersect(ExpPtrArg other, const Environment& env)
 {
     auto value = Identifier::unwrapIfId(other, env);
     env.debugPrint("Intersecting function:" + this->show() + "\n");
@@ -53,7 +53,7 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
     auto evaluated = value->eval(newEnv);
 
 
-    if (auto other = d_cast<Function>(evaluated))
+    if (auto other = d_cast<Morphism>(evaluated))
     {
         // return make_ptr<Operation>(make_ptr<Union>(),
         //                            shared_from_this(),
@@ -106,32 +106,32 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
                                evaluated);
 }
 
-ExpPtr Function::codomain()
+ExpPtr Morphism::codomain()
 {
     return make_ptr<Any>();
 }
 
-ExpPtr Function::domain()
+ExpPtr Morphism::domain()
 {
     return make_ptr<Any>();
 }
 
-ExpPtr Function::reverse() const
+ExpPtr Morphism::reverse() const
 {
     return make_ptr<Void>();
 }
 
-bool Function::reversible() const
+bool Morphism::reversible() const
 {
     return false;
 }
 
-bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
     // throw std::logic_error("AAAAAAAA");
     // TODO
 //    return false;
-    auto reversed = d_cast<Function>(reverse());
+    auto reversed = d_cast<Morphism>(reverse());
     //;->apply(make_ptr<Any>(), env)->eval(env);
 
 //   auto ret = reversed->unapplyVariables(e, env);
@@ -140,7 +140,7 @@ bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
     return !checkType<Void>(ret);
 }
 
-bool ReversibleFunction::reversible() const
+bool Isomorphism::reversible() const
 {
     return true;
 }
