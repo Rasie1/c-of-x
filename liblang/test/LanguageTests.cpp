@@ -249,18 +249,19 @@ BOOST_AUTO_TEST_CASE(simpleMacroMatch)
     BOOST_CHECK(checkType<Void>(c));
 }
 
-BOOST_AUTO_TEST_CASE(simpleMacroMatchVariable)
-{
-    Environment env;
-    Parser p;
+// TODO: why did I wrote this test?
+// BOOST_AUTO_TEST_CASE(simpleMacroMatchVariable)
+// {
+//     Environment env;
+//     Parser p;
 
-    auto parsed = p.parse("token ('x) = 0", env);
-    parsed->eval(env);
-    parsed = p.parse("token c", env);
-    auto c = parsed->eval(env);
-    BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 0);
+//     auto parsed = p.parse("token ('x) = 0", env);
+//     parsed->eval(env);
+//     parsed = p.parse("token c", env);
+//     auto c = parsed->eval(env);
+//     BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 0);
 
-}
+// }
 
 // BOOST_AUTO_TEST_CASE(functionMacroMatch)
 // {
@@ -386,4 +387,14 @@ BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 3);
     auto applied2 = p.parse("f 1", env)->eval(env);
     BOOST_CHECK(checkType<Void>(applied2));
+}
+
+BOOST_AUTO_TEST_CASE(simpleInverseFunction)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f (int x) = x + 1", env);
+    parsed->eval(env);
+    auto applied = p.parse("(inverse f) 0", env)->eval(env);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, -1);
 }
