@@ -3,6 +3,9 @@
 #include "Expressions/Application.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Any.h"
+#include "Expressions/Operation.h"
+#include "Expressions/Intersection.h"
+#include "Expressions/Union.h"
 
 std::string ValueInSet::show() const
 {
@@ -11,8 +14,15 @@ std::string ValueInSet::show() const
 
 bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    auto taken = set->element(env);
-    if (auto stillValueInSet = d_cast<ValueInSet>(taken))
+//    if (auto operation = d_cast<Operation>(e))
+//    {
+//        if (checkType<Intersection>(operation->op))
+//        {
+
+//        }
+//    }
+    auto element = set->element(env);
+    if (auto stillValueInSet = d_cast<ValueInSet>(element))
     {
         auto ret = Application().unapplyVariables(e,
                                                   set,
@@ -21,7 +31,7 @@ bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
         return ret;
     }
 
-    return taken->unapplyVariables(e, env);
+    return element->unapplyVariables(e, env);
 
 }
 

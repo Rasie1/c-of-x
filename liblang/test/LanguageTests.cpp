@@ -155,6 +155,43 @@ BOOST_AUTO_TEST_CASE(unapplyPlus)
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, -2);
 }
 
+BOOST_AUTO_TEST_CASE(unapplyPlusAsArgument)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f (x + 2) = x", env);
+    parsed->eval(env);
+    parsed = p.parse("f 0", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_REQUIRE(checkType<Integer>(x));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, -2);
+}
+
+BOOST_AUTO_TEST_CASE(unapplyPartialPlus)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("(+2) x = 0", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_REQUIRE(checkType<Integer>(x));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, -2);
+}
+
+BOOST_AUTO_TEST_CASE(unapplyPartialPlusAsArgument)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f ((+2) x) = x", env);
+    parsed->eval(env);
+    parsed = p.parse("f 0", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_REQUIRE(checkType<Integer>(x));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, -2);
+}
+
 BOOST_AUTO_TEST_CASE(reverseApplication)
 {
     Environment env;
@@ -306,7 +343,7 @@ BOOST_AUTO_TEST_CASE(firstOrderAsNonInfix)
 
 BOOST_AUTO_TEST_CASE(functionOverloading)
 {
-    return; // unimplemented autoremoving void
+    return; //unimplemented
     Environment env;
     Parser p;
     auto parsed = p.parse("f 1 = 1", env);

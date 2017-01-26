@@ -177,8 +177,8 @@ ReverseApplication::ReverseApplication()
 }
 
 ExpPtr ReverseApplication::operate(ExpPtrArg first,
-                            ExpPtrArg second,
-                            Environment& env) const
+                                   ExpPtrArg second,
+                                   Environment& env) const
 {
     return proxy.operate(second, first, env);
 }

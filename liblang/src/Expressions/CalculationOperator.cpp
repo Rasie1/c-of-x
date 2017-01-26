@@ -28,7 +28,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     right = Identifier::unwrapIfId(right, env);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
+        return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), first, second);
 
 
     // Next comes union stuff that will be replaced later
