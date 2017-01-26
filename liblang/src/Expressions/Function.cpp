@@ -106,19 +106,6 @@ ExpPtr Function::intersect(ExpPtrArg other, const Environment& env)
                                evaluated);
 }
 
-bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
-{
-    // throw std::logic_error("AAAAAAAA");
-    // TODO
-//    return false;
-    auto reversed = reverse();//;->apply(make_ptr<Any>(), env)->eval(env);
-
-//   auto ret = reversed->unapplyVariables(e, env);
-    auto ret = reversed->apply(e, env);
-
-    return !checkType<Void>(ret);
-}
-
 ExpPtr Function::codomain()
 {
     return make_ptr<Any>();
@@ -127,4 +114,33 @@ ExpPtr Function::codomain()
 ExpPtr Function::domain()
 {
     return make_ptr<Any>();
+}
+
+ExpPtr Function::reverse() const
+{
+    return make_ptr<Void>();
+}
+
+bool Function::reversible() const
+{
+    return false;
+}
+
+bool ReversibleFunction::unapplyVariables(ExpPtrArg e, Environment& env) const
+{
+    // throw std::logic_error("AAAAAAAA");
+    // TODO
+//    return false;
+    auto reversed = d_cast<Function>(reverse());
+    //;->apply(make_ptr<Any>(), env)->eval(env);
+
+//   auto ret = reversed->unapplyVariables(e, env);
+    auto ret = reversed->apply(e, env);
+
+    return !checkType<Void>(ret);
+}
+
+bool ReversibleFunction::reversible() const
+{
+    return true;
 }

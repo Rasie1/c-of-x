@@ -150,7 +150,8 @@ bool Application::unapplyVariables(ExpPtrArg e,
     }
     if (auto f = d_cast<ReversibleFunction>(lvalue))
     {
-        auto reversed = f->reverse()->apply(r, env);
+        auto reverse = d_cast<Function>(f->reverse());
+        auto reversed = reverse->apply(r, env);
         return reversed->unapplyVariables(e, env);
     }
     if (lId)

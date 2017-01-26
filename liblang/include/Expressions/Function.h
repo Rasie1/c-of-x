@@ -8,11 +8,14 @@ public:
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
     virtual ExpPtr codomain();
     virtual ExpPtr domain();
+    virtual bool   reversible() const;
+    virtual ExpPtr reverse() const;
 };
 
 class ReversibleFunction : public Function
 {
 public:
-    virtual std::shared_ptr<Function> reverse() const = 0;
+    bool reversible() const override;
     bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
 };
+

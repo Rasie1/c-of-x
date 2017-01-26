@@ -4,7 +4,7 @@
 #include "System/Environment.h"
 
 class Environment;
-class Closure : public Function
+class Closure : public ReversibleFunction
 {
 public:
     Closure(ExpPtrArg argument,
@@ -20,6 +20,8 @@ public:
 
     ExpPtr codomain() override;
     ExpPtr domain() override;
+
+    ExpPtr reverse() const override;
 
     ExpPtr body;
     ExpPtr argument;

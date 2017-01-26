@@ -121,3 +121,10 @@ bool Closure::unapplyVariables(ExpPtrArg e, Environment& env) const
 
     return unapplied;
 }
+
+ExpPtr Closure::reverse() const
+{
+    throw std::logic_error("unimplemented");
+
+    // TODO: calculate reverse function out of arg and body
+}
