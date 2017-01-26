@@ -6,6 +6,8 @@
 #include "Expressions/Void.h"
 #include "Parser/Parser.h"
 #include "Expressions/Integer.h"
+#include "Expressions/ValueInSet.h"
+#include "Expressions/IntegerType.h"
 #include "Expressions/Then.h"
 #include "Expressions/More.h"
 #include "Expressions/Less.h"
@@ -397,4 +399,28 @@ BOOST_AUTO_TEST_CASE(simpleInverseFunction)
     parsed->eval(env);
     auto applied = p.parse("(inverse f) 0", env)->eval(env);
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, -1);
+}
+
+BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f x = x + 10", env);
+    parsed->eval(env);
+    {
+        parsed = p.parse("m (int x) = f 10 + f 17", env);
+        parsed->eval(env);
+        auto applied = p.parse("(inverse m) 47", env)->eval(env);
+        BOOST_CHECK(checkType<ValueInSet>(applied));
+        applied = p.parse("(inverse m) 46", env)->eval(env);
+        BOOST_CHECK(checkType<Void>(applied));
+    }
+    {
+        parsed = p.parse("n 0 = f 10 + f 17", env);
+        parsed->eval(env);
+        auto applied = p.parse("(inverse n) 47", env)->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, 0);
+        applied = p.parse("(inverse n) 46", env)->eval(env);
+        BOOST_CHECK(checkType<Void>(applied));
+    }
 }

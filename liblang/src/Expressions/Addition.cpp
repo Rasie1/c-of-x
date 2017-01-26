@@ -52,7 +52,8 @@ bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environme
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = e->eval(env);
+    auto evaluated = make_ptr<Operation>(make_ptr<Addition>(),
+                                         l, r)->eval(env);
     if (auto op = d_cast<Operation>(evaluated))
     {
         if (checkType<Addition>(op->op))
