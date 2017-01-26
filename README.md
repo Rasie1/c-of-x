@@ -11,7 +11,7 @@ This is an experimental programming language inspired by Haskell and C++ templat
 
 ### Dependencies
 
-- C++17 compiler
+- c++14 compiler
 - readline
 - boost
 
