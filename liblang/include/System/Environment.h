@@ -47,7 +47,7 @@ public:
     std::string show() const;
     bool operator==(const Environment& other) const;
 
-    std::vector<std::string> getKeys() const;
+    std::vector<std::string> getAllNames() const;
 
     std::shared_ptr<const Operator> defaultOperator;
 

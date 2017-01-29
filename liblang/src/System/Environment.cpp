@@ -131,7 +131,7 @@ ExpPtr Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
     return add(key, make_ptr<Equals>(value), excluding);
 }
 
-std::vector<std::string> Environment::getKeys() const
+std::vector<std::string> Environment::getAllNames() const
 {
     std::vector<std::string> ret;
     ret.reserve(data.size());

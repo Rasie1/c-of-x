@@ -66,7 +66,7 @@ void REPL::start()
 
 void REPL::formCompletionNames()
 {
-    completer.names = env.getKeys();
+    completer.names = env.getAllNames();
     completer.names.push_back("-quit");
     completer.names.push_back("-clear");
     completer.names.push_back("-help");
