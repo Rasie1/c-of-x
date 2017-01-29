@@ -7,6 +7,10 @@ std::string Any::show() const
 
 const std::string Any::defaultName = "_";
 
+bool Any::unapplyVariables(ExpPtrArg e, Environment& env) const
+{
+    return true;
+}
 
 ExpPtr Any::intersect(ExpPtrArg other, const Environment& env)
 {

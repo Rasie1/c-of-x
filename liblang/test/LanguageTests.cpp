@@ -424,3 +424,76 @@ BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
         BOOST_CHECK(checkType<Void>(applied));
     }
 }
+
+BOOST_AUTO_TEST_CASE(simpleClosure)
+{
+    Environment env;
+    Parser p;
+    {
+        auto parsed = p.parse("(x => x) 3", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 3);
+    }
+    {
+        auto parsed = p.parse("(3 => 3) 3", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 3);
+    }
+    {
+        auto parsed = p.parse("(2 => 3) 3", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK(checkType<Void>(c));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(complexClosure)
+{
+    Environment env;
+    Parser p;
+    {
+        auto parsed = p.parse("(int x => x) 3", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 3);
+    }
+    {
+        auto parsed = p.parse("(2|3 => 3) 3", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 3);
+    }
+    {
+        auto parsed = p.parse("(1|2 => 3) 3", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK(checkType<Void>(c));
+    }
+    {
+        auto parsed = p.parse("(int x => 3) \"abc\"", env);
+        auto c = parsed->eval(env);
+        BOOST_CHECK(checkType<Void>(c));
+    }
+}
+
+// BOOST_AUTO_TEST_CASE(closureIntersection)
+// {
+//     Environment env;
+//     Parser p;
+//     {
+//         auto parsed = p.parse("((1 => 1) & (1 => 1)) 1", env);
+//         auto c = parsed->eval(env);
+//         BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 1);
+//     }
+//     {
+//         auto parsed = p.parse("((int x => 1) & (1 => 1)) 1", env);
+//         auto c = parsed->eval(env);
+//         BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 1);
+//     }
+//     {
+//         auto parsed = p.parse("((int x => 1) & (2 => 1)) 1", env);
+//         auto c = parsed->eval(env);
+//         BOOST_CHECK(checkType<Void>(c));
+//     }
+//     {
+//         auto parsed = p.parse("((int x => 1) & (1 => 1)) 2", env);
+//         auto c = parsed->eval(env);
+//         BOOST_CHECK(checkType<Void>(c));
+//     }
+// }

@@ -2,6 +2,7 @@
 #include "System/Environment.h"
 #include "Expressions/Void.h"
 #include "Expressions/Not.h"
+#include "Expressions/Any.h"
 
 ExpPtr Data::eval(Environment& env) const
 {
@@ -10,7 +11,8 @@ ExpPtr Data::eval(Environment& env) const
 
 bool Data::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    // TODO: why is that?
+    if (checkType<Any>(e))
+        return true;
     return *this == *e;
 }
 
