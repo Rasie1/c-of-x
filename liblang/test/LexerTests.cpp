@@ -201,7 +201,55 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     BOOST_CHECK_EQUAL(yId.name, "y");
 }
 
+BOOST_AUTO_TEST_CASE(MulticharacterOp)
+{
+    Lexer l;
+    l.tokenize("x ==> y");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 3);
+
+    auto x = tokens[0];
+    auto p = tokens[1];
+    auto y = tokens[2];
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    BOOST_CHECK(p.type() == typeid(Identifier));
+    BOOST_CHECK(y.type() == typeid(Identifier));
+    auto xId = get<Identifier>(tokens[0]);
+    auto pId = get<Identifier>(tokens[1]);
+    auto yId = get<Identifier>(tokens[2]);
+    BOOST_CHECK_EQUAL(xId.name, "x");
+    BOOST_CHECK_EQUAL(pId.name, "==>");
+    BOOST_CHECK_EQUAL(yId.name, "y");
+}
+
 BOOST_AUTO_TEST_CASE(XPlusYNoSpaces)
+{
+    Lexer l;
+    l.tokenize("x==>y");
+    auto tokens = l.getTokens();
+
+    BOOST_CHECK_EQUAL(tokens.size(), 5);
+
+    auto x = tokens[0];
+    auto ns1 = tokens[1];
+    auto p = tokens[2];
+    auto ns2 = tokens[3];
+    auto y = tokens[4];
+    BOOST_CHECK(x.type() == typeid(Identifier));
+    BOOST_CHECK(ns1.type() == typeid(NoSpace));
+    BOOST_CHECK(p.type() == typeid(Identifier));
+    BOOST_CHECK(ns2.type() == typeid(NoSpace));
+    BOOST_CHECK(y.type() == typeid(Identifier));
+    auto xId = get<Identifier>(tokens[0]);
+    auto pId = get<Identifier>(tokens[2]);
+    auto yId = get<Identifier>(tokens[4]);
+    BOOST_CHECK_EQUAL(xId.name, "x");
+    BOOST_CHECK_EQUAL(pId.name, "==>");
+    BOOST_CHECK_EQUAL(yId.name, "y");
+}
+
+BOOST_AUTO_TEST_CASE(MulticharacterOpNoSpaces)
 {
     Lexer l;
     l.tokenize("x+y");

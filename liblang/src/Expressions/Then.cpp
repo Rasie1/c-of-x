@@ -25,4 +25,4 @@ std::string Then::show() const
     return Then::defaultName;
 }
 
-const std::string Then::defaultName = "~"; // later: "=>"
+const std::string Then::defaultName = "==>";

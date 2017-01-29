@@ -47,6 +47,46 @@ static constexpr bool isOperatorCharacter(char c)
             ;
 }
 
+Lexer::Lexer()
+{
+    // TODO: make it dynamic
+    addSplittingSequence("==>");
+    addSplittingSequence(":-");
+    addSplittingSequence("-:");
+    addSplittingSequence("->");
+    addSplittingSequence("<-");
+    addSplittingSequence("=>");
+    addSplittingSequence("<=");
+    addSplittingSequence(">=");
+    addSplittingSequence("=<");
+    addSplittingSequence("\'");
+    addSplittingSequence("\\");
+    addSplittingSequence("_");
+    addSplittingSequence("+");
+    addSplittingSequence("-");
+    addSplittingSequence("*");
+    addSplittingSequence(":");
+    addSplittingSequence("#");
+    addSplittingSequence("~");
+    addSplittingSequence("$");
+    addSplittingSequence(">");
+    addSplittingSequence("<");
+    addSplittingSequence("*");
+    addSplittingSequence("@");
+    addSplittingSequence("!");
+    addSplittingSequence("%");
+    addSplittingSequence("&");
+    addSplittingSequence("`");
+    addSplittingSequence("|");
+    addSplittingSequence("?");
+    addSplittingSequence("/");
+    addSplittingSequence("^");
+    addSplittingSequence(";");
+    addSplittingSequence(",");
+    addSplittingSequence(".");
+    addSplittingSequence("=");
+}
+
 std::vector<Token> Lexer::getTokens()
 {
     return parsedTokens;
@@ -55,15 +95,13 @@ std::vector<Token> Lexer::getTokens()
 static optional<size_t> shouldSplitWithSequence(const std::string& input,
                                                 const vector<string>& splittingSequences)
 {
-    if (isOperatorCharacter(input[0]))
-        return make_optional((size_t)1);
     for (auto& currentSplittingSequence : splittingSequences)
     {
         auto res = mismatch(currentSplittingSequence.begin(),
                             currentSplittingSequence.end(),
                             input.begin());
 
-        if (res.first == input.end())
+        if (res.first == currentSplittingSequence.end())
         {
             return make_optional(currentSplittingSequence.size());
         }
@@ -227,12 +265,14 @@ bool Lexer::tokenize(const std::string& input)
             parsedTokens.push_back(Tokens::Identifier{input.substr(currentCharacterIndex, *splitTokenSize)});
             currentTokenStart = currentCharacterIndex;
 
-            auto moveDistance = *splitTokenSize; //////////!!!!!!!!!!!!
+            auto moveDistance = *splitTokenSize;
 
             if (currentCharacterIndex + moveDistance < input.size() &&
                 (input[currentCharacterIndex + moveDistance] != ' ' &&
                  input[currentCharacterIndex + moveDistance] != '\n'))
                 parsedTokens.push_back((Tokens::NoSpace()));
+
+            currentCharacterIndex += moveDistance - 1;
         }
         else if (isIdentifierCharacter(currentCharacter))
         {
@@ -263,7 +303,7 @@ bool Lexer::tokenize(const std::string& input)
 
 void Lexer::addSplittingSequence(const std::string& s)
 {
-    // todo: insert it so it won't be matched after prefix string
+    // TODO: insert it so it won't be matched after prefix string
     splittingSequences.push_back(s);
 }
 

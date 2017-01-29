@@ -29,7 +29,7 @@ std::string Lambda::show() const
     return Lambda::defaultName;
 }
 
-const std::string Lambda::defaultName = "\\"; // later: "=>"
+const std::string Lambda::defaultName = "=>";
 
 // bool Lambda::unapplyVariables(ExpPtrArg e,
 //                               ExpPtrArg l,
