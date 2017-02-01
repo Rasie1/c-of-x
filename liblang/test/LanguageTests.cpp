@@ -472,6 +472,17 @@ BOOST_AUTO_TEST_CASE(complexClosure)
     }
 }
 
+BOOST_AUTO_TEST_CASE(closurePredicate)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x : (x => (x = 0))", env);
+    parsed->eval(env);
+    auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 0);
+}
+
 // BOOST_AUTO_TEST_CASE(closureIntersection)
 // {
 //     Environment env;

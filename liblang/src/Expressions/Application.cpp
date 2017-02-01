@@ -151,11 +151,12 @@ bool Application::unapplyVariables(ExpPtrArg e,
     if (auto f = d_cast<Morphism>(lvalue))
     {
         auto inverse = d_cast<Morphism>(f->inverse());
-        if (!checkType<Void>(inverse))
-        {
-            auto inversed = inverse->apply(r, env);
-            return inversed->unapplyVariables(e, env);
-        }
+        if (inverse)
+            if (!checkType<Void>(inverse))
+            {
+                auto inversed = inverse->apply(r, env);
+                return inversed->unapplyVariables(e, env);
+            }
     }
     if (lId)
     {

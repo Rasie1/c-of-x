@@ -47,6 +47,9 @@ static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 {
+    // In case of closure as predicate, it is more likely that closure's body intersects with only
+    // argument subset, leaving arguments' complement in context of applied value as it was before
+
     auto value = Identifier::unwrapIfId(e, env);
     auto newEnv = this->env;
 
