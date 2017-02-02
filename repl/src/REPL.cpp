@@ -3,6 +3,7 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include "Expressions/Expression.h"
+#include "Expressions/Identifier.h"
 #include "Expressions/ExceptionParseError.h"
 #include "Expressions/Void.h"
 #include "AutoCompleter.h"
@@ -48,7 +49,11 @@ void REPL::start()
                 }
 
                 auto evaluated = expression->eval(env);
-                cout << endl << "evaluated: " << evaluated->show() << endl;
+                cout << endl << "evaluated: ";
+                cout << evaluated->show();
+                if (checkType<Identifier>(evaluated))
+                    cout << " : " << env.get(evaluated)->show();
+                cout << endl;
             }
 //        }
 //        catch (std::exception& e)
