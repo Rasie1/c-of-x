@@ -48,7 +48,7 @@ ExpPtr Application::operate(ExpPtrArg first,
                             Environment& env) const
 {
     ExpPtr left, right;
-    left = Identifier::unwrapIfId(first, env)->eval(env);
+    left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env)->eval(env), env);
     if (isExpressionQuoted(left, env))
         right = second;
     else

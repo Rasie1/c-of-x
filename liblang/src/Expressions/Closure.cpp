@@ -50,6 +50,20 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
     // In case of closure as predicate, it is more likely that closure's body intersects with only
     // argument subset, leaving arguments' complement in context of applied value as it was before
 
+    
+    if (checkType<Identifier>(e))
+    {
+        auto id = s_cast<Identifier>(e);
+        ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
+        env.add(id, x, true);
+
+        auto expr = env.getEqual(id);
+
+        return id;
+    }
+
+
+
     auto value = Identifier::unwrapIfId(e, env);
     auto newEnv = this->env;
 

@@ -20,7 +20,7 @@ bool Identifier::operator==(const Expression& other) const
 
 std::string Identifier::show() const
 {
-    return /*"\'" + */name;
+    return name;
 }
 
 bool Identifier::hasFreeVariables(const Environment& env) const
@@ -38,9 +38,11 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
 
 bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
-    // TODO: explain what actually happens here
-    
-    auto value = Identifier::unwrapIfId(e, env)->eval(env);
+    // Just put evaluated e into variable
+
+    auto newEnv = env;
+    auto returned = e->eval(newEnv);
+    auto value = Identifier::unwrapIfId(returned, newEnv);
     if (checkType<Void>(value))
         return false;
 
