@@ -16,16 +16,19 @@ CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, 
 
 ExpPtr CalculationOperator::operate(ExpPtrArg first,
                                     ExpPtrArg second,
-                                    Environment& envOld) const
+                                    Environment& env) const
 {
-    Environment env = envOld;
     env.defaultOperator = s_cast<const Operator>(shared_from_this());
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
-    left  = left->eval(env);
-    right = right->eval(env);
-    left  = Identifier::unwrapIfId(left, env);
-    right = Identifier::unwrapIfId(right, env);
+
+    auto envCopy = env;
+    left  = left->eval(envCopy);
+    left  = Identifier::unwrapIfId(left, envCopy);
+
+    envCopy = env;
+    right = right->eval(envCopy);
+    right = Identifier::unwrapIfId(right, envCopy);
 
     if (checkType<Any>(left) || checkType<Any>(right))
         return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), first, second);
