@@ -512,6 +512,19 @@ BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
     }
 }
 
+// BOOST_AUTO_TEST_CASE(simpleLet)
+// {
+//     Environment env;
+//     Parser p;
+//     auto parsed = p.parse("f x = let (a = x + 2) a", env);
+//     parsed->eval(env);
+//     parsed = p.parse("x = 0", env);
+//     parsed->eval(env);
+//     auto x = env.getEqual(make_ptr<Identifier>("x"));
+//     BOOST_CHECK(checkType<Integer>(x));
+//     BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 0);
+// }
+
 //BOOST_AUTO_TEST_CASE(closureIntersection)
 //{
 //    Environment env;
