@@ -24,6 +24,7 @@
 #include "Expressions/IntegerType.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Any.h"
+#include "Expressions/Let.h"
 #include "Expressions/Equality.h"
 #include "Expressions/Less.h"
 #include "Expressions/More.h"
@@ -178,6 +179,7 @@ void Environment::addDefaultDefinitions()
     addVariable<Equality>(this);
     addVariable<Less>(this);
     addVariable<More>(this);
+    addVariable<Let>(this);
     addVariable<Any>(this);
     addVariable<PrintInfo>(this);
     addVariable<PrintEnv>(this);

@@ -10,7 +10,7 @@ ExpPtr Let::apply(ExpPtrArg e, Environment& env) const
     if (checkType<Void>(result))
         return result;
     else
-        return make_ptr<Any>();
+        return make_ptr<LetContext>(env);
 }
 
 std::string Let::show() const
@@ -20,3 +20,20 @@ std::string Let::show() const
 
 const std::string Let::defaultName = "let";
 
+
+LetContext::LetContext(const Environment& env) :
+    env(env)
+{
+}
+
+ExpPtr LetContext::apply(ExpPtrArg e, Environment& env) const
+{
+    auto envCopy = this->env;
+    auto result = e->eval(envCopy);
+    return result;
+}
+
+std::string LetContext::show() const
+{
+    return Let::defaultName + "[...]";
+}
