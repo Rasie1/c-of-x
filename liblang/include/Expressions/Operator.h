@@ -17,6 +17,7 @@ public:
 
     bool operator==(const Expression& other) const override;
 
+    virtual ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const;
     virtual bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const;
 
     virtual ExpPtr partialApplyLeft  (ExpPtrArg e, Environment& env) const;

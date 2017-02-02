@@ -2,6 +2,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Void.h"
 #include "Expressions/Identifier.h"
+#include "Expressions/Intersection.h"
 #include <algorithm>
 #include <list>
 
@@ -194,3 +195,15 @@ bool Union::unapplyVariables(ExpPtrArg e,
     return result;
 }
 
+ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+{
+    // TODO: preserve identifier?
+    auto leftIntersection  = Intersection().operate(l, e, env);
+    if (checkType<Void>(leftIntersection))
+    {
+        auto rightIntersection = Intersection().operate(r, e, env);
+        return rightIntersection;
+    }
+
+    return leftIntersection;
+}

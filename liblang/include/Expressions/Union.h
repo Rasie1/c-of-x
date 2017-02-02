@@ -14,6 +14,8 @@ public:
 
     std::string show() const override;
 
+
+    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const override;
     bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
 
     template<class It>

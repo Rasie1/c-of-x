@@ -536,6 +536,32 @@ BOOST_AUTO_TEST_CASE(letSharing)
     BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 3);
 }
 
+BOOST_AUTO_TEST_CASE(contains)
+{
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (=(1 | 2))", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 1", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 1);
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (=(1 | 2 | (2 + 1) | (2 + 2) | 5))", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 3", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_CHECK_EQUAL(s_cast<Integer>(x)->value, 3);
+    }
+}
+
 //BOOST_AUTO_TEST_CASE(closureIntersection)
 //{
 //    Environment env;

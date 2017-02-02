@@ -52,8 +52,9 @@ bool Operation::hasFreeVariables(const Environment& env) const
 ExpPtr Operation::intersect(ExpPtrArg other, const Environment& envc)
 {
     auto env = envc;
-    return Intersection().operate(Intersection().operate(left, other, env),
-                                  Intersection().operate(right, other, env), env);
+//    return Intersection().operate(Intersection().operate(left, other, env),
+//                                  Intersection().operate(right, other, env), env);
+    return op->intersect(left, right, other, env);
 }
 
 bool Operation::operator==(const Expression& other) const
