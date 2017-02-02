@@ -39,6 +39,8 @@ public:
     void increaseDebugIndentation();
     void decreaseDebugIndentation();
     void toggleDebugPrint();
+    bool getDebugPrint();
+    void setDebugPrint(bool enabled);
     void debugPrint(const std::string& s, bool shouldIndent = true) const;
 
     bool compareOperators(const std::shared_ptr<Operator>& first,

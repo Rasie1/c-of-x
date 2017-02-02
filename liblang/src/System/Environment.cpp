@@ -100,6 +100,16 @@ void Environment::toggleDebugPrint()
     debugPrinter->toggleDebugPrint();
 }
 
+bool Environment::getDebugPrint()
+{
+    return debugPrinter->getDebugPrint();
+}
+
+void Environment::setDebugPrint(bool enabled)
+{
+    debugPrinter->setDebugPrint(enabled);
+}
+
 void Environment::erase(CExpPtrArg e)
 {
     data.erase(e);

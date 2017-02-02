@@ -9,6 +9,8 @@ public:
     void increaseDebugIndentation();
     void decreaseDebugIndentation();
     void toggleDebugPrint();
+    bool getDebugPrint();
+    void setDebugPrint(bool enabled);
     void debugPrint(const std::string& s, bool shouldIndent = false) const;
 
 private:

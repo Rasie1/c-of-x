@@ -14,6 +14,16 @@ void DebugPrinter::toggleDebugPrint()
     shouldPrint = !shouldPrint;
 }
 
+bool DebugPrinter::getDebugPrint()
+{
+    return shouldPrint;
+}
+
+void DebugPrinter::setDebugPrint(bool enabled)
+{
+    shouldPrint = enabled;
+}
+
 void DebugPrinter::debugPrint(const std::string& s, bool shouldIndent) const
 {
     if (shouldPrint)

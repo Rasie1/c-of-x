@@ -52,7 +52,12 @@ void REPL::start()
                 cout << endl << "evaluated: ";
                 cout << evaluated->show();
                 if (checkType<Identifier>(evaluated))
+                {
+                    auto previousDebugPrint = env.getDebugPrint();
+                    env.setDebugPrint(false);
                     cout << " : " << env.get(evaluated)->show();
+                    env.setDebugPrint(previousDebugPrint);
+                }
                 cout << endl;
             }
 //        }
