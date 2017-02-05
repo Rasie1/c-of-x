@@ -8,6 +8,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Lambda.h"
 #include "Expressions/Integer.h"
+#include "Expressions/Application.h"
 #include "Expressions/Less.h"
 
 
@@ -107,7 +108,7 @@ ExpPtr More::operate(ExpPtrArg first,
 {
     auto f = s_cast<MoreThan>(partialApplyRight(second, env));
 
-    return f->apply(first, env);
+    return Application().operate(f, first, env);
 }
 
 std::string More::show() const

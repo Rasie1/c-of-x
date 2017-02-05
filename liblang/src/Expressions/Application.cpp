@@ -120,7 +120,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     if (!checkType<Void>(ret))
         if (auto id = d_cast<Identifier>(right))
         {
-            env.addEqual(id, ret, true);
+            env.replaceEqual(id, ret, true);
 
             auto expr = env.getEqual(id);
 
@@ -156,8 +156,10 @@ bool Application::unapplyVariables(ExpPtrArg e,
         if (inverse)
             if (!checkType<Void>(inverse))
             {
-                auto inversed = inverse->apply(r, env);
-                return inversed->unapplyVariables(e, env);
+                auto inversed = inverse->apply(e, env);
+                auto unapplied = r->unapplyVariables(inversed, env);
+
+                return unapplied;
             }
     }
     if (lId)

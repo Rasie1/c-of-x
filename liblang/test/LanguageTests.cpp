@@ -71,6 +71,7 @@ BOOST_AUTO_TEST_CASE(typedArgument)
     auto parsed = p.parse("f (int x) = x + 1", env);
     parsed->eval(env);
     auto applied = p.parse("f 0", env)->eval(env);
+    BOOST_REQUIRE(checkType<Integer>(applied));
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, 1);
 }
 
@@ -143,8 +144,9 @@ BOOST_AUTO_TEST_CASE(substitutionInPartialApplication)
     Parser p;
     p.parse("arg = 3", env)->eval(env);
     auto applied0 = p.parse("x = (+1) arg", env)->eval(env);
-    BOOST_CHECK(checkType<Identifier>(applied0));
+    BOOST_REQUIRE(checkType<Identifier>(applied0));
     auto x = env.getEqual(make_ptr<Identifier>("x"))->eval(env);
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 4);
 }
 
@@ -214,22 +216,26 @@ BOOST_AUTO_TEST_CASE(typedVariables)
     auto parsed = p.parse("int x = 0", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
 
     parsed = p.parse("y : int = 0", env);
     parsed->eval(env);
     auto y = env.getEqual(make_ptr<Identifier>("y"));
+    BOOST_REQUIRE(checkType<Integer>(y));
     BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
 
     parsed = p.parse("int (x0 = 0)", env);
     parsed->eval(env);
     auto x0 = env.getEqual(make_ptr<Identifier>("x0"));
-    BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
+    BOOST_REQUIRE(checkType<Integer>(x0));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x0)->value, 0);
 
     parsed = p.parse("(int x1) = 0", env);
     parsed->eval(env);
     auto x1 = env.getEqual(make_ptr<Identifier>("x1"));
-    BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 0);
+    BOOST_REQUIRE(checkType<Integer>(x1));
+    BOOST_CHECK_EQUAL(d_cast<Integer>(x1)->value, 0);
 }
 
 // recursion test

@@ -143,6 +143,19 @@ ExpPtr Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
     return add(key, make_ptr<Equals>(value), excluding);
 }
 
+ExpPtr Environment::replace(CExpPtrArg key, ExpPtrArg value, bool excluding)
+{
+    debugPrint("ENV UPD KEY: " + key->show() + "\n", true);
+    debugPrint("    NEW: " + value->show() + "\n", true);
+    data[key] = value;
+    return data[key];
+}
+
+ExpPtr Environment::replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
+{
+    return replace(key, make_ptr<Equals>(value), excluding);
+}
+
 std::vector<std::string> Environment::getAllNames() const
 {
     std::vector<std::string> ret;
