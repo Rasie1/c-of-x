@@ -1,5 +1,6 @@
 #include "Expressions/Operator.h"
 #include "Expressions/Lambda.h"
+#include "Expressions/Void.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/Operation.h"
@@ -74,4 +75,9 @@ ExpPtr Operator::apply(ExpPtrArg e, Environment& env) const
 ExpPtr Operator::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
 {
     return Intersection().operate(operate(l, r, env), e, env);
+}
+
+ExpPtr Operator::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+{
+    return make_ptr<Void>();
 }

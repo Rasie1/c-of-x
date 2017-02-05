@@ -1,8 +1,8 @@
 #pragma once
-#include "Expressions/Expression.h"
+#include "Expressions/Morphism.h"
 
 class Operator;
-class Operation : public Expression
+class Operation : public Morphism
 {
 public:
     Operation(const std::shared_ptr<const Operator>& op,
@@ -12,7 +12,8 @@ public:
     ExpPtr eval(Environment& env) const override;
     std::string show() const override;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env);
+    ExpPtr apply(ExpPtrArg other, Environment& env) const override;
+    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
     bool hasFreeVariables(const Environment& env) const;
     bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
 

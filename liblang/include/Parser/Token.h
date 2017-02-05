@@ -39,6 +39,11 @@ namespace Tokens
         size_t size;
     };
 
+    struct IndentationNode
+    {
+
+    };
+
     struct Opening
     {
 

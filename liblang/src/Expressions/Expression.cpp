@@ -64,6 +64,11 @@ ExpPtr Expression::element(const Environment& env)
     return make_ptr<ValueInSet>(shared_from_this());
 }
 
+ExpPtr Expression::apply(ExpPtrArg& other, Environment& env) const
+{
+    return make_ptr<Void>();
+}
+
 bool Expression::unapplyVariables(ExpPtrArg e, Environment& env) const
 {
     // TODO: we aren't supposed to get here

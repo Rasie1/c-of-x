@@ -21,4 +21,5 @@ private:
     std::vector<size_t> previousLineIndentationPoints;
     std::vector<size_t> currentLineIndentationPoints;
     size_t lastLineStartIndex = 0;
+    size_t tokensSinceLastLine = 0;
 };

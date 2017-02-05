@@ -76,29 +76,29 @@ ExpPtr Equality::operate(ExpPtrArg first,
                          ExpPtrArg second,
                          Environment& env) const
 {
-    auto envl = env;
+//    auto envl = env;
 //    auto envr = env;
     env.debugPrint("Equality: (" + first->show() + ") = (" + second->show() + ")\n", true);
     env.debugPrint("L R:\n", true);
     env.increaseDebugIndentation();
-    auto l = operateHelper(first, second, envl);
+    auto l = operateHelper(first, second, env);
     env.decreaseDebugIndentation();
 
-    ExpPtr ret;
-    if (l)
-    {
-        env = envl;
-        ret = first;
-    }
+    ExpPtr ret = first;
+//    if (l)
+//    {
+//        env = envl;
+//        ret = first;
+//    }
 //    else if (r)
 //    {
 //        env = envr;
 //        ret = second;
 //    }
-    else
-    {
-        return make_ptr<Void>();
-    }
+//    else
+//    {
+//        return make_ptr<Void>();
+//    }
 
     return ret;
 }

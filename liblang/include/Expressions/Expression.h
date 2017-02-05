@@ -16,6 +16,7 @@ public:
     Expression();
 
     virtual ExpPtr eval(Environment& env) const = 0;
+    virtual ExpPtr apply(ExpPtrArg other, Environment& env) const;
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
     virtual ExpPtr unionize(ExpPtrArg other, const Environment& env);
     virtual ExpPtr complement(const Environment& env);

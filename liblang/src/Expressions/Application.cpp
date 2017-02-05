@@ -71,29 +71,19 @@ ExpPtr Application::operate(ExpPtrArg first,
         rUnion = checkType<Union>(r->op);
 
     if (!lUnion && !rUnion)
-    {
-//        if (checkType<Equals>(left) && checkType<Equals>(right))
-//        {
-//            auto eq = s_cast<Equals>(left);
-//            auto eq = s_cast<Equals>(left);
-//            left = eq->value;
-
-//        }
-//        else
-        {
-            
-            if (auto function = d_cast<Morphism>(left))
-            {
-                expressions.push_back(function->apply(right, env));
-            }
-            //                                                TODO: save env?
-            else if (auto function = d_cast<Morphism>(left->eval(env)))
-            {
-                expressions.push_back(function->apply(right, env));
-            }
-            else
-                return make_ptr<ErrorWithMessage>("Not a function");
-        }
+    {               
+        expressions.push_back(left->apply(right, env));
+        // if (auto function = d_cast<Morphism>(left))
+        // {
+        //     expressions.push_back(left->apply(right, env));
+        // }
+        // //                                                TODO: save env?
+        // else if (auto function = d_cast<Morphism>(left->eval(env)))
+        // {
+        //     expressions.push_back(function->apply(right, env));
+        // }
+        // else
+        //     return make_ptr<ErrorWithMessage>("Not a function");
     }
     else if (lUnion && !rUnion)
     {

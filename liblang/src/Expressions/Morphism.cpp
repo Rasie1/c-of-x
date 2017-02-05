@@ -53,57 +53,58 @@ ExpPtr Morphism::intersect(ExpPtrArg other, const Environment& env)
     auto evaluated = value->eval(newEnv);
 
 
-    if (auto other = d_cast<Morphism>(evaluated))
-    {
-        // return make_ptr<Operation>(make_ptr<Union>(),
-        //                            shared_from_this(),
-        //                            other);
-        // todo: not sure if it even works for non-closures
-        auto intersectionOfCodomains =
-            make_ptr<Operation>(make_ptr<Intersection>(),
-                                this->codomain(),
-                                other->codomain());
-        auto intersectionOfDomains =
-            make_ptr<Operation>(make_ptr<Intersection>(),
-                                this->domain(),
-                                other->domain());
+    // if (auto other = d_cast<Morphism>(evaluated))
+    // {
+    //     // return make_ptr<Operation>(make_ptr<Union>(),
+    //     //                            shared_from_this(),
+    //     //                            other);
+    //     // todo: not sure if it even works for non-closures
+    //     auto intersectionOfCodomains =
+    //         make_ptr<Operation>(make_ptr<Intersection>(),
+    //                             this->codomain(),
+    //                             other->codomain());
+    //     auto intersectionOfDomains =
+    //         make_ptr<Operation>(make_ptr<Intersection>(),
+    //                             this->domain(),
+    //                             other->domain());
 
-        auto leftDomain = 
-            make_ptr<Operation>(make_ptr<Intersection>(),
-                                make_ptr<Complement>(intersectionOfDomains),
-                                this->domain());
-        auto rightDomain = 
-            make_ptr<Operation>(make_ptr<Intersection>(),
-                                make_ptr<Complement>(intersectionOfDomains),
-                                other->domain());
+    //     auto leftDomain = 
+    //         make_ptr<Operation>(make_ptr<Intersection>(),
+    //                             make_ptr<Complement>(intersectionOfDomains),
+    //                             this->domain());
+    //     auto rightDomain = 
+    //         make_ptr<Operation>(make_ptr<Intersection>(),
+    //                             make_ptr<Complement>(intersectionOfDomains),
+    //                             other->domain());
 
-        auto intersectionClosure = 
-            make_ptr<Closure>(make_ptr<ValueInSet>(intersectionOfDomains),
-                              make_ptr<ValueInSet>(intersectionOfCodomains),
-                              newEnv);
-        auto leftClosure =
-            make_ptr<Closure>(make_ptr<ValueInSet>(leftDomain),
-                              make_ptr<ValueInSet>(this->codomain()),
-                              newEnv);
-        auto rightClosure =
-            make_ptr<Closure>(make_ptr<ValueInSet>(rightDomain),
-                              make_ptr<ValueInSet>(other->codomain()),
-                              newEnv);
-        // // todo: here could be something about fourth case
+    //     auto intersectionClosure = 
+    //         make_ptr<Closure>(make_ptr<ValueInSet>(intersectionOfDomains),
+    //                           make_ptr<ValueInSet>(intersectionOfCodomains),
+    //                           newEnv);
+    //     auto leftClosure =
+    //         make_ptr<Closure>(make_ptr<ValueInSet>(leftDomain),
+    //                           make_ptr<ValueInSet>(this->codomain()),
+    //                           newEnv);
+    //     auto rightClosure =
+    //         make_ptr<Closure>(make_ptr<ValueInSet>(rightDomain),
+    //                           make_ptr<ValueInSet>(other->codomain()),
+    //                           newEnv);
+    //     // // todo: here could be something about fourth case
 
-        auto intersectionOfFunctions =
-            make_ptr<Operation>(make_ptr<Union>(),
-                                intersectionClosure,
-                                make_ptr<Operation>(make_ptr<Union>(),
-                                                    leftClosure,
-                                                    rightClosure));
+    //     auto intersectionOfFunctions =
+    //         make_ptr<Operation>(make_ptr<Union>(),
+    //                             intersectionClosure,
+    //                             make_ptr<Operation>(make_ptr<Union>(),
+    //                                                 leftClosure,
+    //                                                 rightClosure));
 
-        return intersectionOfFunctions;
-    }
+    //     return intersectionOfFunctions;
+    // }
 
     return make_ptr<Operation>(make_ptr<Intersection>(),
                                shared_from_this(),
                                evaluated);
+
 }
 
 ExpPtr Morphism::codomain()

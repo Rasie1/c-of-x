@@ -66,10 +66,19 @@ bool Intersection::unapplyVariables(ExpPtrArg e,
                                     Environment &env) const
 {
     auto lUnapplied = l->unapplyVariables(e, env);
-    auto rUnapplied = r->unapplyVariables(e, env); //wtf
+    auto rUnapplied = r->unapplyVariables(e, env);
 
     auto result = lUnapplied && rUnapplied;
 
     return result;
 }
 
+ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+{
+    auto lApplied = l->apply(e, env);
+    auto rApplied = r->apply(e, env);
+
+    auto result = Intersection().operate(lApplied, rApplied, env);
+
+    return result;
+}
