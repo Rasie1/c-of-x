@@ -9,13 +9,13 @@
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 {
-    if (checkType<Identifier>(e))
-    {
-        auto id = s_cast<Identifier>(e);
-        ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
-        env.add(id, x, true);
+    // if (checkType<Identifier>(e))
+    // {
+    //     auto id = s_cast<Identifier>(e);
+    //     ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
+    //     env.add(id, x, true);
 
-        auto expr = env.getEqual(id);
+    //     auto expr = env.getEqual(id);
 
         //auto ret = env.intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
         // it gets Any because right now it's "int" and isn't equal to anything
@@ -29,12 +29,12 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 //            return e;
 
 
-        return id;
-    }
+    //     return id;
+    // }
 
-    auto expr = e->eval(env);
+    auto expr = Identifier::unwrapIfId(e->eval(env), env);
 
-    if (checkType<Any>(e))
+    if (checkType<Any>(expr))
         return make_ptr<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
 
     auto ret = holds(expr, env) ? expr : make_ptr<Void>();

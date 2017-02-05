@@ -74,7 +74,7 @@ ExpPtr Operator::apply(ExpPtrArg e, Environment& env) const
 
 ExpPtr Operator::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
 {
-    return Intersection().operate(operate(l, r, env), e, env);
+    return make_ptr<Operation>(make_ptr<Intersection>(), operate(l, r, env), e);
 }
 
 ExpPtr Operator::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 

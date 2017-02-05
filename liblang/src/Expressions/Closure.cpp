@@ -51,16 +51,16 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
     // argument subset, leaving arguments' complement in context of applied value as it was before
 
     
-    if (checkType<Identifier>(e))
-    {
-        auto id = s_cast<Identifier>(e);
-        ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
-        env.add(id, x, true);
+    // if (checkType<Identifier>(e))
+    // {
+    //     auto id = s_cast<Identifier>(e);
+    //     ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
+    //     env.add(id, x, true);
 
-        auto expr = env.getEqual(id);
+    //     auto expr = env.getEqual(id);
 
-        return id;
-    }
+    //     return id;
+    // }
 
 
 

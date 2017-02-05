@@ -117,8 +117,7 @@ void Environment::erase(CExpPtrArg e)
 
 ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
-    debugPrint("ENV ADD: " + key->show() + "\n", true);
-    get(key);
+    debugPrint("ENV ADD KEY: " + key->show() + "\n", true);
     debugPrint("    NEW: " + value->show() + "\n", true);
 //    auto constKey = std::const_pointer_cast<Expression>(get(key));
 //    if (checkType<Operation>(value)
@@ -127,7 +126,9 @@ ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     // else
     if (data.find(key) != data.end())
     {
-        auto intersection = intersect(data[key], value);
+        auto current = data[key];
+        debugPrint("    OLD: " + current->show() + "\n", true);
+        auto intersection = intersect(current, value);
         debugPrint("    INT: " + intersection->show() + "\n", true);
         data[key] = intersection;
     }

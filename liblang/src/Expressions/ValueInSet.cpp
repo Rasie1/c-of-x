@@ -6,6 +6,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/Union.h"
+#include "System/Environment.h"
 
 std::string ValueInSet::show() const
 {
@@ -33,6 +34,14 @@ bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
 
     return element->unapplyVariables(e, env);
 
+}
+
+ExpPtr ValueInSet::intersect(ExpPtrArg other, const Environment& env)
+{
+    auto envc = env;
+    auto ret = this->set->apply(other, envc);
+
+    return ret;
 }
 
 ExpPtr ValueInSet::eval(Environment& env) const

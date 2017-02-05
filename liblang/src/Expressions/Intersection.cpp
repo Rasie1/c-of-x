@@ -75,6 +75,7 @@ bool Intersection::unapplyVariables(ExpPtrArg e,
 
 ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
 {
+    auto envc = env;
     auto lApplied = l->apply(e, env);
     auto rApplied = r->apply(e, env);
 

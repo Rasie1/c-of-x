@@ -115,7 +115,19 @@ ExpPtr Application::operate(ExpPtrArg first,
         expressions.push_back(operate(lr, rr, env));
     }
 
-    return Union::make(std::begin(expressions), std::end(expressions));
+    auto ret = Union::make(std::begin(expressions), std::end(expressions));
+
+    if (!checkType<Void>(ret))
+        if (auto id = d_cast<Identifier>(right))
+        {
+            env.addEqual(id, ret, true);
+
+            auto expr = env.getEqual(id);
+
+            return id;
+        }
+
+    return ret;
 }
 
 std::string Application::show() const
