@@ -43,6 +43,16 @@ BOOST_AUTO_TEST_CASE(identityFunction)
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 5);
 }
 
+BOOST_AUTO_TEST_CASE(identityType)
+{
+    Environment env;
+    Parser p;
+    p.parse("i x = x", env)->eval(env);
+    p.parse("a = 5",   env)->eval(env);
+    auto a = p.parse("i a", env)->eval(env);
+    BOOST_CHECK(checkType<Identifier>(a));
+}
+
 BOOST_AUTO_TEST_CASE(indirection)
 {
     Environment env;

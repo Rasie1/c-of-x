@@ -9,37 +9,34 @@
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 {
-    // if (checkType<Identifier>(e))
-    // {
-    //     auto id = s_cast<Identifier>(e);
-    //     ExpPtr x = std::const_pointer_cast<Expression>(shared_from_this());
-    //     env.add(id, x, true);
+    auto evaluated = e->eval(env);
 
-    //     auto expr = env.getEqual(id);
-
-        //auto ret = env.intersect(std::const_pointer_cast<Expression>(shared_from_this()), id);
-        // it gets Any because right now it's "int" and isn't equal to anything
-
-        // some expressions should be intersected at first, other should be iterated
-        // to be more effective
-
-        // not sure if "any" here is appropriate:
-
-//        if (d_cast<Any>(expr) || holds(expr, env))
-//            return e;
-
-
-    //     return id;
-    // }
-
-    auto expr = Identifier::unwrapIfId(e->eval(env), env);
+    auto expr = Identifier::unwrapIfId(evaluated, env);
 
     if (checkType<Any>(expr))
-        return make_ptr<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
+    {
+        if (auto id = d_cast<Identifier>(evaluated))
+        {
+            env.add(id,
+                    std::const_pointer_cast<Expression>(shared_from_this()));
+            return evaluated;
+        }
+        else
+            return make_ptr<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
 
-    auto ret = holds(expr, env) ? expr : make_ptr<Void>();
+    }
+    else
+    {
+        auto result = holds(expr, env) ? expr
+                                       : make_ptr<Void>();
 
-    return ret;
+        if (auto id = d_cast<Identifier>(evaluated))
+            env.add(id,
+                    std::const_pointer_cast<Expression>(shared_from_this()));
+
+        return result;
+    }
+
 }
 
 ExpPtr Predicate::inverse() const
@@ -47,3 +44,5 @@ ExpPtr Predicate::inverse() const
     // kind of dangerous
     return s_cast<Morphism>(std::const_pointer_cast<Expression>(shared_from_this()));
 }
+
+

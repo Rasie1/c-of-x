@@ -117,15 +117,10 @@ ExpPtr Application::operate(ExpPtrArg first,
 
     auto ret = Union::make(std::begin(expressions), std::end(expressions));
 
-    if (!checkType<Void>(ret))
-        if (auto id = d_cast<Identifier>(right))
-        {
-            env.replaceEqual(id, ret, true);
 
-            auto expr = env.getEqual(id);
-
-            return id;
-        }
+    //for (auto& x : ret)
+    //    if (auto id = d_cast<Identifier>(x))
+    //        env.add(id, x, true); // possibly, it is wrong and I should do union somewhere near
 
     return ret;
 }

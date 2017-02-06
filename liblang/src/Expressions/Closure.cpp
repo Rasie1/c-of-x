@@ -75,13 +75,21 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
 
     auto evaluated = body->eval(newEnv);
 
+    if (*evaluated == *this->argument)
+    {
+        auto value = Identifier::unwrapIfId(evaluated, env);
+        env.replace(e, value);
+        return e;
+    }
+
+
 //    if (isExpressionQuoted(argument, env))
 //    {
 //        env = newEnv; // not correct, it should affect only bound variables
 //        return evaluated;
 //    }
 //    else
-        return Identifier::unwrapIfId(evaluated, newEnv);
+    return Identifier::unwrapIfId(evaluated, newEnv);
 }
 
 std::string Closure::show() const
