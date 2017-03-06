@@ -68,6 +68,12 @@ ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
         env.addEqual(e, value);
         return e;
     }
+    else if (checkType<Operation>(evaluated))
+    {
+        return make_ptr<Operation>(make_ptr<Application>(),
+                                   std::const_pointer_cast<Expression>(shared_from_this()),
+                                   e);
+    }
 
     return Identifier::unwrapIfId(evaluated, newEnv);
 }

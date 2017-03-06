@@ -3,6 +3,7 @@
 #include <memory>
 #include <typeinfo>
 #include <stdexcept>
+#include <boost/optional.hpp>
 
 class Environment;
 class Expression : public std::enable_shared_from_this<Expression>
@@ -39,6 +40,10 @@ typedef Expression::ExpPtr ExpPtr;
 typedef Expression::ExpPtr ExpPtrArg;
 typedef Expression::CExpPtr CExpPtr;
 typedef Expression::CExpPtr CExpPtrArg;
+
+using boost::optional;
+using boost::none;
+using boost::make_optional;
 
 template <class T, class... Args>
 constexpr auto make_ptr(Args&&... args)

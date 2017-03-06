@@ -8,9 +8,18 @@
 #include "Expressions/Application.h"
 
 
-bool Equals::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> Equals::holds(ExpPtrArg e, const Environment& env) const
 {
-    return *value == *e;
+    if (*value == *e)
+        return make_optional(true);
+
+    auto intersection = Intersection().operate(value, e,
+                                               const_cast<Environment&>(env));
+    if (*intersection == *value || *intersection == *e)
+        return make_optional(true);
+
+    return none;
+    // todo: infinite casting possibilities go here
 }
 
 bool Equals::operator==(const Expression& other) const

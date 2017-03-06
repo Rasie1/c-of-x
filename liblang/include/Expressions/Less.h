@@ -9,7 +9,7 @@ class LessThan :
 {
 public:
     LessThan(ExpPtrArg e) : value(e) {}
-    bool holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
 
     ExpPtr value;
 
@@ -30,7 +30,7 @@ class LessOrEqualThan :
 {
 public:
     LessOrEqualThan(ExpPtrArg e) : value(e) {}
-    bool holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
 
     ExpPtr value;
 

@@ -4,12 +4,12 @@
 #include "Expressions/Identifier.h"
 #include "System/Environment.h"
 
-bool IntegerType::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> IntegerType::holds(ExpPtrArg e, const Environment& env) const
 {
     auto envc = env;
     auto value = Identifier::unwrapIfId(e->eval(envc), envc);
     auto ret = typeid(*value) == typeid(Integer);
-    return ret;
+    return make_optional(ret);
 }
 
 std::string IntegerType::show() const

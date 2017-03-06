@@ -30,11 +30,11 @@ public:
 
     ExpPtr add(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
     ExpPtr addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
+    ExpPtr addIntersecting(CExpPtrArg key, ExpPtrArg pred);
     ExpPtr replace(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
     ExpPtr replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
     ExpPtr get(CExpPtrArg key) const;
     ExpPtr getEqual(CExpPtrArg key) const;
-    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r);
     void erase(CExpPtrArg e);
     void clear();
 

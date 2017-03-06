@@ -6,6 +6,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Any.h"
 #include "Expressions/ValueInSet.h"
+#include "Expressions/Application.h"
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
 {
@@ -27,14 +28,23 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
     }
     else
     {
-        auto result = holds(expr, env) ? expr
-                                       : make_ptr<Void>();
+        ExpPtr result;
+        if (auto option = holds(expr, env))
+            result =  *option ? expr
+                              : make_ptr<Void>();
+        else
+            result = make_ptr<Operation>(make_ptr<Application>(),
+                                         std::const_pointer_cast<Expression>(shared_from_this()),
+                                         expr);
 
         if (auto id = d_cast<Identifier>(evaluated))
+        {
             env.add(id,
                     std::const_pointer_cast<Expression>(shared_from_this()));
-
-        return result;
+            return id;
+        }
+        else
+            return result;
     }
 
 }

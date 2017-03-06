@@ -12,15 +12,15 @@
 #include "Expressions/Less.h"
 
 
-bool MoreThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> MoreThan::holds(ExpPtrArg e, const Environment& env) const
 {
     if (checkType<Integer>(e))
     {
         auto v1 = s_cast<Integer>(value);
         auto v2 = s_cast<Integer>(e);
-        return v2->value > v1->value;
+        return make_optional(v2->value > v1->value);
     }
-    return *value == *e;
+    return none;
 }
 
 bool MoreThan::operator==(const Expression& other) const
@@ -128,15 +128,15 @@ ExpPtr More::partialApplyRight(ExpPtrArg e, Environment& env) const
      return make_ptr<MoreThan>(e);
 }
 
-bool MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
 {
     if (checkType<Integer>(e))
     {
         auto v1 = s_cast<Integer>(value);
         auto v2 = s_cast<Integer>(e);
-        return v2->value >= v1->value;
+        return make_optional(v2->value >= v1->value);
     }
-    return *value == *e;
+    return none;
 }
 
 bool MoreOrEqualThan::operator==(const Expression& other) const

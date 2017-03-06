@@ -23,7 +23,7 @@ class Equals : public Predicate
 {
 public:
     Equals(ExpPtrArg e) : value(e) {}
-    bool holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
 
     ExpPtr value;
 

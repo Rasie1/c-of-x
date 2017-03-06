@@ -9,16 +9,18 @@
 #include "Expressions/Integer.h"
 #include "Expressions/Union.h"
 #include "Expressions/More.h"
+#include "Expressions/ValueInSet.h"
 
-bool LessThan::holds(ExpPtrArg e, const Environment& env) const
+
+optional<bool> LessThan::holds(ExpPtrArg e, const Environment& env) const
 {
     if (checkType<Integer>(e))
     {
         auto v1 = s_cast<Integer>(value);
         auto v2 = s_cast<Integer>(e);
-        return v2->value < v1->value;
+        return make_optional(v2->value < v1->value);
     }
-    return *value == *e;
+    return none;
 }
 
 bool LessThan::operator==(const Expression& other) const
@@ -129,15 +131,15 @@ ExpPtr Less::partialApplyRight(ExpPtrArg e, Environment& env) const
 }
 
 
-bool LessOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> LessOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
 {
     if (checkType<Integer>(e))
     {
         auto v1 = s_cast<Integer>(value);
         auto v2 = s_cast<Integer>(e);
-        return v2->value <= v1->value;
+        return make_optional(v2->value <= v1->value);
     }
-    return *value == *e;
+    return none;
 }
 
 bool LessOrEqualThan::operator==(const Expression& other) const

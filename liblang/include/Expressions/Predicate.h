@@ -10,6 +10,6 @@ public:
     ExpPtr apply(ExpPtrArg e, Environment& env) const override;
     ExpPtr inverse() const override;
 
-    virtual bool holds(ExpPtrArg e, const Environment& env) const = 0;
+    virtual optional<bool> holds(ExpPtrArg e, const Environment& env) const = 0;
 };
 

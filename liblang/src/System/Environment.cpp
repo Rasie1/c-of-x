@@ -34,6 +34,15 @@
 #include <vector>
 #include <fstream>
 
+
+inline ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, Environment env)
+{
+    auto lp = checkType<Identifier>(l) ? env.get(l) : l;
+    auto rp = checkType<Identifier>(r) ? env.get(r) : r;
+
+    return Intersection().operate(lp, rp, env);
+}
+
 Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
     debugPrinter(debugPrinter),
     defaultOperator(make_ptr<Then>())
@@ -128,7 +137,7 @@ ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     {
         auto current = data[key];
         debugPrint("    OLD: " + current->show() + "\n", true);
-        auto intersection = intersect(current, value);
+        auto intersection = intersect(current, value, *this);
         debugPrint("    INT: " + intersection->show() + "\n", true);
         data[key] = intersection;
     }
@@ -224,16 +233,6 @@ bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
 
     return (firstValue < secondValue) ||
            (!isFirstRightAssociative && (firstValue <= secondValue));
-}
-
-ExpPtr Environment::intersect(ExpPtrArg l, ExpPtrArg r)
-{
-    auto env = *this;
-
-    auto lp = checkType<Identifier>(l) ? get(l) : l;
-    auto rp = checkType<Identifier>(r) ? get(r) : r;
-
-    return Intersection().operate(lp, rp, env);
 }
 
 std::string Environment::show() const

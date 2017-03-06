@@ -22,8 +22,8 @@ ExpPtr Operation::eval(Environment& env) const
 
     env.debugPrint("OPERATION: " + this->op->show() + '\n', true);
 
-    env.debugPrint("SND: " + this->right->show() + '\n', true);
     env.debugPrint("FST: " + this->left->show() + '\n', true);
+    env.debugPrint("SND: " + this->right->show() + '\n', true);
 
 
     env.increaseDebugIndentation();

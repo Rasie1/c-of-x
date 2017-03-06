@@ -9,7 +9,7 @@ class MoreThan :
 {
 public:
     MoreThan(ExpPtrArg e) : value(e) {}
-    bool holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
 
     ExpPtr value;
 
@@ -46,7 +46,7 @@ class MoreOrEqualThan :
 {
 public:
     MoreOrEqualThan(ExpPtrArg e) : value(e) {}
-    bool holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
 
     ExpPtr value;
 
