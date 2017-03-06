@@ -18,7 +18,7 @@ REPL::REPL() :
 
 void REPL::start()
 {
-    cout << "Welcome to c(x), type -h to get help" << endl;
+    cout << "Welcome to the language, type -h to get help" << endl;
 
 
     while (true)

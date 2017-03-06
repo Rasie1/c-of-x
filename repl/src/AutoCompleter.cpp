@@ -5,6 +5,9 @@
 #include <sys/file.h>
 #include <sys/stat.h>
 #include <sys/errno.h>
+#include <iostream>
+
+using namespace std;
 
 static std::vector<std::string>* gNames = nullptr;
 
@@ -20,6 +23,28 @@ char *dupstr(const char* s)
 char *command_generator (const char*, int);
 char **fileman_completion (const char*, int, int);
 
+bool wasLineBreak = false;
+
+std::string getLineStartString()
+{
+    if (wasLineBreak)
+        return " > ";
+    else
+        return "&> ";
+}
+
+int onLineBreak(int count, int key) 
+{
+    cout << endl << getLineStartString();
+    if (wasLineBreak) 
+    {
+        wasLineBreak = false;
+        rl_done = 1;
+    }
+    wasLineBreak = true;
+}
+
+
 /* Tell the GNU Readline library how to complete.  We want to try to
    complete on command names if this is the first word in the line, or
    on filenames if not. */
@@ -30,6 +55,9 @@ void initialize_readline()
 
     /* Tell the completer that we want a crack first. */
     rl_attempted_completion_function = fileman_completion;
+
+    // rl_bind_key('\n', onLineBreak);
+    // rl_bind_key('\r', onLineBreak);
 }
 
 
@@ -71,7 +99,7 @@ char **fileman_completion(const char * text, int start, int end)
 
     matches = rl_completion_matches(text, command_generator);
 
-    return (matches);
+    return matches;
 }
 
 
@@ -88,7 +116,7 @@ void AutoCompleter::switchContext()
 
 std::string AutoCompleter::readline()
 {
-    std::string line = ::readline("&>");
+    std::string line = ::readline(getLineStartString().c_str());
 
     add_history(line.c_str());
 
