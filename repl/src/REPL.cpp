@@ -28,7 +28,7 @@ void REPL::start()
             formCompletionNames();
             string instruction;
 
-            instruction = completer.readline();
+            instruction = input.read();
             boost::trim_right(instruction);
 
             if (shouldExit(instruction))
@@ -76,12 +76,13 @@ void REPL::start()
 
 void REPL::formCompletionNames()
 {
-    completer.names = env.getAllNames();
-    completer.names.push_back("-quit");
-    completer.names.push_back("-clear");
-    completer.names.push_back("-help");
-    completer.names.push_back("-debugprint");
-    completer.names.push_back("-load");
+    auto& completerNames = input.completerNames();
+    completerNames = env.getAllNames();
+    completerNames.push_back("-quit");
+    completerNames.push_back("-clear");
+    completerNames.push_back("-help");
+    completerNames.push_back("-debugprint");
+    completerNames.push_back("-load");
 }
 
 bool REPL::shouldExit(const std::string& s)

@@ -2,6 +2,7 @@
 #include "System/Environment.h"
 #include "Parser/Parser.h"
 #include "AutoCompleter.h"
+#include "Input.h"
 
 class REPL
 {
@@ -14,7 +15,7 @@ public:
 private:
     Environment env;
     Parser parser;
-    AutoCompleter completer;
+    Input input;
 
     bool command(const std::string& s);
     bool shouldExit(const std::string& s);
