@@ -163,7 +163,8 @@ bool Application::unapplyVariables(ExpPtrArg e,
         newEnv.addEqual(l, make_ptr<Operation>(make_ptr<Lambda>(), r, e), true);
         auto closure = Lambda().operate(r, e, newEnv);
 
-        auto ret = env.addEqual(l, closure, false);
+        env.addEqual(l, closure, false);
+        auto ret = env.get(l);
 
         return !checkType<Void>(ret);
     }

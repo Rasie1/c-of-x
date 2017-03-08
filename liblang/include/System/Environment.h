@@ -28,11 +28,11 @@ class Environment
 public:
     Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
 
-    ExpPtr add(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
-    ExpPtr addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
-    ExpPtr addIntersecting(CExpPtrArg key, ExpPtrArg pred);
-    ExpPtr replace(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
-    ExpPtr replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
+    void add(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
+    void addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
+    // void addIntersecting(CExpPtrArg key, ExpPtrArg pred);
+    void replace(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
+    void replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
     ExpPtr get(CExpPtrArg key) const;
     ExpPtr getEqual(CExpPtrArg key) const;
     void erase(CExpPtrArg e);

@@ -13,8 +13,9 @@ optional<bool> Equals::holds(ExpPtrArg e, const Environment& env) const
     if (*value == *e)
         return make_optional(true);
 
-    auto intersection = Intersection().operate(value, e,
-                                               const_cast<Environment&>(env));
+    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), value, e);
+    auto intersection = operation->eval(const_cast<Environment&>(env));
+
     if (*intersection == *value || *intersection == *e)
         return make_optional(true);
 

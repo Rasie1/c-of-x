@@ -13,11 +13,6 @@ ExpPtr Intersection::operate(ExpPtrArg first,
                              ExpPtrArg second,
                              Environment& env) const
 {
-    env.debugPrint("Intersecting operation\n");
-    env.increaseDebugIndentation();
-    env.debugPrint("FST: " + first->show() + "\n");
-    env.debugPrint("SND: " + second->show() + "\n");
-    env.decreaseDebugIndentation();
     auto l = Identifier::unwrapIfId(first, env)->eval(env);
     auto r = Identifier::unwrapIfId(second, env)->eval(env);
 
@@ -82,7 +77,8 @@ ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &e
     auto lApplied = l->apply(e, env);
     auto rApplied = r->apply(e, env);
 
-    auto result = Intersection().operate(lApplied, rApplied, env);
+    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), lApplied, rApplied);
+    auto result = operation->eval(env);
 
     return result;
 }

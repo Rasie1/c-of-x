@@ -198,10 +198,14 @@ bool Union::unapplyVariables(ExpPtrArg e,
 ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
 {
     // TODO: preserve identifier?
-    auto leftIntersection  = Intersection().operate(l, e, env);
+    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), l, e);
+    auto leftIntersection = operation->eval(env);
+
     if (checkType<Void>(leftIntersection))
     {
-        auto rightIntersection = Intersection().operate(r, e, env);
+        auto operation = make_ptr<Operation>(make_ptr<Intersection>(), r, e);
+        auto rightIntersection = operation->eval(env);
+
         return rightIntersection;
     }
 

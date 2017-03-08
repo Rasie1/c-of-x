@@ -40,7 +40,10 @@ inline ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, Environment env)
     auto lp = checkType<Identifier>(l) ? env.get(l) : l;
     auto rp = checkType<Identifier>(r) ? env.get(r) : r;
 
-    return Intersection().operate(lp, rp, env);
+    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), lp, rp);
+    auto result = operation->eval(env);
+
+    return result;
 }
 
 Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
@@ -124,7 +127,7 @@ void Environment::erase(CExpPtrArg e)
     data.erase(e);
 }
 
-ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
     debugPrint("ENV ADD KEY: " + key->show() + "\n", true);
     debugPrint("    NEW: " + value->show() + "\n", true);
@@ -144,25 +147,25 @@ ExpPtr Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     else
         data[key] = value;
     debugPrint("    RET: " + data[key]->show() + "\n", true);
-    return data[key];
+//    return data[key;
 }
 
-ExpPtr Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
-    return add(key, make_ptr<Equals>(value), excluding);
+    add(key, make_ptr<Equals>(value), excluding);
 }
 
-ExpPtr Environment::replace(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::replace(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
     debugPrint("ENV UPD KEY: " + key->show() + "\n", true);
     debugPrint("    NEW: " + value->show() + "\n", true);
     data[key] = value;
-    return data[key];
+    // return data[key];
 }
 
-ExpPtr Environment::replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
-    return replace(key, make_ptr<Equals>(value), excluding);
+    replace(key, make_ptr<Equals>(value), excluding);
 }
 
 std::vector<std::string> Environment::getAllNames() const
