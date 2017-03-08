@@ -1,5 +1,5 @@
 #pragma once
-#include "Expressions/Predicate.h"
+#include "Expressions/DataType.h"
 
 class ValueInSet : public Data
 {

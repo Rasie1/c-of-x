@@ -52,12 +52,6 @@ constexpr auto make_ptr(Args&&... args)
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
 template <class T, class... Args>
-constexpr auto s_cast(Args&&... args)
- -> decltype(std::static_pointer_cast<T>(std::forward<Args>(args)...))
-{
-    return std::static_pointer_cast<T>(std::forward<Args>(args)...);
-}
-template <class T, class... Args>
 constexpr auto d_cast(Args&&... args)
  -> decltype(std::dynamic_pointer_cast<T>(std::forward<Args>(args)...))
 {

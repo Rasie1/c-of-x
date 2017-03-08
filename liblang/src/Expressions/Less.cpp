@@ -14,10 +14,9 @@
 
 optional<bool> LessThan::holds(ExpPtrArg e, const Environment& env) const
 {
-    if (checkType<Integer>(e))
+    if (auto v1 = d_cast<Integer>(value))
+    if (auto v2 = d_cast<Integer>(e))
     {
-        auto v1 = s_cast<Integer>(value);
-        auto v2 = s_cast<Integer>(e);
         return make_optional(v2->value < v1->value);
     }
     return none;
@@ -43,24 +42,22 @@ const std::string LessThan::defaultName = "lessThan";
 
 ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<LessThan>(other))
+    if (auto p = d_cast<LessThan>(other))
     {
-        auto p = s_cast<LessThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<LessThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
         return make_ptr<Void>();
     }
-    else if (checkType<Equals>(other))
+    else if (auto p = d_cast<Equals>(other))
     {
-        auto p = s_cast<Equals>(other);
-        if (checkType<Integer>(p->value))
+        if (auto v1 = d_cast<Integer>(p->value))
+        if (auto v2 = d_cast<Integer>(this->value))
         {
-            auto eqvalue = s_cast<Integer>(p->value)->value;
-            auto thvalue = s_cast<Integer>(this->value)->value;
+            auto eqvalue = v1->value;
+            auto thvalue = v2->value;
             if (thvalue > eqvalue)
                 return p;
             else
@@ -73,13 +70,11 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
 
 ExpPtr LessThan::unionize(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<LessThan>(other))
+    if (auto p = d_cast<LessThan>(other))
     {
-        auto p = s_cast<LessThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<LessThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
         }
     }
@@ -108,7 +103,7 @@ ExpPtr Less::operate(ExpPtrArg first,
                      Environment& env) const
 
 {
-    auto f = s_cast<LessThan>(partialApplyRight(second, env));
+    auto f = d_cast<LessThan>(partialApplyRight(second, env));
 
     return f->apply(first, env);
 }
@@ -133,10 +128,9 @@ ExpPtr Less::partialApplyRight(ExpPtrArg e, Environment& env) const
 
 optional<bool> LessOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
 {
-    if (checkType<Integer>(e))
+    if (auto v1 = d_cast<Integer>(value))
+    if (auto v2 = d_cast<Integer>(e))
     {
-        auto v1 = s_cast<Integer>(value);
-        auto v2 = s_cast<Integer>(e);
         return make_optional(v2->value <= v1->value);
     }
     return none;
@@ -162,24 +156,22 @@ const std::string LessOrEqualThan::defaultName = "lessOrEqualThan";
 
 ExpPtr LessOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<LessOrEqualThan>(other))
+    if (auto p = d_cast<LessOrEqualThan>(other))
     {
-        auto p = s_cast<LessOrEqualThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<LessOrEqualThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
         return make_ptr<Void>();
     }
-    else if (checkType<Equals>(other))
+    else if (auto p = d_cast<Equals>(other))
     {
-        auto p = s_cast<Equals>(other);
-        if (checkType<Integer>(p->value))
+        if (auto v1 = d_cast<Integer>(p->value))
+        if (auto v2 = d_cast<Integer>(this->value))
         {
-            auto eqvalue = s_cast<Integer>(p->value)->value;
-            auto thvalue = s_cast<Integer>(this->value)->value;
+            auto eqvalue = v1->value;
+            auto thvalue = v2->value;
             if (thvalue > eqvalue)
                 return p;
             else
@@ -192,13 +184,11 @@ ExpPtr LessOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
 
 ExpPtr LessOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<LessOrEqualThan>(other))
+    if (auto p = d_cast<LessOrEqualThan>(other))
     {
-        auto p = s_cast<LessOrEqualThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<LessOrEqualThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
         }
     }
@@ -227,7 +217,7 @@ ExpPtr LessOrEqual::operate(ExpPtrArg first,
                      Environment& env) const
 
 {
-    auto f = s_cast<LessOrEqualThan>(partialApplyRight(second, env));
+    auto f = d_cast<LessOrEqualThan>(partialApplyRight(second, env));
 
     return f->apply(first, env);
 }

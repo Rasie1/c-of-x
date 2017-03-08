@@ -4,6 +4,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/Void.h"
+#include "Expressions/Any.h"
 #include "Expressions/Lambda.h"
 #include "Expressions/Application.h"
 
@@ -43,6 +44,8 @@ const std::string Equals::defaultName = "=";
 
 ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 {
+    if (checkType<Any>(value))
+        return other;
     if (checkType<Equals>(other))
     {
         auto equals = s_cast<Equals>(other);

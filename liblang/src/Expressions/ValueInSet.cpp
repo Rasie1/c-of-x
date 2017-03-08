@@ -39,7 +39,11 @@ bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
 ExpPtr ValueInSet::intersect(ExpPtrArg other, const Environment& env)
 {
     auto envc = env;
-    auto ret = this->set->apply(other, envc);
+    if (checkType<Any>(this->set))
+        return other;
+
+    auto operation = make_ptr<Operation>(make_ptr<Application>(), this->set, other);
+    auto ret = operation->eval(envc);
 
     return ret;
 }

@@ -14,10 +14,9 @@
 
 optional<bool> MoreThan::holds(ExpPtrArg e, const Environment& env) const
 {
-    if (checkType<Integer>(e))
+    if (auto v1 = d_cast<Integer>(value))
+    if (auto v2 = d_cast<Integer>(e))
     {
-        auto v1 = s_cast<Integer>(value);
-        auto v2 = s_cast<Integer>(e);
         return make_optional(v2->value > v1->value);
     }
     return none;
@@ -43,24 +42,22 @@ const std::string MoreThan::defaultName = "moreThan";
 
 ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<MoreThan>(other))
+    if (auto p = d_cast<MoreThan>(other))
     {
-        auto p = s_cast<MoreThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<MoreThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
         }
         return make_ptr<Void>();
     }
-    else if (checkType<Equals>(other))
+    else if (auto p = d_cast<Equals>(other))
     {
-        auto p = s_cast<Equals>(other);
-        if (checkType<Integer>(p->value))
+        if (auto v1 = d_cast<Integer>(p->value))
+        if (auto v2 = d_cast<Integer>(this->value))
         {
-            auto eqvalue = s_cast<Integer>(p->value)->value;
-            auto thvalue = s_cast<Integer>(this->value)->value;
+            auto eqvalue = v1->value;
+            auto thvalue = v2->value;
             if (thvalue < eqvalue)
                 return p;
             else
@@ -73,13 +70,11 @@ ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
 
 ExpPtr MoreThan::unionize(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<MoreThan>(other))
+    if (auto p = d_cast<MoreThan>(other))
     {
-        auto p = s_cast<MoreThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<MoreThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
     }
@@ -106,7 +101,7 @@ ExpPtr More::operate(ExpPtrArg first,
                      ExpPtrArg second,
                      Environment& env) const
 {
-    auto f = s_cast<MoreThan>(partialApplyRight(second, env));
+    auto f = d_cast<MoreThan>(partialApplyRight(second, env));
 
     return Application().operate(f, first, env);
 }
@@ -130,10 +125,9 @@ ExpPtr More::partialApplyRight(ExpPtrArg e, Environment& env) const
 
 optional<bool> MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
 {
-    if (checkType<Integer>(e))
+    if (auto v1 = d_cast<Integer>(value))
+    if (auto v2 = d_cast<Integer>(e))
     {
-        auto v1 = s_cast<Integer>(value);
-        auto v2 = s_cast<Integer>(e);
         return make_optional(v2->value >= v1->value);
     }
     return none;
@@ -159,24 +153,22 @@ const std::string MoreOrEqualThan::defaultName = "moreOrEqualThan";
 
 ExpPtr MoreOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<MoreOrEqualThan>(other))
+    if (auto p = d_cast<MoreOrEqualThan>(other))
     {
-        auto p = s_cast<MoreOrEqualThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<MoreOrEqualThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
         }
         return make_ptr<Void>();
     }
-    else if (checkType<Equals>(other))
+    else if (auto d = d_cast<Equals>(other))
     {
-        auto p = s_cast<Equals>(other);
-        if (checkType<Integer>(p->value))
+        if (auto v1 = d_cast<Integer>(p->value))
+        if (auto v2 = d_cast<Integer>(this->value))
         {
-            auto eqvalue = s_cast<Integer>(p->value)->value;
-            auto thvalue = s_cast<Integer>(this->value)->value;
+            auto eqvalue = v1->value;
+            auto thvalue = v2->value;
             if (thvalue < eqvalue)
                 return p;
             else
@@ -189,13 +181,11 @@ ExpPtr MoreOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
 
 ExpPtr MoreOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
 {
-    if (checkType<MoreOrEqualThan>(other))
+    if (auto p = d_cast<MoreOrEqualThan>(other))
     {
-        auto p = s_cast<MoreOrEqualThan>(other);
-        if (checkType<Integer>(value) && checkType<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = d_cast<Integer>(value))
+        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            auto v1 = s_cast<Integer>(value);
-            auto v2 = s_cast<Integer>(p->value);
             return make_ptr<MoreOrEqualThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
         }
     }
@@ -222,7 +212,7 @@ ExpPtr MoreOrEqual::operate(ExpPtrArg first,
                      ExpPtrArg second,
                      Environment& env) const
 {
-    auto f = s_cast<MoreOrEqualThan>(partialApplyRight(second, env));
+    auto f = d_cast<MoreOrEqualThan>(partialApplyRight(second, env));
 
     return f->apply(first, env);
 }

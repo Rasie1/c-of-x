@@ -55,24 +55,29 @@ ExpPtr Application::operate(ExpPtrArg first,
         right = second->eval(env);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), left, right);
-
-
-    // Next comes union stuff that will be replaced later
+        return make_ptr<Operation>(shared_from_this(), left, right);
 
     std::vector<ExpPtr> expressions;
 
-    bool lUnion = false;
-    bool rUnion = false;
+    if (auto operation = d_cast<Operation>(left))
+    if (auto lUnion = d_cast<Union>(operation->op))
+    {
+        auto opl = operation->left;
+        auto opr = operation->right;
+        expressions.push_back(operate(opl, right, env));
+        expressions.push_back(operate(opr, right, env));   
+    }
+    if (auto operation = d_cast<Operation>(right))
+    if (auto rUnion = d_cast<Union>(operation->op))
+    {
+        auto opl = operation->left;
+        auto opr = operation->right;
+        expressions.push_back(operate(left, opl, env));
+        expressions.push_back(operate(left, opr, env));
+    }
 
-    if (auto l = d_cast<Operation>(left))
-        lUnion = checkType<Union>(l->op);
-    if (auto r = d_cast<Operation>(right))
-        rUnion = checkType<Union>(r->op);
-
-    if (!lUnion && !rUnion)
-    {               
-        expressions.push_back(left->apply(right, env));
+    // is that needed?
+    expressions.push_back(left->apply(right, env));
         // if (auto function = d_cast<Morphism>(left))
         // {
         //     expressions.push_back(left->apply(right, env));
@@ -84,39 +89,8 @@ ExpPtr Application::operate(ExpPtrArg first,
         // }
         // else
         //     return make_ptr<ErrorWithMessage>("Not a function");
-    }
-    else if (lUnion && !rUnion)
-    {
-        auto operation = s_cast<Operation>(left);
-        auto opl = operation->left;
-        auto opr = operation->right;
-        expressions.push_back(operate(opl, right, env));
-        expressions.push_back(operate(opr, right, env));
-    }
-    else if (rUnion && !lUnion)
-    {
-        auto operation = s_cast<Operation>(right);
-        auto opl = operation->left;
-        auto opr = operation->right;
-        expressions.push_back(operate(left, opl, env));
-        expressions.push_back(operate(left, opr, env));
-    }
-    else
-    {
-        auto operationl = s_cast<Operation>(left);
-        auto operationr = s_cast<Operation>(right);
-        auto ll = operationl->left;
-        auto lr = operationl->right;
-        auto rl = operationr->left;
-        auto rr = operationr->right;
-        expressions.push_back(operate(ll, rl, env));
-        expressions.push_back(operate(ll, rr, env));
-        expressions.push_back(operate(lr, rl, env));
-        expressions.push_back(operate(lr, rr, env));
-    }
-
+    
     auto ret = Union::make(std::begin(expressions), std::end(expressions));
-
 
     //for (auto& x : ret)
     //    if (auto id = d_cast<Identifier>(x))
@@ -142,7 +116,7 @@ bool Application::unapplyVariables(ExpPtrArg e,
 
     if (auto q = d_cast<Quote>(lvalue))
     {
-        auto qe = s_cast<QuotedExpression>(q->apply(r, env));
+        auto qe = d_cast<QuotedExpression>(q->apply(r, env));
         return qe->unapplyVariables(e, env);
     }
     if (auto f = d_cast<Morphism>(lvalue))

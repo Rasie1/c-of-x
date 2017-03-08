@@ -50,12 +50,15 @@ bool Subtraction::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Enviro
         auto value = make_ptr<Operation>(make_ptr<Addition>(), e, l);
         return r->unapplyVariables(value, env);
     }
-    else if (checkType<Operation>(e))
+
+    auto evaluated = make_ptr<Operation>(make_ptr<Subtraction>(),
+                                         l, r)->eval(env);
+
+    if (auto op = d_cast<Operation>(evaluated))
     {
-        auto op = s_cast<Operation>(e);
         if (checkType<Subtraction>(op->op))
             return op->left->unapplyVariables(l, env)
                 && op->right->unapplyVariables(r, env);
     }
-    return false;
+    return evaluated->unapplyVariables(e, env);
 }

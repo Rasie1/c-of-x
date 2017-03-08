@@ -16,32 +16,32 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     auto l = Identifier::unwrapIfId(first, env)->eval(env);
     auto r = Identifier::unwrapIfId(second, env)->eval(env);
 
-    if (*l == *r)
-        return l;
+    // if (*l == *r)
+    //     return l;
 
     auto lr = l->intersect(r, env);
 
-    bool lf = false;
-    bool rf = false;
-    if (checkType<Operation>(lr))
-    {
-        auto op = s_cast<Operation>(lr)->op;
-        if (checkType<Intersection>(op))
-            lf = true;
-    }
-    if (!lf)
-        return lr;
+    // bool lf = false;
+    // bool rf = false;
+    // if (checkType<Operation>(lr))
+    // {
+    //     auto op = s_cast<Operation>(lr)->op;
+    //     if (checkType<Intersection>(op))
+    //         lf = true;
+    // }
+    // if (!lf)
+    //     return lr;
 
-    auto rl = r->intersect(l, env);
+    // auto rl = r->intersect(l, env);
 
-    if (checkType<Operation>(rl))
-    {
-        auto op = s_cast<Operation>(rl)->op;
-        if (checkType<Intersection>(op))
-            rf = true;
-    }
-    if (!rf)
-        return rl;
+    // if (checkType<Operation>(rl))
+    // {
+    //     auto op = s_cast<Operation>(rl)->op;
+    //     if (checkType<Intersection>(op))
+    //         rf = true;
+    // }
+    // if (!rf)
+    //     return rl;
 
     // TODO: make this default behaviour and remove returns for both
     // branches (lines 40-41 and 51-52)

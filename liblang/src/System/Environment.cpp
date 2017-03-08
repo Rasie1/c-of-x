@@ -61,21 +61,22 @@ void Environment::clear()
 
 static ExpPtr unwrapEqual(ExpPtrArg value)
 {
-    if (checkType<Equals>(value))
-        return s_cast<Equals>(value)->value;
+    if (auto eq = d_cast<Equals>(value))
+        return eq->value;
     else if (checkType<Any>(value))
         return value;
-    else if (checkType<Operation>(value) && checkType<Union>(s_cast<Operation>(value)->op))
+    
+    if (auto operation = d_cast<Operation>(value))
+    if (checkType<Union>(operation->op))
     {
-        auto operation = s_cast<Operation>(value);
         auto l = unwrapEqual(operation->left);
         auto r = unwrapEqual(operation->right);
         return make_ptr<Operation>(make_ptr<Union>(), l, r);
     }
-    else if (checkType<Void>(value))
+    if (checkType<Void>(value))
         return value;
-    else
-        return make_ptr<ValueInSet>(value);
+    
+    return make_ptr<ValueInSet>(value);
 }
 
 ExpPtr Environment::getEqual(CExpPtrArg key) const
@@ -174,9 +175,9 @@ std::vector<std::string> Environment::getAllNames() const
     ret.reserve(data.size());
 
     for (auto &x : data)
-        if (checkType<const Identifier>(x.first))
+        if (auto id = d_cast<const Identifier>(x.first))
         {
-            ret.push_back(s_cast<const Identifier>(x.first)->name);
+            ret.push_back(id->name);
         }
 
     return ret;
