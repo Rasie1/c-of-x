@@ -15,11 +15,10 @@ Multiplication::Multiplication()
 
 ExpPtr Multiplication::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    if (checkType<Integer>(l) && checkType<Integer>(r))
+    if (auto first = d_cast<Integer>(l))
+    if (auto second = d_cast<Integer>(r))
     {
-        auto firstInteger  = s_cast<Integer>(l);
-        auto secondInteger = s_cast<Integer>(r);
-        return make_ptr<Integer>(firstInteger->value * secondInteger->value);
+        return make_ptr<Integer>(first->value * second->value);
     }
     else
     {
@@ -30,8 +29,9 @@ ExpPtr Multiplication::calculate(ExpPtrArg l, ExpPtrArg r) const
     }
 }
 
-bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
 {
+
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);
 
@@ -47,14 +47,16 @@ bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Env
         // auto value = make_ptr<Operation>(make_ptr<Division>(), e, l);
         // return r->unapplyVariables(value, env);
     }
-    else if (checkType<Operation>(e))
+
+    auto evaluated = make_ptr<Operation>(make_ptr<Multiplication>(),
+                                         l, r)->eval(env);
+    if (auto op = d_cast<Operation>(evaluated))
     {
-        auto op = s_cast<Operation>(e);
         if (checkType<Multiplication>(op->op))
             return op->left->unapplyVariables(l, env)
                 && op->right->unapplyVariables(r, env);
     }
-    return false;
+    return evaluated->unapplyVariables(e, env);
 }
 
 std::string Multiplication::show() const

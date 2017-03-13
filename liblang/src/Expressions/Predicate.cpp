@@ -8,7 +8,7 @@
 #include "Expressions/ValueInSet.h"
 #include "Expressions/Application.h"
 
-ExpPtr Predicate::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
 {
     auto evaluated = e->eval(env);
 

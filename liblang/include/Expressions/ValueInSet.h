@@ -9,7 +9,7 @@ public:
     ExpPtr eval(Environment& env) const override;
 
     ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
 
     virtual std::string show() const;
 

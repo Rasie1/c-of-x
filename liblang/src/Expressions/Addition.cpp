@@ -14,11 +14,10 @@ Addition::Addition()
 
 ExpPtr Addition::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
-    if (checkType<Integer>(l) && checkType<Integer>(r))
+    if (auto first = d_cast<Integer>(l))
+    if (auto second = d_cast<Integer>(r))
     {
-        auto firstInteger  = s_cast<Integer>(l);
-        auto secondInteger = s_cast<Integer>(r);
-        return make_ptr<Integer>(firstInteger->value + secondInteger->value);
+        return make_ptr<Integer>(first->value + second->value);
     }
     else
     {
@@ -36,7 +35,7 @@ std::string Addition::show() const
 
 const std::string Addition::defaultName = "+";
 
-bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
 {
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);

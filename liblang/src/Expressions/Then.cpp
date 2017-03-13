@@ -11,7 +11,7 @@ Then::Then()
 
 ExpPtr Then::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment& env) const
+                     Environment& env)
 {
     auto l = first->eval(env);
     if (checkType<Void>(l))

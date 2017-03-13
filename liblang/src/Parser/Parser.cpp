@@ -94,7 +94,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
             bool evalForce = false;
             if (checkType<Identifier>(left))
             {
-                auto variable = s_cast<Identifier>(left);
+                auto variable = std::static_pointer_cast<Identifier>(left);
                 evalForce = variable->name == "#";
             }
             if (evalForce)

@@ -7,9 +7,9 @@ class Predicate :
 public:
     Predicate() {}
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment& env) override;
     ExpPtr inverse() const override;
 
-    virtual optional<bool> holds(ExpPtrArg e, const Environment& env) const = 0;
+    virtual optional<bool> holds(ExpPtrArg e, const Environment& env) = 0;
 };
 

@@ -12,7 +12,7 @@
 #include "Expressions/ValueInSet.h"
 
 
-optional<bool> LessThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> LessThan::holds(ExpPtrArg e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -100,7 +100,7 @@ Less::Less()
 
 ExpPtr Less::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment& env) const
+                     Environment& env)
 
 {
     auto f = d_cast<LessThan>(partialApplyRight(second, env));
@@ -115,18 +115,18 @@ std::string Less::show() const
 
 const std::string Less::defaultName = "<";
 
-ExpPtr Less::partialApplyLeft(ExpPtrArg e, Environment& env) const
+ExpPtr Less::partialApplyLeft(ExpPtrArg e, Environment& env)
 {
      return make_ptr<MoreThan>(e);
 }
 
-ExpPtr Less::partialApplyRight(ExpPtrArg e, Environment& env) const
+ExpPtr Less::partialApplyRight(ExpPtrArg e, Environment& env)
 {
      return make_ptr<LessThan>(e);
 }
 
 
-optional<bool> LessOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> LessOrEqualThan::holds(ExpPtrArg e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -214,7 +214,7 @@ LessOrEqual::LessOrEqual()
 
 ExpPtr LessOrEqual::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment& env) const
+                     Environment& env)
 
 {
     auto f = d_cast<LessOrEqualThan>(partialApplyRight(second, env));
@@ -229,12 +229,12 @@ std::string LessOrEqual::show() const
 
 const std::string LessOrEqual::defaultName = "=<";
 
-ExpPtr LessOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env) const
+ExpPtr LessOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env)
 {
      return make_ptr<MoreOrEqualThan>(e);
 }
 
-ExpPtr LessOrEqual::partialApplyRight(ExpPtrArg e, Environment& env) const
+ExpPtr LessOrEqual::partialApplyRight(ExpPtrArg e, Environment& env)
 {
      return make_ptr<LessOrEqualThan>(e);
 }

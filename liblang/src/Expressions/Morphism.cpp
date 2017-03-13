@@ -23,9 +23,8 @@ ExpPtr Morphism::intersect(ExpPtrArg other, const Environment& env)
 
     // For some reason, here intersection of function and argument gives us the result.
     // I'm not really sure if it is correct, but now it fits everything
-    if (checkType<Equals>(value))
+    if (auto eq = d_cast<Equals>(value))
     {
-        auto eq = s_cast<Equals>(value);
         auto exactValue = eq->value;
         auto envCopy = env;
         auto applied = apply(exactValue, envCopy);
@@ -122,7 +121,7 @@ ExpPtr Morphism::inverse() const
     return make_ptr<Void>();
 }
 
-bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     // throw std::logic_error("AAAAAAAA");
     // TODO

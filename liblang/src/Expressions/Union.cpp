@@ -131,7 +131,7 @@ Union::Union()
 
 ExpPtr Union::operate(ExpPtrArg first,
                       ExpPtrArg second,
-                      Environment& env) const
+                      Environment& env)
 {
     auto l = first->eval(env);
     auto r = second->eval(env);
@@ -140,9 +140,8 @@ ExpPtr Union::operate(ExpPtrArg first,
 
     bool lf = false;
     bool rf = false;
-    if (checkType<Operation>(lr))
+    if (auto op = d_cast<Operation>(lr))
     {
-        auto op = s_cast<Operation>(lr)->op;
         if (checkType<Union>(op))
             lf = true;
     }
@@ -151,9 +150,8 @@ ExpPtr Union::operate(ExpPtrArg first,
 
     auto rl = r->unionize(l, env);
 
-    if (checkType<Operation>(rl))
+    if (auto op = d_cast<Operation>(rl))
     {
-        auto op = s_cast<Operation>(rl)->op;
         if (checkType<Union>(op))
             rf = true;
     }
@@ -179,7 +177,7 @@ const std::string Union::defaultName = "|";
 bool Union::unapplyVariables(ExpPtrArg e,
                              ExpPtrArg l,
                              ExpPtrArg r,
-                             Environment &env) const
+                             Environment &env)
 {
     // TODO: when adding to env, we should union branches and not intersect
     // this is not accessible right now and most likely I'll have to add
@@ -195,7 +193,7 @@ bool Union::unapplyVariables(ExpPtrArg e,
     return result;
 }
 
-ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
 {
     // TODO: preserve identifier?
     auto operation = make_ptr<Operation>(make_ptr<Intersection>(), l, e);

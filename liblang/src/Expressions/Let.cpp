@@ -3,7 +3,7 @@
 #include "Expressions/Void.h"
 #include "System/Environment.h"
 
-ExpPtr Let::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Let::apply(ExpPtrArg e, Environment& env)
 {
     // TODO: add new value to env unionized with old value
     auto result = e->eval(env);
@@ -26,7 +26,7 @@ LetContext::LetContext(const Environment& env) :
 {
 }
 
-ExpPtr LetContext::apply(ExpPtrArg e, Environment& env) const
+ExpPtr LetContext::apply(ExpPtrArg e, Environment& env)
 {
     auto envCopy = this->env;
     auto result = e->eval(envCopy);

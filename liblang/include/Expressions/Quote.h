@@ -6,7 +6,7 @@ class Quote : public Morphism
 public:
     Quote() {}
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };
@@ -19,7 +19,7 @@ public:
     virtual std::string show() const;
     static const std::string defaultName;
 
-    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
 
     ExpPtr e;
 };

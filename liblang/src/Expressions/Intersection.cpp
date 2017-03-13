@@ -11,7 +11,7 @@ Intersection::Intersection()
 
 ExpPtr Intersection::operate(ExpPtrArg first,
                              ExpPtrArg second,
-                             Environment& env) const
+                             Environment& env)
 {
     auto l = Identifier::unwrapIfId(first, env)->eval(env);
     auto r = Identifier::unwrapIfId(second, env)->eval(env);
@@ -61,7 +61,7 @@ const std::string Intersection::defaultName = "&";
 bool Intersection::unapplyVariables(ExpPtrArg e,
                                     ExpPtrArg l,
                                     ExpPtrArg r,
-                                    Environment &env) const
+                                    Environment &env)
 {
     auto lUnapplied = l->unapplyVariables(e, env);
     auto rUnapplied = r->unapplyVariables(e, env);
@@ -71,7 +71,7 @@ bool Intersection::unapplyVariables(ExpPtrArg e,
     return result;
 }
 
-ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
 {
     auto envc = env;
     auto lApplied = l->apply(e, env);

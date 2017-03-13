@@ -17,7 +17,7 @@ public:
     Expression();
 
     virtual ExpPtr eval(Environment& env) const = 0;
-    virtual ExpPtr apply(ExpPtrArg other, Environment& env) const;
+    virtual ExpPtr apply(ExpPtrArg other, Environment& env);
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
     virtual ExpPtr unionize(ExpPtrArg other, const Environment& env);
     virtual ExpPtr complement(const Environment& env);
@@ -33,7 +33,7 @@ public:
 
     virtual bool hasFreeVariables(const Environment& env) const;
     // returns true if no error occured
-    virtual bool unapplyVariables(ExpPtrArg e, Environment& env) const;
+    virtual bool unapplyVariables(ExpPtrArg e, Environment& env);
 };
 
 typedef Expression::ExpPtr ExpPtr;

@@ -10,5 +10,5 @@ public:
 
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
-                   Environment& env) const override;
+                   Environment& env) override;
 };

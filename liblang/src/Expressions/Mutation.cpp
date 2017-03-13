@@ -7,7 +7,7 @@
 
 ExpPtr Mutation::operate(ExpPtrArg first,
                          ExpPtrArg second,
-                         Environment& env) const
+                         Environment& env)
 {
     // still in todo state (can't use the same variable)
     env.erase(first);

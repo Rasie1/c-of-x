@@ -9,5 +9,5 @@ public:
 
     ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
 
-    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
 };

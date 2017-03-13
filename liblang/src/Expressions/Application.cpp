@@ -45,7 +45,7 @@ static bool isExpressionQuoted(ExpPtrArg left, Environment& env)
 
 ExpPtr Application::operate(ExpPtrArg first,
                             ExpPtrArg second,
-                            Environment& env) const
+                            Environment& env)
 {
     ExpPtr left, right;
     left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env)->eval(env), env);
@@ -55,7 +55,7 @@ ExpPtr Application::operate(ExpPtrArg first,
         right = second->eval(env);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return make_ptr<Operation>(shared_from_this(), left, right);
+        return make_ptr<Operation>(std::static_pointer_cast<Operator>(shared_from_this()), left, right);
 
     std::vector<ExpPtr> expressions;
 
@@ -107,7 +107,7 @@ std::string Application::show() const
 bool Application::unapplyVariables(ExpPtrArg e,
                                    ExpPtrArg l,
                                    ExpPtrArg r,
-                                   Environment &env) const
+                                   Environment &env)
 {
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);
@@ -157,7 +157,7 @@ ReverseApplication::ReverseApplication()
 
 ExpPtr ReverseApplication::operate(ExpPtrArg first,
                                    ExpPtrArg second,
-                                   Environment& env) const
+                                   Environment& env)
 {
     return proxy.operate(second, first, env);
 }
@@ -172,7 +172,7 @@ const std::string ReverseApplication::defaultName = ":";
 bool ReverseApplication::unapplyVariables(ExpPtrArg e,
                                           ExpPtrArg l,
                                           ExpPtrArg r,
-                                          Environment &env) const
+                                          Environment &env)
 {
     return proxy.unapplyVariables(e, r, l, env);
 }
@@ -185,7 +185,7 @@ LowPriorityApplication::LowPriorityApplication()
 
 ExpPtr LowPriorityApplication::operate(ExpPtrArg first,
                                        ExpPtrArg second,
-                                       Environment& env) const
+                                       Environment& env)
 {
     return proxy.operate(first, second, env);
 }
@@ -200,7 +200,7 @@ const std::string LowPriorityApplication::defaultName = "$";
 bool LowPriorityApplication::unapplyVariables(ExpPtrArg e,
                                               ExpPtrArg l,
                                               ExpPtrArg r,
-                                              Environment &env) const
+                                              Environment &env)
 {
     return proxy.unapplyVariables(e, l, r, env);
 }

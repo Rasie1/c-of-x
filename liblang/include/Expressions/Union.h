@@ -10,13 +10,13 @@ public:
 
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
-                   Environment& env) const override;
+                   Environment& env) override;
 
     std::string show() const override;
 
 
-    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const override;
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
+    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) override;
+    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
 
     template<class It>
     static ExpPtr make(const It& begin, const It& end)

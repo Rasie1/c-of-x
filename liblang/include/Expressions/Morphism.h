@@ -13,6 +13,6 @@ public:
 class Isomorphism : public Morphism
 {
 public:
-    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
 };
 

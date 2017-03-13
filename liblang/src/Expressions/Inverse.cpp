@@ -2,7 +2,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Identifier.h"
 
-ExpPtr Inverse::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Inverse::apply(ExpPtrArg e, Environment& env)
 {
     auto value = Identifier::unwrapIfId(e, env);
     if (auto f = d_cast<Morphism>(value))

@@ -23,10 +23,10 @@ bool Operator::operator==(const Expression& other) const
     return typeid(*this) == typeid(other);
 }
 
-ExpPtr Operator::partialApplyLeft(ExpPtrArg e, Environment& env) const
+ExpPtr Operator::partialApplyLeft(ExpPtrArg e, Environment& env)
 {
     auto arg = make_ptr<Identifier>("arg");
-    auto that = s_cast<const Operator>(shared_from_this());
+    auto that = std::static_pointer_cast<const Operator>(shared_from_this());
     auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
                                     e, 
                                     arg);
@@ -35,10 +35,10 @@ ExpPtr Operator::partialApplyLeft(ExpPtrArg e, Environment& env) const
     return closure;
 }
 
-ExpPtr Operator::partialApplyRight(ExpPtrArg e, Environment& env) const
+ExpPtr Operator::partialApplyRight(ExpPtrArg e, Environment& env)
 {
     auto arg = make_ptr<Identifier>("arg");
-    auto that = s_cast<const Operator>(shared_from_this());
+    auto that = std::static_pointer_cast<const Operator>(shared_from_this());
     auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
                                     arg, 
                                     e);
@@ -47,11 +47,11 @@ ExpPtr Operator::partialApplyRight(ExpPtrArg e, Environment& env) const
     return closure;
 }
 
-ExpPtr Operator::partialApplyNoArgs(Environment& env) const
+ExpPtr Operator::partialApplyNoArgs(Environment& env)
 {
     auto l = make_ptr<Identifier>("l");
     auto r = make_ptr<Identifier>("r");
-    auto that = s_cast<const Operator>(shared_from_this());
+    auto that = std::static_pointer_cast<const Operator>(shared_from_this());
     auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
                                     l, 
                                     r);
@@ -62,22 +62,24 @@ ExpPtr Operator::partialApplyNoArgs(Environment& env) const
     return lUnapplied;
 }
 
-bool Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
 {
     return false;
 }
 
-ExpPtr Operator::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Operator::apply(ExpPtrArg e, Environment& env)
 {
     return partialApplyRight(e, env);
 }
 
-ExpPtr Operator::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+ExpPtr Operator::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) 
 {
-    return make_ptr<Operation>(make_ptr<Intersection>(), operate(l, r, env), e);
+    return make_ptr<Operation>(make_ptr<Intersection>(), 
+                               operate(l, r, env), 
+                               e);
 }
 
-ExpPtr Operator::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const 
+ExpPtr Operator::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) 
 {
     return make_ptr<Void>();
 }

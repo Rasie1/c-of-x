@@ -13,7 +13,7 @@ std::string ValueInSet::show() const
     return "(\u0251 : " + this->set->show() + ")";
 }
 
-bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool ValueInSet::unapplyVariables(ExpPtrArg e, Environment& env)
 {
 //    if (auto operation = d_cast<Operation>(e))
 //    {

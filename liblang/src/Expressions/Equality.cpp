@@ -9,7 +9,7 @@
 #include "Expressions/Application.h"
 
 
-optional<bool> Equals::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> Equals::holds(ExpPtrArg e, const Environment& env)
 {
     if (*value == *e)
         return make_optional(true);
@@ -46,9 +46,8 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
 {
     if (checkType<Any>(value))
         return other;
-    if (checkType<Equals>(other))
+    if (auto equals = d_cast<Equals>(other))
     {
-        auto equals = s_cast<Equals>(other);
         auto l = value;
         auto r = equals->value;
         return make_ptr<Equals>(l->intersect(r, env));
@@ -87,7 +86,7 @@ static bool operateHelper(ExpPtrArg first,
 
 ExpPtr Equality::operate(ExpPtrArg first,
                          ExpPtrArg second,
-                         Environment& env) const
+                         Environment& env)
 {
 //    auto envl = env;
 //    auto envr = env;
@@ -123,12 +122,12 @@ std::string Equality::show() const
 
 const std::string Equality::defaultName = "=";
 
-ExpPtr Equality::partialApplyLeft(ExpPtrArg e, Environment& env) const
+ExpPtr Equality::partialApplyLeft(ExpPtrArg e, Environment& env)
 {
      return make_ptr<Equals>(e);
 }
 
-ExpPtr Equality::partialApplyRight(ExpPtrArg e, Environment& env) const
+ExpPtr Equality::partialApplyRight(ExpPtrArg e, Environment& env)
 {
      return make_ptr<Equals>(e);
 }

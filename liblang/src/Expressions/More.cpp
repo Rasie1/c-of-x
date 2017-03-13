@@ -12,7 +12,7 @@
 #include "Expressions/Less.h"
 
 
-optional<bool> MoreThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> MoreThan::holds(ExpPtrArg e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -99,7 +99,7 @@ More::More()
 
 ExpPtr More::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment& env) const
+                     Environment& env)
 {
     auto f = d_cast<MoreThan>(partialApplyRight(second, env));
 
@@ -113,17 +113,17 @@ std::string More::show() const
 
 const std::string More::defaultName = ">";
 
-ExpPtr More::partialApplyLeft(ExpPtrArg e, Environment& env) const
+ExpPtr More::partialApplyLeft(ExpPtrArg e, Environment& env)
 {
      return make_ptr<LessThan>(e);
 }
 
-ExpPtr More::partialApplyRight(ExpPtrArg e, Environment& env) const
+ExpPtr More::partialApplyRight(ExpPtrArg e, Environment& env)
 {
      return make_ptr<MoreThan>(e);
 }
 
-optional<bool> MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -210,7 +210,7 @@ MoreOrEqual::MoreOrEqual()
 
 ExpPtr MoreOrEqual::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment& env) const
+                     Environment& env)
 {
     auto f = d_cast<MoreOrEqualThan>(partialApplyRight(second, env));
 
@@ -224,12 +224,12 @@ std::string MoreOrEqual::show() const
 
 const std::string MoreOrEqual::defaultName = ">=";
 
-ExpPtr MoreOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env) const
+ExpPtr MoreOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env)
 {
      return make_ptr<LessThan>(e);
 }
 
-ExpPtr MoreOrEqual::partialApplyRight(ExpPtrArg e, Environment& env) const
+ExpPtr MoreOrEqual::partialApplyRight(ExpPtrArg e, Environment& env)
 {
      return make_ptr<MoreThan>(e);
 }

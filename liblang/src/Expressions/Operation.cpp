@@ -6,7 +6,7 @@
 #include "Expressions/Any.h"
 #include "Expressions/Intersection.h"
 
-Operation::Operation(const std::shared_ptr<const Operator>& op,
+Operation::Operation(const std::shared_ptr<Operator>& op,
                      ExpPtrArg left,
                      ExpPtrArg right)
     : op(op),
@@ -55,7 +55,7 @@ ExpPtr Operation::intersect(ExpPtrArg other, const Environment& envc)
     return op->intersect(left, right, other, env);
 }
 
-ExpPtr Operation::apply(ExpPtrArg other, Environment& envc) const
+ExpPtr Operation::apply(ExpPtrArg other, Environment& envc)
 {
     auto env = envc;
     return op->apply(left, right, other, env);
@@ -75,7 +75,7 @@ bool Operation::operator==(const Expression& other) const
     }
 }
 
-bool Operation::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Operation::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     return op->unapplyVariables(e, this->left, this->right, env);
 }

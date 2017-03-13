@@ -9,7 +9,7 @@ Pair::Pair()
 
 ExpPtr Pair::operate(ExpPtrArg first,
                      ExpPtrArg second,
-                     Environment& env) const
+                     Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Pair>(), first, second);
 }

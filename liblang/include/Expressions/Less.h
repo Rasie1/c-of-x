@@ -9,7 +9,7 @@ class LessThan :
 {
 public:
     LessThan(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
 
     ExpPtr value;
 
@@ -30,7 +30,7 @@ class LessOrEqualThan :
 {
 public:
     LessOrEqualThan(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
 
     ExpPtr value;
 
@@ -52,9 +52,9 @@ public:
 
     ExpPtr operate(ExpPtrArg  first,
                    ExpPtrArg  second,
-                   Environment& env) const override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) const override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) const override;
+                   Environment& env) override;
+    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
+    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
 
     std::string show() const override;
 
@@ -68,9 +68,9 @@ public:
 
     ExpPtr operate(ExpPtrArg  first,
                    ExpPtrArg  second,
-                   Environment& env) const override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) const override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) const override;
+                   Environment& env) override;
+    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
+    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
 
     std::string show() const override;
 

@@ -5,7 +5,7 @@
 #include "Expressions/Void.h"
 #include "System/Environment.h"
 
-ExpPtr Not::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Not::apply(ExpPtrArg e, Environment& env)
 {
     return e->complement(env);
 }
@@ -25,7 +25,7 @@ std::string Complement::show() const
 
 const std::string Complement::defaultName = "!";
 
-bool Complement::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Complement::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     auto newEnv = env;
     auto result = this->e->unapplyVariables(e, newEnv);

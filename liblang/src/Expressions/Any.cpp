@@ -5,14 +5,14 @@ std::string Any::show() const
     return defaultName;
 }
 
-ExpPtr Any::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Any::apply(ExpPtrArg e, Environment& env)
 {
     return make_ptr<Any>();
 }
 
 const std::string Any::defaultName = "_";
 
-bool Any::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Any::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     return true;
 }

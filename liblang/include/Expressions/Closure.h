@@ -12,11 +12,11 @@ public:
             const Environment& env);
     ~Closure();
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment& env) override;
     // ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
     std::string show() const override;
     bool operator==(const Expression& other) const override;
-    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
 
     ExpPtr codomain() override;
     ExpPtr domain() override;

@@ -53,7 +53,7 @@ public:
 
     std::vector<std::string> getAllNames() const;
 
-    std::shared_ptr<const Operator> defaultOperator;
+    std::shared_ptr<Operator> defaultOperator;
 
 private:
     void addDefaultDefinitions();

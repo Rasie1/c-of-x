@@ -6,7 +6,7 @@ class Not : public Morphism
 public:
     Not() {}
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };
@@ -22,7 +22,7 @@ public:
     virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
     ExpPtr complement(const Environment& env) override;
 
-    bool unapplyVariables(ExpPtrArg e, Environment& env) const override;
+    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
 
     ExpPtr e;
 };

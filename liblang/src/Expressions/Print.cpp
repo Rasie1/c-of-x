@@ -5,7 +5,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Any.h"
 
-ExpPtr Print::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Print::apply(ExpPtrArg e, Environment& env)
 {
     ExpPtr arg;
     arg = Identifier::unwrapIfId(e, env);
@@ -25,7 +25,7 @@ std::string Print::show() const
 const std::string Print::defaultName = "print";
 
 
-ExpPtr PrintInfo::apply(ExpPtrArg e, Environment& env) const
+ExpPtr PrintInfo::apply(ExpPtrArg e, Environment& env)
 {
     ExpPtr arg;
     arg = d_cast<Identifier>(e);
@@ -46,7 +46,7 @@ std::string PrintInfo::show() const
 const std::string PrintInfo::defaultName = "info";
 
 
-ExpPtr PrintEnv::apply(ExpPtrArg e, Environment& env) const
+ExpPtr PrintEnv::apply(ExpPtrArg e, Environment& env)
 {
     std::cout << env.show();
     return make_ptr<Void>();

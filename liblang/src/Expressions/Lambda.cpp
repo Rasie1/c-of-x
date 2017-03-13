@@ -12,7 +12,7 @@ Lambda::Lambda()
 
 ExpPtr Lambda::operate(ExpPtrArg first,
                        ExpPtrArg second,
-                       Environment& env) const
+                       Environment& env)
 {
     auto newEnv = env;
     auto arg = first->eval(newEnv);

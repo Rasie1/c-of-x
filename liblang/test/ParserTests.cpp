@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(VariableTest)
     auto parsed = p.parse("x", env);
 
     BOOST_CHECK(checkType<Identifier>(parsed));
-    auto x = s_cast<Identifier>(parsed);
+    auto x = d_cast<Identifier>(parsed);
     BOOST_CHECK_EQUAL(x->name, "x");
 }
 
@@ -31,12 +31,12 @@ BOOST_AUTO_TEST_CASE(ApplicationTest)
     auto parsed = p.parse("f x", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(op->op));
     BOOST_CHECK(checkType<Identifier>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(SimpleBracesTest)
@@ -46,12 +46,12 @@ BOOST_AUTO_TEST_CASE(SimpleBracesTest)
     auto parsed = p.parse("(f x)", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(op->op));
     BOOST_CHECK(checkType<Identifier>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(VoidTest)
@@ -70,17 +70,17 @@ BOOST_AUTO_TEST_CASE(BracesTest)
     auto parsed = p.parse("g (f x)", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(op->op));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "g");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "g");
 
 
-    auto f_x = s_cast<Operation>(op->right);
+    auto f_x = d_cast<Operation>(op->right);
     BOOST_CHECK(checkType<Application>(f_x->op));
     BOOST_CHECK(checkType<Identifier>(f_x->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(f_x->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(MultipleApplication)
@@ -91,36 +91,36 @@ BOOST_AUTO_TEST_CASE(MultipleApplication)
 
     BOOST_CHECK(checkType<Operation>(parsed));
 
-    auto f_x_y_oa_bc_z = s_cast<Operation>(parsed);
+    auto f_x_y_oa_bc_z = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(f_x_y_oa_bc_z->op));
     BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc_z->left));
     BOOST_CHECK(checkType<Identifier>(f_x_y_oa_bc_z->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
 
-    auto f_x_y_oa_bc = s_cast<Operation>(f_x_y_oa_bc_z->left);
+    auto f_x_y_oa_bc = d_cast<Operation>(f_x_y_oa_bc_z->left);
     BOOST_CHECK(checkType<Application>(f_x_y_oa_bc->op));
     BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->left));
     BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->right));
 
-    auto f_x_y = s_cast<Operation>(f_x_y_oa_bc->left);
+    auto f_x_y = d_cast<Operation>(f_x_y_oa_bc->left);
     BOOST_CHECK(checkType<Application>(f_x_y->op));
     BOOST_CHECK(checkType<Operation>(f_x_y->left));
     BOOST_CHECK(checkType<Identifier>(f_x_y->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y->right)->name, "y");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x_y->right)->name, "y");
 
-    auto a_b = s_cast<Operation>(f_x_y_oa_bc->right);
+    auto a_b = d_cast<Operation>(f_x_y_oa_bc->right);
     BOOST_CHECK(checkType<Application>(a_b->op));
     BOOST_CHECK(checkType<Identifier>(a_b->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->left)->name, "a");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(a_b->left)->name, "a");
     BOOST_CHECK(checkType<Identifier>(a_b->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->right)->name, "b");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(a_b->right)->name, "b");
 
-    auto f_x = s_cast<Operation>(f_x_y->left);
+    auto f_x = d_cast<Operation>(f_x_y->left);
     BOOST_CHECK(checkType<Application>(f_x->op));
     BOOST_CHECK(checkType<Identifier>(f_x->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(f_x->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(ParenthesesParse)
@@ -131,36 +131,36 @@ BOOST_AUTO_TEST_CASE(ParenthesesParse)
 
     BOOST_CHECK(checkType<Operation>(parsed));
 
-    auto f_x_y_oa_bc_z = s_cast<Operation>(parsed);
+    auto f_x_y_oa_bc_z = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(f_x_y_oa_bc_z->op));
     BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc_z->left));
     BOOST_CHECK(checkType<Identifier>(f_x_y_oa_bc_z->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
 
-    auto f_x_y_oa_bc = s_cast<Operation>(f_x_y_oa_bc_z->left);
+    auto f_x_y_oa_bc = d_cast<Operation>(f_x_y_oa_bc_z->left);
     BOOST_CHECK(checkType<Application>(f_x_y_oa_bc->op));
     BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->left));
     BOOST_CHECK(checkType<Operation>(f_x_y_oa_bc->right));
 
-    auto f_x_y = s_cast<Operation>(f_x_y_oa_bc->left);
+    auto f_x_y = d_cast<Operation>(f_x_y_oa_bc->left);
     BOOST_CHECK(checkType<Application>(f_x_y->op));
     BOOST_CHECK(checkType<Operation>(f_x_y->left));
     BOOST_CHECK(checkType<Identifier>(f_x_y->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x_y->right)->name, "y");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x_y->right)->name, "y");
 
-    auto a_b = s_cast<Operation>(f_x_y_oa_bc->right);
+    auto a_b = d_cast<Operation>(f_x_y_oa_bc->right);
     BOOST_CHECK(checkType<Application>(a_b->op));
     BOOST_CHECK(checkType<Identifier>(a_b->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->left)->name, "a");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(a_b->left)->name, "a");
     BOOST_CHECK(checkType<Identifier>(a_b->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(a_b->right)->name, "b");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(a_b->right)->name, "b");
 
-    auto f_x = s_cast<Operation>(f_x_y->left);
+    auto f_x = d_cast<Operation>(f_x_y->left);
     BOOST_CHECK(checkType<Application>(f_x->op));
     BOOST_CHECK(checkType<Identifier>(f_x->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(f_x->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(f_x->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(f_x->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(XPlusY)
@@ -170,12 +170,12 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     auto parsed = p.parse("x + y", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Addition>(op->op));
     BOOST_CHECK(checkType<Identifier>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "x");
     BOOST_CHECK(checkType<Identifier>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "y");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->right)->name, "y");
 }
 
 BOOST_AUTO_TEST_CASE(NumbersOperation)
@@ -185,12 +185,12 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     auto parsed = p.parse("1 + 2", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Addition>(op->op));
     BOOST_CHECK(checkType<Integer>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 1);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(op->left)->value, 1);
     BOOST_CHECK(checkType<Integer>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 2);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(op->right)->value, 2);
 }
 
 BOOST_AUTO_TEST_CASE(HighPriorityUsage)
@@ -210,12 +210,12 @@ BOOST_AUTO_TEST_CASE(MultilineApplication)
                           "  x", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(op->op));
     BOOST_CHECK(checkType<Identifier>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(MultilineApplication2)
@@ -227,12 +227,12 @@ BOOST_AUTO_TEST_CASE(MultilineApplication2)
                           "  y", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(op->op));
     BOOST_CHECK(checkType<Identifier>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(MultilineApplicationSeparate)
@@ -245,12 +245,12 @@ BOOST_AUTO_TEST_CASE(MultilineApplicationSeparate)
                           "y", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Application>(op->op));
     BOOST_CHECK(checkType<Identifier>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->left)->name, "f");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->left)->name, "f");
     BOOST_CHECK(checkType<Identifier>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Identifier>(op->right)->name, "x");
+    BOOST_CHECK_EQUAL(d_cast<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(AdditionSection)
@@ -262,16 +262,16 @@ BOOST_AUTO_TEST_CASE(AdditionSection)
                           "    3", env);
 
     BOOST_CHECK(checkType<Operation>(parsed));
-    auto op = s_cast<Operation>(parsed);
+    auto op = d_cast<Operation>(parsed);
     BOOST_CHECK(checkType<Addition>(op->op));
     BOOST_CHECK(checkType<Integer>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 1);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(op->left)->value, 1);
     BOOST_CHECK(checkType<Integer>(op->right));
     BOOST_CHECK(checkType<Operation>(op->right));
-    op = s_cast<Operation>(op->right);
+    op = d_cast<Operation>(op->right);
     BOOST_CHECK(checkType<DefaultOperator>(op->op));
     BOOST_CHECK(checkType<Integer>(op->left));
-    BOOST_CHECK_EQUAL(s_cast<Integer>(op->left)->value, 2);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(op->left)->value, 2);
     BOOST_CHECK(checkType<Integer>(op->right));
-    BOOST_CHECK_EQUAL(s_cast<Integer>(op->right)->value, 3);
+    BOOST_CHECK_EQUAL(d_cast<Integer>(op->right)->value, 3);
 }

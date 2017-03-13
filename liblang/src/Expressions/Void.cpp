@@ -13,7 +13,7 @@ std::string Void::show() const
 
 const std::string Void::defaultName = "void";
 
-bool Void::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Void::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     return false;
 }

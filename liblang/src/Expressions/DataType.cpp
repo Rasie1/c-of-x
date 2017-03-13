@@ -9,7 +9,7 @@ ExpPtr Data::eval(Environment& env) const
     return std::const_pointer_cast<Expression>(shared_from_this());
 }
 
-bool Data::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Data::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     if (checkType<Any>(e))
         return true;

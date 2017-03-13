@@ -7,7 +7,7 @@ public:
     Print() {}
 
     ExpPtr apply(ExpPtrArg e,
-                 Environment& env) const override;
+                 Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };
@@ -18,7 +18,7 @@ public:
     PrintInfo() {}
 
     ExpPtr apply(ExpPtrArg e,
-                 Environment& env) const override;
+                 Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };
@@ -29,7 +29,7 @@ public:
     PrintEnv() {}
 
     ExpPtr apply(ExpPtrArg e,
-                 Environment& env) const override;
+                 Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };

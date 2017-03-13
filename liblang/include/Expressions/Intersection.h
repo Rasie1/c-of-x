@@ -8,10 +8,10 @@ public:
 
     ExpPtr operate(ExpPtrArg first,
                    ExpPtrArg second,
-                   Environment& env) const override;
+                   Environment& env) override;
     
-    virtual ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const;
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const override;
+    virtual ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
+    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
 
     std::string show() const override;
 

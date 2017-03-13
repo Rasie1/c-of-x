@@ -4,7 +4,7 @@
 #include "Expressions/Identifier.h"
 #include "System/Environment.h"
 
-optional<bool> IntegerType::holds(ExpPtrArg e, const Environment& env) const
+optional<bool> IntegerType::holds(ExpPtrArg e, const Environment& env)
 {
     auto envc = env;
     auto value = Identifier::unwrapIfId(e->eval(envc), envc);

@@ -9,9 +9,9 @@ public:
 
     ExpPtr operate(ExpPtrArg  first,
                    ExpPtrArg  second,
-                   Environment& env) const override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) const override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) const override;
+                   Environment& env) override;
+    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
+    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
 
     std::string show() const override;
 
@@ -23,7 +23,7 @@ class Equals : public Predicate
 {
 public:
     Equals(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) const override;
+    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
 
     ExpPtr value;
 

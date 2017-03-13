@@ -16,9 +16,9 @@ CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, 
 
 ExpPtr CalculationOperator::operate(ExpPtrArg first,
                                     ExpPtrArg second,
-                                    Environment& env) const
+                                    Environment& env)
 {
-    env.defaultOperator = s_cast<const Operator>(shared_from_this());
+    env.defaultOperator = d_cast<Operator>(shared_from_this());
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
 
@@ -31,7 +31,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     right = Identifier::unwrapIfId(right, envCopy);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return make_ptr<Operation>(s_cast<const Operator>(shared_from_this()), first, second);
+        return make_ptr<Operation>(d_cast<Operator>(shared_from_this()), first, second);
 
 
     // Next comes union stuff that will be replaced later
@@ -42,9 +42,9 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     bool rUnion = false;
 
     if (checkType<Operation>(left))
-        lUnion = checkType<Union>(s_cast<Operation>(left)->op);
+        lUnion = checkType<Union>(d_cast<Operation>(left)->op);
     if (checkType<Operation>(right))
-        rUnion = checkType<Union>(s_cast<Operation>(right)->op);
+        rUnion = checkType<Union>(d_cast<Operation>(right)->op);
 
     if (!lUnion && !rUnion)
     {
@@ -52,7 +52,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     }
     else if (lUnion && !rUnion)
     {
-        auto operation = s_cast<Operation>(left);
+        auto operation = d_cast<Operation>(left);
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(opl, right, env));
@@ -60,7 +60,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     }
     else if (rUnion && !lUnion)
     {
-        auto operation = s_cast<Operation>(right);
+        auto operation = d_cast<Operation>(right);
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(left, opl, env));
@@ -68,8 +68,8 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
     }
     else
     {
-        auto operationl = s_cast<Operation>(left);
-        auto operationr = s_cast<Operation>(right);
+        auto operationl = d_cast<Operation>(left);
+        auto operationr = d_cast<Operation>(right);
         auto ll = operationl->left;
         auto lr = operationl->right;
         auto rl = operationr->left;

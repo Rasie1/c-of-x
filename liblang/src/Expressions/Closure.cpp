@@ -30,9 +30,8 @@ static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
 {
     if (checkType<QuotedExpression>(e))
         return true;
-    if (checkType<Operation>(e))
+    if (auto op = d_cast<Operation>(e))
     {
-        auto op = s_cast<Operation>(e);
         if (checkType<Application>(op->op))
         {
             if (checkType<Quote>(Identifier::unwrapIfId(op->left, env))) // really?
@@ -45,7 +44,7 @@ static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
 }
 
 
-ExpPtr Closure::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Closure::apply(ExpPtrArg e, Environment& env)
 {
     // In case of closure as predicate, it is more likely that closure's body intersects with only
     // argument subset, leaving arguments' complement in context of applied value as it was before
@@ -114,7 +113,7 @@ ExpPtr Closure::domain()
     // TODO: not only argument. Constraints from body should be also applied here. Probably.
 }
 
-bool Closure::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Closure::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     // this is somewhat opposite of case 
     // f x = y ---> f = x -> y

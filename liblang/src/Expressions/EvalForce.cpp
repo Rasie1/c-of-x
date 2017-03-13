@@ -1,7 +1,7 @@
 #include "Expressions/EvalForce.h"
 #include "Expressions/TypeError.h"
 
-ExpPtr EvalForce::apply(ExpPtrArg e, Environment& env) const
+ExpPtr EvalForce::apply(ExpPtrArg e, Environment& env)
 {
     return e->eval(env)->eval(env);
 }

@@ -35,7 +35,7 @@ std::string Subtraction::show() const
 }
 
 const std::string Subtraction::defaultName = "-";
-bool Subtraction::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const
+bool Subtraction::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
 {
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);

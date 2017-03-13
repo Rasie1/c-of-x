@@ -11,18 +11,28 @@ DefaultOperator::DefaultOperator()
 
 ExpPtr DefaultOperator::operate(ExpPtrArg first,
                                 ExpPtrArg second,
-                                Environment& env) const
+                                Environment& env)
 {
-    ExpPtr l = (d_cast<Operation>(first) && checkType<DefaultOperator>(s_cast<Operation>(first)->op))
-            ? env.defaultOperator->operate(s_cast<Operation>(first)->left,
-                                           s_cast<Operation>(first)->right,
-                                           env)
-            : first;
-    ExpPtr r = (d_cast<Operation>(second) && checkType<DefaultOperator>(s_cast<Operation>(second)->op))
-            ? env.defaultOperator->operate(s_cast<Operation>(second)->left,
-                                           s_cast<Operation>(second)->right,
-                                           env)
-            : second;
+    ExpPtr l, r;
+    {
+        if (auto o = d_cast<Operation>(first))
+        {
+            if (auto d = d_cast<DefaultOperator>(o->op))
+                l = env.defaultOperator->operate(o->left, o->right, env);
+        }
+        else
+            l = first;
+    }
+    {
+        if (auto o = d_cast<Operation>(second))
+        {
+            if (auto d = d_cast<DefaultOperator>(o->op))
+                r = env.defaultOperator->operate(o->left, o->right, env);
+        }
+        else
+            r = second;
+    }
+
     return env.defaultOperator->operate(l, r, env);
 }
 

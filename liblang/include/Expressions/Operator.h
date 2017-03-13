@@ -8,7 +8,7 @@ public:
 
     virtual ExpPtr operate(ExpPtrArg first,
                            ExpPtrArg second,
-                           Environment& env) const = 0;
+                           Environment& env) = 0;
 
     bool isRightAssociative;
     int priority;
@@ -17,15 +17,15 @@ public:
 
     bool operator==(const Expression& other) const override;
 
-    virtual ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const;
-    virtual ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) const;
-    virtual bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) const;
+    virtual ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
+    virtual ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
+    virtual bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env);
 
-    virtual ExpPtr partialApplyLeft  (ExpPtrArg e, Environment& env) const;
-    virtual ExpPtr partialApplyRight (ExpPtrArg e, Environment& env) const;
-    virtual ExpPtr partialApplyNoArgs(Environment& env) const;
+    virtual ExpPtr partialApplyLeft  (ExpPtrArg e, Environment& env);
+    virtual ExpPtr partialApplyRight (ExpPtrArg e, Environment& env);
+    virtual ExpPtr partialApplyNoArgs(Environment& env);
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) const override;
+    ExpPtr apply(ExpPtrArg e, Environment& env) override;
 
     virtual std::string show() const;
 private:

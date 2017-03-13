@@ -3,7 +3,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Identifier.h"
 
-ExpPtr Quote::apply(ExpPtrArg e, Environment& env) const
+ExpPtr Quote::apply(ExpPtrArg e, Environment& env)
 {
     return make_ptr<QuotedExpression>(e);
 }
@@ -23,7 +23,7 @@ std::string QuotedExpression::show() const
 
 const std::string QuotedExpression::defaultName = "\'";
 
-bool QuotedExpression::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool QuotedExpression::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     if (auto opThis = d_cast<Operation>(this->e))
     {
