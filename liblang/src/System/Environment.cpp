@@ -30,6 +30,7 @@
 #include "Expressions/More.h"
 #include "Expressions/ValueInSet.h"
 #include "Expressions/DefaultOperator.h"
+#include "System/Cast.h"
 
 #include <vector>
 #include <fstream>

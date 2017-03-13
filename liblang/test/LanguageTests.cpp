@@ -11,6 +11,7 @@
 #include "Expressions/Then.h"
 #include "Expressions/More.h"
 #include "Expressions/Less.h"
+#include "System/Cast.h"
 
 BOOST_AUTO_TEST_CASE(newVariable)
 {

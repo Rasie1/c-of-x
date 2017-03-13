@@ -4,6 +4,7 @@
 #include "Expressions/Morphism.h"
 #include "System/Environment.h"
 #include "Expressions/Operation.h"
+#include "System/Cast.h"
 
 Lambda::Lambda()
     : Operator(true, 2, true)

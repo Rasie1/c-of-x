@@ -10,6 +10,7 @@
 #include "Expressions/Integer.h"
 #include "Expressions/Application.h"
 #include "Expressions/Less.h"
+#include "System/Cast.h"
 
 
 optional<bool> MoreThan::holds(ExpPtrArg e, const Environment& env)

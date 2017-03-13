@@ -4,6 +4,7 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/Operation.h"
+#include "System/Cast.h"
 
 Operator::Operator(bool isRightAssociative, int priority, bool splitting)
     : isRightAssociative(isRightAssociative),

@@ -2,6 +2,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include "System/Environment.h"
+#include "System/Cast.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Application.h"

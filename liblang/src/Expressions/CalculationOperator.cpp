@@ -7,6 +7,7 @@
 #include "System/Environment.h"
 #include "Expressions/Union.h"
 #include "Expressions/Any.h"
+#include "System/Cast.h"
 #include <vector>
 
 CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, bool splitting)

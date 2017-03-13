@@ -3,6 +3,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Not.h"
 #include "Expressions/Any.h"
+#include "System/Cast.h"
 
 ExpPtr Data::eval(Environment& env) const
 {

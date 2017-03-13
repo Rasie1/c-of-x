@@ -3,6 +3,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Intersection.h"
+#include "System/Cast.h"
 #include <algorithm>
 #include <list>
 
@@ -208,4 +209,19 @@ ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
     }
 
     return leftIntersection;
+}
+
+ExpPtr Union::make(const std::vector<ExpPtr>::iterator& begin, 
+                   const std::vector<ExpPtr>::iterator& end)
+{
+    auto next = std::next(begin);
+    if (next == end)
+        return *begin;
+    if (checkType<Void>(*begin))
+    {
+        return make(next, end);
+    }
+    return make_ptr<Operation>(make_ptr<Union>(),
+                               *begin,
+                               make(next, end));
 }

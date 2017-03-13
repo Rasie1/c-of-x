@@ -10,6 +10,7 @@
 #include "Expressions/Union.h"
 #include "Expressions/More.h"
 #include "Expressions/ValueInSet.h"
+#include "System/Cast.h"
 
 
 optional<bool> LessThan::holds(ExpPtrArg e, const Environment& env)

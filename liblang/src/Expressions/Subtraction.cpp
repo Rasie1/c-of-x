@@ -7,6 +7,7 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/TypeError.h"
 #include "System/Environment.h"
+#include "System/Cast.h"
 
 Subtraction::Subtraction()
     : CalculationOperator(false, 5, true)

@@ -18,6 +18,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/EvalForce.h"
 #include "Expressions/Lambda.h"
+#include "System/Cast.h"
 using namespace std;
 
 ExpPtr Parser::parse(const string& s, Environment& env)

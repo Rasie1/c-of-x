@@ -10,6 +10,7 @@
 #include "Expressions/Quote.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Application.h"
+#include "System/Cast.h"
 
 Closure::Closure(ExpPtrArg argument,
                  ExpPtrArg body,

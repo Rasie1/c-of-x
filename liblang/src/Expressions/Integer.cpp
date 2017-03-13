@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+#include "System/Cast.h"
 
 Integer::Integer(long long value)
     : value(value)

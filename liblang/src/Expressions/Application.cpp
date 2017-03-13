@@ -12,6 +12,7 @@
 #include "Expressions/Quote.h"
 #include "Expressions/Closure.h"
 #include "Expressions/Equality.h"
+#include "System/Cast.h"
 
 Application::Application()
     : Operator(false, 10, true)

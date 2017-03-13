@@ -6,6 +6,7 @@
 #include "Expressions/TypeError.h"
 #include "System/Environment.h"
 #include "Expressions/Any.h"
+#include "System/Cast.h"
 
 Multiplication::Multiplication()
     : CalculationOperator(false, 7, true)

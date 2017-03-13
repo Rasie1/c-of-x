@@ -3,6 +3,7 @@
 #include "System/Environment.h"
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
+#include "System/Cast.h"
 
 Then::Then()
     : Operator(true, 3, true)

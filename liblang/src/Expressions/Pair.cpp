@@ -1,5 +1,6 @@
 #include "Expressions/Pair.h"
 #include "Expressions/Operation.h"
+#include "System/Cast.h"
 
 Pair::Pair()
     : Operator(true, 0, true)

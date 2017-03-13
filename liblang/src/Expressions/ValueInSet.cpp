@@ -7,6 +7,7 @@
 #include "Expressions/Intersection.h"
 #include "Expressions/Union.h"
 #include "System/Environment.h"
+#include "System/Cast.h"
 
 std::string ValueInSet::show() const
 {

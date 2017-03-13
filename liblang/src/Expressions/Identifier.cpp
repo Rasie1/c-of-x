@@ -5,6 +5,7 @@
 #include "Expressions/Error.h"
 #include "Expressions/Any.h"
 #include "Expressions/Void.h"
+#include "System/Cast.h"
 
 bool Identifier::operator==(const Expression& other) const
 {

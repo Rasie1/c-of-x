@@ -3,6 +3,7 @@
 #include "Parser/Parser.h"
 #include "System/Environment.h"
 #include "Expressions/Error.h"
+#include "System/Cast.h"
 
 ExpPtr Include::apply(ExpPtrArg e, Environment& env)
 {

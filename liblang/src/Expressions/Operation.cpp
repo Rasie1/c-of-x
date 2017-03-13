@@ -5,6 +5,7 @@
 #include "System/Environment.h"
 #include "Expressions/Any.h"
 #include "Expressions/Intersection.h"
+#include "System/Cast.h"
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
                      ExpPtrArg left,

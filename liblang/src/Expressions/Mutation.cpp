@@ -3,6 +3,7 @@
 #include "System/Environment.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Equality.h"
+#include "System/Cast.h"
 
 
 ExpPtr Mutation::operate(ExpPtrArg first,

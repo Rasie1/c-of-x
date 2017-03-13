@@ -4,6 +4,7 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
 #include "System/Environment.h"
+#include "System/Cast.h"
 
 ExpPtr Not::apply(ExpPtrArg e, Environment& env)
 {

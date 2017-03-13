@@ -7,6 +7,7 @@
 #include "Expressions/Any.h"
 #include "Expressions/ValueInSet.h"
 #include "Expressions/Application.h"
+#include "System/Cast.h"
 
 ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
 {

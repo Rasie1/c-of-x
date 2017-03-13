@@ -1,6 +1,7 @@
 #include "Expressions/Inverse.h"
 #include "Expressions/Void.h"
 #include "Expressions/Identifier.h"
+#include "System/Cast.h"
 
 ExpPtr Inverse::apply(ExpPtrArg e, Environment& env)
 {

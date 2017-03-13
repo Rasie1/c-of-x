@@ -3,6 +3,7 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
 #include "System/Environment.h"
+#include "System/Cast.h"
 
 DefaultOperator::DefaultOperator()
     : Operator(false, 4, true)

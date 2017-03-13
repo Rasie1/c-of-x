@@ -11,6 +11,7 @@
 #include "Expressions/ValueInSet.h"
 #include "Expressions/Union.h"
 #include "Expressions/Not.h"
+#include "System/Cast.h"
 
 ExpPtr Morphism::intersect(ExpPtrArg other, const Environment& env)
 {

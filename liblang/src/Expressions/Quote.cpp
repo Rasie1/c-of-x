@@ -2,6 +2,7 @@
 #include "Expressions/Application.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Identifier.h"
+#include "System/Cast.h"
 
 ExpPtr Quote::apply(ExpPtrArg e, Environment& env)
 {

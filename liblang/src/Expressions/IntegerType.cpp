@@ -3,6 +3,7 @@
 #include "Expressions/Void.h"
 #include "Expressions/Identifier.h"
 #include "System/Environment.h"
+#include "System/Cast.h"
 
 optional<bool> IntegerType::holds(ExpPtrArg e, const Environment& env)
 {

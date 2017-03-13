@@ -7,6 +7,7 @@
 #include "Expressions/Any.h"
 #include "Expressions/Lambda.h"
 #include "Expressions/Application.h"
+#include "System/Cast.h"
 
 
 optional<bool> Equals::holds(ExpPtrArg e, const Environment& env)
