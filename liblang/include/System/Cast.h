@@ -2,13 +2,6 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
 
-// template <class T, class... Args>
-// constexpr auto d_cast(Args&&... args)
-//  -> decltype(std::dynamic_pointer_cast<T>(std::forward<Args>(args)...))
-// {
-//     return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
-// }
-
 template <class T>
 constexpr bool typeEquals(const std::shared_ptr<const Expression>& e)
 {
@@ -30,8 +23,6 @@ auto d_cast(const std::shared_ptr<F>& e)
             return r;
     }
 
-    // return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
-
     return nullptr;
 }
 
@@ -50,14 +41,12 @@ auto d_cast(const std::shared_ptr<const F>& e)
             return r;
     }
 
-    // return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
-
     return nullptr;
 }
 
 template <class T>
 constexpr bool checkType(const std::shared_ptr<const Expression>& e)
 {
-    return typeid(*e) == typeid(T);
-    // return d_cast<const T>(e) != nullptr;
+    // return typeid(*e) == typeid(T);
+    return d_cast<const T>(e) != nullptr;
 }
