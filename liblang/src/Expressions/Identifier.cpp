@@ -36,7 +36,7 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
         return e;
 }
 
-bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env) const
+bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env)
 {
     // Just put evaluated e into variable
 
