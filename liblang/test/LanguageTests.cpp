@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(newVariable)
 {
     Environment env;
     auto x = env.getEqual(make_ptr<Identifier>("x"));
-    BOOST_CHECK(checkType<Any>(x));
+    BOOST_REQUIRE(checkType<Any>(x));
 }
 
 BOOST_AUTO_TEST_CASE(assignment)
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(assignment)
     auto parsed = p.parse("x = 0", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
-    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
 }
 
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(identityFunction)
     auto parsed = p.parse("i x = x", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
-    BOOST_CHECK(checkType<Any>(x));
+    BOOST_REQUIRE(checkType<Any>(x));
     auto i = env.getEqual(make_ptr<Identifier>("i"));
     auto applied0 = p.parse("i 5", env)->eval(env);
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 5);
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(identityType)
     p.parse("i x = x", env)->eval(env);
     p.parse("a = 5",   env)->eval(env);
     auto a = p.parse("i a", env)->eval(env);
-    BOOST_CHECK(checkType<Identifier>(a));
+    BOOST_REQUIRE(checkType<Identifier>(a));
 }
 
 BOOST_AUTO_TEST_CASE(indirection)
@@ -93,11 +93,11 @@ BOOST_AUTO_TEST_CASE(then)
     auto then = Then::defaultName;
 
     auto x = p.parse("0 " + then + " 1", env)->eval(env);
-    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
 
     auto y = p.parse("(0 > 1) " + then + " 1", env)->eval(env);
-    BOOST_CHECK(checkType<Void>(y));
+    BOOST_REQUIRE(checkType<Void>(y));
 }
 
 //BOOST_AUTO_TEST_CASE(unionPlus)
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(then)
 
 //    p.parse("y > 10", env)->eval(env);
 //    auto applied1 = p.parse("y = 0", env)->eval(env);
-//    BOOST_CHECK(checkType<Void>(applied1));
+//    BOOST_REQUIRE(checkType<Void>(applied1));
 //}
 
 BOOST_AUTO_TEST_CASE(moreThan)
@@ -124,15 +124,15 @@ BOOST_AUTO_TEST_CASE(moreThan)
     Parser p;
     p.parse("x > 10", env)->eval(env);
     auto applied0 = p.parse("x = 100", env)->eval(env);
-    BOOST_CHECK(checkType<Identifier>(applied0));
+    BOOST_REQUIRE(checkType<Identifier>(applied0));
     auto x = env.getEqual(make_ptr<Identifier>("x"))->eval(env);
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 100);
 
     p.parse("y > 10", env)->eval(env);
     auto applied1 = p.parse("y = 0", env)->eval(env);
-    BOOST_CHECK(checkType<Identifier>(applied1));
+    BOOST_REQUIRE(checkType<Identifier>(applied1));
     auto y = env.getEqual(applied1);
-    BOOST_CHECK(checkType<Void>(y));
+    BOOST_REQUIRE(checkType<Void>(y));
 }
 
 BOOST_AUTO_TEST_CASE(DoubleNegative)
@@ -141,11 +141,11 @@ BOOST_AUTO_TEST_CASE(DoubleNegative)
     Parser p;
     {
         auto x = p.parse("!(!(<3))", env)->eval(env);
-        BOOST_CHECK(checkType<LessThan>(x));
+        BOOST_REQUIRE(checkType<LessThan>(x));
     }
     {
         auto x = p.parse("!(!(>3))", env)->eval(env);
-        BOOST_CHECK(checkType<MoreThan>(x));
+        BOOST_REQUIRE(checkType<MoreThan>(x));
     }
 }
 
@@ -262,10 +262,10 @@ BOOST_AUTO_TEST_CASE(simpleMacroMatch)
     BOOST_CHECK_EQUAL(d_cast<Integer>(c)->value, 4);
     parsed = p.parse("f (1 + 3)", env);
     c = parsed->eval(env);
-    BOOST_CHECK(checkType<Void>(c));
+    BOOST_REQUIRE(checkType<Void>(c));
     parsed = p.parse("f 3", env);
     c = parsed->eval(env);
-    BOOST_CHECK(checkType<Void>(c));
+    BOOST_REQUIRE(checkType<Void>(c));
 }
 
 // TODO: why did I wrote this test?
@@ -393,7 +393,7 @@ BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
     auto applied1 = p.parse("f 2", env)->eval(env);
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied1)->value, 3);
     auto applied2 = p.parse("f 3", env)->eval(env);
-    BOOST_CHECK(checkType<Void>(applied2));
+    BOOST_REQUIRE(checkType<Void>(applied2));
 }
 
 BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
@@ -405,7 +405,7 @@ BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
     auto applied0 = p.parse("f 2", env)->eval(env);
     BOOST_CHECK_EQUAL(d_cast<Integer>(applied0)->value, 3);
     auto applied2 = p.parse("f 1", env)->eval(env);
-    BOOST_CHECK(checkType<Void>(applied2));
+    BOOST_REQUIRE(checkType<Void>(applied2));
 }
 
 BOOST_AUTO_TEST_CASE(simpleInverseFunction)
@@ -428,9 +428,9 @@ BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
         parsed = p.parse("m (int x) = f 10 + f 17", env);
         parsed->eval(env);
         auto applied = p.parse("(inverse m) 47", env)->eval(env);
-        BOOST_CHECK(checkType<ValueInSet>(applied));
+        BOOST_REQUIRE(checkType<ValueInSet>(applied));
         applied = p.parse("(inverse m) 46", env)->eval(env);
-        BOOST_CHECK(checkType<Void>(applied));
+        BOOST_REQUIRE(checkType<Void>(applied));
     }
     {
         parsed = p.parse("n 0 = f 10 + f 17", env);
@@ -438,7 +438,7 @@ BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
         auto applied = p.parse("(inverse n) 47", env)->eval(env);
         BOOST_CHECK_EQUAL(d_cast<Integer>(applied)->value, 0);
         applied = p.parse("(inverse n) 46", env)->eval(env);
-        BOOST_CHECK(checkType<Void>(applied));
+        BOOST_REQUIRE(checkType<Void>(applied));
     }
 }
 
@@ -459,7 +459,7 @@ BOOST_AUTO_TEST_CASE(simpleClosure)
     {
         auto parsed = p.parse("(2 => 3) 3", env);
         auto c = parsed->eval(env);
-        BOOST_CHECK(checkType<Void>(c));
+        BOOST_REQUIRE(checkType<Void>(c));
     }
 }
 
@@ -480,12 +480,12 @@ BOOST_AUTO_TEST_CASE(complexClosure)
     {
         auto parsed = p.parse("(1|2 => 3) 3", env);
         auto c = parsed->eval(env);
-        BOOST_CHECK(checkType<Void>(c));
+        BOOST_REQUIRE(checkType<Void>(c));
     }
     {
         auto parsed = p.parse("(int x => 3) \"abc\"", env);
         auto c = parsed->eval(env);
-        BOOST_CHECK(checkType<Void>(c));
+        BOOST_REQUIRE(checkType<Void>(c));
     }
 }
 
@@ -499,7 +499,7 @@ BOOST_AUTO_TEST_CASE(closurePredicate)
         parsed = p.parse("x = 0", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_REQUIRE(checkType<Integer>(x));
         BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
     }
     {
@@ -510,7 +510,37 @@ BOOST_AUTO_TEST_CASE(closurePredicate)
         parsed = p.parse("x = 1", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Void>(x));
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(intersectionMorphism)
+{
+    Environment env;
+    Parser p;
+    {
+        auto x = p.parse("(>0) 0", env)->eval(env);
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
+    {
+        auto x = p.parse("(>0) 1", env)->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
+    }
+    {
+        auto x = p.parse("((>0) & (>0)) 0", env)->eval(env);
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
+    {
+        auto x = p.parse("((>0) & (>0)) 1", env)->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
+    }
+    {
+        auto x = p.parse("((>0) & (<10)) 1", env)->eval(env);
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
+    }
+    {
+        auto x = p.parse("((>0) & (<10)) 11", env)->eval(env);
+        BOOST_REQUIRE(checkType<Void>(x));
     }
 }
 
@@ -531,13 +561,95 @@ BOOST_AUTO_TEST_CASE(closureIntersection)
    {
        auto parsed = p.parse("((int x => 1) & (2 => 1)) 1", env);
        auto c = parsed->eval(env);
-       BOOST_CHECK(checkType<Void>(c));
+       BOOST_REQUIRE(checkType<Void>(c));
    }
    {
        auto parsed = p.parse("((int x => 1) & (1 => 1)) 2", env);
        auto c = parsed->eval(env);
-       BOOST_CHECK(checkType<Void>(c));
+       BOOST_REQUIRE(checkType<Void>(c));
    }
+}
+
+BOOST_AUTO_TEST_CASE(intersectionType)
+{
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (>0) & (<10)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 5", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Integer>(x));
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 5);
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (>0) & (<10)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 0", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (>0) & (<10)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 10", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
+}
+
+
+BOOST_AUTO_TEST_CASE(unionType)
+{
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (=0) | (=5)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 5", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Integer>(x));
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 5);
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (=0) | (=5)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 0", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Integer>(x));
+        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 0);
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (=1) | (=2)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 0", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : (=9) | (=11)", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 10", env);
+        parsed->eval(env);
+        auto x = env.getEqual(make_ptr<Identifier>("x"));
+        BOOST_REQUIRE(checkType<Void>(x));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(closureIntersectionType)
@@ -550,7 +662,7 @@ BOOST_AUTO_TEST_CASE(closureIntersectionType)
         parsed = p.parse("x = 5", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_REQUIRE(checkType<Integer>(x));
         BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 5);
     }
     {
@@ -561,7 +673,7 @@ BOOST_AUTO_TEST_CASE(closureIntersectionType)
         parsed = p.parse("x = 0", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Void>(x));
+        BOOST_REQUIRE(checkType<Void>(x));
     }
     {
         Environment env;
@@ -571,37 +683,7 @@ BOOST_AUTO_TEST_CASE(closureIntersectionType)
         parsed = p.parse("x = 0", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Void>(x));
-    }
-}
-
-BOOST_AUTO_TEST_CASE(intersectionMorphism)
-{
-    Environment env;
-    Parser p;
-    {
-        auto x = p.parse("(>0) 0", env)->eval(env);
-        BOOST_CHECK(checkType<Void>(x));
-    }
-    {
-        auto x = p.parse("(>0) 1", env)->eval(env);
-        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
-    }
-    {
-        auto x = p.parse("((>0) & (>0)) 0", env)->eval(env);
-        BOOST_CHECK(checkType<Void>(x));
-    }
-    {
-        auto x = p.parse("((>0) & (>0)) 1", env)->eval(env);
-        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
-    }
-    {
-        auto x = p.parse("((>0) & (<10)) 1", env)->eval(env);
-        BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
-    }
-    {
-        auto x = p.parse("((>0) & (<10)) 11", env)->eval(env);
-        BOOST_CHECK(checkType<Void>(x));
+        BOOST_REQUIRE(checkType<Void>(x));
     }
 }
 
@@ -615,10 +697,10 @@ BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
         parsed = p.parse("x = ((+1) y) + ((+1) y)", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_REQUIRE(checkType<Integer>(x));
         BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 4);
         auto y = env.getEqual(make_ptr<Identifier>("y"));
-        BOOST_CHECK(checkType<Integer>(y));
+        BOOST_REQUIRE(checkType<Integer>(y));
         BOOST_CHECK_EQUAL(d_cast<Integer>(y)->value, 1);
     }
     {
@@ -627,7 +709,7 @@ BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
         parsed = p.parse("w = (int z) + (int z)", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("w"));
-        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_REQUIRE(checkType<Integer>(x));
         BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 4);
     }
 }
@@ -641,7 +723,7 @@ BOOST_AUTO_TEST_CASE(simpleLet)
     parsed = p.parse("z = f 1", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("z"));
-    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 3);
 }
 
@@ -652,7 +734,7 @@ BOOST_AUTO_TEST_CASE(letSharing)
     auto parsed = p.parse("let (x = 3)", env);
     parsed->eval(env);
     auto x = env.getEqual(make_ptr<Identifier>("x"));
-    BOOST_CHECK(checkType<Integer>(x));
+    BOOST_REQUIRE(checkType<Integer>(x));
     BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 3);
 }
 
@@ -666,7 +748,7 @@ BOOST_AUTO_TEST_CASE(contains)
         parsed = p.parse("x = 1", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_REQUIRE(checkType<Integer>(x));
         BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 1);
     }
     {
@@ -677,7 +759,7 @@ BOOST_AUTO_TEST_CASE(contains)
         parsed = p.parse("x = 3", env);
         parsed->eval(env);
         auto x = env.getEqual(make_ptr<Identifier>("x"));
-        BOOST_CHECK(checkType<Integer>(x));
+        BOOST_REQUIRE(checkType<Integer>(x));
         BOOST_CHECK_EQUAL(d_cast<Integer>(x)->value, 3);
     }
 }
