@@ -56,9 +56,8 @@ ExpPtr Operation::intersect(ExpPtrArg other, const Environment& envc)
     return op->intersect(left, right, other, env);
 }
 
-ExpPtr Operation::apply(ExpPtrArg other, Environment& envc)
+ExpPtr Operation::apply(ExpPtrArg other, Environment& env)
 {
-    auto env = envc;
     return op->apply(left, right, other, env);
 }
 

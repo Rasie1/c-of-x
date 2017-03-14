@@ -27,6 +27,11 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
             return make_ptr<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
 
     }
+    else if (auto id = d_cast<Identifier>(evaluated))
+    {
+        env.add(id, std::const_pointer_cast<Expression>(shared_from_this()));
+        return id;
+    }
     else
     {
         ExpPtr result;
@@ -37,15 +42,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
             result = make_ptr<Operation>(make_ptr<Application>(),
                                          std::const_pointer_cast<Expression>(shared_from_this()),
                                          expr);
-
-        if (auto id = d_cast<Identifier>(evaluated))
-        {
-            env.add(id,
-                    std::const_pointer_cast<Expression>(shared_from_this()));
-            return id;
-        }
-        else
-            return result;
+        return result;
     }
 
 }

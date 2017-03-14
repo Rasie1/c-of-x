@@ -14,11 +14,14 @@ ExpPtr Intersection::operate(ExpPtrArg first,
                              ExpPtrArg second,
                              Environment& env)
 {
+    if (auto idL = d_cast<Identifier>(first))
+    if (auto idR = d_cast<Identifier>(second))
+    if (idL->name == idR->name)
+        return first;
+        
     auto l = Identifier::unwrapIfId(first, env)->eval(env);
     auto r = Identifier::unwrapIfId(second, env)->eval(env);
 
-    // if (*l == *r)
-    //     return l;
 
     auto lr = l->intersect(r, env);
 
