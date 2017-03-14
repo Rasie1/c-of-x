@@ -6,6 +6,7 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/ExceptionParseError.h"
 #include "Expressions/Void.h"
+#include "System/Cast.h"
 #include "AutoCompleter.h"
 
 using namespace std;
