@@ -11,7 +11,7 @@ Object Let::apply(const Object& e, Environment& env)
     if (checkType<Void>(result))
         return result;
     else
-        return make_ptr<LetContext>(env);
+        return makeObject<LetContext>(env);
 }
 
 std::string Let::show() const

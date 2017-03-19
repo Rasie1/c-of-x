@@ -54,7 +54,7 @@ Object Closure::apply(const Object& e, Environment& env)
     auto fits = this->argument->unapplyVariables(value, newEnv);
     if (!fits)
     {
-        return make_ptr<Void>();
+        return makeObject<Void>();
     }
 
     auto evaluated = body->eval(newEnv);
@@ -68,7 +68,7 @@ Object Closure::apply(const Object& e, Environment& env)
     }
     else if (checkType<Operation>(evaluated))
     {
-        return make_ptr<Operation>(make_ptr<Application>(),
+        return makeObject<Operation>(makeObject<Application>(),
                                    std::const_pointer_cast<Expression>(shared_from_this()),
                                    e);
     }
@@ -96,19 +96,19 @@ bool Closure::operator==(const Expression& other) const
 
 Object Closure::codomain()
 {
-    // return make_ptr<Equals>(body);
+    // return makeObject<Equals>(body);
     // TODO: not only body. Constraints from argument should be also applied here.
     // TODO: environment counts as codomain as well
 
-    return make_ptr<Equals>(
-               make_ptr<Operation>(make_ptr<Application>(),
+    return makeObject<Equals>(
+               makeObject<Operation>(makeObject<Application>(),
                                    shared_from_this(),
-                                   make_ptr<Any>()));
+                                   makeObject<Any>()));
 }
 
 Object Closure::domain()
 {
-    return make_ptr<Equals>(argument);
+    return makeObject<Equals>(argument);
     // TODO: not only argument. Constraints from body should be also applied here. Probably.
 }
 
@@ -133,5 +133,5 @@ bool Closure::unapplyVariables(const Object& e, Environment& env)
 
 Object Closure::inverse() const
 {
-    return make_ptr<Closure>(body, argument, env);
+    return makeObject<Closure>(body, argument, env);
 }

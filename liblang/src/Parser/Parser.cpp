@@ -101,7 +101,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
             if (evalForce)
                 q.push_back(right->eval(env));
             else
-                q.push_back(make_ptr<Operation>(op, left, right));
+                q.push_back(makeObject<Operation>(op, left, right));
             expressionBegin = false;
         }
         else
@@ -122,7 +122,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
         Object e = nullptr;
         if (currentToken.type() == typeid(Tokens::Identifier))
         {
-            e = make_ptr<Identifier>(get<Tokens::Identifier>(currentToken).name);
+            e = makeObject<Identifier>(get<Tokens::Identifier>(currentToken).name);
         }
         else if (currentToken.type() == typeid(Tokens::Opening))
         {
@@ -136,7 +136,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
                     parsingParenthesisDepth--;
                     if (false) // todo: case with wrong brackets
                     {
-                        return make_ptr<ParseError>("Parentheses mismatch");
+                        return makeObject<ParseError>("Parentheses mismatch");
                     }
                     if (parsingParenthesisDepth == 0)
                     {
@@ -153,27 +153,27 @@ Object Parser::parse(const vector<Token>::iterator& begin,
             }
             if (newEnd == end)
             {
-                return make_ptr<ParseError>("No matching parentheses");
+                return makeObject<ParseError>("No matching parentheses");
             }
         }
         else if (currentToken.type() == typeid(Tokens::Closing))
         {
-            return make_ptr<ParseError>("Unexpected parentheses");
+            return makeObject<ParseError>("Unexpected parentheses");
         }
         else if (currentToken.type() == typeid(Tokens::StringData))
         {
-            e = make_ptr<String>(get<Tokens::StringData>(currentToken).data);
+            e = makeObject<String>(get<Tokens::StringData>(currentToken).data);
         }
         else if (currentToken.type() == typeid(Tokens::IntegerData))
         {
-            e = make_ptr<Integer>(get<Tokens::IntegerData>(currentToken).data);
+            e = makeObject<Integer>(get<Tokens::IntegerData>(currentToken).data);
         }
         else if (currentToken.type() == typeid(Tokens::NoSpace))
         {
         }
         else if (currentToken.type() == typeid(Tokens::LineBreak))
         {
-            operatorStack.push(make_ptr<DefaultOperator>());
+            operatorStack.push(makeObject<DefaultOperator>());
             makeOperation();
         }
         else if (currentToken.type() == typeid(Tokens::Tabulation))
@@ -181,7 +181,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
         }
         else
         {
-            e = make_ptr<ParseError>(
+            e = makeObject<ParseError>(
                 std::string("Unexpected token of type ") + currentToken.type().name());
             return e;
         }
@@ -210,7 +210,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
             q.push_back(e);
             if (applicationFlag)
             {
-                operatorStack.push(make_ptr<Application>());
+                operatorStack.push(makeObject<Application>());
                 makeOperation();
             }
 
@@ -225,7 +225,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
     if (!q.empty())
         ret = q.front();
     if (!ret)
-        ret = make_ptr<Void>();
+        ret = makeObject<Void>();
 
     return ret;
 }

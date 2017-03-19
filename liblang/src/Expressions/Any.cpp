@@ -7,7 +7,7 @@ std::string Any::show() const
 
 Object Any::apply(const Object& e, Environment& env)
 {
-    return make_ptr<Any>();
+    return makeObject<Any>();
 }
 
 const std::string Any::defaultName = "_";

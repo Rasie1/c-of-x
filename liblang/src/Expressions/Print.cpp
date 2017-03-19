@@ -50,7 +50,7 @@ const std::string PrintInfo::defaultName = "info";
 Object PrintEnv::apply(const Object& e, Environment& env)
 {
     std::cout << env.show();
-    return make_ptr<Void>();
+    return makeObject<Void>();
 }
 
 std::string PrintEnv::show() const

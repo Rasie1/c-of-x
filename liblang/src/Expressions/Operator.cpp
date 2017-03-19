@@ -26,9 +26,9 @@ bool Operator::operator==(const Expression& other) const
 
 Object Operator::partialApplyLeft(const Object& e, Environment& env)
 {
-    auto arg = make_ptr<Identifier>("arg");
+    auto arg = makeObject<Identifier>("arg");
     auto that = std::static_pointer_cast<const Operator>(shared_from_this());
-    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
+    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
                                     e, 
                                     arg);
 
@@ -38,9 +38,9 @@ Object Operator::partialApplyLeft(const Object& e, Environment& env)
 
 Object Operator::partialApplyRight(const Object& e, Environment& env)
 {
-    auto arg = make_ptr<Identifier>("arg");
+    auto arg = makeObject<Identifier>("arg");
     auto that = std::static_pointer_cast<const Operator>(shared_from_this());
-    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
+    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
                                     arg, 
                                     e);
 
@@ -50,15 +50,15 @@ Object Operator::partialApplyRight(const Object& e, Environment& env)
 
 Object Operator::partialApplyNoArgs(Environment& env)
 {
-    auto l = make_ptr<Identifier>("l");
-    auto r = make_ptr<Identifier>("r");
+    auto l = makeObject<Identifier>("l");
+    auto r = makeObject<Identifier>("r");
     auto that = std::static_pointer_cast<const Operator>(shared_from_this());
-    auto body = make_ptr<Operation>(std::const_pointer_cast<Operator>(that), 
+    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
                                     l, 
                                     r);
 
     // auto rUnapplied = Lambda().operate(r, body, env);
-    auto rUnapplied = make_ptr<Operation>(make_ptr<Lambda>(), r, body);
+    auto rUnapplied = makeObject<Operation>(makeObject<Lambda>(), r, body);
     auto lUnapplied = Lambda().operate(l, rUnapplied, env);
     return lUnapplied;
 }
@@ -75,12 +75,12 @@ Object Operator::apply(const Object& e, Environment& env)
 
 Object Operator::intersect(const Object& l, const Object& r, const Object& e, Environment &env) 
 {
-    return make_ptr<Operation>(make_ptr<Intersection>(), 
+    return makeObject<Operation>(makeObject<Intersection>(), 
                                operate(l, r, env), 
                                e);
 }
 
 Object Operator::apply(const Object& l, const Object& r, const Object& e, Environment &env) 
 {
-    return make_ptr<Void>();
+    return makeObject<Void>();
 }

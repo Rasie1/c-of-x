@@ -23,5 +23,5 @@ Object PlainData::intersect(const Object& other, const Environment& env)
     if (*other == *this)
         return other;
     else
-        return make_ptr<Void>();
+        return makeObject<Void>();
 }

@@ -31,7 +31,7 @@ Object Morphism::intersect(const Object& other, const Environment& env)
         auto applied = apply(exactValue, envCopy);
         if (checkType<Void>(applied))
             return applied;
-        return make_ptr<Equals>(applied);
+        return makeObject<Equals>(applied);
     }
 
     // Same thing; possibly there are incorrect cases. Needs some research. What I've got is:
@@ -55,53 +55,53 @@ Object Morphism::intersect(const Object& other, const Environment& env)
 
     // if (auto other = d_cast<Morphism>(evaluated))
     // {
-    //     // return make_ptr<Operation>(make_ptr<Union>(),
+    //     // return makeObject<Operation>(makeObject<Union>(),
     //     //                            shared_from_this(),
     //     //                            other);
     //     // todo: not sure if it even works for non-closures
     //     auto intersectionOfCodomains =
-    //         make_ptr<Operation>(make_ptr<Intersection>(),
+    //         makeObject<Operation>(makeObject<Intersection>(),
     //                             this->codomain(),
     //                             other->codomain());
     //     auto intersectionOfDomains =
-    //         make_ptr<Operation>(make_ptr<Intersection>(),
+    //         makeObject<Operation>(makeObject<Intersection>(),
     //                             this->domain(),
     //                             other->domain());
 
     //     auto leftDomain = 
-    //         make_ptr<Operation>(make_ptr<Intersection>(),
-    //                             make_ptr<Complement>(intersectionOfDomains),
+    //         makeObject<Operation>(makeObject<Intersection>(),
+    //                             makeObject<Complement>(intersectionOfDomains),
     //                             this->domain());
     //     auto rightDomain = 
-    //         make_ptr<Operation>(make_ptr<Intersection>(),
-    //                             make_ptr<Complement>(intersectionOfDomains),
+    //         makeObject<Operation>(makeObject<Intersection>(),
+    //                             makeObject<Complement>(intersectionOfDomains),
     //                             other->domain());
 
     //     auto intersectionClosure = 
-    //         make_ptr<Closure>(make_ptr<ValueInSet>(intersectionOfDomains),
-    //                           make_ptr<ValueInSet>(intersectionOfCodomains),
+    //         makeObject<Closure>(makeObject<ValueInSet>(intersectionOfDomains),
+    //                           makeObject<ValueInSet>(intersectionOfCodomains),
     //                           newEnv);
     //     auto leftClosure =
-    //         make_ptr<Closure>(make_ptr<ValueInSet>(leftDomain),
-    //                           make_ptr<ValueInSet>(this->codomain()),
+    //         makeObject<Closure>(makeObject<ValueInSet>(leftDomain),
+    //                           makeObject<ValueInSet>(this->codomain()),
     //                           newEnv);
     //     auto rightClosure =
-    //         make_ptr<Closure>(make_ptr<ValueInSet>(rightDomain),
-    //                           make_ptr<ValueInSet>(other->codomain()),
+    //         makeObject<Closure>(makeObject<ValueInSet>(rightDomain),
+    //                           makeObject<ValueInSet>(other->codomain()),
     //                           newEnv);
     //     // // todo: here could be something about fourth case
 
     //     auto intersectionOfFunctions =
-    //         make_ptr<Operation>(make_ptr<Union>(),
+    //         makeObject<Operation>(makeObject<Union>(),
     //                             intersectionClosure,
-    //                             make_ptr<Operation>(make_ptr<Union>(),
+    //                             makeObject<Operation>(makeObject<Union>(),
     //                                                 leftClosure,
     //                                                 rightClosure));
 
     //     return intersectionOfFunctions;
     // }
 
-    return make_ptr<Operation>(make_ptr<Intersection>(),
+    return makeObject<Operation>(makeObject<Intersection>(),
                                shared_from_this(),
                                evaluated);
 
@@ -109,17 +109,17 @@ Object Morphism::intersect(const Object& other, const Environment& env)
 
 Object Morphism::codomain()
 {
-    return make_ptr<Any>();
+    return makeObject<Any>();
 }
 
 Object Morphism::domain()
 {
-    return make_ptr<Any>();
+    return makeObject<Any>();
 }
 
 Object Morphism::inverse() const
 {
-    return make_ptr<Void>();
+    return makeObject<Void>();
 }
 
 bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
@@ -128,7 +128,7 @@ bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
     // TODO
 //    return false;
     auto reversed = d_cast<Morphism>(inverse());
-    //;->apply(make_ptr<Any>(), env)->eval(env);
+    //;->apply(makeObject<Any>(), env)->eval(env);
 
 //   auto ret = reversed->unapplyVariables(e, env);
     auto ret = reversed->apply(e, env);

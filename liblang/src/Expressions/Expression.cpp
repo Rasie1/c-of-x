@@ -45,27 +45,27 @@ bool Expression::hasFreeVariables(const Environment& env) const
 
 Object Expression::intersect(const Object& other, const Environment& env)
 {
-    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
 }
 
 Object Expression::unionize(const Object& other, const Environment& env)
 {
-    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
 }
 
 Object Expression::complement(const Environment& env)
 {
-    return make_ptr<Complement>(shared_from_this());
+    return makeObject<Complement>(shared_from_this());
 }
 
 Object Expression::element(const Environment& env)
 {
-    return make_ptr<ValueInSet>(shared_from_this());
+    return makeObject<ValueInSet>(shared_from_this());
 }
 
 Object Expression::apply(const Object& other, Environment& env)
 {
-    return make_ptr<Void>();
+    return makeObject<Void>();
 }
 
 bool Expression::unapplyVariables(const Object& e, Environment& env)

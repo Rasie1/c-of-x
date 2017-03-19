@@ -48,9 +48,9 @@ Object LessThan::intersect(const Object& other, const Environment& env)
         if (auto v1 = d_cast<Integer>(value))
         if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            return make_ptr<LessThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
+            return makeObject<LessThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
-        return make_ptr<Void>();
+        return makeObject<Void>();
     }
     else if (auto p = d_cast<Equals>(other))
     {
@@ -62,11 +62,11 @@ Object LessThan::intersect(const Object& other, const Environment& env)
             if (thvalue > eqvalue)
                 return p;
             else
-                return make_ptr<Void>();
+                return makeObject<Void>();
         }
     }
 
-    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
 }
 
 Object LessThan::unionize(const Object& other, const Environment& env)
@@ -76,16 +76,16 @@ Object LessThan::unionize(const Object& other, const Environment& env)
         if (auto v1 = d_cast<Integer>(value))
         if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            return make_ptr<LessThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
+            return makeObject<LessThan>(makeObject<Integer>(std::max(v1->value, v2->value)));
         }
     }
 
-    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
 }
 
 Object LessThan::complement(const Environment& env)
 {
-    return make_ptr<MoreOrEqualThan>(value);
+    return makeObject<MoreOrEqualThan>(value);
 }
 
 Object LessThan::end()
@@ -118,12 +118,12 @@ const std::string Less::defaultName = "<";
 
 Object Less::partialApplyLeft(const Object& e, Environment& env)
 {
-     return make_ptr<MoreThan>(e);
+     return makeObject<MoreThan>(e);
 }
 
 Object Less::partialApplyRight(const Object& e, Environment& env)
 {
-     return make_ptr<LessThan>(e);
+     return makeObject<LessThan>(e);
 }
 
 
@@ -162,9 +162,9 @@ Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
         if (auto v1 = d_cast<Integer>(value))
         if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            return make_ptr<LessOrEqualThan>(make_ptr<Integer>(std::min(v1->value, v2->value)));
+            return makeObject<LessOrEqualThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
-        return make_ptr<Void>();
+        return makeObject<Void>();
     }
     else if (auto p = d_cast<Equals>(other))
     {
@@ -176,11 +176,11 @@ Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
             if (thvalue > eqvalue)
                 return p;
             else
-                return make_ptr<Void>();
+                return makeObject<Void>();
         }
     }
 
-    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
 }
 
 Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
@@ -190,16 +190,16 @@ Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
         if (auto v1 = d_cast<Integer>(value))
         if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
-            return make_ptr<LessOrEqualThan>(make_ptr<Integer>(std::max(v1->value, v2->value)));
+            return makeObject<LessOrEqualThan>(makeObject<Integer>(std::max(v1->value, v2->value)));
         }
     }
 
-    return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
 }
 
 Object LessOrEqualThan::complement(const Environment& env)
 {
-    return make_ptr<MoreThan>(value);
+    return makeObject<MoreThan>(value);
 }
 
 Object LessOrEqualThan::end()
@@ -232,10 +232,10 @@ const std::string LessOrEqual::defaultName = "=<";
 
 Object LessOrEqual::partialApplyLeft(const Object& e, Environment& env)
 {
-     return make_ptr<MoreOrEqualThan>(e);
+     return makeObject<MoreOrEqualThan>(e);
 }
 
 Object LessOrEqual::partialApplyRight(const Object& e, Environment& env)
 {
-     return make_ptr<LessOrEqualThan>(e);
+     return makeObject<LessOrEqualThan>(e);
 }

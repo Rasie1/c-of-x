@@ -15,7 +15,7 @@ optional<bool> Equals::holds(const Object& e, const Environment& env)
     if (*value == *e)
         return make_optional(true);
 
-    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), value, e);
+    auto operation = makeObject<Operation>(makeObject<Intersection>(), value, e);
     auto intersection = operation->eval(const_cast<Environment&>(env));
 
     if (*intersection == *value || *intersection == *e)
@@ -51,9 +51,9 @@ Object Equals::intersect(const Object& other, const Environment& env)
         auto l = value;
         auto r = equals->value;
 
-        return make_ptr<Equals>(l->intersect(r, env));
+        return makeObject<Equals>(l->intersect(r, env));
     }
-    return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
+    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
 }
 
 Object Equals::element(const Environment& env)
@@ -105,10 +105,10 @@ const std::string Equality::defaultName = "=";
 
 Object Equality::partialApplyLeft(const Object& e, Environment& env)
 {
-     return make_ptr<Equals>(e);
+     return makeObject<Equals>(e);
 }
 
 Object Equality::partialApplyRight(const Object& e, Environment& env)
 {
-     return make_ptr<Equals>(e);
+     return makeObject<Equals>(e);
 }

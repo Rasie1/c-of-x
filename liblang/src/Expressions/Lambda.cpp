@@ -21,7 +21,7 @@ Object Lambda::operate(const Object& first,
     arg = first->eval(newEnv); // not really good. Should detect bound variables
                                // and erase them
     auto body = second;
-    auto ret = make_ptr<Closure>(arg, body, newEnv);
+    auto ret = makeObject<Closure>(arg, body, newEnv);
     return ret;
 }
 

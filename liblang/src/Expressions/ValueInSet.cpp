@@ -28,7 +28,7 @@ bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
     {
         auto ret = Application().unapplyVariables(e,
                                                   set,
-                                                  make_ptr<Any>(),
+                                                  makeObject<Any>(),
                                                   env);
         return ret;
     }
@@ -43,7 +43,7 @@ Object ValueInSet::intersect(const Object& other, const Environment& env)
     if (checkType<Any>(this->set))
         return other;
 
-    auto operation = make_ptr<Operation>(make_ptr<Application>(), this->set, other);
+    auto operation = makeObject<Operation>(makeObject<Application>(), this->set, other);
     auto ret = operation->eval(envc);
 
     return ret;

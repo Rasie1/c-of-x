@@ -9,7 +9,7 @@ Object Include::apply(const Object& e, Environment& env)
 {
     auto str = d_cast<String>(e);
     if (!str)
-        return make_ptr<ErrorWithMessage>("Not a string");
+        return makeObject<ErrorWithMessage>("Not a string");
 
     auto filename = str->value;
 

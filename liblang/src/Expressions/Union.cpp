@@ -66,9 +66,9 @@ Union::Union()
 //    if (std::distance(p0, p1) == 0)
 //        return *p0;
 //    if (std::distance(p0, p1) == 1)
-//        return make_ptr<Operation>(make_ptr<Union>(), *p0, *p1);
+//        return makeObject<Operation>(makeObject<Union>(), *p0, *p1);
 //    auto center = std::next(p0, std::distance(p0, p1) / 2);
-//    return make_ptr<Operation>(make_ptr<Union>(),
+//    return makeObject<Operation>(makeObject<Union>(),
 //                               makeTree(p0, center),
 //                               makeTree(std::next(center), p1));
 //}
@@ -82,7 +82,7 @@ Union::Union()
 //        xs.splice(xs.begin(), unroll(x));
 
 //    if (xs.size() == 0)
-//        return make_ptr<Void>();
+//        return makeObject<Void>();
 
 
 //    for (auto current = xs.begin(); current != xs.end(); ++current)
@@ -102,31 +102,31 @@ Union::Union()
 
 //    if (xs.size() == 2)
 //    {
-//        return make_ptr<Operation>(make_ptr<Union>(),
+//        return makeObject<Operation>(makeObject<Union>(),
 //                                   *xs.begin(),
 //                                   *std::next(xs.begin()));
 //    }
 
 //    if (xs.size() == 3)
 //    {
-//        return make_ptr<Operation>(make_ptr<Union>(), *xs.begin(),
-//                                   make_ptr<Operation>(make_ptr<Union>(),
+//        return makeObject<Operation>(makeObject<Union>(), *xs.begin(),
+//                                   makeObject<Operation>(makeObject<Union>(),
 //                                                       *std::next(xs.begin(), 1),
 //                                                       *std::next(xs.begin(), 2)));
 //    }
 
 //    if (xs.size() == 4)
 //    {
-//        return make_ptr<Operation>(make_ptr<Union>(),
-//                                   make_ptr<Operation>(make_ptr<Union>(),
+//        return makeObject<Operation>(makeObject<Union>(),
+//                                   makeObject<Operation>(makeObject<Union>(),
 //                                                       *std::next(xs.begin(), 0),
 //                                                       *std::next(xs.begin(), 1)),
-//                                   make_ptr<Operation>(make_ptr<Union>(),
+//                                   makeObject<Operation>(makeObject<Union>(),
 //                                                       *std::next(xs.begin(), 2),
 //                                                       *std::next(xs.begin(), 3)));
 //    }
 
-//    return make_ptr<Void>();
+//    return makeObject<Void>();
 
 //}
 
@@ -197,12 +197,12 @@ bool Union::unapplyVariables(const Object& e,
 Object Union::intersect(const Object& l, const Object& r, const Object& e, Environment &env)
 {
     // TODO: preserve identifier?
-    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), l, e);
+    auto operation = makeObject<Operation>(makeObject<Intersection>(), l, e);
     auto leftIntersection = operation->eval(env);
 
     if (checkType<Void>(leftIntersection))
     {
-        auto operation = make_ptr<Operation>(make_ptr<Intersection>(), r, e);
+        auto operation = makeObject<Operation>(makeObject<Intersection>(), r, e);
         auto rightIntersection = operation->eval(env);
 
         return rightIntersection;
@@ -221,7 +221,7 @@ Object Union::make(const std::vector<Object>::iterator& begin,
     {
         return make(next, end);
     }
-    return make_ptr<Operation>(make_ptr<Union>(),
+    return makeObject<Operation>(makeObject<Union>(),
                                *begin,
                                make(next, end));
 }

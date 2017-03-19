@@ -17,12 +17,12 @@ Object Addition::calculate(const Object& l, const Object& r) const
 {
     if (auto first = d_cast<Integer>(l))
     if (auto second = d_cast<Integer>(r))
-        return make_ptr<Integer>(first->value + second->value);
+        return makeObject<Integer>(first->value + second->value);
         
-    auto operation = make_ptr<Operation>(make_ptr<Addition>(), l, r);
-    return make_ptr<TypeError>(operation,
-                               make_ptr<Identifier>("arguments of type integer"),
-                               make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
+    auto operation = makeObject<Operation>(makeObject<Addition>(), l, r);
+    return makeObject<TypeError>(operation,
+                               makeObject<Identifier>("arguments of type integer"),
+                               makeObject<Identifier>("arguments: " + l->show() + ", " + r->show()));
 }
 
 std::string Addition::show() const
@@ -39,16 +39,16 @@ bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& 
 
     if (lId && !rId)
     {
-        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, r);
+        auto value = makeObject<Operation>(makeObject<Subtraction>(), e, r);
         return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
-        auto value = make_ptr<Operation>(make_ptr<Subtraction>(), e, l);
+        auto value = makeObject<Operation>(makeObject<Subtraction>(), e, l);
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = make_ptr<Operation>(make_ptr<Addition>(),
+    auto evaluated = makeObject<Operation>(makeObject<Addition>(),
                                          l, r)->eval(env);
     if (auto op = d_cast<Operation>(evaluated))
     {

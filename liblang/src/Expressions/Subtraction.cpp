@@ -21,13 +21,13 @@ Object Subtraction::calculate(const Object& l, const Object& r) const
 
     if (!firstInteger || !secondInteger)
     {
-        auto operation = make_ptr<Operation>(make_ptr<Subtraction>(), l, r);
-        return make_ptr<TypeError>(operation,
-                                   make_ptr<Identifier>("int"),
-                                   make_ptr<Identifier>("?"));
+        auto operation = makeObject<Operation>(makeObject<Subtraction>(), l, r);
+        return makeObject<TypeError>(operation,
+                                   makeObject<Identifier>("int"),
+                                   makeObject<Identifier>("?"));
     }
 
-    return make_ptr<Integer>(firstInteger->value - secondInteger->value);
+    return makeObject<Integer>(firstInteger->value - secondInteger->value);
 }
 
 std::string Subtraction::show() const
@@ -43,16 +43,16 @@ bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Objec
 
     if (lId && !rId)
     {
-        auto value = make_ptr<Operation>(make_ptr<Addition>(), e, r);
+        auto value = makeObject<Operation>(makeObject<Addition>(), e, r);
         return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
-        auto value = make_ptr<Operation>(make_ptr<Addition>(), e, l);
+        auto value = makeObject<Operation>(makeObject<Addition>(), e, l);
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = make_ptr<Operation>(make_ptr<Subtraction>(),
+    auto evaluated = makeObject<Operation>(makeObject<Subtraction>(),
                                          l, r)->eval(env);
 
     if (auto op = d_cast<Operation>(evaluated))

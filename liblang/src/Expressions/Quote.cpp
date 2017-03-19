@@ -6,7 +6,7 @@
 
 Object Quote::apply(const Object& e, Environment& env)
 {
-    return make_ptr<QuotedExpression>(e);
+    return makeObject<QuotedExpression>(e);
 }
 
 std::string Quote::show() const

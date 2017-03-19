@@ -12,7 +12,7 @@
 using namespace std;
 
 REPL::REPL() :
-    env(make_ptr<DebugPrinter>(&std::cout))
+    env(makeObject<DebugPrinter>(&std::cout))
 {
 
 }

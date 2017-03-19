@@ -9,7 +9,7 @@ Object Inverse::apply(const Object& e, Environment& env)
     if (auto f = d_cast<Morphism>(value))
         return f->inverse();
     else
-        return make_ptr<Void>();
+        return makeObject<Void>();
 }
 
 std::string Inverse::show() const

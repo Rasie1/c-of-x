@@ -36,7 +36,7 @@ bool Complement::unapplyVariables(const Object& e, Environment& env)
 Object Complement::intersect(const Object& other, const Environment& env)
 {
     if (*e == *other)
-        return make_ptr<Void>();
+        return makeObject<Void>();
     else
         return shared_from_this();
 }

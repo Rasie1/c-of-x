@@ -24,5 +24,5 @@ std::string Integer::show() const
 
 Object Integer::next()
 {
-    return make_ptr<Integer>(value + 1);
+    return makeObject<Integer>(value + 1);
 }

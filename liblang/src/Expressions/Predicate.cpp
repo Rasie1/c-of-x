@@ -24,7 +24,7 @@ Object Predicate::apply(const Object& e, Environment& env)
             return evaluated;
         }
         else
-            return make_ptr<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
+            return makeObject<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
 
     }
     else if (auto id = d_cast<Identifier>(evaluated))
@@ -37,9 +37,9 @@ Object Predicate::apply(const Object& e, Environment& env)
         Object result;
         if (auto option = holds(expr, env))
             result =  *option ? expr
-                              : make_ptr<Void>();
+                              : makeObject<Void>();
         else
-            result = make_ptr<Operation>(make_ptr<Application>(),
+            result = makeObject<Operation>(makeObject<Application>(),
                                          std::const_pointer_cast<Expression>(shared_from_this()),
                                          expr);
         return result;

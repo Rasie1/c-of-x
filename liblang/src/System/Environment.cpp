@@ -41,7 +41,7 @@ inline Object intersect(const Object& l, const Object& r, Environment env)
     auto lp = checkType<Identifier>(l) ? env.get(l) : l;
     auto rp = checkType<Identifier>(r) ? env.get(r) : r;
 
-    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), lp, rp);
+    auto operation = makeObject<Operation>(makeObject<Intersection>(), lp, rp);
     auto result = operation->eval(env);
 
     return result;
@@ -49,7 +49,7 @@ inline Object intersect(const Object& l, const Object& r, Environment env)
 
 Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
     debugPrinter(debugPrinter),
-    defaultOperator(make_ptr<Then>())
+    defaultOperator(makeObject<Then>())
 {
     addDefaultDefinitions();
 }
@@ -72,12 +72,12 @@ static Object unwrapEqual(const Object& value)
     {
         auto l = unwrapEqual(operation->left);
         auto r = unwrapEqual(operation->right);
-        return make_ptr<Operation>(make_ptr<Union>(), l, r);
+        return makeObject<Operation>(makeObject<Union>(), l, r);
     }
     if (checkType<Void>(value))
         return value;
     
-    return make_ptr<ValueInSet>(value);
+    return makeObject<ValueInSet>(value);
 }
 
 Object Environment::getEqual(const Object& key) const
@@ -95,7 +95,7 @@ Object Environment::get(const Object& key) const
 
     Object ret;
     if (x == std::end(data))
-        ret = make_ptr<Any>();
+        ret = makeObject<Any>();
     else
         ret = x->second;
 
@@ -150,7 +150,7 @@ void Environment::add(const Object& key, const Object& value, bool excluding)
 
 void Environment::addEqual(const Object& key, const Object& value, bool excluding)
 {
-    add(key, make_ptr<Equals>(value), excluding);
+    add(key, makeObject<Equals>(value), excluding);
 }
 
 void Environment::replace(const Object& key, const Object& value, bool excluding)
@@ -163,7 +163,7 @@ void Environment::replace(const Object& key, const Object& value, bool excluding
 
 void Environment::replaceEqual(const Object& key, const Object& value, bool excluding)
 {
-    replace(key, make_ptr<Equals>(value), excluding);
+    replace(key, makeObject<Equals>(value), excluding);
 }
 
 std::vector<std::string> Environment::getAllNames() const
@@ -188,8 +188,8 @@ bool Environment::operator==(const Environment& other) const
 template <class T>
 void addVariable(Environment* env)
 {
-    env->addEqual(make_ptr<Identifier>(T::defaultName), 
-                  make_ptr<T>(), 
+    env->addEqual(makeObject<Identifier>(T::defaultName), 
+                  makeObject<T>(), 
                   true);
 }
 
@@ -219,7 +219,7 @@ void Environment::addDefaultDefinitions()
     addVariable<PrintEnv>(this);
     addVariable<ReverseApplication>(this);
     addVariable<LowPriorityApplication>(this);
-    addEqual(make_ptr<Identifier>(";"), make_ptr<DefaultOperator>(), true);
+    addEqual(makeObject<Identifier>(";"), makeObject<DefaultOperator>(), true);
 }
 
 bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
