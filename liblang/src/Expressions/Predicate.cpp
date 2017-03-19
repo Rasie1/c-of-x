@@ -9,7 +9,7 @@
 #include "Expressions/Application.h"
 #include "System/Cast.h"
 
-ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
+Object Predicate::apply(const Object& e, Environment& env)
 {
     auto evaluated = e->eval(env);
 
@@ -34,7 +34,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
     }
     else
     {
-        ExpPtr result;
+        Object result;
         if (auto option = holds(expr, env))
             result =  *option ? expr
                               : make_ptr<Void>();
@@ -47,7 +47,7 @@ ExpPtr Predicate::apply(ExpPtrArg e, Environment& env)
 
 }
 
-ExpPtr Predicate::inverse() const
+Object Predicate::inverse() const
 {
     // kind of dangerous
     return d_cast<Morphism>(std::const_pointer_cast<Expression>(shared_from_this()));

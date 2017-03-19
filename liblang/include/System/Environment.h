@@ -5,17 +5,17 @@
 #include "Expressions/Expression.h"
 #include "System/DebugPrinter.h"
 
-struct ExpPtrLess
+struct ObjectLess
 {
-    bool operator() (CExpPtrArg l, CExpPtrArg r) const
+    bool operator() (const Object& l, const Object& r) const
     {
         return *l < *r;
     }
 };
 
-//struct ExpPtrHash
+//struct ObjectHash
 //{
-//  size_t operator() (ExpPtrArg key) const
+//  size_t operator() (const Object& key) const
 //  {
 //      return key->hash();
 //  }
@@ -28,14 +28,14 @@ class Environment
 public:
     Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
 
-    void add(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
-    void addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
-    // void addIntersecting(CExpPtrArg key, ExpPtrArg pred);
-    void replace(CExpPtrArg key, ExpPtrArg predicate, bool excluding = true);
-    void replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding = true);
-    ExpPtr get(CExpPtrArg key) const;
-    ExpPtr getEqual(CExpPtrArg key) const;
-    void erase(CExpPtrArg e);
+    void add(const Object& key, const Object& predicate, bool excluding = true);
+    void addEqual(const Object& key, const Object& value, bool excluding = true);
+    // void addIntersecting(const Object& key, const Object& pred);
+    void replace(const Object& key, const Object& predicate, bool excluding = true);
+    void replaceEqual(const Object& key, const Object& value, bool excluding = true);
+    Object get(const Object& key) const;
+    Object getEqual(const Object& key) const;
+    void erase(const Object& e);
     void clear();
 
     void increaseDebugIndentation();
@@ -58,8 +58,8 @@ public:
 private:
     void addDefaultDefinitions();
 
-    //std::unordered_map<ExpPtr, ExpPtr, ExpPtrHash, ExpPtrLess> data;
-    std::map<CExpPtr, ExpPtr, ExpPtrLess> data;
+    //std::unordered_map<Object, Object, ObjectHash, ObjectLess> data;
+    std::map<const Object, Object, ObjectLess> data;
 
     std::shared_ptr<DebugPrinter> debugPrinter;
 };

@@ -6,9 +6,9 @@
 #include "Expressions/Any.h"
 #include "System/Cast.h"
 
-ExpPtr Print::apply(ExpPtrArg e, Environment& env)
+Object Print::apply(const Object& e, Environment& env)
 {
-    ExpPtr arg;
+    Object arg;
     arg = Identifier::unwrapIfId(e, env);
     auto evaluated = arg->eval(env);
 
@@ -26,9 +26,9 @@ std::string Print::show() const
 const std::string Print::defaultName = "print";
 
 
-ExpPtr PrintInfo::apply(ExpPtrArg e, Environment& env)
+Object PrintInfo::apply(const Object& e, Environment& env)
 {
-    ExpPtr arg;
+    Object arg;
     arg = d_cast<Identifier>(e);
     if (arg)
         arg = env.get(e);
@@ -47,7 +47,7 @@ std::string PrintInfo::show() const
 const std::string PrintInfo::defaultName = "info";
 
 
-ExpPtr PrintEnv::apply(ExpPtrArg e, Environment& env)
+Object PrintEnv::apply(const Object& e, Environment& env)
 {
     std::cout << env.show();
     return make_ptr<Void>();

@@ -13,7 +13,7 @@
 #include "Expressions/Not.h"
 #include "System/Cast.h"
 
-ExpPtr Morphism::intersect(ExpPtrArg other, const Environment& env)
+Object Morphism::intersect(const Object& other, const Environment& env)
 {
     auto value = Identifier::unwrapIfId(other, env);
     env.debugPrint("Intersecting function:" + this->show() + "\n");
@@ -107,22 +107,22 @@ ExpPtr Morphism::intersect(ExpPtrArg other, const Environment& env)
 
 }
 
-ExpPtr Morphism::codomain()
+Object Morphism::codomain()
 {
     return make_ptr<Any>();
 }
 
-ExpPtr Morphism::domain()
+Object Morphism::domain()
 {
     return make_ptr<Any>();
 }
 
-ExpPtr Morphism::inverse() const
+Object Morphism::inverse() const
 {
     return make_ptr<Void>();
 }
 
-bool Isomorphism::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
 {
     // throw std::logic_error("AAAAAAAA");
     // TODO

@@ -1,7 +1,7 @@
 #include "Expressions/Void.h"
 
 
-ExpPtr Void::intersect(ExpPtrArg other, const Environment& env)
+Object Void::intersect(const Object& other, const Environment& env)
 {
     return shared_from_this();
 }
@@ -13,7 +13,7 @@ std::string Void::show() const
 
 const std::string Void::defaultName = "void";
 
-bool Void::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Void::unapplyVariables(const Object& e, Environment& env)
 {
     return false;
 }

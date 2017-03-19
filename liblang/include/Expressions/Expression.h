@@ -10,12 +10,12 @@ class Expression : public std::enable_shared_from_this<Expression>
 public:
     Expression();
 
-    virtual ExpPtr eval(Environment& env) const = 0;
-    virtual ExpPtr apply(ExpPtrArg other, Environment& env);
-    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env);
-    virtual ExpPtr unionize(ExpPtrArg other, const Environment& env);
-    virtual ExpPtr complement(const Environment& env);
-    virtual ExpPtr element(const Environment& env);
+    virtual Object eval(Environment& env) const = 0;
+    virtual Object apply(const Object& other, Environment& env);
+    virtual Object intersect(const Object& other, const Environment& env);
+    virtual Object unionize(const Object& other, const Environment& env);
+    virtual Object complement(const Environment& env);
+    virtual Object element(const Environment& env);
 
     virtual bool operator==(const Expression& other) const;
     virtual bool operator!=(const Expression& other) const { return !(*this == other); }
@@ -29,5 +29,5 @@ public:
     virtual bool hasFreeVariables(const Environment& env) const;
 
     // returns true if no error occured
-    virtual bool unapplyVariables(ExpPtrArg e, Environment& env);
+    virtual bool unapplyVariables(const Object& e, Environment& env);
 };

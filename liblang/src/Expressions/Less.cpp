@@ -13,7 +13,7 @@
 #include "System/Cast.h"
 
 
-optional<bool> LessThan::holds(ExpPtrArg e, const Environment& env)
+optional<bool> LessThan::holds(const Object& e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -41,7 +41,7 @@ std::string LessThan::show() const
 
 const std::string LessThan::defaultName = "lessThan";
 
-ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
+Object LessThan::intersect(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<LessThan>(other))
     {
@@ -69,7 +69,7 @@ ExpPtr LessThan::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr LessThan::unionize(ExpPtrArg other, const Environment& env)
+Object LessThan::unionize(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<LessThan>(other))
     {
@@ -83,12 +83,12 @@ ExpPtr LessThan::unionize(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
-ExpPtr LessThan::complement(const Environment& env)
+Object LessThan::complement(const Environment& env)
 {
     return make_ptr<MoreOrEqualThan>(value);
 }
 
-ExpPtr LessThan::end()
+Object LessThan::end()
 {
     return value;
 }
@@ -99,8 +99,8 @@ Less::Less()
 
 }
 
-ExpPtr Less::operate(ExpPtrArg first,
-                     ExpPtrArg second,
+Object Less::operate(const Object& first,
+                     const Object& second,
                      Environment& env)
 
 {
@@ -116,18 +116,18 @@ std::string Less::show() const
 
 const std::string Less::defaultName = "<";
 
-ExpPtr Less::partialApplyLeft(ExpPtrArg e, Environment& env)
+Object Less::partialApplyLeft(const Object& e, Environment& env)
 {
      return make_ptr<MoreThan>(e);
 }
 
-ExpPtr Less::partialApplyRight(ExpPtrArg e, Environment& env)
+Object Less::partialApplyRight(const Object& e, Environment& env)
 {
      return make_ptr<LessThan>(e);
 }
 
 
-optional<bool> LessOrEqualThan::holds(ExpPtrArg e, const Environment& env)
+optional<bool> LessOrEqualThan::holds(const Object& e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -155,7 +155,7 @@ std::string LessOrEqualThan::show() const
 
 const std::string LessOrEqualThan::defaultName = "lessOrEqualThan";
 
-ExpPtr LessOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
+Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<LessOrEqualThan>(other))
     {
@@ -183,7 +183,7 @@ ExpPtr LessOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr LessOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
+Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<LessOrEqualThan>(other))
     {
@@ -197,12 +197,12 @@ ExpPtr LessOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
-ExpPtr LessOrEqualThan::complement(const Environment& env)
+Object LessOrEqualThan::complement(const Environment& env)
 {
     return make_ptr<MoreThan>(value);
 }
 
-ExpPtr LessOrEqualThan::end()
+Object LessOrEqualThan::end()
 {
     return value;
 }
@@ -213,8 +213,8 @@ LessOrEqual::LessOrEqual()
 
 }
 
-ExpPtr LessOrEqual::operate(ExpPtrArg first,
-                     ExpPtrArg second,
+Object LessOrEqual::operate(const Object& first,
+                     const Object& second,
                      Environment& env)
 
 {
@@ -230,12 +230,12 @@ std::string LessOrEqual::show() const
 
 const std::string LessOrEqual::defaultName = "=<";
 
-ExpPtr LessOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env)
+Object LessOrEqual::partialApplyLeft(const Object& e, Environment& env)
 {
      return make_ptr<MoreOrEqualThan>(e);
 }
 
-ExpPtr LessOrEqual::partialApplyRight(ExpPtrArg e, Environment& env)
+Object LessOrEqual::partialApplyRight(const Object& e, Environment& env)
 {
      return make_ptr<LessOrEqualThan>(e);
 }

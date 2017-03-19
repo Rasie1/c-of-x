@@ -14,7 +14,7 @@ Subtraction::Subtraction()
 {
 }
 
-ExpPtr Subtraction::calculate(ExpPtrArg l, ExpPtrArg r) const
+Object Subtraction::calculate(const Object& l, const Object& r) const
 {
     auto firstInteger  = d_cast<Integer>(l);
     auto secondInteger = d_cast<Integer>(r);
@@ -36,7 +36,7 @@ std::string Subtraction::show() const
 }
 
 const std::string Subtraction::defaultName = "-";
-bool Subtraction::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
+bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);

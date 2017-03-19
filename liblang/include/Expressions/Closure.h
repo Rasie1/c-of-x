@@ -7,24 +7,24 @@ class Environment;
 class Closure : public Morphism
 {
 public:
-    Closure(ExpPtrArg argument,
-            ExpPtrArg body,
+    Closure(const Object& argument,
+            const Object& body,
             const Environment& env);
     ~Closure();
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) override;
-    // ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
+    Object apply(const Object& e, Environment& env) override;
+    // Object intersect(const Object& other, const Environment& env) override;
     std::string show() const override;
     bool operator==(const Expression& other) const override;
-    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
+    bool unapplyVariables(const Object& e, Environment& env) override;
 
-    ExpPtr codomain() override;
-    ExpPtr domain() override;
+    Object codomain() override;
+    Object domain() override;
 
-    ExpPtr inverse() const override;
+    Object inverse() const override;
 
-    ExpPtr body;
-    ExpPtr argument;
+    Object body;
+    Object argument;
 
     Environment env;
     int envSize;

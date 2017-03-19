@@ -10,8 +10,8 @@ Then::Then()
 {
 }
 
-ExpPtr Then::operate(ExpPtrArg first,
-                     ExpPtrArg second,
+Object Then::operate(const Object& first,
+                     const Object& second,
                      Environment& env)
 {
     auto l = first->eval(env);

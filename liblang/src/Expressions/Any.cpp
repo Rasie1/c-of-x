@@ -5,19 +5,19 @@ std::string Any::show() const
     return defaultName;
 }
 
-ExpPtr Any::apply(ExpPtrArg e, Environment& env)
+Object Any::apply(const Object& e, Environment& env)
 {
     return make_ptr<Any>();
 }
 
 const std::string Any::defaultName = "_";
 
-bool Any::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Any::unapplyVariables(const Object& e, Environment& env)
 {
     return true;
 }
 
-ExpPtr Any::intersect(ExpPtrArg other, const Environment& env)
+Object Any::intersect(const Object& other, const Environment& env)
 {
     return other;
 }

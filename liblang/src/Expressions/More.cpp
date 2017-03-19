@@ -13,7 +13,7 @@
 #include "System/Cast.h"
 
 
-optional<bool> MoreThan::holds(ExpPtrArg e, const Environment& env)
+optional<bool> MoreThan::holds(const Object& e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -41,7 +41,7 @@ std::string MoreThan::show() const
 
 const std::string MoreThan::defaultName = "moreThan";
 
-ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
+Object MoreThan::intersect(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<MoreThan>(other))
     {
@@ -69,7 +69,7 @@ ExpPtr MoreThan::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr MoreThan::unionize(ExpPtrArg other, const Environment& env)
+Object MoreThan::unionize(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<MoreThan>(other))
     {
@@ -82,12 +82,12 @@ ExpPtr MoreThan::unionize(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
-ExpPtr MoreThan::complement(const Environment& env)
+Object MoreThan::complement(const Environment& env)
 {
     return make_ptr<LessOrEqualThan>(value);
 }
 
-ExpPtr MoreThan::begin()
+Object MoreThan::begin()
 {
     return value;
 }
@@ -98,8 +98,8 @@ More::More()
 
 }
 
-ExpPtr More::operate(ExpPtrArg first,
-                     ExpPtrArg second,
+Object More::operate(const Object& first,
+                     const Object& second,
                      Environment& env)
 {
     auto f = d_cast<MoreThan>(partialApplyRight(second, env));
@@ -114,17 +114,17 @@ std::string More::show() const
 
 const std::string More::defaultName = ">";
 
-ExpPtr More::partialApplyLeft(ExpPtrArg e, Environment& env)
+Object More::partialApplyLeft(const Object& e, Environment& env)
 {
      return make_ptr<LessThan>(e);
 }
 
-ExpPtr More::partialApplyRight(ExpPtrArg e, Environment& env)
+Object More::partialApplyRight(const Object& e, Environment& env)
 {
      return make_ptr<MoreThan>(e);
 }
 
-optional<bool> MoreOrEqualThan::holds(ExpPtrArg e, const Environment& env)
+optional<bool> MoreOrEqualThan::holds(const Object& e, const Environment& env)
 {
     if (auto v1 = d_cast<Integer>(value))
     if (auto v2 = d_cast<Integer>(e))
@@ -152,7 +152,7 @@ std::string MoreOrEqualThan::show() const
 
 const std::string MoreOrEqualThan::defaultName = "moreOrEqualThan";
 
-ExpPtr MoreOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
+Object MoreOrEqualThan::intersect(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<MoreOrEqualThan>(other))
     {
@@ -180,7 +180,7 @@ ExpPtr MoreOrEqualThan::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr MoreOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
+Object MoreOrEqualThan::unionize(const Object& other, const Environment& env)
 {
     if (auto p = d_cast<MoreOrEqualThan>(other))
     {
@@ -193,12 +193,12 @@ ExpPtr MoreOrEqualThan::unionize(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
-ExpPtr MoreOrEqualThan::complement(const Environment& env)
+Object MoreOrEqualThan::complement(const Environment& env)
 {
     return make_ptr<LessThan>(value);
 }
 
-ExpPtr MoreOrEqualThan::begin()
+Object MoreOrEqualThan::begin()
 {
     return value;
 }
@@ -209,8 +209,8 @@ MoreOrEqual::MoreOrEqual()
 
 }
 
-ExpPtr MoreOrEqual::operate(ExpPtrArg first,
-                     ExpPtrArg second,
+Object MoreOrEqual::operate(const Object& first,
+                     const Object& second,
                      Environment& env)
 {
     auto f = d_cast<MoreOrEqualThan>(partialApplyRight(second, env));
@@ -225,12 +225,12 @@ std::string MoreOrEqual::show() const
 
 const std::string MoreOrEqual::defaultName = ">=";
 
-ExpPtr MoreOrEqual::partialApplyLeft(ExpPtrArg e, Environment& env)
+Object MoreOrEqual::partialApplyLeft(const Object& e, Environment& env)
 {
      return make_ptr<LessThan>(e);
 }
 
-ExpPtr MoreOrEqual::partialApplyRight(ExpPtrArg e, Environment& env)
+Object MoreOrEqual::partialApplyRight(const Object& e, Environment& env)
 {
      return make_ptr<MoreThan>(e);
 }

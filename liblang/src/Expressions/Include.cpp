@@ -5,7 +5,7 @@
 #include "Expressions/Error.h"
 #include "System/Cast.h"
 
-ExpPtr Include::apply(ExpPtrArg e, Environment& env)
+Object Include::apply(const Object& e, Environment& env)
 {
     auto str = d_cast<String>(e);
     if (!str)

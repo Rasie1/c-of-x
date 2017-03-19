@@ -12,7 +12,7 @@ Union::Union()
 {
 }
 
-//bool findSameOperand(ExpPtrArg where, ExpPtrArg what)
+//bool findSameOperand(const Object& where, const Object& what)
 //{
 //    if (*where == *what)
 //        return true;
@@ -26,7 +26,7 @@ Union::Union()
 //}
 
 
-//bool isVoid(ExpPtr x)
+//bool isVoid(Object x)
 //{
 //    if (d_cast<Void>(x))
 //        return true;
@@ -39,7 +39,7 @@ Union::Union()
 //    return false;
 //}
 
-//std::list<ExpPtr> unroll(ExpPtrArg x)
+//std::list<Object> unroll(const Object& x)
 //{
 //    if (isVoid(x))
 //        return {};
@@ -48,7 +48,7 @@ Union::Union()
 //    {
 //        if (checkType<Union>(op->op))
 //        {
-//            std::list<ExpPtr> ret;
+//            std::list<Object> ret;
 //            ret.splice(ret.begin(), unroll(op->left));
 //            ret.splice(ret.begin(), unroll(op->right));
 //            return ret;
@@ -60,8 +60,8 @@ Union::Union()
 //        return {x};
 //}
 
-//ExpPtr makeTree(const std::list<ExpPtr>::iterator& p0,
-//                const std::list<ExpPtr>::iterator& p1)
+//Object makeTree(const std::list<Object>::iterator& p0,
+//                const std::list<Object>::iterator& p1)
 //{
 //    if (std::distance(p0, p1) == 0)
 //        return *p0;
@@ -73,11 +73,11 @@ Union::Union()
 //                               makeTree(std::next(center), p1));
 //}
 
-//ExpPtr Union::make_old(const std::vector<ExpPtr>& exps)
+//Object Union::make_old(const std::vector<Object>& exps)
 //{
 //    // TODO: make generic tree algorithm
 
-//    std::list<ExpPtr> xs;
+//    std::list<Object> xs;
 //    for (auto &x : exps)
 //        xs.splice(xs.begin(), unroll(x));
 
@@ -130,8 +130,8 @@ Union::Union()
 
 //}
 
-ExpPtr Union::operate(ExpPtrArg first,
-                      ExpPtrArg second,
+Object Union::operate(const Object& first,
+                      const Object& second,
                       Environment& env)
 {
     auto l = first->eval(env);
@@ -175,9 +175,9 @@ std::string Union::show() const
 
 const std::string Union::defaultName = "|";
 
-bool Union::unapplyVariables(ExpPtrArg e,
-                             ExpPtrArg l,
-                             ExpPtrArg r,
+bool Union::unapplyVariables(const Object& e,
+                             const Object& l,
+                             const Object& r,
                              Environment &env)
 {
     // TODO: when adding to env, we should union branches and not intersect
@@ -194,7 +194,7 @@ bool Union::unapplyVariables(ExpPtrArg e,
     return result;
 }
 
-ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
+Object Union::intersect(const Object& l, const Object& r, const Object& e, Environment &env)
 {
     // TODO: preserve identifier?
     auto operation = make_ptr<Operation>(make_ptr<Intersection>(), l, e);
@@ -211,8 +211,8 @@ ExpPtr Union::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
     return leftIntersection;
 }
 
-ExpPtr Union::make(const std::vector<ExpPtr>::iterator& begin, 
-                   const std::vector<ExpPtr>::iterator& end)
+Object Union::make(const std::vector<Object>::iterator& begin, 
+                   const std::vector<Object>::iterator& end)
 {
     auto next = std::next(begin);
     if (next == end)

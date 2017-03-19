@@ -5,8 +5,8 @@ class Then : public Operator
 {
 public:
     Then();
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
 
     std::string show() const override;

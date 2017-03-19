@@ -4,10 +4,7 @@
 
 class Expression;
 
-typedef std::shared_ptr<Expression> ExpPtr;
-typedef const ExpPtr& ExpPtrArg;
-typedef std::shared_ptr<const Expression> CExpPtr;
-typedef const CExpPtr& CExpPtrArg;
+typedef std::shared_ptr<Expression> Object;
 
 using boost::optional;
 using boost::none;

@@ -1,7 +1,7 @@
 #include "Expressions/Conjunction.h"
 #include "System/Cast.h"
 
-//ExpPtr eval(Environment& env) const override
+//Object eval(Environment& env) const override
 //{
 //    throw "not implemented";
 //    for (auto i = data.begin(); i != data.end(); ++i)

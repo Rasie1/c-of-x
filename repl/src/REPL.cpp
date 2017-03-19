@@ -38,7 +38,7 @@ void REPL::start()
                 continue;
             else
             {
-                ExpPtr expression;
+                Object expression;
                 try
                 {
                     expression = parser.parse(instruction, env);

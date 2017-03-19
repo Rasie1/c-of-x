@@ -21,7 +21,7 @@
 #include "System/Cast.h"
 using namespace std;
 
-ExpPtr Parser::parse(const string& s, Environment& env)
+Object Parser::parse(const string& s, Environment& env)
 {
     lexer.tokenize(s);
     auto tokens = lexer.getTokens();
@@ -30,7 +30,7 @@ ExpPtr Parser::parse(const string& s, Environment& env)
     return parse(begin(tokens), end(tokens), env, 0);
 }
 
-static bool isOperator(ExpPtr e, Environment& env)
+static bool isOperator(Object e, Environment& env)
 {
     if (!e)
         return false;
@@ -41,7 +41,7 @@ static bool isOperator(ExpPtr e, Environment& env)
         return false;
 }
 
-ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
+Object Parser::parseFile(const std::string& filename, Environment& env)
 {
     std::ifstream ifs(filename);
     std::string content((std::istreambuf_iterator<char>(ifs)),
@@ -50,7 +50,7 @@ ExpPtr Parser::parseFile(const std::string& filename, Environment& env)
     return Parser::parse(content, env)->eval(env);
 }
 
-ExpPtr Parser::parse(const vector<Token>::iterator& begin,
+Object Parser::parse(const vector<Token>::iterator& begin,
                      const vector<Token>::iterator& end,
                      Environment& env,
                      size_t indentation)
@@ -63,17 +63,17 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
         env.debugPrint(debugOutput.str());
     }
 
-    ExpPtr ret = nullptr;
+    Object ret = nullptr;
 
     std::stack<std::shared_ptr<Operator>> operatorStack;
-    std::deque<ExpPtr> q;
+    std::deque<Object> q;
     bool applicationFlag = false;
     bool operatorWasLast = false;
     bool expressionBegin = true;
 
     auto makeOperation = [&](){
-        ExpPtr left;
-        ExpPtr right;
+        Object left;
+        Object right;
         std::shared_ptr<Operator> op = operatorStack.top();
         operatorStack.pop();
 
@@ -119,7 +119,7 @@ ExpPtr Parser::parse(const vector<Token>::iterator& begin,
          currentTokenIt++)
     {
         auto& currentToken = *currentTokenIt;
-        ExpPtr e = nullptr;
+        Object e = nullptr;
         if (currentToken.type() == typeid(Tokens::Identifier))
         {
             e = make_ptr<Identifier>(get<Tokens::Identifier>(currentToken).name);

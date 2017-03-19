@@ -15,8 +15,8 @@ CalculationOperator::CalculationOperator(bool isRightAssociative, int priority, 
 {
 }
 
-ExpPtr CalculationOperator::operate(ExpPtrArg first,
-                                    ExpPtrArg second,
+Object CalculationOperator::operate(const Object& first,
+                                    const Object& second,
                                     Environment& env)
 {
     env.defaultOperator = d_cast<Operator>(shared_from_this());
@@ -37,7 +37,7 @@ ExpPtr CalculationOperator::operate(ExpPtrArg first,
 
     // Next comes union stuff that will be replaced later
 
-    std::vector<ExpPtr> expressions;
+    std::vector<Object> expressions;
 
     bool lUnion = false;
     bool rUnion = false;

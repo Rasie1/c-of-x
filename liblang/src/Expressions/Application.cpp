@@ -19,7 +19,7 @@ Application::Application()
 {
 }
 
-static bool isExpressionQuoted(ExpPtrArg left, Environment& env)
+static bool isExpressionQuoted(const Object& left, Environment& env)
 {
     if (checkType<Quote>(left))
         return true;
@@ -44,11 +44,11 @@ static bool isExpressionQuoted(ExpPtrArg left, Environment& env)
     return false;
 }
 
-ExpPtr Application::operate(ExpPtrArg first,
-                            ExpPtrArg second,
+Object Application::operate(const Object& first,
+                            const Object& second,
                             Environment& env)
 {
-    ExpPtr left, right;
+    Object left, right;
     left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env)->eval(env), env);
     if (isExpressionQuoted(left, env))
         right = second;
@@ -58,7 +58,7 @@ ExpPtr Application::operate(ExpPtrArg first,
     if (checkType<Any>(left) || checkType<Any>(right))
         return make_ptr<Operation>(std::static_pointer_cast<Operator>(shared_from_this()), left, right);
 
-    std::vector<ExpPtr> expressions;
+    std::vector<Object> expressions;
 
     if (auto operation = d_cast<Operation>(left))
     if (auto lUnion = d_cast<Union>(operation->op))
@@ -105,9 +105,9 @@ std::string Application::show() const
     return "";
 }
 
-bool Application::unapplyVariables(ExpPtrArg e,
-                                   ExpPtrArg l,
-                                   ExpPtrArg r,
+bool Application::unapplyVariables(const Object& e,
+                                   const Object& l,
+                                   const Object& r,
                                    Environment &env)
 {
     auto lId = checkType<Identifier>(l);
@@ -156,8 +156,8 @@ ReverseApplication::ReverseApplication()
 {
 }
 
-ExpPtr ReverseApplication::operate(ExpPtrArg first,
-                                   ExpPtrArg second,
+Object ReverseApplication::operate(const Object& first,
+                                   const Object& second,
                                    Environment& env)
 {
     return proxy.operate(second, first, env);
@@ -170,9 +170,9 @@ std::string ReverseApplication::show() const
 
 const std::string ReverseApplication::defaultName = ":";
 
-bool ReverseApplication::unapplyVariables(ExpPtrArg e,
-                                          ExpPtrArg l,
-                                          ExpPtrArg r,
+bool ReverseApplication::unapplyVariables(const Object& e,
+                                          const Object& l,
+                                          const Object& r,
                                           Environment &env)
 {
     return proxy.unapplyVariables(e, r, l, env);
@@ -184,8 +184,8 @@ LowPriorityApplication::LowPriorityApplication()
 {
 }
 
-ExpPtr LowPriorityApplication::operate(ExpPtrArg first,
-                                       ExpPtrArg second,
+Object LowPriorityApplication::operate(const Object& first,
+                                       const Object& second,
                                        Environment& env)
 {
     return proxy.operate(first, second, env);
@@ -198,9 +198,9 @@ std::string LowPriorityApplication::show() const
 
 const std::string LowPriorityApplication::defaultName = "$";
 
-bool LowPriorityApplication::unapplyVariables(ExpPtrArg e,
-                                              ExpPtrArg l,
-                                              ExpPtrArg r,
+bool LowPriorityApplication::unapplyVariables(const Object& e,
+                                              const Object& l,
+                                              const Object& r,
                                               Environment &env)
 {
     return proxy.unapplyVariables(e, l, r, env);

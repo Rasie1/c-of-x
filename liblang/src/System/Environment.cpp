@@ -36,7 +36,7 @@
 #include <fstream>
 
 
-inline ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, Environment env)
+inline Object intersect(const Object& l, const Object& r, Environment env)
 {
     auto lp = checkType<Identifier>(l) ? env.get(l) : l;
     auto rp = checkType<Identifier>(r) ? env.get(r) : r;
@@ -60,7 +60,7 @@ void Environment::clear()
     addDefaultDefinitions();
 }
 
-static ExpPtr unwrapEqual(ExpPtrArg value)
+static Object unwrapEqual(const Object& value)
 {
     if (auto eq = d_cast<Equals>(value))
         return eq->value;
@@ -80,20 +80,20 @@ static ExpPtr unwrapEqual(ExpPtrArg value)
     return make_ptr<ValueInSet>(value);
 }
 
-ExpPtr Environment::getEqual(CExpPtrArg key) const
+Object Environment::getEqual(const Object& key) const
 {
     auto value = get(key);
 
     return unwrapEqual(value);
 }
 
-ExpPtr Environment::get(CExpPtrArg key) const
+Object Environment::get(const Object& key) const
 {
     debugPrint("ENV GET: (" + key->show() + ") : (", true);
 
     auto x = data.find(key);
 
-    ExpPtr ret;
+    Object ret;
     if (x == std::end(data))
         ret = make_ptr<Any>();
     else
@@ -124,12 +124,12 @@ void Environment::setDebugPrint(bool enabled)
     debugPrinter->setDebugPrint(enabled);
 }
 
-void Environment::erase(CExpPtrArg e)
+void Environment::erase(const Object& e)
 {
     data.erase(e);
 }
 
-void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::add(const Object& key, const Object& value, bool excluding)
 {
     debugPrint("ENV ADD KEY: " + key->show() + "\n", true);
     increaseDebugIndentation();
@@ -148,12 +148,12 @@ void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     decreaseDebugIndentation();
 }
 
-void Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::addEqual(const Object& key, const Object& value, bool excluding)
 {
     add(key, make_ptr<Equals>(value), excluding);
 }
 
-void Environment::replace(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::replace(const Object& key, const Object& value, bool excluding)
 {
     debugPrint("ENV UPD KEY: " + key->show() + "\n", true);
     debugPrint("NEW: " + value->show() + "\n", true);
@@ -161,7 +161,7 @@ void Environment::replace(CExpPtrArg key, ExpPtrArg value, bool excluding)
     // return data[key];
 }
 
-void Environment::replaceEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
+void Environment::replaceEqual(const Object& key, const Object& value, bool excluding)
 {
     replace(key, make_ptr<Equals>(value), excluding);
 }

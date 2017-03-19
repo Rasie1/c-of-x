@@ -5,12 +5,12 @@
 #include "Expressions/Any.h"
 #include "System/Cast.h"
 
-ExpPtr Data::eval(Environment& env) const
+Object Data::eval(Environment& env) const
 {
     return std::const_pointer_cast<Expression>(shared_from_this());
 }
 
-bool Data::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Data::unapplyVariables(const Object& e, Environment& env)
 {
     if (checkType<Any>(e))
         return true;
@@ -18,7 +18,7 @@ bool Data::unapplyVariables(ExpPtrArg e, Environment& env)
 }
 
 
-ExpPtr PlainData::intersect(ExpPtrArg other, const Environment& env)
+Object PlainData::intersect(const Object& other, const Environment& env)
 {
     if (*other == *this)
         return other;

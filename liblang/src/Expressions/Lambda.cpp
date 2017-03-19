@@ -11,8 +11,8 @@ Lambda::Lambda()
 {
 }
 
-ExpPtr Lambda::operate(ExpPtrArg first,
-                       ExpPtrArg second,
+Object Lambda::operate(const Object& first,
+                       const Object& second,
                        Environment& env)
 {
     auto newEnv = env;
@@ -32,9 +32,9 @@ std::string Lambda::show() const
 
 const std::string Lambda::defaultName = "=>";
 
-// bool Lambda::unapplyVariables(ExpPtrArg e,
-//                               ExpPtrArg l,
-//                               ExpPtrArg r,
+// bool Lambda::unapplyVariables(const Object& e,
+//                               const Object& l,
+//                               const Object& r,
 //                               Environment &env) const
 // {
     

@@ -10,11 +10,11 @@ DefaultOperator::DefaultOperator()
 {
 }
 
-ExpPtr DefaultOperator::operate(ExpPtrArg first,
-                                ExpPtrArg second,
+Object DefaultOperator::operate(const Object& first,
+                                const Object& second,
                                 Environment& env)
 {
-    ExpPtr l, r;
+    Object l, r;
     {
         if (auto o = d_cast<Operation>(first))
         {

@@ -6,13 +6,13 @@ class Intersection : public Operator
 public:
     Intersection();
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
     
-    ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
-    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
+    Object apply(const Object& l, const Object& r, const Object& e, Environment &env);
+    Object intersect(const Object& l, const Object& r, const Object& e, Environment &env);
+    bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
     std::string show() const override;
 

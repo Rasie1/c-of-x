@@ -10,7 +10,7 @@
 #include "System/Cast.h"
 
 
-optional<bool> Equals::holds(ExpPtrArg e, const Environment& env)
+optional<bool> Equals::holds(const Object& e, const Environment& env)
 {
     if (*value == *e)
         return make_optional(true);
@@ -42,7 +42,7 @@ std::string Equals::show() const
 
 const std::string Equals::defaultName = "=";
 
-ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
+Object Equals::intersect(const Object& other, const Environment& env)
 {
     if (checkType<Any>(value))
         return other;
@@ -56,7 +56,7 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr Equals::element(const Environment& env)
+Object Equals::element(const Environment& env)
 {
     return value;
 }
@@ -67,8 +67,8 @@ Equality::Equality()
 
 }
 
-static bool operateHelper(ExpPtrArg first,
-                          ExpPtrArg second,
+static bool operateHelper(const Object& first,
+                          const Object& second,
                           Environment& env)
 {
     auto lvalue = first;//Identifier::unwrapIfId(first, env);
@@ -81,8 +81,8 @@ static bool operateHelper(ExpPtrArg first,
     return ret;
 }
 
-ExpPtr Equality::operate(ExpPtrArg first,
-                         ExpPtrArg second,
+Object Equality::operate(const Object& first,
+                         const Object& second,
                          Environment& env)
 {
     env.debugPrint("Equality: (" + first->show() + ") = (" + second->show() + ")\n", true);
@@ -91,7 +91,7 @@ ExpPtr Equality::operate(ExpPtrArg first,
     operateHelper(first, second, env);
     env.decreaseDebugIndentation();
 
-    ExpPtr ret = first;
+    Object ret = first;
 
     return ret;
 }
@@ -103,12 +103,12 @@ std::string Equality::show() const
 
 const std::string Equality::defaultName = "=";
 
-ExpPtr Equality::partialApplyLeft(ExpPtrArg e, Environment& env)
+Object Equality::partialApplyLeft(const Object& e, Environment& env)
 {
      return make_ptr<Equals>(e);
 }
 
-ExpPtr Equality::partialApplyRight(ExpPtrArg e, Environment& env)
+Object Equality::partialApplyRight(const Object& e, Environment& env)
 {
      return make_ptr<Equals>(e);
 }

@@ -5,9 +5,9 @@ class Any : public Morphism
 {
 public:
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) override;
-    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
+    Object apply(const Object& e, Environment& env) override;
+    bool unapplyVariables(const Object& e, Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };

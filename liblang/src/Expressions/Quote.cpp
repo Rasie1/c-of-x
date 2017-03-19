@@ -4,7 +4,7 @@
 #include "Expressions/Identifier.h"
 #include "System/Cast.h"
 
-ExpPtr Quote::apply(ExpPtrArg e, Environment& env)
+Object Quote::apply(const Object& e, Environment& env)
 {
     return make_ptr<QuotedExpression>(e);
 }
@@ -24,7 +24,7 @@ std::string QuotedExpression::show() const
 
 const std::string QuotedExpression::defaultName = "\'";
 
-bool QuotedExpression::unapplyVariables(ExpPtrArg e, Environment& env)
+bool QuotedExpression::unapplyVariables(const Object& e, Environment& env)
 {
     if (auto opThis = d_cast<Operation>(this->e))
     {

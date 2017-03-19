@@ -4,15 +4,15 @@
 class Data : public Expression
 {
 public:
-    ExpPtr eval(Environment& env) const override;
+    Object eval(Environment& env) const override;
     //virtual bool operator==(const Expression& other) const = 0;
 
-    virtual bool unapplyVariables(ExpPtrArg e, Environment& env) override;
+    virtual bool unapplyVariables(const Object& e, Environment& env) override;
 private:
 };
 
 class PlainData : public Data
 {
 public:
-    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
+    virtual Object intersect(const Object& other, const Environment& env) override;
 };

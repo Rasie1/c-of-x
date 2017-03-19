@@ -4,7 +4,7 @@
 #include "System/Environment.h"
 #include "System/Cast.h"
 
-ExpPtr Let::apply(ExpPtrArg e, Environment& env)
+Object Let::apply(const Object& e, Environment& env)
 {
     // TODO: add new value to env unionized with old value
     auto result = e->eval(env);
@@ -27,7 +27,7 @@ LetContext::LetContext(const Environment& env) :
 {
 }
 
-ExpPtr LetContext::apply(ExpPtrArg e, Environment& env)
+Object LetContext::apply(const Object& e, Environment& env)
 {
     auto envCopy = this->env;
     auto result = e->eval(envCopy);

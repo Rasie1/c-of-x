@@ -4,15 +4,15 @@
 class Morphism : public Data
 {
 public:
-    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    virtual ExpPtr codomain();
-    virtual ExpPtr domain();
-    virtual ExpPtr inverse() const;
+    virtual Object intersect(const Object& other, const Environment& env) override;
+    virtual Object codomain();
+    virtual Object domain();
+    virtual Object inverse() const;
 };
 
 class Isomorphism : public Morphism
 {
 public:
-    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
+    bool unapplyVariables(const Object& e, Environment& env) override;
 };
 

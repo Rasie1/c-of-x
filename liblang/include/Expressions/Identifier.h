@@ -13,8 +13,8 @@ public:
 
     bool hasFreeVariables(const Environment& env) const;
 
-    static ExpPtr unwrapIfId(ExpPtrArg e, const Environment& env);
-    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
+    static Object unwrapIfId(const Object& e, const Environment& env);
+    bool unapplyVariables(const Object& e, Environment& env) override;
 
     std::string name;
 };

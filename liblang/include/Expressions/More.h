@@ -8,20 +8,20 @@ class MoreThan :
         public RangeBegin
 {
 public:
-    MoreThan(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
+    MoreThan(const Object& e) : value(e) {}
+    optional<bool> holds(const Object& e, const Environment& env) override;
 
-    ExpPtr value;
+    Object value;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    ExpPtr unionize(ExpPtrArg other, const Environment& env) override;
-    ExpPtr complement(const Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
+    Object unionize(const Object& other, const Environment& env) override;
+    Object complement(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;
     static const std::string defaultName;
 
-    ExpPtr begin() override;
+    Object begin() override;
 };
 
 class More : public Operator
@@ -29,11 +29,11 @@ class More : public Operator
 public:
     More();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
+    Object operate(const Object&  first,
+                   const Object&  second,
                    Environment& env) override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
+    Object partialApplyLeft(const Object& e, Environment& env) override;
+    Object partialApplyRight(const Object& e, Environment& env) override;
 
     std::string show() const override;
 
@@ -45,20 +45,20 @@ class MoreOrEqualThan :
         public RangeBegin
 {
 public:
-    MoreOrEqualThan(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
+    MoreOrEqualThan(const Object& e) : value(e) {}
+    optional<bool> holds(const Object& e, const Environment& env) override;
 
-    ExpPtr value;
+    Object value;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    ExpPtr unionize(ExpPtrArg other, const Environment& env) override;
-    ExpPtr complement(const Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
+    Object unionize(const Object& other, const Environment& env) override;
+    Object complement(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;
     static const std::string defaultName;
 
-    ExpPtr begin() override;
+    Object begin() override;
 };
 
 class MoreOrEqual : public Operator
@@ -66,11 +66,11 @@ class MoreOrEqual : public Operator
 public:
     MoreOrEqual();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
+    Object operate(const Object&  first,
+                   const Object&  second,
                    Environment& env) override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
+    Object partialApplyLeft(const Object& e, Environment& env) override;
+    Object partialApplyRight(const Object& e, Environment& env) override;
 
     std::string show() const override;
 

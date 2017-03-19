@@ -8,8 +8,8 @@ Pair::Pair()
 
 }
 
-ExpPtr Pair::operate(ExpPtrArg first,
-                     ExpPtrArg second,
+Object Pair::operate(const Object& first,
+                     const Object& second,
                      Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Pair>(), first, second);

@@ -7,11 +7,11 @@ class Equality : public Operator
 public:
     Equality();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
+    Object operate(const Object&  first,
+                   const Object&  second,
                    Environment& env) override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
+    Object partialApplyLeft(const Object& e, Environment& env) override;
+    Object partialApplyRight(const Object& e, Environment& env) override;
 
     std::string show() const override;
 
@@ -22,13 +22,13 @@ public:
 class Equals : public Predicate
 {
 public:
-    Equals(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
+    Equals(const Object& e) : value(e) {}
+    optional<bool> holds(const Object& e, const Environment& env) override;
 
-    ExpPtr value;
+    Object value;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    ExpPtr element(const Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
+    Object element(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;

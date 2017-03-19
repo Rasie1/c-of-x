@@ -6,9 +6,9 @@ class CalculationOperator : public Operator
 public:
     CalculationOperator(bool isRightAssociative, int priority, bool splitting);
 
-    virtual ExpPtr calculate(ExpPtrArg l, ExpPtrArg r) const = 0;
+    virtual Object calculate(const Object& l, const Object& r) const = 0;
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
 };

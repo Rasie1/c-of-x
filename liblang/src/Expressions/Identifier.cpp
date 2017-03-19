@@ -29,7 +29,7 @@ bool Identifier::hasFreeVariables(const Environment& env) const
     return d_cast<Any>(env.getEqual(std::const_pointer_cast<Expression>(shared_from_this()))) != nullptr;
 }
 
-ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
+Object Identifier::unwrapIfId(const Object& e, const Environment& env)
 {
     if (d_cast<Identifier>(e))
         return env.getEqual(e);
@@ -37,7 +37,7 @@ ExpPtr Identifier::unwrapIfId(ExpPtrArg e, const Environment& env)
         return e;
 }
 
-bool Identifier::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Identifier::unapplyVariables(const Object& e, Environment& env)
 {
     // Just put evaluated e into variable
 

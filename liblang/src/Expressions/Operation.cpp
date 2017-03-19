@@ -8,8 +8,8 @@
 #include "System/Cast.h"
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
-                     ExpPtrArg left,
-                     ExpPtrArg right)
+                     const Object& left,
+                     const Object& right)
     : op(op),
       left(left),
       right(right)
@@ -17,9 +17,9 @@ Operation::Operation(const std::shared_ptr<Operator>& op,
 
 }
 
-ExpPtr Operation::eval(Environment& env) const
+Object Operation::eval(Environment& env) const
 {
-    ExpPtr ret;
+    Object ret;
 
     env.debugPrint("OPERATION: " + this->op->show() + '\n', true);
 
@@ -50,13 +50,13 @@ bool Operation::hasFreeVariables(const Environment& env) const
     return left->hasFreeVariables(env) || right->hasFreeVariables(env);
 }
 
-ExpPtr Operation::intersect(ExpPtrArg other, const Environment& envc)
+Object Operation::intersect(const Object& other, const Environment& envc)
 {
     auto env = envc;
     return op->intersect(left, right, other, env);
 }
 
-ExpPtr Operation::apply(ExpPtrArg other, Environment& env)
+Object Operation::apply(const Object& other, Environment& env)
 {
     return op->apply(left, right, other, env);
 }
@@ -75,7 +75,7 @@ bool Operation::operator==(const Expression& other) const
     }
 }
 
-bool Operation::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Operation::unapplyVariables(const Object& e, Environment& env)
 {
     return op->unapplyVariables(e, this->left, this->right, env);
 }

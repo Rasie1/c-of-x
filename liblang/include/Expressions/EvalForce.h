@@ -6,7 +6,7 @@ class EvalForce : public Morphism
 public:
     EvalForce() {}
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) override;
+    Object apply(const Object& e, Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };

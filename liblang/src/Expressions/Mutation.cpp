@@ -6,8 +6,8 @@
 #include "System/Cast.h"
 
 
-ExpPtr Mutation::operate(ExpPtrArg first,
-                         ExpPtrArg second,
+Object Mutation::operate(const Object& first,
+                         const Object& second,
                          Environment& env)
 {
     // still in todo state (can't use the same variable)

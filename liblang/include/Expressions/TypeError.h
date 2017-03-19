@@ -5,9 +5,9 @@
 class TypeError : public Error
 {
 public:
-    TypeError(ExpPtrArg where,
-              ExpPtrArg expectedType,
-              ExpPtrArg actualType)
+    TypeError(const Object& where,
+              const Object& expectedType,
+              const Object& actualType)
       : where(where),
         expected(expectedType),
         actual(actualType) {}
@@ -15,5 +15,5 @@ public:
     std::string show() const override;
 
 private:
-    ExpPtr where, expected, actual;
+    Object where, expected, actual;
 };

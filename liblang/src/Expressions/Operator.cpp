@@ -24,7 +24,7 @@ bool Operator::operator==(const Expression& other) const
     return typeid(*this) == typeid(other);
 }
 
-ExpPtr Operator::partialApplyLeft(ExpPtrArg e, Environment& env)
+Object Operator::partialApplyLeft(const Object& e, Environment& env)
 {
     auto arg = make_ptr<Identifier>("arg");
     auto that = std::static_pointer_cast<const Operator>(shared_from_this());
@@ -36,7 +36,7 @@ ExpPtr Operator::partialApplyLeft(ExpPtrArg e, Environment& env)
     return closure;
 }
 
-ExpPtr Operator::partialApplyRight(ExpPtrArg e, Environment& env)
+Object Operator::partialApplyRight(const Object& e, Environment& env)
 {
     auto arg = make_ptr<Identifier>("arg");
     auto that = std::static_pointer_cast<const Operator>(shared_from_this());
@@ -48,7 +48,7 @@ ExpPtr Operator::partialApplyRight(ExpPtrArg e, Environment& env)
     return closure;
 }
 
-ExpPtr Operator::partialApplyNoArgs(Environment& env)
+Object Operator::partialApplyNoArgs(Environment& env)
 {
     auto l = make_ptr<Identifier>("l");
     auto r = make_ptr<Identifier>("r");
@@ -63,24 +63,24 @@ ExpPtr Operator::partialApplyNoArgs(Environment& env)
     return lUnapplied;
 }
 
-bool Operator::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
+bool Operator::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
     return false;
 }
 
-ExpPtr Operator::apply(ExpPtrArg e, Environment& env)
+Object Operator::apply(const Object& e, Environment& env)
 {
     return partialApplyRight(e, env);
 }
 
-ExpPtr Operator::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) 
+Object Operator::intersect(const Object& l, const Object& r, const Object& e, Environment &env) 
 {
     return make_ptr<Operation>(make_ptr<Intersection>(), 
                                operate(l, r, env), 
                                e);
 }
 
-ExpPtr Operator::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) 
+Object Operator::apply(const Object& l, const Object& r, const Object& e, Environment &env) 
 {
     return make_ptr<Void>();
 }

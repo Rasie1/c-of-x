@@ -4,14 +4,14 @@
 class ValueInSet : public Data
 {
 public:
-    ValueInSet(ExpPtrArg set) : set(set) {}
+    ValueInSet(const Object& set) : set(set) {}
 
-    ExpPtr eval(Environment& env) const override;
+    Object eval(Environment& env) const override;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
+    bool unapplyVariables(const Object& e, Environment& env) override;
 
     virtual std::string show() const;
 
-    ExpPtr set;
+    Object set;
 };

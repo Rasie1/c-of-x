@@ -9,18 +9,18 @@ class Union : public Operator
 public:
     Union();
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
 
     std::string show() const override;
 
 
-    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env) override;
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
+    Object intersect(const Object& l, const Object& r, const Object& e, Environment &env) override;
+    bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
-    static ExpPtr make(const std::vector<ExpPtr>::iterator& begin, 
-                       const std::vector<ExpPtr>::iterator& end);
+    static Object make(const std::vector<Object>::iterator& begin, 
+                       const std::vector<Object>::iterator& end);
 
     static const std::string defaultName;
 };

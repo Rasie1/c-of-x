@@ -3,7 +3,7 @@
 #include "Expressions/Identifier.h"
 #include "System/Cast.h"
 
-ExpPtr Inverse::apply(ExpPtrArg e, Environment& env)
+Object Inverse::apply(const Object& e, Environment& env)
 {
     auto value = Identifier::unwrapIfId(e, env);
     if (auto f = d_cast<Morphism>(value))

@@ -14,7 +14,7 @@ Multiplication::Multiplication()
 
 }
 
-ExpPtr Multiplication::calculate(ExpPtrArg l, ExpPtrArg r) const
+Object Multiplication::calculate(const Object& l, const Object& r) const
 {
     if (auto first = d_cast<Integer>(l))
     if (auto second = d_cast<Integer>(r))
@@ -26,7 +26,7 @@ ExpPtr Multiplication::calculate(ExpPtrArg l, ExpPtrArg r) const
                                make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
 }
 
-bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
+bool Multiplication::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
 
     auto lId = checkType<Identifier>(l);

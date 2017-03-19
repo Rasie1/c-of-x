@@ -10,8 +10,8 @@ Intersection::Intersection()
 {
 }
 
-ExpPtr Intersection::operate(ExpPtrArg first,
-                             ExpPtrArg second,
+Object Intersection::operate(const Object& first,
+                             const Object& second,
                              Environment& env)
 {
     if (auto idL = d_cast<Identifier>(first))
@@ -75,9 +75,9 @@ std::string Intersection::show() const
 
 const std::string Intersection::defaultName = "&";
 
-bool Intersection::unapplyVariables(ExpPtrArg e,
-                                    ExpPtrArg l,
-                                    ExpPtrArg r,
+bool Intersection::unapplyVariables(const Object& e,
+                                    const Object& l,
+                                    const Object& r,
                                     Environment &env)
 {
     auto lUnapplied = l->unapplyVariables(e, env);
@@ -88,7 +88,7 @@ bool Intersection::unapplyVariables(ExpPtrArg e,
     return result;
 }
 
-ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
+Object Intersection::apply(const Object& l, const Object& r, const Object& e, Environment &env)
 {
     auto envc = env;
     auto lApplied = l->apply(e, env);
@@ -100,7 +100,7 @@ ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &e
     return result;
 }
 
-ExpPtr Intersection::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
+Object Intersection::intersect(const Object& l, const Object& r, const Object& e, Environment &env)
 {
     auto envc = env;
     auto lApplied = l->intersect(e, env);

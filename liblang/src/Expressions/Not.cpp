@@ -6,7 +6,7 @@
 #include "System/Environment.h"
 #include "System/Cast.h"
 
-ExpPtr Not::apply(ExpPtrArg e, Environment& env)
+Object Not::apply(const Object& e, Environment& env)
 {
     return e->complement(env);
 }
@@ -26,14 +26,14 @@ std::string Complement::show() const
 
 const std::string Complement::defaultName = "!";
 
-bool Complement::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Complement::unapplyVariables(const Object& e, Environment& env)
 {
     auto newEnv = env;
     auto result = this->e->unapplyVariables(e, newEnv);
     return !result;
 }
 
-ExpPtr Complement::intersect(ExpPtrArg other, const Environment& env)
+Object Complement::intersect(const Object& other, const Environment& env)
 {
     if (*e == *other)
         return make_ptr<Void>();
@@ -41,7 +41,7 @@ ExpPtr Complement::intersect(ExpPtrArg other, const Environment& env)
         return shared_from_this();
 }
 
-ExpPtr Complement::complement(const Environment& env)
+Object Complement::complement(const Environment& env)
 {
     return e;
 }

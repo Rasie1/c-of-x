@@ -11,7 +11,7 @@ public:
     bool operator==(const Expression& other) const override;
     std::string show() const override;
 
-    ExpPtr next() override;
+    Object next() override;
 
     long long value;
 };

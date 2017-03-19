@@ -6,7 +6,7 @@ class Not : public Morphism
 public:
     Not() {}
 
-    ExpPtr apply(ExpPtrArg e, Environment& env) override;
+    Object apply(const Object& e, Environment& env) override;
     virtual std::string show() const;
     static const std::string defaultName;
 };
@@ -14,15 +14,15 @@ public:
 class Complement : public Data
 {
 public:
-    Complement(ExpPtrArg e) : e(e) {}
+    Complement(const Object& e) : e(e) {}
 
     virtual std::string show() const;
     static const std::string defaultName;
     
-    virtual ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    ExpPtr complement(const Environment& env) override;
+    virtual Object intersect(const Object& other, const Environment& env) override;
+    Object complement(const Environment& env) override;
 
-    bool unapplyVariables(ExpPtrArg e, Environment& env) override;
+    bool unapplyVariables(const Object& e, Environment& env) override;
 
-    ExpPtr e;
+    Object e;
 };

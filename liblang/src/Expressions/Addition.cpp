@@ -13,7 +13,7 @@ Addition::Addition()
 {
 }
 
-ExpPtr Addition::calculate(ExpPtrArg l, ExpPtrArg r) const
+Object Addition::calculate(const Object& l, const Object& r) const
 {
     if (auto first = d_cast<Integer>(l))
     if (auto second = d_cast<Integer>(r))
@@ -32,7 +32,7 @@ std::string Addition::show() const
 
 const std::string Addition::defaultName = "+";
 
-bool Addition::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)
+bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);

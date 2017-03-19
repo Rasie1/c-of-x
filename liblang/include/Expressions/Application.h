@@ -6,11 +6,11 @@ class Application : public Operator
 public:
     Application();
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
 
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
+    bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
     std::string show() const override;
 private:
@@ -21,11 +21,11 @@ class ReverseApplication : public Operator
 public:
     ReverseApplication();
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
 
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
+    bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
     std::string show() const override;
     static const std::string defaultName;
@@ -38,11 +38,11 @@ class LowPriorityApplication : public Operator
 public:
     LowPriorityApplication();
 
-    ExpPtr operate(ExpPtrArg first,
-                   ExpPtrArg second,
+    Object operate(const Object& first,
+                   const Object& second,
                    Environment& env) override;
 
-    bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
+    bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
     std::string show() const override;
     static const std::string defaultName;

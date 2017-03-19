@@ -12,8 +12,8 @@
 #include "Expressions/Application.h"
 #include "System/Cast.h"
 
-Closure::Closure(ExpPtrArg argument,
-                 ExpPtrArg body,
+Closure::Closure(const Object& argument,
+                 const Object& body,
                  const Environment& env)
     : body(body),
       argument(argument),
@@ -26,7 +26,7 @@ Closure::~Closure()
 {
 }
 
-static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
+static bool isExpressionQuoted(const Object& e, Environment& env)
 {
     if (checkType<QuotedExpression>(e))
         return true;
@@ -43,7 +43,7 @@ static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
     return false;
 }
 
-ExpPtr Closure::apply(ExpPtrArg e, Environment& env)
+Object Closure::apply(const Object& e, Environment& env)
 {
     // In case of closure as predicate, it is more likely that closure's body intersects with only
     // argument subset, leaving arguments' complement in context of applied value as it was before
@@ -94,7 +94,7 @@ bool Closure::operator==(const Expression& other) const
         return false;
 }
 
-ExpPtr Closure::codomain()
+Object Closure::codomain()
 {
     // return make_ptr<Equals>(body);
     // TODO: not only body. Constraints from argument should be also applied here.
@@ -106,13 +106,13 @@ ExpPtr Closure::codomain()
                                    make_ptr<Any>()));
 }
 
-ExpPtr Closure::domain()
+Object Closure::domain()
 {
     return make_ptr<Equals>(argument);
     // TODO: not only argument. Constraints from body should be also applied here. Probably.
 }
 
-bool Closure::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Closure::unapplyVariables(const Object& e, Environment& env)
 {
     // this is somewhat opposite of case 
     // f x = y ---> f = x -> y
@@ -131,7 +131,7 @@ bool Closure::unapplyVariables(ExpPtrArg e, Environment& env)
     return unapplied;
 }
 
-ExpPtr Closure::inverse() const
+Object Closure::inverse() const
 {
     return make_ptr<Closure>(body, argument, env);
 }

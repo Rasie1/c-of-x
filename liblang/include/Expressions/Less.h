@@ -8,20 +8,20 @@ class LessThan :
         public RangeEnd
 {
 public:
-    LessThan(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
+    LessThan(const Object& e) : value(e) {}
+    optional<bool> holds(const Object& e, const Environment& env) override;
 
-    ExpPtr value;
+    Object value;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    ExpPtr unionize(ExpPtrArg other, const Environment& env) override;
-    ExpPtr complement(const Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
+    Object unionize(const Object& other, const Environment& env) override;
+    Object complement(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;
     static const std::string defaultName;
 
-    ExpPtr end() override;
+    Object end() override;
 };
 
 class LessOrEqualThan :
@@ -29,20 +29,20 @@ class LessOrEqualThan :
         public RangeEnd
 {
 public:
-    LessOrEqualThan(ExpPtrArg e) : value(e) {}
-    optional<bool> holds(ExpPtrArg e, const Environment& env) override;
+    LessOrEqualThan(const Object& e) : value(e) {}
+    optional<bool> holds(const Object& e, const Environment& env) override;
 
-    ExpPtr value;
+    Object value;
 
-    ExpPtr intersect(ExpPtrArg other, const Environment& env) override;
-    ExpPtr unionize(ExpPtrArg other, const Environment& env) override;
-    ExpPtr complement(const Environment& env) override;
+    Object intersect(const Object& other, const Environment& env) override;
+    Object unionize(const Object& other, const Environment& env) override;
+    Object complement(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
     std::string show() const;
     static const std::string defaultName;
 
-    ExpPtr end() override;
+    Object end() override;
 };
 
 class Less : public Operator
@@ -50,11 +50,11 @@ class Less : public Operator
 public:
     Less();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
+    Object operate(const Object&  first,
+                   const Object&  second,
                    Environment& env) override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
+    Object partialApplyLeft(const Object& e, Environment& env) override;
+    Object partialApplyRight(const Object& e, Environment& env) override;
 
     std::string show() const override;
 
@@ -66,11 +66,11 @@ class LessOrEqual : public Operator
 public:
     LessOrEqual();
 
-    ExpPtr operate(ExpPtrArg  first,
-                   ExpPtrArg  second,
+    Object operate(const Object&  first,
+                   const Object&  second,
                    Environment& env) override;
-    ExpPtr partialApplyLeft(ExpPtrArg e, Environment& env) override;
-    ExpPtr partialApplyRight(ExpPtrArg e, Environment& env) override;
+    Object partialApplyLeft(const Object& e, Environment& env) override;
+    Object partialApplyRight(const Object& e, Environment& env) override;
 
     std::string show() const override;
 

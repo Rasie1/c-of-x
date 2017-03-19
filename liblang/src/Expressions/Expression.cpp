@@ -30,7 +30,6 @@ bool Expression::operator< (const Expression& other) const
 
 size_t Expression::hash() const
 {
-//    std::cout << show() << "::::" << std::hash<std::string>()(show()) << std::endl;
     return std::hash<std::string>()(show());
 }
 
@@ -44,32 +43,32 @@ bool Expression::hasFreeVariables(const Environment& env) const
     return false;
 }
 
-ExpPtr Expression::intersect(ExpPtrArg& other, const Environment& env)
+Object Expression::intersect(const Object& other, const Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
 
-ExpPtr Expression::unionize(ExpPtrArg& other, const Environment& env)
+Object Expression::unionize(const Object& other, const Environment& env)
 {
     return make_ptr<Operation>(make_ptr<Union>(), shared_from_this(), other);
 }
 
-ExpPtr Expression::complement(const Environment& env)
+Object Expression::complement(const Environment& env)
 {
     return make_ptr<Complement>(shared_from_this());
 }
 
-ExpPtr Expression::element(const Environment& env)
+Object Expression::element(const Environment& env)
 {
     return make_ptr<ValueInSet>(shared_from_this());
 }
 
-ExpPtr Expression::apply(ExpPtrArg& other, Environment& env)
+Object Expression::apply(const Object& other, Environment& env)
 {
     return make_ptr<Void>();
 }
 
-bool Expression::unapplyVariables(ExpPtrArg e, Environment& env)
+bool Expression::unapplyVariables(const Object& e, Environment& env)
 {
     // TODO: we aren't supposed to get here
     return false;
