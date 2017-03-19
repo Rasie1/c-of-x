@@ -150,6 +150,7 @@ void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     else
         data[key] = value;
     debugPrint("RET: " + data[key]->show() + "\n", true);
+    decreaseDebugIndentation();
 //    return data[key;
 }
 
