@@ -4,7 +4,48 @@
 
 class Expression;
 
-typedef std::shared_ptr<Expression> Object;
+// typedef std::shared_ptr<Expression> Object;
+
+class Object
+{
+private:
+
+public:
+    Object() {}
+    
+    Object(const std::shared_ptr<Expression>& e) :
+        expression(e)
+    {
+    }
+
+    template <class T, class... Args>
+    constexpr auto makeObject(Args&&... args)
+     -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
+    {
+        Object ret;
+        ret.expression = std::make_shared<T>(std::forward<Args>(args)...);
+
+        return ret;
+    }
+
+    inline Expression& operator*() const
+    {
+        return *expression;
+    }
+
+    inline Expression* operator->() const
+    {
+        return expression.operator->();
+    }
+
+    inline bool operator==(const Object& other)
+    {
+        return expression == other.expression;
+    }
+
+    std::shared_ptr<Expression> expression;
+private:
+};
 
 using boost::optional;
 using boost::none;
@@ -16,6 +57,6 @@ template <class T, class... Args>
 constexpr auto makeObject(Args&&... args)
  -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
 {
-    return std::make_shared<T>(std::forward<Args>(args)...);
+    return Object::makeObject<T>(std::forward<Args>(args)...);
 }
 
