@@ -26,7 +26,6 @@ Closure::~Closure()
 {
 }
 
-
 static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
 {
     if (checkType<QuotedExpression>(e))
@@ -43,7 +42,6 @@ static bool isExpressionQuoted(ExpPtrArg e, Environment& env)
     }
     return false;
 }
-
 
 ExpPtr Closure::apply(ExpPtrArg e, Environment& env)
 {

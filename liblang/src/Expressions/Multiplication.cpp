@@ -18,16 +18,12 @@ ExpPtr Multiplication::calculate(ExpPtrArg l, ExpPtrArg r) const
 {
     if (auto first = d_cast<Integer>(l))
     if (auto second = d_cast<Integer>(r))
-    {
         return make_ptr<Integer>(first->value * second->value);
-    }
-    else
-    {
-        auto operation = make_ptr<Operation>(make_ptr<Multiplication>(), l, r);
-        return make_ptr<TypeError>(operation,
-                                   make_ptr<Identifier>("arguments of type integer"),
-                                   make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
-    }
+        
+    auto operation = make_ptr<Operation>(make_ptr<Multiplication>(), l, r);
+    return make_ptr<TypeError>(operation,
+                               make_ptr<Identifier>("arguments of type integer"),
+                               make_ptr<Identifier>("arguments: " + l->show() + ", " + r->show()));
 }
 
 bool Multiplication::unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env)

@@ -22,7 +22,6 @@ optional<bool> Equals::holds(ExpPtrArg e, const Environment& env)
         return make_optional(true);
 
     return none;
-    // todo: infinite casting possibilities go here
 }
 
 bool Equals::operator==(const Expression& other) const
@@ -51,11 +50,8 @@ ExpPtr Equals::intersect(ExpPtrArg other, const Environment& env)
     {
         auto l = value;
         auto r = equals->value;
+
         return make_ptr<Equals>(l->intersect(r, env));
-        //if (l == r)
-        //    return shared_from_this();
-        //else
-        //    return make_ptr<Void>();
     }
     return make_ptr<Operation>(make_ptr<Intersection>(), shared_from_this(), other);
 }
@@ -89,29 +85,13 @@ ExpPtr Equality::operate(ExpPtrArg first,
                          ExpPtrArg second,
                          Environment& env)
 {
-//    auto envl = env;
-//    auto envr = env;
     env.debugPrint("Equality: (" + first->show() + ") = (" + second->show() + ")\n", true);
     env.debugPrint("L R:\n", true);
     env.increaseDebugIndentation();
-    auto l = operateHelper(first, second, env);
+    operateHelper(first, second, env);
     env.decreaseDebugIndentation();
 
     ExpPtr ret = first;
-//    if (l)
-//    {
-//        env = envl;
-//        ret = first;
-//    }
-//    else if (r)
-//    {
-//        env = envr;
-//        ret = second;
-//    }
-//    else
-//    {
-//        return make_ptr<Void>();
-//    }
 
     return ret;
 }
