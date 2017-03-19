@@ -25,6 +25,9 @@ ExpPtr Intersection::operate(ExpPtrArg first,
 
     auto lr = l->intersect(r, env);
 
+    // temporary
+    return lr;
+
     // bool lf = false;
     // bool rf = false;
     // if (checkType<Operation>(lr))
