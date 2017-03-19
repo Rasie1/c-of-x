@@ -10,7 +10,8 @@ public:
                    ExpPtrArg second,
                    Environment& env) override;
     
-    virtual ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
+    ExpPtr apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
+    ExpPtr intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env);
     bool unapplyVariables(ExpPtrArg e, ExpPtrArg l, ExpPtrArg r, Environment &env) override;
 
     std::string show() const override;

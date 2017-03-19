@@ -18,7 +18,7 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     if (auto idR = d_cast<Identifier>(second))
     if (idL->name == idR->name)
         return first;
-        
+
     auto l = Identifier::unwrapIfId(first, env)->eval(env);
     auto r = Identifier::unwrapIfId(second, env)->eval(env);
 
@@ -36,7 +36,13 @@ ExpPtr Intersection::operate(ExpPtrArg first,
     // if (!lf)
     //     return lr;
 
-    // auto rl = r->intersect(l, env);
+     // auto rl = r->intersect(l, env);
+
+
+     // auto operation = make_ptr<Operation>(make_ptr<Intersection>(), lr, rl);
+//     auto result = operation->eval(env);
+
+     // return operation;
 
     // if (checkType<Operation>(rl))
     // {
@@ -80,6 +86,18 @@ ExpPtr Intersection::apply(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &e
     auto envc = env;
     auto lApplied = l->apply(e, env);
     auto rApplied = r->apply(e, env);
+
+    auto operation = make_ptr<Operation>(make_ptr<Intersection>(), lApplied, rApplied);
+    auto result = operation->eval(env);
+
+    return result;
+}
+
+ExpPtr Intersection::intersect(ExpPtrArg l, ExpPtrArg r, ExpPtrArg e, Environment &env)
+{
+    auto envc = env;
+    auto lApplied = l->intersect(e, env);
+    auto rApplied = r->intersect(e, env);
 
     auto operation = make_ptr<Operation>(make_ptr<Intersection>(), lApplied, rApplied);
     auto result = operation->eval(env);
