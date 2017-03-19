@@ -132,7 +132,8 @@ void Environment::erase(CExpPtrArg e)
 void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
     debugPrint("ENV ADD KEY: " + key->show() + "\n", true);
-    debugPrint("    NEW: " + value->show() + "\n", true);
+    increaseDebugIndentation();
+    debugPrint("NEW: " + value->show() + "\n", true);
 //    auto constKey = std::const_pointer_cast<Expression>(get(key));
 //    if (checkType<Operation>(value)
     // if (!excluding && data.find(key) != data.end())
@@ -141,14 +142,14 @@ void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     if (data.find(key) != data.end())
     {
         auto current = data[key];
-        debugPrint("    OLD: " + current->show() + "\n", true);
+        debugPrint("OLD: " + current->show() + "\n", true);
         auto intersection = intersect(current, value, *this);
-        debugPrint("    INT: " + intersection->show() + "\n", true);
+        debugPrint("INT: " + intersection->show() + "\n", true);
         data[key] = intersection;
     }
     else
         data[key] = value;
-    debugPrint("    RET: " + data[key]->show() + "\n", true);
+    debugPrint("RET: " + data[key]->show() + "\n", true);
 //    return data[key;
 }
 
@@ -160,7 +161,7 @@ void Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
 void Environment::replace(CExpPtrArg key, ExpPtrArg value, bool excluding)
 {
     debugPrint("ENV UPD KEY: " + key->show() + "\n", true);
-    debugPrint("    NEW: " + value->show() + "\n", true);
+    debugPrint("NEW: " + value->show() + "\n", true);
     data[key] = value;
     // return data[key];
 }
