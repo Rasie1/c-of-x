@@ -134,11 +134,6 @@ void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
     debugPrint("ENV ADD KEY: " + key->show() + "\n", true);
     increaseDebugIndentation();
     debugPrint("NEW: " + value->show() + "\n", true);
-//    auto constKey = std::const_pointer_cast<Expression>(get(key));
-//    if (checkType<Operation>(value)
-    // if (!excluding && data.find(key) != data.end())
-    //     data[key] = make_ptr<Operation>(make_ptr<Union>(), data[key], value);
-    // else
     if (data.find(key) != data.end())
     {
         auto current = data[key];
@@ -151,7 +146,6 @@ void Environment::add(CExpPtrArg key, ExpPtrArg value, bool excluding)
         data[key] = value;
     debugPrint("RET: " + data[key]->show() + "\n", true);
     decreaseDebugIndentation();
-//    return data[key;
 }
 
 void Environment::addEqual(CExpPtrArg key, ExpPtrArg value, bool excluding)
