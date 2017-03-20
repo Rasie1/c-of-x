@@ -93,11 +93,8 @@ Object Parser::parse(const vector<Token>::iterator& begin,
 
             // Handle force-eval operator
             bool evalForce = false;
-            if (checkType<Identifier>(left))
-            {
-                auto variable = std::static_pointer_cast<Identifier>(left);
+            if (auto variable = d_cast<Identifier>(left))
                 evalForce = variable->name == "#";
-            }
             if (evalForce)
                 q.push_back(right->eval(env));
             else
@@ -173,7 +170,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
         }
         else if (currentToken.type() == typeid(Tokens::LineBreak))
         {
-            operatorStack.push(makeObject<DefaultOperator>());
+            operatorStack.push(std::make_shared<DefaultOperator>());
             makeOperation();
         }
         else if (currentToken.type() == typeid(Tokens::Tabulation))
@@ -210,7 +207,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
             q.push_back(e);
             if (applicationFlag)
             {
-                operatorStack.push(makeObject<Application>());
+                operatorStack.push(std::make_shared<Application>());
                 makeOperation();
             }
 
