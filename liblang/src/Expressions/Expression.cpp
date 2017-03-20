@@ -38,29 +38,29 @@ std::string Expression::show() const
     return "expr";
 }
 
-bool Expression::hasFreeVariables(const Environment& env) const
+bool Expression::hasFreeVariables(const Environment& env)
 {
     return false;
 }
 
 Object Expression::intersect(const Object& other, const Environment& env)
 {
-    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object Expression::unionize(const Object& other, const Environment& env)
 {
-    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
+    return makeOperation<Union>(thisObject(), other);
 }
 
 Object Expression::complement(const Environment& env)
 {
-    return makeObject<Complement>(shared_from_this());
+    return makeObject<Complement>(thisObject());
 }
 
 Object Expression::element(const Environment& env)
 {
-    return makeObject<ValueInSet>(shared_from_this());
+    return makeObject<ValueInSet>(thisObject());
 }
 
 Object Expression::apply(const Object& other, Environment& env)
@@ -72,4 +72,9 @@ bool Expression::unapplyVariables(const Object& e, Environment& env)
 {
     // TODO: we aren't supposed to get here
     return false;
+}
+
+Object Expression::thisObject()
+{
+    return Object(shared_from_this());
 }

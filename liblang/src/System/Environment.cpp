@@ -41,7 +41,7 @@ inline Object intersect(const Object& l, const Object& r, Environment env)
     auto lp = checkType<Identifier>(l) ? env.get(l) : l;
     auto rp = checkType<Identifier>(r) ? env.get(r) : r;
 
-    auto operation = makeObject<Operation>(makeObject<Intersection>(), lp, rp);
+    auto operation = makeOperation<Intersection>(lp, rp);
     auto result = operation->eval(env);
 
     return result;
@@ -49,7 +49,7 @@ inline Object intersect(const Object& l, const Object& r, Environment env)
 
 Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
     debugPrinter(debugPrinter),
-    defaultOperator(makeObject<Then>())
+    defaultOperator(std::make_shared<Then>())
 {
     addDefaultDefinitions();
 }
@@ -72,7 +72,7 @@ static Object unwrapEqual(const Object& value)
     {
         auto l = unwrapEqual(operation->left);
         auto r = unwrapEqual(operation->right);
-        return makeObject<Operation>(makeObject<Union>(), l, r);
+        return makeOperation<Union>(l, r);
     }
     if (checkType<Void>(value))
         return value;

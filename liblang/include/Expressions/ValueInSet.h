@@ -6,7 +6,7 @@ class ValueInSet : public Data
 public:
     ValueInSet(const Object& set) : set(set) {}
 
-    Object eval(Environment& env) const override;
+    Object eval(Environment& env) override;
 
     Object intersect(const Object& other, const Environment& env) override;
     bool unapplyVariables(const Object& e, Environment& env) override;

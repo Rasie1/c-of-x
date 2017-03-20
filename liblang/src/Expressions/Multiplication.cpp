@@ -20,7 +20,7 @@ Object Multiplication::calculate(const Object& l, const Object& r) const
     if (auto second = d_cast<Integer>(r))
         return makeObject<Integer>(first->value * second->value);
         
-    auto operation = makeObject<Operation>(makeObject<Multiplication>(), l, r);
+    auto operation = makeOperation<Multiplication>(l, r);
     return makeObject<TypeError>(operation,
                                makeObject<Identifier>("arguments of type integer"),
                                makeObject<Identifier>("arguments: " + l->show() + ", " + r->show()));
@@ -35,18 +35,17 @@ bool Multiplication::unapplyVariables(const Object& e, const Object& l, const Ob
     if (lId && !rId)
     {
         throw std::logic_error("not implemented");
-        // auto value = makeObject<Operation>(makeObject<Division>(), e, r);
+        // auto value = makeOperation<Division>(e, r);
         // return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
         throw std::logic_error("not implemented");
-        // auto value = makeObject<Operation>(makeObject<Division>(), e, l);
+        // auto value = makeOperation<Division>(e, l);
         // return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = makeObject<Operation>(makeObject<Multiplication>(),
-                                         l, r)->eval(env);
+    auto evaluated = makeOperation<Multiplication>(l, r)->eval(env);
     if (auto op = d_cast<Operation>(evaluated))
     {
         if (checkType<Multiplication>(op->op))

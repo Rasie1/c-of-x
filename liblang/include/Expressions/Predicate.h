@@ -8,7 +8,7 @@ public:
     Predicate() {}
 
     Object apply(const Object& e, Environment& env) override;
-    Object inverse() const override;
+    Object inverse() override;
 
     virtual optional<bool> holds(const Object& e, const Environment& env) = 0;
 };

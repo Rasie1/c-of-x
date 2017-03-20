@@ -9,7 +9,7 @@ public:
               const Object& left,
               const Object& right);
 
-    Object eval(Environment& env) const override;
+    Object eval(Environment& env) override;
     std::string show() const override;
 
     Object apply(const Object& other, Environment& env) override;
@@ -19,8 +19,14 @@ public:
 
     bool operator==(const Expression& other) const override;
 
-    const std::shared_ptr<Operator> op;
+    std::shared_ptr<Operator> op;
     Object left;
     Object right;
 };
 
+template <class T>
+Object makeOperation(const Object& l, const Object& r)
+{
+    return makeObject<Operation>(std::make_shared<T>(),
+                                 l, r);
+}

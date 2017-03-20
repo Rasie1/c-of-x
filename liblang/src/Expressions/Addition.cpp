@@ -19,7 +19,7 @@ Object Addition::calculate(const Object& l, const Object& r) const
     if (auto second = d_cast<Integer>(r))
         return makeObject<Integer>(first->value + second->value);
         
-    auto operation = makeObject<Operation>(makeObject<Addition>(), l, r);
+    auto operation = makeOperation<Addition>(l, r);
     return makeObject<TypeError>(operation,
                                makeObject<Identifier>("arguments of type integer"),
                                makeObject<Identifier>("arguments: " + l->show() + ", " + r->show()));
@@ -39,17 +39,16 @@ bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& 
 
     if (lId && !rId)
     {
-        auto value = makeObject<Operation>(makeObject<Subtraction>(), e, r);
+        auto value = makeOperation<Subtraction>(e, r);
         return l->unapplyVariables(value, env);
     }
     else if (!lId && rId)
     {
-        auto value = makeObject<Operation>(makeObject<Subtraction>(), e, l);
+        auto value = makeOperation<Subtraction>(e, l);
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = makeObject<Operation>(makeObject<Addition>(),
-                                         l, r)->eval(env);
+    auto evaluated = makeOperation<Addition>(l, r)->eval(env);
     if (auto op = d_cast<Operation>(evaluated))
     {
         if (checkType<Addition>(op->op))

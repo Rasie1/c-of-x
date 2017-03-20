@@ -197,12 +197,12 @@ bool Union::unapplyVariables(const Object& e,
 Object Union::intersect(const Object& l, const Object& r, const Object& e, Environment &env)
 {
     // TODO: preserve identifier?
-    auto operation = makeObject<Operation>(makeObject<Intersection>(), l, e);
+    auto operation = makeOperation<Intersection>(l, e);
     auto leftIntersection = operation->eval(env);
 
     if (checkType<Void>(leftIntersection))
     {
-        auto operation = makeObject<Operation>(makeObject<Intersection>(), r, e);
+        auto operation = makeOperation<Intersection>(r, e);
         auto rightIntersection = operation->eval(env);
 
         return rightIntersection;
@@ -221,7 +221,5 @@ Object Union::make(const std::vector<Object>::iterator& begin,
     {
         return make(next, end);
     }
-    return makeObject<Operation>(makeObject<Union>(),
-                               *begin,
-                               make(next, end));
+    return makeOperation<Union>(*begin, make(next, end));
 }

@@ -63,7 +63,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
         env.debugPrint(debugOutput.str());
     }
 
-    Object ret = nullptr;
+    Object ret;
 
     std::stack<std::shared_ptr<Operator>> operatorStack;
     std::deque<Object> q;
@@ -119,7 +119,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
          currentTokenIt++)
     {
         auto& currentToken = *currentTokenIt;
-        Object e = nullptr;
+        Object e;
         if (currentToken.type() == typeid(Tokens::Identifier))
         {
             e = makeObject<Identifier>(get<Tokens::Identifier>(currentToken).name);

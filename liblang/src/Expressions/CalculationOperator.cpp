@@ -19,7 +19,7 @@ Object CalculationOperator::operate(const Object& first,
                                     const Object& second,
                                     Environment& env)
 {
-    env.defaultOperator = d_cast<Operator>(shared_from_this());
+    env.defaultOperator = d_cast<Operator>(thisObject());
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
 
@@ -32,7 +32,7 @@ Object CalculationOperator::operate(const Object& first,
     right = Identifier::unwrapIfId(right, envCopy);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return makeObject<Operation>(d_cast<Operator>(shared_from_this()), first, second);
+        return makeObject<Operation>(d_cast<Operator>(thisObject()), first, second);
 
 
     // Next comes union stuff that will be replaced later

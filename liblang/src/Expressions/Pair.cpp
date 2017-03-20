@@ -12,7 +12,7 @@ Object Pair::operate(const Object& first,
                      const Object& second,
                      Environment& env)
 {
-    return makeObject<Operation>(makeObject<Pair>(), first, second);
+    return makeOperation<Pair>(first, second);
 }
 
 std::string Pair::show() const

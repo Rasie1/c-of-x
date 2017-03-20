@@ -7,7 +7,7 @@ public:
     virtual Object intersect(const Object& other, const Environment& env) override;
     virtual Object codomain();
     virtual Object domain();
-    virtual Object inverse() const;
+    virtual Object inverse();
 };
 
 class Isomorphism : public Morphism

@@ -60,13 +60,13 @@ Object MoreThan::intersect(const Object& other, const Environment& env)
             auto eqvalue = v1->value;
             auto thvalue = v2->value;
             if (thvalue < eqvalue)
-                return p;
+                return Object(p);
             else
                 return makeObject<Void>();
         }
     }
 
-    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object MoreThan::unionize(const Object& other, const Environment& env)
@@ -79,7 +79,7 @@ Object MoreThan::unionize(const Object& other, const Environment& env)
             return makeObject<MoreThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
     }
-    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
+    return makeOperation<Union>(thisObject(), other);
 }
 
 Object MoreThan::complement(const Environment& env)
@@ -104,7 +104,7 @@ Object More::operate(const Object& first,
 {
     auto f = d_cast<MoreThan>(partialApplyRight(second, env));
 
-    return Application().operate(f, first, env);
+    return Application().operate(Object(f), first, env);
 }
 
 std::string More::show() const
@@ -171,13 +171,13 @@ Object MoreOrEqualThan::intersect(const Object& other, const Environment& env)
             auto eqvalue = v1->value;
             auto thvalue = v2->value;
             if (thvalue < eqvalue)
-                return p;
+                return Object(p);
             else
                 return makeObject<Void>();
         }
     }
 
-    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object MoreOrEqualThan::unionize(const Object& other, const Environment& env)
@@ -190,7 +190,7 @@ Object MoreOrEqualThan::unionize(const Object& other, const Environment& env)
             return makeObject<MoreOrEqualThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
     }
-    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
+    return makeOperation<Union>(thisObject(), other);
 }
 
 Object MoreOrEqualThan::complement(const Environment& env)

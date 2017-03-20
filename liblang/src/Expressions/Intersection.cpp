@@ -46,7 +46,7 @@ Object Intersection::operate(const Object& first,
 //    if (checkType<Void>(rl))
 //        return lr;
 
-    auto operation = makeObject<Operation>(makeObject<Intersection>(), lr, rl);
+    auto operation = makeOperation<Intersection>(lr, rl);
     auto result = operation->eval(env);
 
     return result;
@@ -94,7 +94,7 @@ Object Intersection::apply(const Object& l, const Object& r, const Object& e, En
     auto lApplied = l->apply(e, env);
     auto rApplied = r->apply(e, env);
 
-    auto operation = makeObject<Operation>(makeObject<Intersection>(), lApplied, rApplied);
+    auto operation = makeOperation<Intersection>(lApplied, rApplied);
     auto result = operation->eval(env);
 
     return result;
@@ -106,7 +106,7 @@ Object Intersection::intersect(const Object& l, const Object& r, const Object& e
     auto lApplied = l->intersect(e, env);
     auto rApplied = r->intersect(e, env);
 
-    auto operation = makeObject<Operation>(makeObject<Intersection>(), lApplied, rApplied);
+    auto operation = makeOperation<Intersection>(lApplied, rApplied);
     auto result = operation->eval(env);
 
     return result;

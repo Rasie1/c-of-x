@@ -27,10 +27,9 @@ bool Operator::operator==(const Expression& other) const
 Object Operator::partialApplyLeft(const Object& e, Environment& env)
 {
     auto arg = makeObject<Identifier>("arg");
-    auto that = std::static_pointer_cast<const Operator>(shared_from_this());
+    auto that = std::static_pointer_cast<const Operator>(thisObject().expression);
     auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
-                                    e, 
-                                    arg);
+                                    e, arg);
 
     auto closure = Lambda().operate(arg, body, env);
     return closure;
@@ -39,10 +38,9 @@ Object Operator::partialApplyLeft(const Object& e, Environment& env)
 Object Operator::partialApplyRight(const Object& e, Environment& env)
 {
     auto arg = makeObject<Identifier>("arg");
-    auto that = std::static_pointer_cast<const Operator>(shared_from_this());
+    auto that = std::static_pointer_cast<const Operator>(thisObject().expression);
     auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
-                                    arg, 
-                                    e);
+                                    arg, e);
 
     auto closure = Lambda().operate(arg, body, env);
     return closure;
@@ -52,13 +50,12 @@ Object Operator::partialApplyNoArgs(Environment& env)
 {
     auto l = makeObject<Identifier>("l");
     auto r = makeObject<Identifier>("r");
-    auto that = std::static_pointer_cast<const Operator>(shared_from_this());
+    auto that = std::static_pointer_cast<const Operator>(thisObject().expression);
     auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
-                                    l, 
-                                    r);
+                                    l, r);
 
     // auto rUnapplied = Lambda().operate(r, body, env);
-    auto rUnapplied = makeObject<Operation>(makeObject<Lambda>(), r, body);
+    auto rUnapplied = makeOperation<Lambda>(r, body);
     auto lUnapplied = Lambda().operate(l, rUnapplied, env);
     return lUnapplied;
 }
@@ -75,9 +72,8 @@ Object Operator::apply(const Object& e, Environment& env)
 
 Object Operator::intersect(const Object& l, const Object& r, const Object& e, Environment &env) 
 {
-    return makeObject<Operation>(makeObject<Intersection>(), 
-                               operate(l, r, env), 
-                               e);
+    return makeOperation<Intersection>(operate(l, r, env), 
+                                       e);
 }
 
 Object Operator::apply(const Object& l, const Object& r, const Object& e, Environment &env) 

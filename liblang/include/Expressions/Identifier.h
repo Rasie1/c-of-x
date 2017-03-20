@@ -11,7 +11,7 @@ public:
     bool operator==(const Expression& other) const override;
     std::string show() const override;
 
-    bool hasFreeVariables(const Environment& env) const;
+    bool hasFreeVariables(const Environment& env) override;
 
     static Object unwrapIfId(const Object& e, const Environment& env);
     bool unapplyVariables(const Object& e, Environment& env) override;

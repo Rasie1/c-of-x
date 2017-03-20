@@ -15,7 +15,7 @@ optional<bool> Equals::holds(const Object& e, const Environment& env)
     if (*value == *e)
         return make_optional(true);
 
-    auto operation = makeObject<Operation>(makeObject<Intersection>(), value, e);
+    auto operation = makeOperation<Intersection>(value, e);
     auto intersection = operation->eval(const_cast<Environment&>(env));
 
     if (*intersection == *value || *intersection == *e)
@@ -53,7 +53,7 @@ Object Equals::intersect(const Object& other, const Environment& env)
 
         return makeObject<Equals>(l->intersect(r, env));
     }
-    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object Equals::element(const Environment& env)

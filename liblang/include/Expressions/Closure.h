@@ -21,7 +21,7 @@ public:
     Object codomain() override;
     Object domain() override;
 
-    Object inverse() const override;
+    Object inverse() override;
 
     Object body;
     Object argument;

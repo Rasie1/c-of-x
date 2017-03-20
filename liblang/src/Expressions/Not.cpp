@@ -38,7 +38,7 @@ Object Complement::intersect(const Object& other, const Environment& env)
     if (*e == *other)
         return makeObject<Void>();
     else
-        return shared_from_this();
+        return thisObject();
 }
 
 Object Complement::complement(const Environment& env)

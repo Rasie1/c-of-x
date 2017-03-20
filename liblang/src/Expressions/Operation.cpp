@@ -17,7 +17,7 @@ Operation::Operation(const std::shared_ptr<Operator>& op,
 
 }
 
-Object Operation::eval(Environment& env) const
+Object Operation::eval(Environment& env)
 {
     Object ret;
 

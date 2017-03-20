@@ -3,7 +3,7 @@
 
 Object Void::intersect(const Object& other, const Environment& env)
 {
-    return shared_from_this();
+    return thisObject();
 }
 
 std::string Void::show() const

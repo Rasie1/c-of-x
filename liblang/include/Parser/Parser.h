@@ -4,9 +4,9 @@
 #include <vector>
 #include "Parser/Token.h"
 #include "Parser/Lexer.h"
+#include "System/Object.h"
 
 class Expression;
-typedef std::shared_ptr<Expression> Object;
 class Environment;
 class Parser
 {

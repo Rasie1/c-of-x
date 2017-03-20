@@ -68,9 +68,7 @@ Object Closure::apply(const Object& e, Environment& env)
     }
     else if (checkType<Operation>(evaluated))
     {
-        return makeObject<Operation>(makeObject<Application>(),
-                                   std::const_pointer_cast<Expression>(shared_from_this()),
-                                   e);
+        return makeOperation<Application>(thisObject(), e);
     }
 
     return Identifier::unwrapIfId(evaluated, newEnv);
@@ -100,10 +98,8 @@ Object Closure::codomain()
     // TODO: not only body. Constraints from argument should be also applied here.
     // TODO: environment counts as codomain as well
 
-    return makeObject<Equals>(
-               makeObject<Operation>(makeObject<Application>(),
-                                   shared_from_this(),
-                                   makeObject<Any>()));
+    return makeObject<Equals>(makeOperation<Application>(thisObject(),
+                                                         makeObject<Any>()));
 }
 
 Object Closure::domain()
@@ -131,7 +127,7 @@ bool Closure::unapplyVariables(const Object& e, Environment& env)
     return unapplied;
 }
 
-Object Closure::inverse() const
+Object Closure::inverse()
 {
     return makeObject<Closure>(body, argument, env);
 }

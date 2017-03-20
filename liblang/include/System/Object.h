@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <typeinfo>
+#include <boost/optional.hpp>
 
 class Expression;
 
@@ -19,8 +20,7 @@ public:
     }
 
     template <class T, class... Args>
-    constexpr auto makeObject(Args&&... args)
-     -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
+    static constexpr Object makeObject(Args&&... args)
     {
         Object ret;
         ret.expression = std::make_shared<T>(std::forward<Args>(args)...);
@@ -38,9 +38,14 @@ public:
         return expression.operator->();
     }
 
-    inline bool operator==(const Object& other)
+    inline bool operator==(const Object& other) const
     {
         return expression == other.expression;
+    }
+
+    inline explicit operator bool() const
+    {
+        return expression.operator bool();
     }
 
     std::shared_ptr<Expression> expression;
@@ -54,8 +59,7 @@ using std::static_pointer_cast;
 using std::dynamic_pointer_cast;
 
 template <class T, class... Args>
-constexpr auto makeObject(Args&&... args)
- -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
+constexpr Object makeObject(Args&&... args)
 {
     return Object::makeObject<T>(std::forward<Args>(args)...);
 }

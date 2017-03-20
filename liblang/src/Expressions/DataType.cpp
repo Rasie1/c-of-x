@@ -5,9 +5,9 @@
 #include "Expressions/Any.h"
 #include "System/Cast.h"
 
-Object Data::eval(Environment& env) const
+Object Data::eval(Environment& env)
 {
-    return std::const_pointer_cast<Expression>(shared_from_this());
+    return thisObject();
 }
 
 bool Data::unapplyVariables(const Object& e, Environment& env)

@@ -56,7 +56,7 @@ Object Application::operate(const Object& first,
         right = second->eval(env);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return makeObject<Operation>(std::static_pointer_cast<Operator>(shared_from_this()), left, right);
+        return makeOperation<Application>(left, right);
 
     std::vector<Object> expressions;
 
@@ -135,7 +135,7 @@ bool Application::unapplyVariables(const Object& e,
     if (lId)
     {
         auto newEnv = env;
-        newEnv.addEqual(l, makeObject<Operation>(makeObject<Lambda>(), r, e), true);
+        newEnv.addEqual(l, makeOperation<Lambda>(r, e), true);
         auto closure = Lambda().operate(r, e, newEnv);
 
         env.addEqual(l, closure, false);
@@ -146,7 +146,7 @@ bool Application::unapplyVariables(const Object& e,
 
     // Otherwise, 'unapply' the application, turning right side into function
     // For example, `f x = y ----> f = x -> y`
-    auto closure = makeObject<Operation>(makeObject<Lambda>(), r, e);
+    auto closure = makeOperation<Lambda>(r, e);
     return l->unapplyVariables(closure, env);
 }
 

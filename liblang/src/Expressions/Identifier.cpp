@@ -24,9 +24,9 @@ std::string Identifier::show() const
     return name;
 }
 
-bool Identifier::hasFreeVariables(const Environment& env) const
+bool Identifier::hasFreeVariables(const Environment& env)
 {
-    return d_cast<Any>(env.getEqual(std::const_pointer_cast<Expression>(shared_from_this()))) != nullptr;
+    return checkType<Any>(env.getEqual(thisObject()));
 }
 
 Object Identifier::unwrapIfId(const Object& e, const Environment& env)
@@ -47,9 +47,9 @@ bool Identifier::unapplyVariables(const Object& e, Environment& env)
     if (checkType<Void>(value))
         return false;
 
-    env.addEqual(shared_from_this(), value, true);
+    env.addEqual(thisObject(), value, true);
 
-    auto intersection = env.getEqual(shared_from_this());
+    auto intersection = env.getEqual(thisObject());
     if (checkType<Void>(intersection))
         return false;
 

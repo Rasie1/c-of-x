@@ -55,26 +55,21 @@ Object Morphism::intersect(const Object& other, const Environment& env)
 
     // if (auto other = d_cast<Morphism>(evaluated))
     // {
-    //     // return makeObject<Operation>(makeObject<Union>(),
-    //     //                            shared_from_this(),
-    //     //                            other);
+    //     // return makeOperation<Union>(thisObject(),
+    //     //                             other);
     //     // todo: not sure if it even works for non-closures
     //     auto intersectionOfCodomains =
-    //         makeObject<Operation>(makeObject<Intersection>(),
-    //                             this->codomain(),
+    //         makeOperation<Intersection>(this->codomain(),
     //                             other->codomain());
     //     auto intersectionOfDomains =
-    //         makeObject<Operation>(makeObject<Intersection>(),
-    //                             this->domain(),
+    //         makeOperation<Intersection>(this->domain(),
     //                             other->domain());
 
     //     auto leftDomain = 
-    //         makeObject<Operation>(makeObject<Intersection>(),
-    //                             makeObject<Complement>(intersectionOfDomains),
+    //         makeOperation<Intersection>(makeObject<Complement>(intersectionOfDomains),
     //                             this->domain());
     //     auto rightDomain = 
-    //         makeObject<Operation>(makeObject<Intersection>(),
-    //                             makeObject<Complement>(intersectionOfDomains),
+    //         makeOperation<Intersection>(makeObject<Complement>(intersectionOfDomains),
     //                             other->domain());
 
     //     auto intersectionClosure = 
@@ -87,23 +82,20 @@ Object Morphism::intersect(const Object& other, const Environment& env)
     //                           newEnv);
     //     auto rightClosure =
     //         makeObject<Closure>(makeObject<ValueInSet>(rightDomain),
-    //                           makeObject<ValueInSet>(other->codomain()),
-    //                           newEnv);
+    //                             makeObject<ValueInSet>(other->codomain()),
+    //                             newEnv);
     //     // // todo: here could be something about fourth case
 
     //     auto intersectionOfFunctions =
-    //         makeObject<Operation>(makeObject<Union>(),
-    //                             intersectionClosure,
-    //                             makeObject<Operation>(makeObject<Union>(),
-    //                                                 leftClosure,
-    //                                                 rightClosure));
+    //         makeOperation<Union>(intersectionClosure,
+    //                              makeOperation<Union>(leftClosure,
+    //                                                   rightClosure));
 
     //     return intersectionOfFunctions;
     // }
 
-    return makeObject<Operation>(makeObject<Intersection>(),
-                               shared_from_this(),
-                               evaluated);
+    return makeOperation<Intersection>(thisObject(),
+                                       evaluated);
 
 }
 
@@ -117,7 +109,7 @@ Object Morphism::domain()
     return makeObject<Any>();
 }
 
-Object Morphism::inverse() const
+Object Morphism::inverse()
 {
     return makeObject<Void>();
 }

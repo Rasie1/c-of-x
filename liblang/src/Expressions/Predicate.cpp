@@ -19,18 +19,18 @@ Object Predicate::apply(const Object& e, Environment& env)
     {
         if (auto id = d_cast<Identifier>(evaluated))
         {
-            env.add(id,
-                    std::const_pointer_cast<Expression>(shared_from_this()));
+            env.add(Object(id),
+                    thisObject());
             return evaluated;
         }
         else
-            return makeObject<ValueInSet>(std::const_pointer_cast<Expression>(shared_from_this()));
+            return makeObject<ValueInSet>(thisObject());
 
     }
     else if (auto id = d_cast<Identifier>(evaluated))
     {
-        env.add(id, std::const_pointer_cast<Expression>(shared_from_this()));
-        return id;
+        env.add(Object(id), thisObject());
+        return Object(id);
     }
     else
     {
@@ -39,18 +39,16 @@ Object Predicate::apply(const Object& e, Environment& env)
             result =  *option ? expr
                               : makeObject<Void>();
         else
-            result = makeObject<Operation>(makeObject<Application>(),
-                                         std::const_pointer_cast<Expression>(shared_from_this()),
-                                         expr);
+            result = makeOperation<Application>(thisObject(), expr);
         return result;
     }
 
 }
 
-Object Predicate::inverse() const
+Object Predicate::inverse()
 {
     // kind of dangerous
-    return d_cast<Morphism>(std::const_pointer_cast<Expression>(shared_from_this()));
+    return Object(d_cast<Morphism>(thisObject()));
 }
 
 

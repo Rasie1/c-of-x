@@ -16,13 +16,6 @@ std::string ValueInSet::show() const
 
 bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
 {
-//    if (auto operation = d_cast<Operation>(e))
-//    {
-//        if (checkType<Intersection>(operation->op))
-//        {
-
-//        }
-//    }
     auto element = set->element(env);
     if (auto stillValueInSet = d_cast<ValueInSet>(element))
     {
@@ -43,13 +36,13 @@ Object ValueInSet::intersect(const Object& other, const Environment& env)
     if (checkType<Any>(this->set))
         return other;
 
-    auto operation = makeObject<Operation>(makeObject<Application>(), this->set, other);
+    auto operation = makeOperation<Application>(this->set, other);
     auto ret = operation->eval(envc);
 
     return ret;
 }
 
-Object ValueInSet::eval(Environment& env) const
+Object ValueInSet::eval(Environment& env)
 {
     return set->element(env);
 }

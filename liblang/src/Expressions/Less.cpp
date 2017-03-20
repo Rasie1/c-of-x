@@ -60,13 +60,13 @@ Object LessThan::intersect(const Object& other, const Environment& env)
             auto eqvalue = v1->value;
             auto thvalue = v2->value;
             if (thvalue > eqvalue)
-                return p;
+                return Object(p);
             else
                 return makeObject<Void>();
         }
     }
 
-    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object LessThan::unionize(const Object& other, const Environment& env)
@@ -80,7 +80,7 @@ Object LessThan::unionize(const Object& other, const Environment& env)
         }
     }
 
-    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
+    return makeOperation<Union>(thisObject(), other);
 }
 
 Object LessThan::complement(const Environment& env)
@@ -174,13 +174,13 @@ Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
             auto eqvalue = v1->value;
             auto thvalue = v2->value;
             if (thvalue > eqvalue)
-                return p;
+                return Object(p);
             else
                 return makeObject<Void>();
         }
     }
 
-    return makeObject<Operation>(makeObject<Intersection>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
@@ -194,7 +194,7 @@ Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
         }
     }
 
-    return makeObject<Operation>(makeObject<Union>(), shared_from_this(), other);
+    return makeOperation<Intersection>(thisObject(), other);
 }
 
 Object LessOrEqualThan::complement(const Environment& env)

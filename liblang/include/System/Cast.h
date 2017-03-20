@@ -15,57 +15,80 @@ constexpr bool typeEquals(const Object& e)
     return typeid(*e) == typeid(T);
 }
 
-template <class T, class F>
-auto cast_helper_visitor(const std::shared_ptr<F>& e)
- -> decltype(std::dynamic_pointer_cast<T>(e))
+namespace cast_impl
 {
-    if (auto casted = std::dynamic_pointer_cast<T>(e))
-        return casted;
-    if (auto op = std::dynamic_pointer_cast<Operation>(e))
-    if (typeEquals<Intersection>(op->op))
+
+    template <class T, class F>
+    auto cast_helper_visitor(const std::shared_ptr<F>& e)
+     -> decltype(std::dynamic_pointer_cast<T>(e))
     {
-        if (auto l = cast_helper_visitor<T>(op->left.expression))
-            return l;
-        if (auto r = cast_helper_visitor<T>(op->right.expression))
-            return r;
+        if (auto casted = std::dynamic_pointer_cast<T>(e))
+            return casted;
+        if (auto op = std::dynamic_pointer_cast<const Operation>(e))
+        if (typeEquals<const Intersection>(op->op))
+        {
+            if (auto l = cast_helper_visitor<T>(op->left.expression))
+                return l;
+            if (auto r = cast_helper_visitor<T>(op->right.expression))
+                return r;
+        }
+
+        return nullptr;
     }
 
-    return nullptr;
-}
+    template <class T, class F>
+    auto d_cast_helper(const std::shared_ptr<F>& e)
+     -> decltype(cast_helper_visitor<T>(e))
+    {
+        return cast_helper_visitor<T>(e);    
+    }
 
-template <class T, class F>
-auto d_cast_helper(const std::shared_ptr<F>& e)
- -> decltype(cast_helper_visitor<T>(e))
-{
-    return cast_helper_visitor<T>(e);    
-}
+    template <class T, class F>
+    auto d_cast_helper(const std::shared_ptr<const F>& e)
+     -> decltype(cast_helper_visitor<const T>(e))
+    {
+        return cast_helper_visitor<const T>(e);    
+    }
 
-template <class T, class F>
-auto d_cast_helper(const std::shared_ptr<const F>& e)
- -> decltype(cast_helper_visitor<const T>(e))
-{
-    return cast_helper_visitor<const T>(e);    
+    // template <class T, class F>
+    // auto cast_helper(const std::shared_ptr<F>& e)
+    //  -> decltype(std::dynamic_pointer_cast<T>(e))
+    // {
+    //     if (auto casted = std::dynamic_pointer_cast<T>(e))
+    //         return casted;
+    //     if (auto op = std::dynamic_pointer_cast<const Operation>(e))
+    //     if (typeEquals<const Intersection>(op->op))
+    //     {
+    //         if (auto l = cast_helper<T>(op->left))
+    //             return l;
+    //         if (auto r = cast_helper<T>(op->right))
+    //             return r;
+    //     }
+
+    //     return nullptr;
+    // }
+
 }
 
 template <class T>
 auto d_cast(const Object& e)
- -> decltype(d_cast_helper<T>(e.expression))
+ -> decltype(cast_impl::d_cast_helper<T>(e.expression))
 {
-    return d_cast_helper<T>(e.expression);    
+    return cast_impl::d_cast_helper<T>(e.expression);    
 }
 
 template <class T, class F>
 auto d_cast(const std::shared_ptr<F>& e)
- -> decltype(cast_helper_visitor<T>(e))
+ -> decltype(cast_impl::cast_helper_visitor<T>(e))
 {
-    return cast_helper_visitor<T>(e);    
+    return cast_impl::cast_helper_visitor<T>(e);    
 }
 
 template <class T, class F>
 auto d_cast(const std::shared_ptr<const F>& e)
- -> decltype(cast_helper_visitor<const T>(e))
+ -> decltype(cast_impl::cast_helper_visitor<const T>(e))
 {
-    return cast_helper_visitor<const T>(e);    
+    return cast_impl::cast_helper_visitor<const T>(e);    
 }
 
 template <class T>

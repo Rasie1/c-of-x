@@ -28,12 +28,7 @@ const std::string Print::defaultName = "print";
 
 Object PrintInfo::apply(const Object& e, Environment& env)
 {
-    Object arg;
-    arg = d_cast<Identifier>(e);
-    if (arg)
-        arg = env.get(e);
-    else
-        arg = e;
+    Object arg = checkType<Identifier>(e) ? env.get(e) : e;
     auto evaluated = arg->eval(env);
     std::cout << evaluated->show();
     return evaluated;
