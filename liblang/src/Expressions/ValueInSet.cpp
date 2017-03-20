@@ -17,7 +17,7 @@ std::string ValueInSet::show() const
 bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
 {
     auto element = set->element(env);
-    if (auto stillValueInSet = d_cast<ValueInSet>(element))
+    if (auto stillValueInSet = cast<ValueInSet>(element))
     {
         auto ret = Application().unapplyVariables(e,
                                                   set,

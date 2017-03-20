@@ -15,8 +15,8 @@
 
 optional<bool> LessThan::holds(const Object& e, const Environment& env)
 {
-    if (auto v1 = d_cast<Integer>(value))
-    if (auto v2 = d_cast<Integer>(e))
+    if (auto v1 = cast<Integer>(value))
+    if (auto v2 = cast<Integer>(e))
     {
         return make_optional(v2->value < v1->value);
     }
@@ -43,19 +43,19 @@ const std::string LessThan::defaultName = "lessThan";
 
 Object LessThan::intersect(const Object& other, const Environment& env)
 {
-    if (auto p = d_cast<LessThan>(other))
+    if (auto p = cast<LessThan>(other))
     {
-        if (auto v1 = d_cast<Integer>(value))
-        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(value))
+        if (auto v2 = cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             return makeObject<LessThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
         return makeObject<Void>();
     }
-    else if (auto p = d_cast<Equals>(other))
+    else if (auto p = cast<Equals>(other))
     {
-        if (auto v1 = d_cast<Integer>(p->value))
-        if (auto v2 = d_cast<Integer>(this->value))
+        if (auto v1 = cast<Integer>(p->value))
+        if (auto v2 = cast<Integer>(this->value))
         {
             auto eqvalue = v1->value;
             auto thvalue = v2->value;
@@ -71,10 +71,10 @@ Object LessThan::intersect(const Object& other, const Environment& env)
 
 Object LessThan::unionize(const Object& other, const Environment& env)
 {
-    if (auto p = d_cast<LessThan>(other))
+    if (auto p = cast<LessThan>(other))
     {
-        if (auto v1 = d_cast<Integer>(value))
-        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(value))
+        if (auto v2 = cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             return makeObject<LessThan>(makeObject<Integer>(std::max(v1->value, v2->value)));
         }
@@ -104,7 +104,7 @@ Object Less::operate(const Object& first,
                      Environment& env)
 
 {
-    auto f = d_cast<LessThan>(partialApplyRight(second, env));
+    auto f = cast<LessThan>(partialApplyRight(second, env));
 
     return f->apply(first, env);
 }
@@ -129,8 +129,8 @@ Object Less::partialApplyRight(const Object& e, Environment& env)
 
 optional<bool> LessOrEqualThan::holds(const Object& e, const Environment& env)
 {
-    if (auto v1 = d_cast<Integer>(value))
-    if (auto v2 = d_cast<Integer>(e))
+    if (auto v1 = cast<Integer>(value))
+    if (auto v2 = cast<Integer>(e))
     {
         return make_optional(v2->value <= v1->value);
     }
@@ -157,19 +157,19 @@ const std::string LessOrEqualThan::defaultName = "lessOrEqualThan";
 
 Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
 {
-    if (auto p = d_cast<LessOrEqualThan>(other))
+    if (auto p = cast<LessOrEqualThan>(other))
     {
-        if (auto v1 = d_cast<Integer>(value))
-        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(value))
+        if (auto v2 = cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             return makeObject<LessOrEqualThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
         return makeObject<Void>();
     }
-    else if (auto p = d_cast<Equals>(other))
+    else if (auto p = cast<Equals>(other))
     {
-        if (auto v1 = d_cast<Integer>(p->value))
-        if (auto v2 = d_cast<Integer>(this->value))
+        if (auto v1 = cast<Integer>(p->value))
+        if (auto v2 = cast<Integer>(this->value))
         {
             auto eqvalue = v1->value;
             auto thvalue = v2->value;
@@ -185,10 +185,10 @@ Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
 
 Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
 {
-    if (auto p = d_cast<LessOrEqualThan>(other))
+    if (auto p = cast<LessOrEqualThan>(other))
     {
-        if (auto v1 = d_cast<Integer>(value))
-        if (auto v2 = d_cast<Integer>(Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(value))
+        if (auto v2 = cast<Integer>(Identifier::unwrapIfId(p->value, env)))
         {
             return makeObject<LessOrEqualThan>(makeObject<Integer>(std::max(v1->value, v2->value)));
         }
@@ -218,7 +218,7 @@ Object LessOrEqual::operate(const Object& first,
                      Environment& env)
 
 {
-    auto f = d_cast<LessOrEqualThan>(partialApplyRight(second, env));
+    auto f = cast<LessOrEqualThan>(partialApplyRight(second, env));
 
     return f->apply(first, env);
 }

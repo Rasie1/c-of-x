@@ -31,7 +31,7 @@ bool Identifier::hasFreeVariables(const Environment& env)
 
 Object Identifier::unwrapIfId(const Object& e, const Environment& env)
 {
-    if (d_cast<Identifier>(e))
+    if (cast<Identifier>(e))
         return env.getEqual(e);
     else
         return e;

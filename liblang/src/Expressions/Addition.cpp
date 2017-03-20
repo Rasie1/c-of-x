@@ -15,8 +15,8 @@ Addition::Addition()
 
 Object Addition::calculate(const Object& l, const Object& r) const
 {
-    if (auto first = d_cast<Integer>(l))
-    if (auto second = d_cast<Integer>(r))
+    if (auto first = cast<Integer>(l))
+    if (auto second = cast<Integer>(r))
         return makeObject<Integer>(first->value + second->value);
         
     auto operation = makeOperation<Addition>(l, r);
@@ -49,7 +49,7 @@ bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& 
     }
 
     auto evaluated = makeOperation<Addition>(l, r)->eval(env);
-    if (auto op = d_cast<Operation>(evaluated))
+    if (auto op = cast<Operation>(evaluated))
     {
         if (checkType<Addition>(op->op))
             return op->left->unapplyVariables(l, env)

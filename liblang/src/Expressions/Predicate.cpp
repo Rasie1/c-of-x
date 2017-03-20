@@ -17,7 +17,7 @@ Object Predicate::apply(const Object& e, Environment& env)
 
     if (checkType<Any>(expr))
     {
-        if (auto id = d_cast<Identifier>(evaluated))
+        if (auto id = cast<Identifier>(evaluated))
         {
             env.add(Object(id),
                     thisObject());
@@ -27,7 +27,7 @@ Object Predicate::apply(const Object& e, Environment& env)
             return makeObject<ValueInSet>(thisObject());
 
     }
-    else if (auto id = d_cast<Identifier>(evaluated))
+    else if (auto id = cast<Identifier>(evaluated))
     {
         env.add(Object(id), thisObject());
         return Object(id);
@@ -48,7 +48,7 @@ Object Predicate::apply(const Object& e, Environment& env)
 Object Predicate::inverse()
 {
     // kind of dangerous
-    return Object(d_cast<Morphism>(thisObject()));
+    return Object(cast<Morphism>(thisObject()));
 }
 
 

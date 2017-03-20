@@ -19,7 +19,7 @@ Object CalculationOperator::operate(const Object& first,
                                     const Object& second,
                                     Environment& env)
 {
-    env.defaultOperator = d_cast<Operator>(thisObject());
+    env.defaultOperator = cast<Operator>(thisObject());
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
 
@@ -32,7 +32,7 @@ Object CalculationOperator::operate(const Object& first,
     right = Identifier::unwrapIfId(right, envCopy);
 
     if (checkType<Any>(left) || checkType<Any>(right))
-        return makeObject<Operation>(d_cast<Operator>(thisObject()), first, second);
+        return makeObject<Operation>(cast<Operator>(thisObject()), first, second);
 
 
     // Next comes union stuff that will be replaced later
@@ -43,9 +43,9 @@ Object CalculationOperator::operate(const Object& first,
     bool rUnion = false;
 
     if (checkType<Operation>(left))
-        lUnion = checkType<Union>(d_cast<Operation>(left)->op);
+        lUnion = checkType<Union>(cast<Operation>(left)->op);
     if (checkType<Operation>(right))
-        rUnion = checkType<Union>(d_cast<Operation>(right)->op);
+        rUnion = checkType<Union>(cast<Operation>(right)->op);
 
     if (!lUnion && !rUnion)
     {
@@ -53,7 +53,7 @@ Object CalculationOperator::operate(const Object& first,
     }
     else if (lUnion && !rUnion)
     {
-        auto operation = d_cast<Operation>(left);
+        auto operation = cast<Operation>(left);
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(opl, right, env));
@@ -61,7 +61,7 @@ Object CalculationOperator::operate(const Object& first,
     }
     else if (rUnion && !lUnion)
     {
-        auto operation = d_cast<Operation>(right);
+        auto operation = cast<Operation>(right);
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(left, opl, env));
@@ -69,8 +69,8 @@ Object CalculationOperator::operate(const Object& first,
     }
     else
     {
-        auto operationl = d_cast<Operation>(left);
-        auto operationr = d_cast<Operation>(right);
+        auto operationl = cast<Operation>(left);
+        auto operationr = cast<Operation>(right);
         auto ll = operationl->left;
         auto lr = operationl->right;
         auto rl = operationr->left;

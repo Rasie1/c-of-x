@@ -62,12 +62,12 @@ void Environment::clear()
 
 static Object unwrapEqual(const Object& value)
 {
-    if (auto eq = d_cast<Equals>(value))
+    if (auto eq = cast<Equals>(value))
         return eq->value;
     else if (checkType<Any>(value))
         return value;
     
-    if (auto operation = d_cast<Operation>(value))
+    if (auto operation = cast<Operation>(value))
     if (checkType<Union>(operation->op))
     {
         auto l = unwrapEqual(operation->left);
@@ -172,7 +172,7 @@ std::vector<std::string> Environment::getAllNames() const
     ret.reserve(data.size());
 
     for (auto &x : data)
-        if (auto id = d_cast<const Identifier>(x.first))
+        if (auto id = cast<const Identifier>(x.first))
         {
             ret.push_back(id->name);
         }

@@ -24,7 +24,7 @@ Object Morphism::intersect(const Object& other, const Environment& env)
 
     // For some reason, here intersection of function and argument gives us the result.
     // I'm not really sure if it is correct, but now it fits everything
-    if (auto eq = d_cast<Equals>(value))
+    if (auto eq = cast<Equals>(value))
     {
         auto exactValue = eq->value;
         auto envCopy = env;
@@ -53,7 +53,7 @@ Object Morphism::intersect(const Object& other, const Environment& env)
     auto evaluated = value->eval(newEnv);
 
 
-    // if (auto other = d_cast<Morphism>(evaluated))
+    // if (auto other = cast<Morphism>(evaluated))
     // {
     //     // return makeOperation<Union>(thisObject(),
     //     //                             other);
@@ -119,7 +119,7 @@ bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
     // throw std::logic_error("AAAAAAAA");
     // TODO
 //    return false;
-    auto reversed = d_cast<Morphism>(inverse());
+    auto reversed = cast<Morphism>(inverse());
     //;->apply(makeObject<Any>(), env)->eval(env);
 
 //   auto ret = reversed->unapplyVariables(e, env);

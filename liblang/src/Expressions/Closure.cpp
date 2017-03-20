@@ -30,7 +30,7 @@ static bool isExpressionQuoted(const Object& e, Environment& env)
 {
     if (checkType<QuotedExpression>(e))
         return true;
-    if (auto op = d_cast<Operation>(e))
+    if (auto op = cast<Operation>(e))
     {
         if (checkType<Application>(op->op))
         {

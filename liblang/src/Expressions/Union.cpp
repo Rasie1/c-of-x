@@ -18,8 +18,8 @@ Union::Union()
 //        return true;
 //    return false;
 
-////    auto op = d_cast<Operation>(where);
-////    if (op && d_cast<Union>(op->op))
+////    auto op = cast<Operation>(where);
+////    if (op && cast<Union>(op->op))
 ////        return findSameOperand(op->left, what) ||
 ////               findSameOperand(op->right, what);
 ////    return false;
@@ -28,10 +28,10 @@ Union::Union()
 
 //bool isVoid(Object x)
 //{
-//    if (d_cast<Void>(x))
+//    if (cast<Void>(x))
 //        return true;
 
-//    auto id = d_cast<Identifier>(x);
+//    auto id = cast<Identifier>(x);
 
 //    if (id && id->name == Void::defaultName)
 //        return true;
@@ -43,7 +43,7 @@ Union::Union()
 //{
 //    if (isVoid(x))
 //        return {};
-//    auto op = d_cast<Operation>(x);
+//    auto op = cast<Operation>(x);
 //    if (op != nullptr)
 //    {
 //        if (checkType<Union>(op->op))
@@ -141,7 +141,7 @@ Object Union::operate(const Object& first,
 
     bool lf = false;
     bool rf = false;
-    if (auto op = d_cast<Operation>(lr))
+    if (auto op = cast<Operation>(lr))
     {
         if (checkType<Union>(op))
             lf = true;
@@ -151,7 +151,7 @@ Object Union::operate(const Object& first,
 
     auto rl = r->unionize(l, env);
 
-    if (auto op = d_cast<Operation>(rl))
+    if (auto op = cast<Operation>(rl))
     {
         if (checkType<Union>(op))
             rf = true;

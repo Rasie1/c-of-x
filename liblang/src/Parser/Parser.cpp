@@ -35,7 +35,7 @@ static bool isOperator(Object e, Environment& env)
     if (!e)
         return false;
     e = Identifier::unwrapIfId(e, env);
-    if (d_cast<Operator>(e))
+    if (cast<Operator>(e))
         return true;
     else
         return false;
@@ -93,7 +93,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
 
             // Handle force-eval operator
             bool evalForce = false;
-            if (auto variable = d_cast<Identifier>(left))
+            if (auto variable = cast<Identifier>(left))
                 evalForce = variable->name == "#";
             if (evalForce)
                 q.push_back(right->eval(env));
@@ -191,9 +191,9 @@ Object Parser::parse(const vector<Token>::iterator& begin,
         {
             applicationFlag = false;
 
-            auto op = d_cast<Operator>(e);
+            auto op = cast<Operator>(e);
             if (!op)
-                op = d_cast<Operator>(env.getEqual(e));
+                op = cast<Operator>(env.getEqual(e));
 
             while (!operatorStack.empty() &&
                    env.compareOperators(op, operatorStack.top()))

@@ -7,7 +7,7 @@
 
 Object Include::apply(const Object& e, Environment& env)
 {
-    auto str = d_cast<String>(e);
+    auto str = cast<String>(e);
     if (!str)
         return makeObject<ErrorWithMessage>("Not a string");
 

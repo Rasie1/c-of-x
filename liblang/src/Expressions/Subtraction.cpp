@@ -16,8 +16,8 @@ Subtraction::Subtraction()
 
 Object Subtraction::calculate(const Object& l, const Object& r) const
 {
-    auto firstInteger  = d_cast<Integer>(l);
-    auto secondInteger = d_cast<Integer>(r);
+    auto firstInteger  = cast<Integer>(l);
+    auto secondInteger = cast<Integer>(r);
 
     if (!firstInteger || !secondInteger)
     {
@@ -54,7 +54,7 @@ bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Objec
 
     auto evaluated = makeOperation<Subtraction>(l, r)->eval(env);
 
-    if (auto op = d_cast<Operation>(evaluated))
+    if (auto op = cast<Operation>(evaluated))
     {
         if (checkType<Subtraction>(op->op))
             return op->left->unapplyVariables(l, env)

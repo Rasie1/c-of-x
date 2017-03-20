@@ -23,11 +23,11 @@ static bool isExpressionQuoted(const Object& left, Environment& env)
 {
     if (checkType<Quote>(left))
         return true;
-    if (auto cl = d_cast<Closure>(left))
+    if (auto cl = cast<Closure>(left))
     {
         if (checkType<QuotedExpression>(cl->argument))
             return true;
-        if (auto op = d_cast<Operation>(cl->argument))
+        if (auto op = cast<Operation>(cl->argument))
         {
             if (checkType<Application>(op->op))
             {
@@ -60,16 +60,16 @@ Object Application::operate(const Object& first,
 
     std::vector<Object> expressions;
 
-    if (auto operation = d_cast<Operation>(left))
-    if (auto lUnion = d_cast<Union>(operation->op))
+    if (auto operation = cast<Operation>(left))
+    if (auto lUnion = cast<Union>(operation->op))
     {
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(opl, right, env));
         expressions.push_back(operate(opr, right, env));   
     }
-    if (auto operation = d_cast<Operation>(right))
-    if (auto rUnion = d_cast<Union>(operation->op))
+    if (auto operation = cast<Operation>(right))
+    if (auto rUnion = cast<Union>(operation->op))
     {
         auto opl = operation->left;
         auto opr = operation->right;
@@ -79,12 +79,12 @@ Object Application::operate(const Object& first,
 
     // is that needed?
     expressions.push_back(left->apply(right, env));
-        // if (auto function = d_cast<Morphism>(left))
+        // if (auto function = cast<Morphism>(left))
         // {
         //     expressions.push_back(left->apply(right, env));
         // }
         // //                                                TODO: save env?
-        // else if (auto function = d_cast<Morphism>(left->eval(env)))
+        // else if (auto function = cast<Morphism>(left->eval(env)))
         // {
         //     expressions.push_back(function->apply(right, env));
         // }
@@ -94,7 +94,7 @@ Object Application::operate(const Object& first,
     auto ret = Union::make(std::begin(expressions), std::end(expressions));
 
     //for (auto& x : ret)
-    //    if (auto id = d_cast<Identifier>(x))
+    //    if (auto id = cast<Identifier>(x))
     //        env.add(id, x, true); // possibly, it is wrong and I should do union somewhere near
 
     return ret;
@@ -115,14 +115,14 @@ bool Application::unapplyVariables(const Object& e,
 
     auto lvalue = lId ? env.getEqual(l) : l;
 
-    if (auto q = d_cast<Quote>(lvalue))
+    if (auto q = cast<Quote>(lvalue))
     {
-        auto qe = d_cast<QuotedExpression>(q->apply(r, env));
+        auto qe = cast<QuotedExpression>(q->apply(r, env));
         return qe->unapplyVariables(e, env);
     }
-    if (auto f = d_cast<Morphism>(lvalue))
+    if (auto f = cast<Morphism>(lvalue))
     {
-        auto inverse = d_cast<Morphism>(f->inverse());
+        auto inverse = cast<Morphism>(f->inverse());
         if (inverse)
             if (!checkType<Void>(inverse))
             {

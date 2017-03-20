@@ -14,8 +14,8 @@ Object Intersection::operate(const Object& first,
                              const Object& second,
                              Environment& env)
 {
-    if (auto idL = d_cast<Identifier>(first))
-    if (auto idR = d_cast<Identifier>(second))
+    if (auto idL = cast<Identifier>(first))
+    if (auto idR = cast<Identifier>(second))
     if (idL->name == idR->name)
         return first;
 

@@ -46,7 +46,7 @@ Object Equals::intersect(const Object& other, const Environment& env)
 {
     if (checkType<Any>(value))
         return other;
-    if (auto equals = d_cast<Equals>(other))
+    if (auto equals = cast<Equals>(other))
     {
         auto l = value;
         auto r = equals->value;

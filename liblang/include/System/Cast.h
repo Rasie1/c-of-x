@@ -37,55 +37,36 @@ namespace cast_impl
     }
 
     template <class T, class F>
-    auto d_cast_helper(const std::shared_ptr<F>& e)
+    auto cast_helper(const std::shared_ptr<F>& e)
      -> decltype(cast_helper_visitor<T>(e))
     {
         return cast_helper_visitor<T>(e);    
     }
 
     template <class T, class F>
-    auto d_cast_helper(const std::shared_ptr<const F>& e)
+    auto cast_helper(const std::shared_ptr<const F>& e)
      -> decltype(cast_helper_visitor<const T>(e))
     {
         return cast_helper_visitor<const T>(e);    
     }
-
-    // template <class T, class F>
-    // auto cast_helper(const std::shared_ptr<F>& e)
-    //  -> decltype(std::dynamic_pointer_cast<T>(e))
-    // {
-    //     if (auto casted = std::dynamic_pointer_cast<T>(e))
-    //         return casted;
-    //     if (auto op = std::dynamic_pointer_cast<const Operation>(e))
-    //     if (typeEquals<const Intersection>(op->op))
-    //     {
-    //         if (auto l = cast_helper<T>(op->left))
-    //             return l;
-    //         if (auto r = cast_helper<T>(op->right))
-    //             return r;
-    //     }
-
-    //     return nullptr;
-    // }
-
 }
 
 template <class T>
-auto d_cast(const Object& e)
- -> decltype(cast_impl::d_cast_helper<T>(e.expression))
+auto cast(const Object& e)
+ -> decltype(cast_impl::cast_helper<T>(e.expression))
 {
-    return cast_impl::d_cast_helper<T>(e.expression);    
+    return cast_impl::cast_helper<T>(e.expression);    
 }
 
 template <class T, class F>
-auto d_cast(const std::shared_ptr<F>& e)
+auto cast(const std::shared_ptr<F>& e)
  -> decltype(cast_impl::cast_helper_visitor<T>(e))
 {
     return cast_impl::cast_helper_visitor<T>(e);    
 }
 
 template <class T, class F>
-auto d_cast(const std::shared_ptr<const F>& e)
+auto cast(const std::shared_ptr<const F>& e)
  -> decltype(cast_impl::cast_helper_visitor<const T>(e))
 {
     return cast_impl::cast_helper_visitor<const T>(e);    
@@ -94,11 +75,11 @@ auto d_cast(const std::shared_ptr<const F>& e)
 template <class T>
 constexpr bool checkType(const Object& e)
 {
-    return d_cast<T>(e) != nullptr;
+    return cast<T>(e) != nullptr;
 }
 
 template <class T>
 constexpr bool checkType(const std::shared_ptr<const Expression>& e)
 {
-    return d_cast<const T>(e) != nullptr;
+    return cast<const T>(e) != nullptr;
 }
