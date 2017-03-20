@@ -52,11 +52,11 @@ void REPL::start()
                 auto evaluated = expression->eval(env);
                 cout << endl << "evaluated: ";
                 cout << evaluated->show();
-                if (checkType<Identifier>(evaluated))
+                if (auto id = cast<Identifier>(evaluated))
                 {
                     auto previousDebugPrint = env.getDebugPrint();
                     env.setDebugPrint(false);
-                    cout << " : " << env.get(evaluated)->show();
+                    cout << " : " << env.get(id->name)->show();
                     env.setDebugPrint(previousDebugPrint);
                 }
                 cout << endl;

@@ -113,7 +113,7 @@ bool Application::unapplyVariables(const Object& e,
     auto lId = checkType<Identifier>(l);
     auto rId = checkType<Identifier>(r);
 
-    auto lvalue = lId ? env.getEqual(l) : l;
+    auto lvalue = lId ? env.getEqual(cast<Identifier>(l)->name) : l;
 
     if (auto q = cast<Quote>(lvalue))
     {
@@ -135,11 +135,13 @@ bool Application::unapplyVariables(const Object& e,
     if (lId)
     {
         auto newEnv = env;
-        newEnv.addEqual(l, makeOperation<Lambda>(r, e), true);
+        newEnv.addEqual(cast<Identifier>(l)->name, 
+                        makeOperation<Lambda>(r, e), true);
         auto closure = Lambda().operate(r, e, newEnv);
 
-        env.addEqual(l, closure, false);
-        auto ret = env.get(l);
+        env.addEqual(cast<Identifier>(l)->name, 
+                     closure, false);
+        auto ret = env.get(cast<Identifier>(l)->name);
 
         return !checkType<Void>(ret);
     }

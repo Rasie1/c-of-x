@@ -193,7 +193,8 @@ Object Parser::parse(const vector<Token>::iterator& begin,
 
             auto op = cast<Operator>(e);
             if (!op)
-                op = cast<Operator>(env.getEqual(e));
+            if (auto id = cast<Identifier>(e))
+                op = cast<Operator>(env.getEqual(id->name));
 
             while (!operatorStack.empty() &&
                    env.compareOperators(op, operatorStack.top()))

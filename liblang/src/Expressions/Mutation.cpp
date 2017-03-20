@@ -11,8 +11,8 @@ Object Mutation::operate(const Object& first,
                          Environment& env)
 {
     // still in todo state (can't use the same variable)
-    env.erase(first);
-    Equality().operate(first, second, env);
+    // env.erase(first);
+    // Equality().operate(first, second, env);
 
     return second;
 }

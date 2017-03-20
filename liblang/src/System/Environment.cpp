@@ -38,8 +38,10 @@
 
 inline Object intersect(const Object& l, const Object& r, Environment env)
 {
-    auto lp = checkType<Identifier>(l) ? env.get(l) : l;
-    auto rp = checkType<Identifier>(r) ? env.get(r) : r;
+    auto lp = checkType<Identifier>(l) ? 
+        env.get(cast<Identifier>(l)->name) : l;
+    auto rp = checkType<Identifier>(r) ? 
+        env.get(cast<Identifier>(r)->name) : r;
 
     auto operation = makeOperation<Intersection>(lp, rp);
     auto result = operation->eval(env);
@@ -80,16 +82,16 @@ static Object unwrapEqual(const Object& value)
     return makeObject<ValueInSet>(value);
 }
 
-Object Environment::getEqual(const Object& key) const
+Object Environment::getEqual(const std::string& key) const
 {
     auto value = get(key);
 
     return unwrapEqual(value);
 }
 
-Object Environment::get(const Object& key) const
+Object Environment::get(const std::string& key) const
 {
-    debugPrint("ENV GET: (" + key->show() + ") : (", true);
+    debugPrint("ENV GET: (" + key + ") : (", true);
 
     auto x = data.find(key);
 
@@ -124,14 +126,14 @@ void Environment::setDebugPrint(bool enabled)
     debugPrinter->setDebugPrint(enabled);
 }
 
-void Environment::erase(const Object& e)
+void Environment::erase(const std::string& key)
 {
-    data.erase(e);
+    data.erase(key);
 }
 
-void Environment::add(const Object& key, const Object& value, bool excluding)
+void Environment::add(const std::string& key, const Object& value, bool excluding)
 {
-    debugPrint("ENV ADD KEY: " + key->show() + "\n", true);
+    debugPrint("ENV ADD KEY: " + key + "\n", true);
     increaseDebugIndentation();
     debugPrint("NEW: " + value->show() + "\n", true);
     if (data.find(key) != data.end())
@@ -148,20 +150,20 @@ void Environment::add(const Object& key, const Object& value, bool excluding)
     decreaseDebugIndentation();
 }
 
-void Environment::addEqual(const Object& key, const Object& value, bool excluding)
+void Environment::addEqual(const std::string& key, const Object& value, bool excluding)
 {
     add(key, makeObject<Equals>(value), excluding);
 }
 
-void Environment::replace(const Object& key, const Object& value, bool excluding)
+void Environment::replace(const std::string& key, const Object& value, bool excluding)
 {
-    debugPrint("ENV UPD KEY: " + key->show() + "\n", true);
+    debugPrint("ENV UPD KEY: " + key + "\n", true);
     debugPrint("NEW: " + value->show() + "\n", true);
     data[key] = value;
     // return data[key];
 }
 
-void Environment::replaceEqual(const Object& key, const Object& value, bool excluding)
+void Environment::replaceEqual(const std::string& key, const Object& value, bool excluding)
 {
     replace(key, makeObject<Equals>(value), excluding);
 }
@@ -172,10 +174,7 @@ std::vector<std::string> Environment::getAllNames() const
     ret.reserve(data.size());
 
     for (auto &x : data)
-        if (auto id = cast<const Identifier>(x.first))
-        {
-            ret.push_back(id->name);
-        }
+        ret.push_back(x.first);
 
     return ret;
 }
@@ -188,7 +187,7 @@ bool Environment::operator==(const Environment& other) const
 template <class T>
 void addVariable(Environment* env)
 {
-    env->addEqual(makeObject<Identifier>(T::defaultName), 
+    env->addEqual(T::defaultName, 
                   makeObject<T>(), 
                   true);
 }
@@ -219,7 +218,7 @@ void Environment::addDefaultDefinitions()
     addVariable<PrintEnv>(this);
     addVariable<ReverseApplication>(this);
     addVariable<LowPriorityApplication>(this);
-    addEqual(makeObject<Identifier>(";"), makeObject<DefaultOperator>(), true);
+    addEqual(";", makeObject<DefaultOperator>(), true);
 }
 
 bool Environment::compareOperators(const std::shared_ptr<Operator>& first,
@@ -240,7 +239,7 @@ std::string Environment::show() const
 {
     std::string ret = "";
     for (auto &x : data)
-        ret += x.first->show() + " |--> " + x.second->show() + "\n";
+        ret += x.first + " |--> " + x.second->show() + "\n";
 
     return ret;
 }

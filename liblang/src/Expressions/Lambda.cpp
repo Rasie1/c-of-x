@@ -2,8 +2,9 @@
 #include <iostream>
 #include "Expressions/Closure.h"
 #include "Expressions/Morphism.h"
-#include "System/Environment.h"
+#include "Expressions/Identifier.h"
 #include "Expressions/Operation.h"
+#include "System/Environment.h"
 #include "System/Cast.h"
 
 Lambda::Lambda()
@@ -17,7 +18,8 @@ Object Lambda::operate(const Object& first,
 {
     auto newEnv = env;
     auto arg = first->eval(newEnv);
-    newEnv.erase(arg);
+    if (auto id = cast<Identifier>(arg))
+        newEnv.erase(id->name);
     arg = first->eval(newEnv); // not really good. Should detect bound variables
                                // and erase them
     auto body = second;

@@ -28,14 +28,14 @@ class Environment
 public:
     Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
 
-    void add(const Object& key, const Object& predicate, bool excluding = true);
-    void addEqual(const Object& key, const Object& value, bool excluding = true);
-    // void addIntersecting(const Object& key, const Object& pred);
-    void replace(const Object& key, const Object& predicate, bool excluding = true);
-    void replaceEqual(const Object& key, const Object& value, bool excluding = true);
-    Object get(const Object& key) const;
-    Object getEqual(const Object& key) const;
-    void erase(const Object& e);
+    void add(const std::string& key, const Object& predicate, bool excluding = true);
+    void addEqual(const std::string& key, const Object& value, bool excluding = true);
+    // void addIntersecting(const std::string& key, const Object& pred);
+    void replace(const std::string& key, const Object& predicate, bool excluding = true);
+    void replaceEqual(const std::string& key, const Object& value, bool excluding = true);
+    Object get(const std::string& key) const;
+    Object getEqual(const std::string& key) const;
+    void erase(const std::string& key);
     void clear();
 
     void increaseDebugIndentation();
@@ -58,8 +58,7 @@ public:
 private:
     void addDefaultDefinitions();
 
-    //std::unordered_map<Object, Object, ObjectHash, ObjectLess> data;
-    std::map<const Object, Object, ObjectLess> data;
+    std::map<std::string, Object> data;
 
     std::shared_ptr<DebugPrinter> debugPrinter;
 };
