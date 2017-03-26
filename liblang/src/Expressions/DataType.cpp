@@ -12,7 +12,7 @@ Object Data::eval(Environment& env)
 
 bool Data::unapplyVariables(const Object& e, Environment& env)
 {
-    if (checkType<Any>(e))
+    if (checkType<Any>(env, e))
         return true;
     return *this == *e;
 }

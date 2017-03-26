@@ -15,8 +15,8 @@ Addition::Addition()
 
 Object Addition::calculate(const Object& l, const Object& r) const
 {
-    if (auto first = cast<Integer>(l))
-    if (auto second = cast<Integer>(r))
+    if (auto first = cast<Integer>(env, l))
+    if (auto second = cast<Integer>(env, r))
         return makeObject<Integer>(first->value + second->value);
         
     auto operation = makeOperation<Addition>(l, r);
@@ -34,8 +34,8 @@ const std::string Addition::defaultName = "+";
 
 bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
-    auto lId = checkType<Identifier>(l);
-    auto rId = checkType<Identifier>(r);
+    auto lId = checkType<Identifier>(env, l);
+    auto rId = checkType<Identifier>(env, r);
 
     if (lId && !rId)
     {
@@ -49,9 +49,9 @@ bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& 
     }
 
     auto evaluated = makeOperation<Addition>(l, r)->eval(env);
-    if (auto op = cast<Operation>(evaluated))
+    if (auto op = cast<Operation>(env, evaluated))
     {
-        if (checkType<Addition>(op->op))
+        if (checkType<Addition>(env, op->op))
             return op->left->unapplyVariables(l, env)
                 && op->right->unapplyVariables(r, env);
     }

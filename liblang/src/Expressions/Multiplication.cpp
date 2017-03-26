@@ -16,8 +16,8 @@ Multiplication::Multiplication()
 
 Object Multiplication::calculate(const Object& l, const Object& r) const
 {
-    if (auto first = cast<Integer>(l))
-    if (auto second = cast<Integer>(r))
+    if (auto first = cast<Integer>(env, l))
+    if (auto second = cast<Integer>(env, r))
         return makeObject<Integer>(first->value * second->value);
         
     auto operation = makeOperation<Multiplication>(l, r);
@@ -29,8 +29,8 @@ Object Multiplication::calculate(const Object& l, const Object& r) const
 bool Multiplication::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
 
-    auto lId = checkType<Identifier>(l);
-    auto rId = checkType<Identifier>(r);
+    auto lId = checkType<Identifier>(env, l);
+    auto rId = checkType<Identifier>(env, r);
 
     if (lId && !rId)
     {
@@ -46,9 +46,9 @@ bool Multiplication::unapplyVariables(const Object& e, const Object& l, const Ob
     }
 
     auto evaluated = makeOperation<Multiplication>(l, r)->eval(env);
-    if (auto op = cast<Operation>(evaluated))
+    if (auto op = cast<Operation>(env, evaluated))
     {
-        if (checkType<Multiplication>(op->op))
+        if (checkType<Multiplication>(env, op->op))
             return op->left->unapplyVariables(l, env)
                 && op->right->unapplyVariables(r, env);
     }

@@ -18,8 +18,8 @@ Union::Union()
 //        return true;
 //    return false;
 
-////    auto op = cast<Operation>(where);
-////    if (op && cast<Union>(op->op))
+////    auto op = cast<Operation>(env, where);
+////    if (op && cast<Union>(env, op->op))
 ////        return findSameOperand(op->left, what) ||
 ////               findSameOperand(op->right, what);
 ////    return false;
@@ -28,10 +28,10 @@ Union::Union()
 
 //bool isVoid(Object x)
 //{
-//    if (cast<Void>(x))
+//    if (cast<Void>(env, x))
 //        return true;
 
-//    auto id = cast<Identifier>(x);
+//    auto id = cast<Identifier>(env, x);
 
 //    if (id && id->name == Void::defaultName)
 //        return true;
@@ -43,10 +43,10 @@ Union::Union()
 //{
 //    if (isVoid(x))
 //        return {};
-//    auto op = cast<Operation>(x);
+//    auto op = cast<Operation>(env, x);
 //    if (op != nullptr)
 //    {
-//        if (checkType<Union>(op->op))
+//        if (checkType<Union>(env, op->op))
 //        {
 //            std::list<Object> ret;
 //            ret.splice(ret.begin(), unroll(op->left));
@@ -141,9 +141,9 @@ Object Union::operate(const Object& first,
 
     bool lf = false;
     bool rf = false;
-    if (auto op = cast<Operation>(lr))
+    if (auto op = cast<Operation>(env, lr))
     {
-        if (checkType<Union>(op))
+        if (checkType<Union>(env, op))
             lf = true;
     }
     if (!lf)
@@ -151,9 +151,9 @@ Object Union::operate(const Object& first,
 
     auto rl = r->unionize(l, env);
 
-    if (auto op = cast<Operation>(rl))
+    if (auto op = cast<Operation>(env, rl))
     {
-        if (checkType<Union>(op))
+        if (checkType<Union>(env, op))
             rf = true;
     }
     if (!rf)
@@ -200,7 +200,7 @@ Object Union::intersect(const Object& l, const Object& r, const Object& e, Envir
     auto operation = makeOperation<Intersection>(l, e);
     auto leftIntersection = operation->eval(env);
 
-    if (checkType<Void>(leftIntersection))
+    if (checkType<Void>(env, leftIntersection))
     {
         auto operation = makeOperation<Intersection>(r, e);
         auto rightIntersection = operation->eval(env);
@@ -217,7 +217,7 @@ Object Union::make(const std::vector<Object>::iterator& begin,
     auto next = std::next(begin);
     if (next == end)
         return *begin;
-    if (checkType<Void>(*begin))
+    if (checkType<Void>(env, *begin))
     {
         return make(next, end);
     }

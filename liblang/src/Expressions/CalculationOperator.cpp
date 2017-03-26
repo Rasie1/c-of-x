@@ -19,7 +19,7 @@ Object CalculationOperator::operate(const Object& first,
                                     const Object& second,
                                     Environment& env)
 {
-    env.defaultOperator = cast<Operator>(thisObject());
+    env.defaultOperator = cast<Operator>(env, thisObject());
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
 
@@ -31,8 +31,8 @@ Object CalculationOperator::operate(const Object& first,
     right = right->eval(envCopy);
     right = Identifier::unwrapIfId(right, envCopy);
 
-    if (checkType<Any>(left) || checkType<Any>(right))
-        return makeObject<Operation>(cast<Operator>(thisObject()), first, second);
+    if (checkType<Any>(env, left) || checkType<Any>(right))
+        return makeObject<Operation>(cast<Operator>(env, thisObject()), first, second);
 
 
     // Next comes union stuff that will be replaced later
@@ -42,10 +42,10 @@ Object CalculationOperator::operate(const Object& first,
     bool lUnion = false;
     bool rUnion = false;
 
-    if (checkType<Operation>(left))
-        lUnion = checkType<Union>(cast<Operation>(left)->op);
-    if (checkType<Operation>(right))
-        rUnion = checkType<Union>(cast<Operation>(right)->op);
+    if (checkType<Operation>(env, left))
+        lUnion = checkType<Union>(env, cast<Operation>(env, left)->op);
+    if (checkType<Operation>(env, right))
+        rUnion = checkType<Union>(env, cast<Operation>(env, right)->op);
 
     if (!lUnion && !rUnion)
     {
@@ -53,7 +53,7 @@ Object CalculationOperator::operate(const Object& first,
     }
     else if (lUnion && !rUnion)
     {
-        auto operation = cast<Operation>(left);
+        auto operation = cast<Operation>(env, left);
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(opl, right, env));
@@ -61,7 +61,7 @@ Object CalculationOperator::operate(const Object& first,
     }
     else if (rUnion && !lUnion)
     {
-        auto operation = cast<Operation>(right);
+        auto operation = cast<Operation>(env, right);
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(left, opl, env));
@@ -69,8 +69,8 @@ Object CalculationOperator::operate(const Object& first,
     }
     else
     {
-        auto operationl = cast<Operation>(left);
-        auto operationr = cast<Operation>(right);
+        auto operationl = cast<Operation>(env, left);
+        auto operationr = cast<Operation>(env, right);
         auto ll = operationl->left;
         auto lr = operationl->right;
         auto rl = operationr->left;

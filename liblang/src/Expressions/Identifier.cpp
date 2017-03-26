@@ -26,12 +26,12 @@ std::string Identifier::show() const
 
 bool Identifier::hasFreeVariables(const Environment& env)
 {
-    return checkType<Any>(env.getEqual(name));
+    return checkType<Any>(env, env.getEqual(name));
 }
 
 Object Identifier::unwrapIfId(const Object& e, const Environment& env)
 {
-    if (auto id = cast<Identifier>(e))
+    if (auto id = cast<Identifier>(env, e))
         return env.getEqual(id->name);
     else
         return e;
@@ -44,13 +44,13 @@ bool Identifier::unapplyVariables(const Object& e, Environment& env)
     auto newEnv = env;
     auto returned = e->eval(newEnv);
     auto value = Identifier::unwrapIfId(returned, newEnv);
-    if (checkType<Void>(value))
+    if (checkType<Void>(env, value))
         return false;
 
     env.addEqual(name, value, true);
 
     auto intersection = env.getEqual(name);
-    if (checkType<Void>(intersection))
+    if (checkType<Void>(env, intersection))
         return false;
 
     return true;

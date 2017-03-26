@@ -16,8 +16,8 @@ Subtraction::Subtraction()
 
 Object Subtraction::calculate(const Object& l, const Object& r) const
 {
-    auto firstInteger  = cast<Integer>(l);
-    auto secondInteger = cast<Integer>(r);
+    auto firstInteger  = cast<Integer>(env, l);
+    auto secondInteger = cast<Integer>(env, r);
 
     if (!firstInteger || !secondInteger)
     {
@@ -38,8 +38,8 @@ std::string Subtraction::show() const
 const std::string Subtraction::defaultName = "-";
 bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env)
 {
-    auto lId = checkType<Identifier>(l);
-    auto rId = checkType<Identifier>(r);
+    auto lId = checkType<Identifier>(env, l);
+    auto rId = checkType<Identifier>(env, r);
 
     if (lId && !rId)
     {
@@ -54,9 +54,9 @@ bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Objec
 
     auto evaluated = makeOperation<Subtraction>(l, r)->eval(env);
 
-    if (auto op = cast<Operation>(evaluated))
+    if (auto op = cast<Operation>(env, evaluated))
     {
-        if (checkType<Subtraction>(op->op))
+        if (checkType<Subtraction>(env, op->op))
             return op->left->unapplyVariables(l, env)
                 && op->right->unapplyVariables(r, env);
     }

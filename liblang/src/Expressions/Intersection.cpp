@@ -14,8 +14,8 @@ Object Intersection::operate(const Object& first,
                              const Object& second,
                              Environment& env)
 {
-    if (auto idL = cast<Identifier>(first))
-    if (auto idR = cast<Identifier>(second))
+    if (auto idL = cast<Identifier>(env, first))
+    if (auto idR = cast<Identifier>(env, second))
     if (idL->name == idR->name)
         return first;
 
@@ -30,10 +30,10 @@ Object Intersection::operate(const Object& first,
 
     // bool lf = false;
     // bool rf = false;
-    // if (checkType<Operation>(lr))
+    // if (checkType<Operation>(env, lr))
     // {
-    //     auto op = s_cast<Operation>(lr)->op;
-    //     if (checkType<Intersection>(op))
+    //     auto op = s_cast<Operation>(env, lr)->op;
+    //     if (checkType<Intersection>(env, op))
     //         lf = true;
     // }
     // if (!lf)
@@ -41,9 +41,9 @@ Object Intersection::operate(const Object& first,
 
     auto rl = r->intersect(l, env);
 
-//    if (checkType<Void>(lr))
+//    if (checkType<Void>(env, lr))
 //        return rl;
-//    if (checkType<Void>(rl))
+//    if (checkType<Void>(env, rl))
 //        return lr;
 
     auto operation = makeOperation<Intersection>(lr, rl);
@@ -51,10 +51,10 @@ Object Intersection::operate(const Object& first,
 
     return result;
 
-    // if (checkType<Operation>(rl))
+    // if (checkType<Operation>(env, rl))
     // {
-    //     auto op = s_cast<Operation>(rl)->op;
-    //     if (checkType<Intersection>(op))
+    //     auto op = s_cast<Operation>(env, rl)->op;
+    //     if (checkType<Intersection>(env, op))
     //         rf = true;
     // }
     // if (!rf)

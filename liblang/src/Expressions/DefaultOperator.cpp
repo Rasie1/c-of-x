@@ -16,18 +16,18 @@ Object DefaultOperator::operate(const Object& first,
 {
     Object l, r;
     {
-        if (auto o = cast<Operation>(first))
+        if (auto o = cast<Operation>(env, first))
         {
-            if (auto d = cast<DefaultOperator>(o->op))
+            if (auto d = cast<DefaultOperator>(env, o->op))
                 l = env.defaultOperator->operate(o->left, o->right, env);
         }
         else
             l = first;
     }
     {
-        if (auto o = cast<Operation>(second))
+        if (auto o = cast<Operation>(env, second))
         {
-            if (auto d = cast<DefaultOperator>(o->op))
+            if (auto d = cast<DefaultOperator>(env, o->op))
                 r = env.defaultOperator->operate(o->left, o->right, env);
         }
         else

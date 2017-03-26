@@ -8,7 +8,7 @@ Object Let::apply(const Object& e, Environment& env)
 {
     // TODO: add new value to env unionized with old value
     auto result = e->eval(env);
-    if (checkType<Void>(result))
+    if (checkType<Void>(env, result))
         return result;
     else
         return makeObject<LetContext>(env);

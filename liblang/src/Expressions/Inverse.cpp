@@ -6,7 +6,7 @@
 Object Inverse::apply(const Object& e, Environment& env)
 {
     auto value = Identifier::unwrapIfId(e, env);
-    if (auto f = cast<Morphism>(value))
+    if (auto f = cast<Morphism>(env, value))
         return f->inverse();
     else
         return makeObject<Void>();

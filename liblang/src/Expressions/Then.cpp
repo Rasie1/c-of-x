@@ -15,7 +15,7 @@ Object Then::operate(const Object& first,
                      Environment& env)
 {
     auto l = first->eval(env);
-    if (checkType<Void>(l))
+    if (checkType<Void>(env, l))
         return l;
 
     return second->eval(env);

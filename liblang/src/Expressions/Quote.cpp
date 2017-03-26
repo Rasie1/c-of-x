@@ -26,9 +26,9 @@ const std::string QuotedExpression::defaultName = "\'";
 
 bool QuotedExpression::unapplyVariables(const Object& e, Environment& env)
 {
-    if (auto opThis = cast<Operation>(this->e))
+    if (auto opThis = cast<Operation>(env, this->e))
     {
-        if (auto opOther = cast<Operation>(e))
+        if (auto opOther = cast<Operation>(env, e))
         {
             if (*(opThis->op) == *(opOther->op))
             {
@@ -41,16 +41,16 @@ bool QuotedExpression::unapplyVariables(const Object& e, Environment& env)
     }
 
     return false;// this->e->unapplyVariables(e, env);
-//    if (checkType<Operation>(this->e) && checkType<Operation>(e))
+//    if (checkType<Operation>(env, this->e) && checkType<Operation>(e))
 //    {
-//        auto l = s_cast<Operation>(this->e);
-//        auto r = s_cast<Operation>(e);
+//        auto l = s_cast<Operation>(env, this->e);
+//        auto r = s_cast<Operation>(env, e);
 
 //        auto rl = Identifier::unwrapIfId(r->left, env);
-//        if (checkType<Quote>(rl))
+//        if (checkType<Quote>(env, rl))
 //        {
-//            if (checkType<Operation>(r->right))
-//                r = s_cast<Operation>(r->right);
+//            if (checkType<Operation>(env, r->right))
+//                r = s_cast<Operation>(env, r->right);
 //            else
 //                return this->e->unapplyVariables(r, env);
 //        }

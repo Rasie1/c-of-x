@@ -33,8 +33,8 @@ public:
     // void addIntersecting(const std::string& key, const Object& pred);
     void replace(const std::string& key, const Object& predicate, bool excluding = true);
     void replaceEqual(const std::string& key, const Object& value, bool excluding = true);
-    Object get(const std::string& key) const;
-    Object getEqual(const std::string& key) const;
+    Object get(const std::string& key);
+    Object getEqual(const std::string& key);
     void erase(const std::string& key);
     void clear();
 

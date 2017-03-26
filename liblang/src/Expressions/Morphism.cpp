@@ -24,12 +24,12 @@ Object Morphism::intersect(const Object& other, const Environment& env)
 
     // For some reason, here intersection of function and argument gives us the result.
     // I'm not really sure if it is correct, but now it fits everything
-    if (auto eq = cast<Equals>(value))
+    if (auto eq = cast<Equals>(env, value))
     {
         auto exactValue = eq->value;
         auto envCopy = env;
         auto applied = apply(exactValue, envCopy);
-        if (checkType<Void>(applied))
+        if (checkType<Void>(env, applied))
             return applied;
         return makeObject<Equals>(applied);
     }
@@ -53,7 +53,7 @@ Object Morphism::intersect(const Object& other, const Environment& env)
     auto evaluated = value->eval(newEnv);
 
 
-    // if (auto other = cast<Morphism>(evaluated))
+    // if (auto other = cast<Morphism>(env, evaluated))
     // {
     //     // return makeOperation<Union>(thisObject(),
     //     //                             other);
@@ -119,11 +119,11 @@ bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
     // throw std::logic_error("AAAAAAAA");
     // TODO
 //    return false;
-    auto reversed = cast<Morphism>(inverse());
+    auto reversed = cast<Morphism>(env, inverse());
     //;->apply(makeObject<Any>(), env)->eval(env);
 
 //   auto ret = reversed->unapplyVariables(e, env);
     auto ret = reversed->apply(e, env);
 
-    return !checkType<Void>(ret);
+    return !checkType<Void>(env, ret);
 }

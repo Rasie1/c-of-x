@@ -18,7 +18,7 @@ Object Lambda::operate(const Object& first,
 {
     auto newEnv = env;
     auto arg = first->eval(newEnv);
-    if (auto id = cast<Identifier>(arg))
+    if (auto id = cast<Identifier>(env, arg))
         newEnv.erase(id->name);
     arg = first->eval(newEnv); // not really good. Should detect bound variables
                                // and erase them

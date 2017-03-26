@@ -21,24 +21,24 @@ Application::Application()
 
 static bool isExpressionQuoted(const Object& left, Environment& env)
 {
-    if (checkType<Quote>(left))
+    if (checkType<Quote>(env, left))
         return true;
-    if (auto cl = cast<Closure>(left))
+    if (auto cl = cast<Closure>(env, left))
     {
-        if (checkType<QuotedExpression>(cl->argument))
+        if (checkType<QuotedExpression>(env, cl->argument))
             return true;
-        if (auto op = cast<Operation>(cl->argument))
+        if (auto op = cast<Operation>(env, cl->argument))
         {
-            if (checkType<Application>(op->op))
+            if (checkType<Application>(env, op->op))
             {
-                if (checkType<Quote>(Identifier::unwrapIfId(op->left, env)))
+                if (checkType<Quote>(env, Identifier::unwrapIfId(op->left, env)))
                 {
                     return true;
                 }
             }
         }
     }
-    if (checkType<QuotedExpression>(left))
+    if (checkType<QuotedExpression>(env, left))
         return true;
 
     return false;
@@ -55,21 +55,21 @@ Object Application::operate(const Object& first,
     else
         right = second->eval(env);
 
-    if (checkType<Any>(left) || checkType<Any>(right))
+    if (checkType<Any>(env, left) || checkType<Any>(right))
         return makeOperation<Application>(left, right);
 
     std::vector<Object> expressions;
 
-    if (auto operation = cast<Operation>(left))
-    if (auto lUnion = cast<Union>(operation->op))
+    if (auto operation = cast<Operation>(env, left))
+    if (auto lUnion = cast<Union>(env, operation->op))
     {
         auto opl = operation->left;
         auto opr = operation->right;
         expressions.push_back(operate(opl, right, env));
         expressions.push_back(operate(opr, right, env));   
     }
-    if (auto operation = cast<Operation>(right))
-    if (auto rUnion = cast<Union>(operation->op))
+    if (auto operation = cast<Operation>(env, right))
+    if (auto rUnion = cast<Union>(env, operation->op))
     {
         auto opl = operation->left;
         auto opr = operation->right;
@@ -79,12 +79,12 @@ Object Application::operate(const Object& first,
 
     // is that needed?
     expressions.push_back(left->apply(right, env));
-        // if (auto function = cast<Morphism>(left))
+        // if (auto function = cast<Morphism>(env, left))
         // {
         //     expressions.push_back(left->apply(right, env));
         // }
         // //                                                TODO: save env?
-        // else if (auto function = cast<Morphism>(left->eval(env)))
+        // else if (auto function = cast<Morphism>(env, left->eval(env)))
         // {
         //     expressions.push_back(function->apply(right, env));
         // }
@@ -94,7 +94,7 @@ Object Application::operate(const Object& first,
     auto ret = Union::make(std::begin(expressions), std::end(expressions));
 
     //for (auto& x : ret)
-    //    if (auto id = cast<Identifier>(x))
+    //    if (auto id = cast<Identifier>(env, x))
     //        env.add(id, x, true); // possibly, it is wrong and I should do union somewhere near
 
     return ret;
@@ -110,21 +110,21 @@ bool Application::unapplyVariables(const Object& e,
                                    const Object& r,
                                    Environment &env)
 {
-    auto lId = checkType<Identifier>(l);
-    auto rId = checkType<Identifier>(r);
+    auto lId = checkType<Identifier>(env, l);
+    auto rId = checkType<Identifier>(env, r);
 
-    auto lvalue = lId ? env.getEqual(cast<Identifier>(l)->name) : l;
+    auto lvalue = lId ? env.getEqual(cast<Identifier>(env, l)->name) : l;
 
-    if (auto q = cast<Quote>(lvalue))
+    if (auto q = cast<Quote>(env, lvalue))
     {
-        auto qe = cast<QuotedExpression>(q->apply(r, env));
+        auto qe = cast<QuotedExpression>(env, q->apply(r, env));
         return qe->unapplyVariables(e, env);
     }
-    if (auto f = cast<Morphism>(lvalue))
+    if (auto f = cast<Morphism>(env, lvalue))
     {
-        auto inverse = cast<Morphism>(f->inverse());
+        auto inverse = cast<Morphism>(env, f->inverse());
         if (inverse)
-            if (!checkType<Void>(inverse))
+            if (!checkType<Void>(env, inverse))
             {
                 auto inversed = inverse->apply(e, env);
                 auto unapplied = r->unapplyVariables(inversed, env);
@@ -135,15 +135,15 @@ bool Application::unapplyVariables(const Object& e,
     if (lId)
     {
         auto newEnv = env;
-        newEnv.addEqual(cast<Identifier>(l)->name, 
+        newEnv.addEqual(cast<Identifier>(env, l)->name, 
                         makeOperation<Lambda>(r, e), true);
         auto closure = Lambda().operate(r, e, newEnv);
 
-        env.addEqual(cast<Identifier>(l)->name, 
+        env.addEqual(cast<Identifier>(env, l)->name, 
                      closure, false);
-        auto ret = env.get(cast<Identifier>(l)->name);
+        auto ret = env.get(cast<Identifier>(env, l)->name);
 
-        return !checkType<Void>(ret);
+        return !checkType<Void>(env, ret);
     }
 
     // Otherwise, 'unapply' the application, turning right side into function

@@ -28,13 +28,13 @@ Closure::~Closure()
 
 static bool isExpressionQuoted(const Object& e, Environment& env)
 {
-    if (checkType<QuotedExpression>(e))
+    if (checkType<QuotedExpression>(env, e))
         return true;
-    if (auto op = cast<Operation>(e))
+    if (auto op = cast<Operation>(env, e))
     {
-        if (checkType<Application>(op->op))
+        if (checkType<Application>(env, op->op))
         {
-            if (checkType<Quote>(Identifier::unwrapIfId(op->left, env))) // really?
+            if (checkType<Quote>(env, Identifier::unwrapIfId(op->left, env))) // really?
             {
                 return true;
             }
@@ -59,15 +59,15 @@ Object Closure::apply(const Object& e, Environment& env)
 
     auto evaluated = body->eval(newEnv);
 
-    if (checkType<Identifier>(evaluated) && 
+    if (checkType<Identifier>(env, evaluated) && 
         *evaluated == *this->argument)
     {
-        auto id = cast<Identifier>(evaluated);
+        auto id = cast<Identifier>(env, evaluated);
         auto value = Identifier::unwrapIfId(evaluated, newEnv);
         env.addEqual(id->name, value);
         return e;
     }
-    else if (checkType<Operation>(evaluated))
+    else if (checkType<Operation>(env, evaluated))
     {
         return makeOperation<Application>(thisObject(), e);
     }

@@ -17,7 +17,7 @@ std::string ValueInSet::show() const
 bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
 {
     auto element = set->element(env);
-    if (auto stillValueInSet = cast<ValueInSet>(element))
+    if (auto stillValueInSet = cast<ValueInSet>(env, element))
     {
         auto ret = Application().unapplyVariables(e,
                                                   set,
@@ -33,7 +33,7 @@ bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
 Object ValueInSet::intersect(const Object& other, const Environment& env)
 {
     auto envc = env;
-    if (checkType<Any>(this->set))
+    if (checkType<Any>(env, this->set))
         return other;
 
     auto operation = makeOperation<Application>(this->set, other);

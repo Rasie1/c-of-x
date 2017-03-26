@@ -44,9 +44,9 @@ const std::string Equals::defaultName = "=";
 
 Object Equals::intersect(const Object& other, const Environment& env)
 {
-    if (checkType<Any>(value))
+    if (checkType<Any>(env, value))
         return other;
-    if (auto equals = cast<Equals>(other))
+    if (auto equals = cast<Equals>(env, other))
     {
         auto l = value;
         auto r = equals->value;

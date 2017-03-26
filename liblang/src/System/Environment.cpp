@@ -38,10 +38,10 @@
 
 inline Object intersect(const Object& l, const Object& r, Environment env)
 {
-    auto lp = checkType<Identifier>(l) ? 
-        env.get(cast<Identifier>(l)->name) : l;
-    auto rp = checkType<Identifier>(r) ? 
-        env.get(cast<Identifier>(r)->name) : r;
+    auto lp = checkType<Identifier>(env, l) ? 
+        env.get(cast<Identifier>(env, l)->name) : l;
+    auto rp = checkType<Identifier>(env, r) ? 
+        env.get(cast<Identifier>(env, r)->name) : r;
 
     auto operation = makeOperation<Intersection>(lp, rp);
     auto result = operation->eval(env);
@@ -62,34 +62,34 @@ void Environment::clear()
     addDefaultDefinitions();
 }
 
-static Object unwrapEqual(const Object& value)
+static Object unwrapEqual(const Object& value, Environment& env)
 {
-    if (auto eq = cast<Equals>(value))
+    if (auto eq = cast<Equals>(env, value))
         return eq->value;
-    else if (checkType<Any>(value))
+    else if (checkType<Any>(env, value))
         return value;
     
-    if (auto operation = cast<Operation>(value))
-    if (checkType<Union>(operation->op))
+    if (auto operation = cast<Operation>(env, value))
+    if (checkType<Union>(env, operation->op))
     {
-        auto l = unwrapEqual(operation->left);
-        auto r = unwrapEqual(operation->right);
+        auto l = unwrapEqual(operation->left, env);
+        auto r = unwrapEqual(operation->right, env);
         return makeOperation<Union>(l, r);
     }
-    if (checkType<Void>(value))
+    if (checkType<Void>(env, value))
         return value;
     
     return makeObject<ValueInSet>(value);
 }
 
-Object Environment::getEqual(const std::string& key) const
+Object Environment::getEqual(const std::string& key)
 {
     auto value = get(key);
 
-    return unwrapEqual(value);
+    return unwrapEqual(value, *this);
 }
 
-Object Environment::get(const std::string& key) const
+Object Environment::get(const std::string& key)
 {
     debugPrint("ENV GET: (" + key + ") : (", true);
 
