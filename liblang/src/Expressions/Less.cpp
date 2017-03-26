@@ -13,8 +13,9 @@
 #include "System/Cast.h"
 
 
-optional<bool> LessThan::holds(const Object& e, const Environment& env)
+optional<bool> LessThan::holds(const Object& e, const Environment& envc)
 {
+    auto env = envc;
     if (auto v1 = cast<Integer>(env, value))
     if (auto v2 = cast<Integer>(env, e))
     {
@@ -41,8 +42,9 @@ std::string LessThan::show() const
 
 const std::string LessThan::defaultName = "lessThan";
 
-Object LessThan::intersect(const Object& other, const Environment& env)
+Object LessThan::intersect(const Object& other, const Environment& envc)
 {
+    auto env = envc;
     if (auto p = cast<LessThan>(env, other))
     {
         if (auto v1 = cast<Integer>(env, value))
@@ -128,8 +130,9 @@ Object Less::partialApplyRight(const Object& e, Environment& env)
 }
 
 
-optional<bool> LessOrEqualThan::holds(const Object& e, const Environment& env)
+optional<bool> LessOrEqualThan::holds(const Object& e, const Environment& envc)
 {
+    auto env = envc;
     if (auto v1 = cast<Integer>(env, value))
     if (auto v2 = cast<Integer>(env, e))
     {
@@ -156,8 +159,9 @@ std::string LessOrEqualThan::show() const
 
 const std::string LessOrEqualThan::defaultName = "lessOrEqualThan";
 
-Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
+Object LessOrEqualThan::intersect(const Object& other, const Environment& envc)
 {
+    auto env = envc;
     if (auto p = cast<LessOrEqualThan>(env, other))
     {
         if (auto v1 = cast<Integer>(env, value))

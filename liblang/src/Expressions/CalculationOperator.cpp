@@ -31,7 +31,7 @@ Object CalculationOperator::operate(const Object& first,
     right = right->eval(envCopy);
     right = Identifier::unwrapIfId(right, envCopy);
 
-    if (checkType<Any>(env, left) || checkType<Any>(right))
+    if (checkType<Any>(env, left) || checkType<Any>(env, right))
         return makeObject<Operation>(cast<Operator>(env, thisObject()), first, second);
 
 
@@ -49,7 +49,7 @@ Object CalculationOperator::operate(const Object& first,
 
     if (!lUnion && !rUnion)
     {
-        expressions.push_back(calculate(left, right));
+        expressions.push_back(calculate(left, right, env));
     }
     else if (lUnion && !rUnion)
     {
@@ -81,5 +81,5 @@ Object CalculationOperator::operate(const Object& first,
         expressions.push_back(operate(lr, rr, env));
     }
 
-    return Union::make(std::begin(expressions), std::end(expressions));
+    return Union::make(std::begin(expressions), std::end(expressions), env);
 }

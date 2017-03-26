@@ -28,7 +28,7 @@ Object Operator::partialApplyLeft(const Object& e, Environment& env)
 {
     auto arg = makeObject<Identifier>("arg");
     auto that = std::static_pointer_cast<const Operator>(thisObject().expression);
-    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(env, that), 
+    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
                                     e, arg);
 
     auto closure = Lambda().operate(arg, body, env);
@@ -39,7 +39,7 @@ Object Operator::partialApplyRight(const Object& e, Environment& env)
 {
     auto arg = makeObject<Identifier>("arg");
     auto that = std::static_pointer_cast<const Operator>(thisObject().expression);
-    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(env, that), 
+    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
                                     arg, e);
 
     auto closure = Lambda().operate(arg, body, env);
@@ -51,7 +51,7 @@ Object Operator::partialApplyNoArgs(Environment& env)
     auto l = makeObject<Identifier>("l");
     auto r = makeObject<Identifier>("r");
     auto that = std::static_pointer_cast<const Operator>(thisObject().expression);
-    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(env, that), 
+    auto body = makeObject<Operation>(std::const_pointer_cast<Operator>(that), 
                                     l, r);
 
     // auto rUnapplied = Lambda().operate(r, body, env);

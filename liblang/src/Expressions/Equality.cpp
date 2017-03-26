@@ -10,8 +10,9 @@
 #include "System/Cast.h"
 
 
-optional<bool> Equals::holds(const Object& e, const Environment& env)
+optional<bool> Equals::holds(const Object& e, const Environment& envc)
 {
+    auto env = envc;
     if (*value == *e)
         return make_optional(true);
 
@@ -42,8 +43,9 @@ std::string Equals::show() const
 
 const std::string Equals::defaultName = "=";
 
-Object Equals::intersect(const Object& other, const Environment& env)
+Object Equals::intersect(const Object& other, const Environment& envc)
 {
+    auto env = envc;
     if (checkType<Any>(env, value))
         return other;
     if (auto equals = cast<Equals>(env, other))

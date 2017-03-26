@@ -13,8 +13,9 @@
 #include "System/Cast.h"
 
 
-optional<bool> MoreThan::holds(const Object& e, const Environment& env)
+optional<bool> MoreThan::holds(const Object& e, const Environment& envc)
 {
+    auto env = envc;
     if (auto v1 = cast<Integer>(env, value))
     if (auto v2 = cast<Integer>(env, e))
     {
@@ -41,8 +42,9 @@ std::string MoreThan::show() const
 
 const std::string MoreThan::defaultName = "moreThan";
 
-Object MoreThan::intersect(const Object& other, const Environment& env)
+Object MoreThan::intersect(const Object& other, const Environment& envc)
 {
+    auto env = envc;
     if (auto p = cast<MoreThan>(env, other))
     {
         if (auto v1 = cast<Integer>(env, value))
@@ -71,10 +73,11 @@ Object MoreThan::intersect(const Object& other, const Environment& env)
 
 Object MoreThan::unionize(const Object& other, const Environment& env)
 {
-    if (auto p = cast<MoreThan>(env, other))
+    auto envc = env;
+    if (auto p = cast<MoreThan>(envc, other))
     {
-        if (auto v1 = cast<Integer>(env, value))
-        if (auto v2 = cast<Integer>(env, Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(envc, value))
+        if (auto v2 = cast<Integer>(envc, Identifier::unwrapIfId(p->value, envc)))
         {
             return makeObject<MoreThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }
@@ -124,8 +127,9 @@ Object More::partialApplyRight(const Object& e, Environment& env)
      return makeObject<MoreThan>(e);
 }
 
-optional<bool> MoreOrEqualThan::holds(const Object& e, const Environment& env)
+optional<bool> MoreOrEqualThan::holds(const Object& e, const Environment& envc)
 {
+    auto env = envc;
     if (auto v1 = cast<Integer>(env, value))
     if (auto v2 = cast<Integer>(env, e))
     {
@@ -152,8 +156,9 @@ std::string MoreOrEqualThan::show() const
 
 const std::string MoreOrEqualThan::defaultName = "moreOrEqualThan";
 
-Object MoreOrEqualThan::intersect(const Object& other, const Environment& env)
+Object MoreOrEqualThan::intersect(const Object& other, const Environment& envc)
 {
+    auto env = envc;
     if (auto p = cast<MoreOrEqualThan>(env, other))
     {
         if (auto v1 = cast<Integer>(env, value))

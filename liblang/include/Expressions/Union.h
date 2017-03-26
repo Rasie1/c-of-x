@@ -20,7 +20,8 @@ public:
     bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
     static Object make(const std::vector<Object>::iterator& begin, 
-                       const std::vector<Object>::iterator& end);
+                       const std::vector<Object>::iterator& end,
+                       Environment& make);
 
     static const std::string defaultName;
 };

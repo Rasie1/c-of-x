@@ -24,13 +24,15 @@ std::string Identifier::show() const
     return name;
 }
 
-bool Identifier::hasFreeVariables(const Environment& env)
+bool Identifier::hasFreeVariables(const Environment& envc)
 {
+    auto env = envc;
     return checkType<Any>(env, env.getEqual(name));
 }
 
-Object Identifier::unwrapIfId(const Object& e, const Environment& env)
+Object Identifier::unwrapIfId(const Object& e, const Environment& envc)
 {
+    auto env = envc;
     if (auto id = cast<Identifier>(env, e))
         return env.getEqual(id->name);
     else

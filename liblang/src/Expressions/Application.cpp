@@ -55,7 +55,7 @@ Object Application::operate(const Object& first,
     else
         right = second->eval(env);
 
-    if (checkType<Any>(env, left) || checkType<Any>(right))
+    if (checkType<Any>(env, left) || checkType<Any>(env, right))
         return makeOperation<Application>(left, right);
 
     std::vector<Object> expressions;
@@ -91,7 +91,7 @@ Object Application::operate(const Object& first,
         // else
         //     return makeObject<ErrorWithMessage>("Not a function");
     
-    auto ret = Union::make(std::begin(expressions), std::end(expressions));
+    auto ret = Union::make(std::begin(expressions), std::end(expressions), env);
 
     //for (auto& x : ret)
     //    if (auto id = cast<Identifier>(env, x))
