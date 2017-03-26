@@ -14,7 +14,9 @@ Multiplication::Multiplication()
 
 }
 
-Object Multiplication::calculate(const Object& l, const Object& r) const
+Object Multiplication::calculate(const Object& l, 
+                                 const Object& r,
+                                 Environment& env) const
 {
     if (auto first = cast<Integer>(env, l))
     if (auto second = cast<Integer>(env, r))

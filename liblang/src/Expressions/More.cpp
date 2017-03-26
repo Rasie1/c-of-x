@@ -182,10 +182,11 @@ Object MoreOrEqualThan::intersect(const Object& other, const Environment& env)
 
 Object MoreOrEqualThan::unionize(const Object& other, const Environment& env)
 {
-    if (auto p = cast<MoreOrEqualThan>(env, other))
+    auto envc = env;
+    if (auto p = cast<MoreOrEqualThan>(envc, other))
     {
-        if (auto v1 = cast<Integer>(env, value))
-        if (auto v2 = cast<Integer>(env, Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(envc, value))
+        if (auto v2 = cast<Integer>(envc, Identifier::unwrapIfId(p->value, envc)))
         {
             return makeObject<MoreOrEqualThan>(makeObject<Integer>(std::min(v1->value, v2->value)));
         }

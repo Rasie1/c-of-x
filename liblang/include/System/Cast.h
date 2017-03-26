@@ -21,16 +21,16 @@ namespace cast_impl
 
     template <class T, class F>
     auto cast_helper_visitor(Environment& env, const std::shared_ptr<F>& e)
-     -> decltype(std::dynamic_pointer_cast<T>(env, e))
+     -> decltype(std::dynamic_pointer_cast<T>(e))
     {
-        if (auto casted = std::dynamic_pointer_cast<T>(env, e))
+        if (auto casted = std::dynamic_pointer_cast<T>(e))
             return casted;
-        if (auto op = std::dynamic_pointer_cast<const Operation>(env, e))
+        if (auto op = std::dynamic_pointer_cast<const Operation>(e))
         if (typeEquals<const Intersection>(op->op))
         {
-            if (auto l = cast_helper_visitor<T>(op->left.expression, env))
+            if (auto l = cast_helper_visitor<T>(env, op->left.expression))
                 return l;
-            if (auto r = cast_helper_visitor<T>(op->right.expression, env))
+            if (auto r = cast_helper_visitor<T>(env, op->right.expression))
                 return r;
         }
 
@@ -54,9 +54,9 @@ namespace cast_impl
 
 template <class T>
 auto cast(Environment& env, const Object& e)
- -> decltype(cast_impl::cast_helper<T>(e.expression, env))
+ -> decltype(cast_impl::cast_helper<T>(env, e.expression))
 {
-    return cast_impl::cast_helper<T>(e.expression, env);    
+    return cast_impl::cast_helper<T>(env, e.expression);    
 }
 
 template <class T, class F>
@@ -74,13 +74,13 @@ auto cast(Environment& env, const std::shared_ptr<const F>& e)
 }
 
 template <class T>
-constexpr bool checkType(Environment& env, const Object& e)
+bool checkType(Environment& env, const Object& e)
 {
     return cast<T>(env, e) != nullptr;
 }
 
 template <class T>
-constexpr bool checkType(Environment& env, const std::shared_ptr<const Expression>& e)
+bool checkType(Environment& env, const std::shared_ptr<const Expression>& e)
 {
     return cast<const T>(env, e) != nullptr;
 }

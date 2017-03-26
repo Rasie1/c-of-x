@@ -71,10 +71,11 @@ Object LessThan::intersect(const Object& other, const Environment& env)
 
 Object LessThan::unionize(const Object& other, const Environment& env)
 {
-    if (auto p = cast<LessThan>(env, other))
+    auto envc = env;
+    if (auto p = cast<LessThan>(envc, other))
     {
-        if (auto v1 = cast<Integer>(env, value))
-        if (auto v2 = cast<Integer>(env, Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(envc, value))
+        if (auto v2 = cast<Integer>(envc, Identifier::unwrapIfId(p->value, envc)))
         {
             return makeObject<LessThan>(makeObject<Integer>(std::max(v1->value, v2->value)));
         }
@@ -185,10 +186,11 @@ Object LessOrEqualThan::intersect(const Object& other, const Environment& env)
 
 Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
 {
-    if (auto p = cast<LessOrEqualThan>(env, other))
+    auto envc = env;
+    if (auto p = cast<LessOrEqualThan>(envc, other))
     {
-        if (auto v1 = cast<Integer>(env, value))
-        if (auto v2 = cast<Integer>(env, Identifier::unwrapIfId(p->value, env)))
+        if (auto v1 = cast<Integer>(envc, value))
+        if (auto v2 = cast<Integer>(envc, Identifier::unwrapIfId(p->value, envc)))
         {
             return makeObject<LessOrEqualThan>(makeObject<Integer>(std::max(v1->value, v2->value)));
         }

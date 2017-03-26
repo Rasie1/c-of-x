@@ -14,7 +14,9 @@ Subtraction::Subtraction()
 {
 }
 
-Object Subtraction::calculate(const Object& l, const Object& r) const
+Object Subtraction::calculate(const Object& l, 
+                              const Object& r,
+                              Environment& env) const
 {
     auto firstInteger  = cast<Integer>(env, l);
     auto secondInteger = cast<Integer>(env, r);

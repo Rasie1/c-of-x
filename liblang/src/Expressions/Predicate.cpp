@@ -48,7 +48,7 @@ Object Predicate::apply(const Object& e, Environment& env)
 Object Predicate::inverse()
 {
     // kind of dangerous
-    return Object(cast<Morphism>(env, thisObject()));
+    return thisObject();
 }
 
 
