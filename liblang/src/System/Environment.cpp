@@ -198,7 +198,6 @@ void Environment::addDefaultDefinitions()
     addVariable<DefaultOperator>(this);
     addVariable<Lambda>(this);
     addVariable<Then>(this);
-    addVariable<Quote>(this);
     addVariable<Not>(this);
     addVariable<Print>(this);
     addVariable<Include>(this);

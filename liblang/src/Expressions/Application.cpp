@@ -50,10 +50,7 @@ Object Application::operate(const Object& first,
 {
     Object left, right;
     left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env)->eval(env), env);
-    if (isExpressionQuoted(left, env))
-        right = second;
-    else
-        right = second->eval(env);
+    right = second->eval(env);
 
     if (checkType<Any>(env, left) || checkType<Any>(env, right))
         return makeOperation<Application>(left, right);
