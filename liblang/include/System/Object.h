@@ -2,6 +2,7 @@
 #include <memory>
 #include <typeinfo>
 #include <boost/optional.hpp>
+#include <vector>
 
 class Expression;
 
@@ -43,6 +44,21 @@ public:
         return expression == other.expression;
     }
 
+    inline bool operator!=(const Object& other) const
+    {
+        return expression != other.expression;
+    }
+    
+    // inline bool operator==(const std::shared_ptr<const Expression>& other) const
+    // {
+    //     return expression == other;
+    // }
+
+    // inline bool operator!=(const std::shared_ptr<const Expression>& other) const
+    // {
+    //     return expression != other;
+    // }
+        
     inline explicit operator bool() const
     {
         return expression.operator bool();

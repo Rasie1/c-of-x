@@ -250,23 +250,23 @@ BOOST_AUTO_TEST_CASE(typedVariables)
 // recursion test
 // re x y = (((x < 11) \ (0)) | ((x > 10) \ (re (x - 1) (print x))) ) x
 
-BOOST_AUTO_TEST_CASE(simpleMacroMatch)
-{
-    Environment env;
-    Parser p;
+// BOOST_AUTO_TEST_CASE(simpleMacroMatch)
+// {
+//     Environment env;
+//     Parser p;
 
-    auto parsed = p.parse("f ('(1 + 2)) = 4", env);
-    parsed->eval(env);
-    parsed = p.parse("f (1 + 2)", env);
-    auto c = parsed->eval(env);
-    BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 4);
-    parsed = p.parse("f (1 + 3)", env);
-    c = parsed->eval(env);
-    BOOST_REQUIRE(checkType<Void>(env, c));
-    parsed = p.parse("f 3", env);
-    c = parsed->eval(env);
-    BOOST_REQUIRE(checkType<Void>(env, c));
-}
+//     auto parsed = p.parse("f ('(1 + 2)) = 4", env);
+//     parsed->eval(env);
+//     parsed = p.parse("f (1 + 2)", env);
+//     auto c = parsed->eval(env);
+//     BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 4);
+//     parsed = p.parse("f (1 + 3)", env);
+//     c = parsed->eval(env);
+//     BOOST_REQUIRE(checkType<Void>(env, c));
+//     parsed = p.parse("f 3", env);
+//     c = parsed->eval(env);
+//     BOOST_REQUIRE(checkType<Void>(env, c));
+// }
 
 // TODO: why did I wrote this test?
 // BOOST_AUTO_TEST_CASE(simpleMacroMatchVariable)
