@@ -79,39 +79,39 @@ void REPL::formCompletionNames()
 {
     auto& completerNames = input.completerNames();
     completerNames = env.getAllNames();
-    completerNames.push_back("-quit");
-    completerNames.push_back("-clear");
-    completerNames.push_back("-help");
-    completerNames.push_back("-debugprint");
-    completerNames.push_back("-load");
+    completerNames.push_back(":quit");
+    completerNames.push_back(":clear");
+    completerNames.push_back(":help");
+    completerNames.push_back(":debugprint");
+    completerNames.push_back(":load");
 }
 
 bool REPL::shouldExit(const std::string& s)
 {
-    return s == "-q" || s == "-quit";
+    return s == ":q" || s == ":quit";
 }
 
 void displayHelp()
 {
     cout << "Help commands :" << endl <<
-            "-q -quit      : quit" << endl <<
-            "-clear        : clear environment" << endl <<
-            "-h -help      : this message" << endl <<
-            "-debugprint   : toggle debug print (disabled by default)" << endl <<
-            "-load         : open and evaluate file" << endl;
+            ":q :quit      : quit" << endl <<
+            ":clear        : clear environment" << endl <<
+            ":h :help      : this message" << endl <<
+            ":debugprint   : toggle debug print (disabled by default)" << endl <<
+            ":load         : open and evaluate file" << endl;
 }
 
 bool REPL::command(const std::string& s)
 {
     if (s == "")
         return true;
-    if (s == "-load")
+    if (s == ":load")
         loadFile("");//todo: add arg
-    else if (s == "-clear")
+    else if (s == ":clear")
         env.clear();
-    else if (s == "-h" || s == "-help")
+    else if (s == ":h" || s == ":help")
         displayHelp();
-    else if (s == "-debugprint")
+    else if (s == ":debugprint")
         toggleDebugPrint();
 
     return false;
