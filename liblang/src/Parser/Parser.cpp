@@ -47,7 +47,7 @@ Object Parser::parseFile(const std::string& filename, Environment& env)
     std::string content((std::istreambuf_iterator<char>(ifs)),
                         (std::istreambuf_iterator<char>()   ));
 
-    return Parser::parse(content, env)->eval(env);
+    return Parser::parse(content, env);
 }
 
 Object Parser::parse(const vector<Token>::iterator& begin,
@@ -96,7 +96,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
             if (auto variable = cast<Identifier>(env, left))
                 evalForce = variable->name == "#";
             if (evalForce)
-                q.push_back(right->eval(env));
+                q.push_back(right);
             else
                 q.push_back(makeObject<Operation>(op, left, right));
             expressionBegin = false;

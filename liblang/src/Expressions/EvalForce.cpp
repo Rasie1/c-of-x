@@ -3,7 +3,7 @@
 
 Object EvalForce::apply(const Object& e, Environment& env)
 {
-    return e->eval(env)->eval(env);
+    return e;
 }
 
 std::string EvalForce::show() const

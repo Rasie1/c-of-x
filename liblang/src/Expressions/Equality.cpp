@@ -10,17 +10,17 @@
 #include "System/Cast.h"
 
 
-optional<bool> Equals::holds(const Object& e, const Environment& envc)
+optional<bool> Equals::holds(const Object& e, Environment& envc)
 {
     auto env = envc;
     if (*value == *e)
         return make_optional(true);
 
-    auto operation = makeOperation<Intersection>(value, e);
-    auto intersection = operation->eval(const_cast<Environment&>(env));
+    // auto operation = makeOperation<Intersection>(value, e);
+    // auto intersection = operation->eval(const_cast<Environment&>(env));
 
-    if (*intersection == *value || *intersection == *e)
-        return make_optional(true);
+    // if (*intersection == *value || *intersection == *e)
+    //     return make_optional(true);
 
     return none;
 }

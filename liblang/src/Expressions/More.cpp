@@ -13,7 +13,7 @@
 #include "System/Cast.h"
 
 
-optional<bool> MoreThan::holds(const Object& e, const Environment& envc)
+optional<bool> MoreThan::holds(const Object& e, Environment& envc)
 {
     auto env = envc;
     if (auto v1 = cast<Integer>(env, value))
@@ -127,7 +127,7 @@ Object More::partialApplyRight(const Object& e, Environment& env)
      return makeObject<MoreThan>(e);
 }
 
-optional<bool> MoreOrEqualThan::holds(const Object& e, const Environment& envc)
+optional<bool> MoreOrEqualThan::holds(const Object& e, Environment& envc)
 {
     auto env = envc;
     if (auto v1 = cast<Integer>(env, value))

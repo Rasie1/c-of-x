@@ -23,13 +23,9 @@ Object CalculationOperator::operate(const Object& first,
     auto left  = Identifier::unwrapIfId(first, env);
     auto right = Identifier::unwrapIfId(second, env);
 
-    auto envCopy = env;
-    left  = left->eval(envCopy);
-    left  = Identifier::unwrapIfId(left, envCopy);
+    left  = Identifier::unwrapIfId(left, env);
 
-    envCopy = env;
-    right = right->eval(envCopy);
-    right = Identifier::unwrapIfId(right, envCopy);
+    right = Identifier::unwrapIfId(right, env);
 
     if (checkType<Any>(env, left) || checkType<Any>(env, right))
         return makeObject<Operation>(cast<Operator>(env, thisObject()), first, second);

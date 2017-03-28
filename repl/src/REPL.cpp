@@ -49,7 +49,7 @@ void REPL::start()
                     continue;
                 }
 
-                auto evaluated = expression->eval(env);
+                auto evaluated = expression;
                 cout << endl << "evaluated: ";
                 cout << evaluated->show();
                 if (auto id = cast<Identifier>(env, evaluated))
@@ -126,6 +126,6 @@ void REPL::loadFile(const std::string& s)
 {
     cout << "Loading file: " << s << endl;
     auto expression = parser.parseFile(s, env);
-    auto evaluated = expression->eval(env);
+    auto evaluated = expression;
 }
 

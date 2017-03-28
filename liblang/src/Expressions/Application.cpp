@@ -49,8 +49,8 @@ Object Application::operate(const Object& first,
                             Environment& env)
 {
     Object left, right;
-    left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env)->eval(env), env);
-    right = second->eval(env);
+    left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env), env);
+    right = second;
 
     if (checkType<Any>(env, left) || checkType<Any>(env, right))
         return makeOperation<Application>(left, right);
@@ -81,7 +81,7 @@ Object Application::operate(const Object& first,
         //     expressions.push_back(left->apply(right, env));
         // }
         // //                                                TODO: save env?
-        // else if (auto function = cast<Morphism>(env, left->eval(env)))
+        // else if (auto function = cast<Morphism>(env, left))
         // {
         //     expressions.push_back(function->apply(right, env));
         // }

@@ -50,7 +50,7 @@ bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& 
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = makeOperation<Addition>(l, r)->eval(env);
+    auto evaluated = makeOperation<Addition>(l, r);
     if (auto op = cast<Operation>(env, evaluated))
     {
         if (checkType<Addition>(env, op->op))

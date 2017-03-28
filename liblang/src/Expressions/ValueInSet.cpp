@@ -37,7 +37,7 @@ Object ValueInSet::intersect(const Object& other, const Environment& env)
         return other;
 
     auto operation = makeOperation<Application>(this->set, other);
-    auto ret = operation->eval(envc);
+    auto ret = operation;//->eval(envc);
 
     return ret;
 }

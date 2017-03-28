@@ -121,7 +121,7 @@ bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
     // TODO
 //    return false;
     auto reversed = cast<Morphism>(env, inverse());
-    //;->apply(makeObject<Any>(), env)->eval(env);
+    //;->apply(makeObject<Any>(), env);
 
 //   auto ret = reversed->unapplyVariables(e, env);
     auto ret = reversed->apply(e, env);

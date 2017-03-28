@@ -10,7 +10,7 @@ Object Print::apply(const Object& e, Environment& env)
 {
     Object arg;
     arg = Identifier::unwrapIfId(e, env);
-    auto evaluated = arg->eval(env);
+    auto evaluated = arg;
 
     env.debugPrint("stdout: [", false);
     std::cout << Identifier::unwrapIfId(evaluated, env)->show();
@@ -30,7 +30,7 @@ Object PrintInfo::apply(const Object& e, Environment& env)
 {
     Object arg = checkType<Identifier>(env, e) ? 
         env.get(cast<Identifier>(env, e)->name) : e;
-    auto evaluated = arg->eval(env);
+    auto evaluated = arg;
     std::cout << evaluated->show();
     return evaluated;
 }

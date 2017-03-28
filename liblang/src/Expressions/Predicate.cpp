@@ -11,7 +11,7 @@
 
 Object Predicate::apply(const Object& e, Environment& env)
 {
-    auto evaluated = e->eval(env);
+    auto evaluated = e;
 
     auto expr = Identifier::unwrapIfId(evaluated, env);
 

@@ -54,7 +54,7 @@ bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Objec
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = makeOperation<Subtraction>(l, r)->eval(env);
+    auto evaluated = makeOperation<Subtraction>(l, r);
 
     if (auto op = cast<Operation>(env, evaluated))
     {

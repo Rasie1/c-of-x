@@ -13,7 +13,7 @@
 #include "System/Cast.h"
 
 
-optional<bool> LessThan::holds(const Object& e, const Environment& envc)
+optional<bool> LessThan::holds(const Object& e, Environment& envc)
 {
     auto env = envc;
     if (auto v1 = cast<Integer>(env, value))
@@ -130,7 +130,7 @@ Object Less::partialApplyRight(const Object& e, Environment& env)
 }
 
 
-optional<bool> LessOrEqualThan::holds(const Object& e, const Environment& envc)
+optional<bool> LessOrEqualThan::holds(const Object& e, Environment& envc)
 {
     auto env = envc;
     if (auto v1 = cast<Integer>(env, value))

@@ -134,8 +134,8 @@ Object Union::operate(const Object& first,
                       const Object& second,
                       Environment& env)
 {
-    auto l = first->eval(env);
-    auto r = second->eval(env);
+    auto l = first;
+    auto r = second;
 
     auto lr = l->unionize(r, env);
 
@@ -160,8 +160,8 @@ Object Union::operate(const Object& first,
         return rl;
 
     return lr;
-//    auto l = first->eval(env);
-//    auto r = second->eval(env);
+//    auto l = first;
+//    auto r = second;
 
 
 //    auto x = {l, r};
@@ -199,12 +199,12 @@ Object Union::intersect(const Object& l, const Object& r, const Object& e, Envir
     auto env = envc;
     // TODO: preserve identifier?
     auto operation = makeOperation<Intersection>(l, e);
-    auto leftIntersection = operation->eval(env);
+    auto leftIntersection = operation;
 
     if (checkType<Void>(env, leftIntersection))
     {
         auto operation = makeOperation<Intersection>(r, e);
-        auto rightIntersection = operation->eval(env);
+        auto rightIntersection = operation;
 
         return rightIntersection;
     }

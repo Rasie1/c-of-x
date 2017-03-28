@@ -14,11 +14,11 @@ Object Then::operate(const Object& first,
                      const Object& second,
                      Environment& env)
 {
-    auto l = first->eval(env);
+    auto l = first;
     if (checkType<Void>(env, l))
         return l;
 
-    return second->eval(env);
+    return second;
 }
 
 std::string Then::show() const

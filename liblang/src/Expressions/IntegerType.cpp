@@ -5,11 +5,9 @@
 #include "System/Environment.h"
 #include "System/Cast.h"
 
-optional<bool> IntegerType::holds(const Object& e, const Environment& env)
+optional<bool> IntegerType::holds(const Object& e, Environment& env)
 {
-    auto envc = env;
-    auto value = Identifier::unwrapIfId(e->eval(envc), envc);
-    auto ret = typeid(*value) == typeid(Integer);
+    auto ret = checkType<Integer>(env, e);
     return make_optional(ret);
 }
 

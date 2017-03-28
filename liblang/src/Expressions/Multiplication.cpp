@@ -47,7 +47,7 @@ bool Multiplication::unapplyVariables(const Object& e, const Object& l, const Ob
         // return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = makeOperation<Multiplication>(l, r)->eval(env);
+    auto evaluated = makeOperation<Multiplication>(l, r);
     if (auto op = cast<Operation>(env, evaluated))
     {
         if (checkType<Multiplication>(env, op->op))

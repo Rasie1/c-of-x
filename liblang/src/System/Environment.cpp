@@ -44,7 +44,7 @@ inline Object intersect(const Object& l, const Object& r, Environment env)
         env.get(cast<Identifier>(env, r)->name) : r;
 
     auto operation = makeOperation<Intersection>(lp, rp);
-    auto result = operation->eval(env);
+    auto result = operation;
 
     return result;
 }

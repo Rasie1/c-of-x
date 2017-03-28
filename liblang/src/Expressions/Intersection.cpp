@@ -19,8 +19,8 @@ Object Intersection::operate(const Object& first,
     if (idL->name == idR->name)
         return first;
 
-    auto l = Identifier::unwrapIfId(first, env)->eval(env);
-    auto r = Identifier::unwrapIfId(second, env)->eval(env);
+    auto l = Identifier::unwrapIfId(first, env);
+    auto r = Identifier::unwrapIfId(second, env);
 
 
     auto lr = l->intersect(r, env);
@@ -47,7 +47,7 @@ Object Intersection::operate(const Object& first,
 //        return lr;
 
     auto operation = makeOperation<Intersection>(lr, rl);
-    auto result = operation->eval(env);
+    auto result = operation;
 
     return result;
 
@@ -95,7 +95,7 @@ Object Intersection::apply(const Object& l, const Object& r, const Object& e, En
     auto rApplied = r->apply(e, env);
 
     auto operation = makeOperation<Intersection>(lApplied, rApplied);
-    auto result = operation->eval(env);
+    auto result = operation;
 
     return result;
 }
@@ -107,7 +107,7 @@ Object Intersection::intersect(const Object& l, const Object& r, const Object& e
     auto rApplied = r->intersect(e, env);
 
     auto operation = makeOperation<Intersection>(lApplied, rApplied);
-    auto result = operation->eval(env);
+    auto result = operation;
 
     return result;
 }
