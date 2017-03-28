@@ -35,16 +35,8 @@ namespace cast_impl
 
     template <class T, class F>
     auto cast_helper_visitor(Environment& env, const std::shared_ptr<F>& e)
-     -> decltype(std::dynamic_pointer_cast<T>(e))
+     -> std::shared_ptr<T>
     {
-        auto evaluate = [&env](auto& e)
-        {
-            auto evaluated = 
-                std::const_pointer_cast<Expression>(e)->eval(env);
-
-            if (evaluated.expression != e) // temp
-                return cast<T>(env, evaluated);
-        };
 
         if (auto casted = std::dynamic_pointer_cast<T>(e))
             return casted;
@@ -52,27 +44,32 @@ namespace cast_impl
         if (auto op = std::dynamic_pointer_cast<const Operation>(e))
         if (typeEquals<const Intersection>(op->op))
         {
-            if (auto l = cast_helper_visitor<T>(env, op->left.expression))
+            if (auto l = cast<T>(env, op->left))
                 return l;
-            if (auto r = cast_helper_visitor<T>(env, op->right.expression))
+            if (auto r = cast<T>(env, op->right))
                 return r;
         }
 
+        auto casted = std::const_pointer_cast<Expression>(
+                      std::dynamic_pointer_cast<const Expression>((e)));
+        auto evaluated = casted->eval(env);
 
-
-        return nullptr;
+        if (evaluated.expression != e) // temp
+            return cast<T>(env, evaluated);
+        else
+            return nullptr;
     }
 
     template <class T, class F>
     auto cast_helper(Environment& env, const std::shared_ptr<F>& e)
-     -> decltype(cast_helper_visitor<T>(env, e))
+     -> std::shared_ptr<T>
     {
         return cast_helper_visitor<T>(env, e);    
     }
 
     template <class T, class F>
     auto cast_helper(Environment& env, const std::shared_ptr<const F>& e)
-     -> decltype(cast_helper_visitor<const T>(env, e))
+     -> std::shared_ptr<const T>
     {
         return cast_helper_visitor<const T>(env, e);    
     }
@@ -82,7 +79,7 @@ template <class T>
 auto cast(Environment& env, const Object& e)
  -> std::shared_ptr<T>
 {
-    return cast_impl::cast_helper<T>(env, e.expression);    
+    return cast_impl::cast_helper_visitor<T>(env, e.expression);    
 }
 
 template <class T, class F>

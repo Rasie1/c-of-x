@@ -6,6 +6,7 @@
 #include "Expressions/Any.h"
 #include "Expressions/Intersection.h"
 #include "System/Cast.h"
+#include <memory>
 
 Operation::Operation(const std::shared_ptr<Operator>& op,
                      const Object& left,
@@ -29,6 +30,12 @@ Object Operation::eval(Environment& env)
 
     env.increaseDebugIndentation();
     ret = op->operate(left, right, env);
+    // save identity
+    if (auto operation = std::dynamic_pointer_cast<Operation>(ret.expression))
+    if (typeid(*(operation->op)) == typeid(*(this->op)))
+    if (operation->left == left)
+    if (operation->right == right)
+        ret = thisObject();
     env.decreaseDebugIndentation();
 
     env.debugPrint("RES: " + ret->show() + '\n', true);

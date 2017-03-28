@@ -44,6 +44,12 @@ Object ValueInSet::intersect(const Object& other, const Environment& env)
 
 Object ValueInSet::eval(Environment& env)
 {
-    return set->element(env);
+    auto result = set->element(env);
+
+    if (auto v = std::dynamic_pointer_cast<ValueInSet>(result.expression))
+    if (v->set == set)
+        return thisObject();
+
+    return result;
 }
 

@@ -570,40 +570,40 @@ BOOST_AUTO_TEST_CASE(closureIntersection)
    }
 }
 
-// BOOST_AUTO_TEST_CASE(intersectionType)
-// {
-//     {
-//         Environment env;
-//         Parser p;
-//         auto parsed = p.parse("x : ((>0) & (<10))", env);
-//         parsed->eval(env);
-//         parsed = p.parse("x = 5", env);
-//         parsed->eval(env);
-//         auto x = env.getEqual("x");
-//         BOOST_REQUIRE(checkType<Integer>(env, x));
-//         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 5);
-//     }
-//     {
-//         Environment env;
-//         Parser p;
-//         auto parsed = p.parse("x : ((>0) & (<10))", env);
-//         parsed->eval(env);
-//         parsed = p.parse("x = 0", env);
-//         parsed->eval(env);
-//         auto x = env.getEqual("x");
-//         BOOST_REQUIRE(checkType<Void>(env, x));
-//     }
-//     {
-//         Environment env;
-//         Parser p;
-//         auto parsed = p.parse("x : ((>0) & (<10))", env);
-//         parsed->eval(env);
-//         parsed = p.parse("x = 10", env);
-//         parsed->eval(env);
-//         auto x = env.getEqual("x");
-//         BOOST_REQUIRE(checkType<Void>(env, x));
-//     }
-// }
+BOOST_AUTO_TEST_CASE(intersectionType)
+{
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : ((>0) & (<10))", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 5", env);
+        parsed->eval(env);
+        auto x = env.getEqual("x");
+        BOOST_REQUIRE(checkType<Integer>(env, x));
+        BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 5);
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : ((>0) & (<10))", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 0", env);
+        parsed->eval(env);
+        auto x = env.getEqual("x");
+        BOOST_REQUIRE(checkType<Void>(env, x));
+    }
+    {
+        Environment env;
+        Parser p;
+        auto parsed = p.parse("x : ((>0) & (<10))", env);
+        parsed->eval(env);
+        parsed = p.parse("x = 10", env);
+        parsed->eval(env);
+        auto x = env.getEqual("x");
+        BOOST_REQUIRE(checkType<Void>(env, x));
+    }
+}
 
 
 // BOOST_AUTO_TEST_CASE(unionType)
