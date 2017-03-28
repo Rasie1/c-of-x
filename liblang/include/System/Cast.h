@@ -4,6 +4,7 @@
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
 #include "Expressions/Equality.h"
+#include "Expressions/Identifier.h"
 #include "System/Environment.h"
 
 template <class T>
@@ -37,7 +38,6 @@ namespace cast_impl
     auto cast_helper_visitor(Environment& env, const std::shared_ptr<F>& e)
      -> std::shared_ptr<T>
     {
-
         if (auto casted = std::dynamic_pointer_cast<T>(e))
             return casted;
         
@@ -79,21 +79,24 @@ template <class T>
 auto cast(Environment& env, const Object& e)
  -> std::shared_ptr<T>
 {
-    return cast_impl::cast_helper_visitor<T>(env, e.expression);    
+    auto v = Identifier::unwrapIfId(e, env).expression;
+    return cast_impl::cast_helper_visitor<T>(env, v);    
 }
 
 template <class T, class F>
 auto cast(Environment& env, const std::shared_ptr<F>& e)
  -> std::shared_ptr<T>
 {
-    return cast_impl::cast_helper_visitor<T>(env, e);    
+    auto v = Identifier::unwrapIfId(e, env).expression;
+    return cast_impl::cast_helper_visitor<T>(env, v);    
 }
 
 template <class T, class F>
 auto cast(Environment& env, const std::shared_ptr<const F>& e)
  -> std::shared_ptr<const T>
 {
-    return cast_impl::cast_helper_visitor<const T>(env, e);    
+    auto v = Identifier::unwrapIfId(e, env).expression;
+    return cast_impl::cast_helper_visitor<const T>(env, v);    
 }
 
 template <class T>

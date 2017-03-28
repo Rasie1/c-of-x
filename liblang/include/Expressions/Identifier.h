@@ -14,6 +14,7 @@ public:
     bool hasFreeVariables(const Environment& env) override;
 
     static Object unwrapIfId(const Object& e, const Environment& env);
+    static Object unwrapIfId(const std::shared_ptr<const Expression>& e, const Environment& env);
     bool unapplyVariables(const Object& e, Environment& env) override;
 
     std::string name;

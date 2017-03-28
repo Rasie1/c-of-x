@@ -49,7 +49,7 @@ void REPL::start()
                     continue;
                 }
 
-                auto evaluated = expression;
+                auto evaluated = expression->eval(env);
                 cout << endl << "evaluated: ";
                 cout << evaluated->show();
                 if (auto id = cast<Identifier>(env, evaluated))

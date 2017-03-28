@@ -30,11 +30,18 @@ bool Identifier::hasFreeVariables(const Environment& envc)
     return checkType<Any>(env, env.getEqual(name));
 }
 
-Object Identifier::unwrapIfId(const Object& e, const Environment& envc)
+Object Identifier::unwrapIfId(const Object& e, const Environment& env)
 {
-    auto env = envc;
-    if (auto id = cast<Identifier>(env, e))
-        return env.getEqual(id->name);
+    if (auto id = std::dynamic_pointer_cast<Identifier>(e.expression))
+        return const_cast<Environment&>(env).getEqual(id->name);
+    else
+        return e;
+}
+
+Object Identifier::unwrapIfId(const std::shared_ptr<const Expression>& e, const Environment& env)
+{
+    if (auto id = std::dynamic_pointer_cast<Identifier>(e))
+        return const_cast<Environment&>(env).getEqual(id->name);
     else
         return e;
 }
