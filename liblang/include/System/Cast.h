@@ -23,6 +23,10 @@ template <class T>
 auto cast(Environment& env, const Object& e)
  -> std::shared_ptr<T>;
 
+template <>
+auto cast<Identifier>(Environment& env, const Object& e)
+ -> std::shared_ptr<Identifier>;
+
 template <class T, class F>
 auto cast(Environment& env, const std::shared_ptr<F>& e)
  -> std::shared_ptr<T>;
@@ -80,7 +84,14 @@ auto cast(Environment& env, const Object& e)
  -> std::shared_ptr<T>
 {
     auto v = Identifier::unwrapIfId(e, env).expression;
-    return cast_impl::cast_helper_visitor<T>(env, v);    
+    return cast_impl::cast_helper_visitor<T>(env, v);
+}
+
+template <>
+auto cast<Identifier>(Environment& env, const Object& e)
+ -> std::shared_ptr<Identifier>
+{
+    return std::dynamic_pointer_cast<Identifier>(e.expression);
 }
 
 template <class T, class F>

@@ -40,10 +40,11 @@ Object Identifier::unwrapIfId(const Object& e, const Environment& env)
 
 Object Identifier::unwrapIfId(const std::shared_ptr<const Expression>& e, const Environment& env)
 {
-    if (auto id = std::dynamic_pointer_cast<Identifier>(e))
+    auto expr = std::const_pointer_cast<Expression>(e);
+    if (auto id = std::dynamic_pointer_cast<Identifier>(expr))
         return const_cast<Environment&>(env).getEqual(id->name);
     else
-        return e;
+        return Object(expr);
 }
 
 bool Identifier::unapplyVariables(const Object& e, Environment& env)

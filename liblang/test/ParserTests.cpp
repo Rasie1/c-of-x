@@ -20,8 +20,8 @@ BOOST_AUTO_TEST_CASE(VariableTest)
     Parser p;
     auto parsed = p.parse("x", env);
 
-    BOOST_CHECK(checkType<Identifier>(env, parsed));
     auto x = cast<Identifier>(env, parsed);
+    BOOST_REQUIRE(x != nullptr);
     BOOST_CHECK_EQUAL(x->name, "x");
 }
 
