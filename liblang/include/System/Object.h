@@ -15,7 +15,7 @@ private:
 public:
     Object() {}
     
-    Object(const std::shared_ptr<Expression>& e) :
+    explicit Object(const std::shared_ptr<Expression>& e) :
         expression(e)
     {
     }

@@ -23,23 +23,50 @@ template <class T>
 auto cast(Environment& env, const Object& e)
  -> std::shared_ptr<T>;
 
+template <class T>
+auto cast(Environment& env, const std::shared_ptr<Expression>& e)
+ -> std::shared_ptr<T>;
+
+template <class T>
+auto cast(Environment& env, const std::shared_ptr<const Expression>& e)
+ -> std::shared_ptr<T>;
+
+
 template <>
 auto cast<Identifier>(Environment& env, const Object& e)
  -> std::shared_ptr<Identifier>;
 
-template <class T, class F>
-auto cast(Environment& env, const std::shared_ptr<F>& e)
+template <>
+auto cast<Identifier>(Environment& env, const std::shared_ptr<Expression>& e)
+ -> std::shared_ptr<Identifier>;
+
+
+template <>
+auto cast<class T>(Environment& env, const Object& e)
  -> std::shared_ptr<T>;
 
-template <class T, class F>
-auto cast(Environment& env, const std::shared_ptr<const F>& e)
- -> std::shared_ptr<const T>;
+template <>
+auto cast<class T>(Environment& env, const std::shared_ptr<Expression>& e)
+ -> std::shared_ptr<T>;
+
+template <>
+auto cast<class T>(Environment& env, const std::shared_ptr<const Expression>& e)
+ -> std::shared_ptr<T>;
+
+// template <class T, class F>
+// auto cast(Environment& env, const std::shared_ptr<F>& e)
+//  -> std::shared_ptr<T>;
+
+// template <class T, class F>
+// auto cast(Environment& env, const std::shared_ptr<const F>& e)
+//  -> std::shared_ptr<const T>;
 
 namespace cast_impl
 {
 
-    template <class T, class F>
-    auto cast_helper_visitor(Environment& env, const std::shared_ptr<F>& e)
+    template <class T>
+    auto cast_helper_visitor(Environment& env, 
+                             const std::shared_ptr<Expression>& e)
      -> std::shared_ptr<T>
     {
         if (auto casted = std::dynamic_pointer_cast<T>(e))
@@ -79,14 +106,6 @@ namespace cast_impl
     }
 }
 
-template <class T>
-auto cast(Environment& env, const Object& e)
- -> std::shared_ptr<T>
-{
-    auto v = Identifier::unwrapIfId(e, env).expression;
-    return cast_impl::cast_helper_visitor<T>(env, v);
-}
-
 template <>
 auto cast<Identifier>(Environment& env, const Object& e)
  -> std::shared_ptr<Identifier>
@@ -94,21 +113,55 @@ auto cast<Identifier>(Environment& env, const Object& e)
     return std::dynamic_pointer_cast<Identifier>(e.expression);
 }
 
-template <class T, class F>
-auto cast(Environment& env, const std::shared_ptr<F>& e)
+template <>
+auto cast<class T>(Environment& env, const Object& e)
+ -> std::shared_ptr<T>
+{
+    auto v = Identifier::unwrapIfId(e, env).expression;
+    return cast_impl::cast_helper_visitor<T>(env, v);
+}
+
+template <>
+auto cast<Identifier>(Environment& env, 
+                      const std::shared_ptr<Expression>& e)
+ -> std::shared_ptr<Identifier>
+{
+    return std::dynamic_pointer_cast<Identifier>(e);
+}
+
+template <>
+auto cast<class T>(Environment& env, 
+                   const std::shared_ptr<Expression>& e)
  -> std::shared_ptr<T>
 {
     auto v = Identifier::unwrapIfId(e, env).expression;
     return cast_impl::cast_helper_visitor<T>(env, v);    
 }
 
-template <class T, class F>
-auto cast(Environment& env, const std::shared_ptr<const F>& e)
- -> std::shared_ptr<const T>
+template <>
+auto cast<class T>(Environment& env, 
+                   const std::shared_ptr<const Expression>& e)
+ -> std::shared_ptr<T>
 {
     auto v = Identifier::unwrapIfId(e, env).expression;
-    return cast_impl::cast_helper_visitor<const T>(env, v);    
+    return cast_impl::cast_helper_visitor<T>(env, v);    
 }
+
+// template <>
+// auto cast<class T, class F>(Environment& env, const std::shared_ptr<F>& e)
+//  -> std::shared_ptr<T>
+// {
+//     auto v = Identifier::unwrapIfId(e, env).expression;
+//     return cast_impl::cast_helper_visitor<T>(env, v);    
+// }
+
+// template <>
+// auto cast<class T, class F>(Environment& env, const std::shared_ptr<const F>& e)
+//  -> std::shared_ptr<const T>
+// {
+//     auto v = Identifier::unwrapIfId(c, env).expression;
+//     return cast_impl::cast_helper_visitor<const T>(env, v);    
+// }
 
 template <class T>
 bool checkType(Environment& env, const Object& e)
