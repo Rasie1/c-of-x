@@ -6,6 +6,7 @@
 #include "Expressions/Equality.h"
 #include "Expressions/Identifier.h"
 #include "System/Environment.h"
+#include "System/Object.h"
 
 template <class T>
 constexpr bool typeEquals(const std::shared_ptr<const Expression>& e)
@@ -19,47 +20,47 @@ constexpr bool typeEquals(const Object& e)
     return typeid(*e) == typeid(T);
 }
 
+namespace cast_impl
+{
+    template <class T>
+    auto cast_helper_visitor(Environment& env, 
+                             const std::shared_ptr<Expression>& e)
+     -> std::shared_ptr<T>;
+}
+
+
+
 template <class T>
 auto cast(Environment& env, const Object& e)
- -> std::shared_ptr<T>;
+ -> std::shared_ptr<T>
+{
+    auto v = Identifier::unwrapIfId(e, env).expression;
+    return cast_impl::cast_helper_visitor<T>(env, v);
+}
 
 template <class T>
-auto cast(Environment& env, const std::shared_ptr<Expression>& e)
- -> std::shared_ptr<T>;
+auto cast(Environment& env, 
+                   const std::shared_ptr<const Expression>& e)
+ -> std::shared_ptr<T>
+{
+    auto v = Identifier::unwrapIfId(e, env).expression;
+    return cast_impl::cast_helper_visitor<T>(env, v);    
+}
+
+template <>
+auto cast<Identifier>(Environment& env, 
+                      const std::shared_ptr<const Expression>& e)
+ -> std::shared_ptr<Identifier>
+{
+    return std::const_pointer_cast<Identifier>(
+        std::dynamic_pointer_cast<const Identifier>(e));
+}
 
 template <class T>
-auto cast(Environment& env, const std::shared_ptr<const Expression>& e)
- -> std::shared_ptr<T>;
-
-
-template <>
-auto cast<Identifier>(Environment& env, const Object& e)
- -> std::shared_ptr<Identifier>;
-
-template <>
-auto cast<Identifier>(Environment& env, const std::shared_ptr<Expression>& e)
- -> std::shared_ptr<Identifier>;
-
-
-template <>
-auto cast<class T>(Environment& env, const Object& e)
- -> std::shared_ptr<T>;
-
-template <>
-auto cast<class T>(Environment& env, const std::shared_ptr<Expression>& e)
- -> std::shared_ptr<T>;
-
-template <>
-auto cast<class T>(Environment& env, const std::shared_ptr<const Expression>& e)
- -> std::shared_ptr<T>;
-
-// template <class T, class F>
-// auto cast(Environment& env, const std::shared_ptr<F>& e)
-//  -> std::shared_ptr<T>;
-
-// template <class T, class F>
-// auto cast(Environment& env, const std::shared_ptr<const F>& e)
-//  -> std::shared_ptr<const T>;
+bool checkType(Environment& env, const Object& e)
+{
+    return cast<T>(env, e) != nullptr;
+}
 
 namespace cast_impl
 {
@@ -81,8 +82,7 @@ namespace cast_impl
                 return r;
         }
 
-        auto casted = std::const_pointer_cast<Expression>(
-                      std::dynamic_pointer_cast<const Expression>((e)));
+        auto casted = std::dynamic_pointer_cast<Expression>(e);
         auto evaluated = casted->eval(env);
 
         if (evaluated.expression != e) // temp
@@ -90,83 +90,6 @@ namespace cast_impl
         else
             return nullptr;
     }
-
-    template <class T, class F>
-    auto cast_helper(Environment& env, const std::shared_ptr<F>& e)
-     -> std::shared_ptr<T>
-    {
-        return cast_helper_visitor<T>(env, e);    
-    }
-
-    template <class T, class F>
-    auto cast_helper(Environment& env, const std::shared_ptr<const F>& e)
-     -> std::shared_ptr<const T>
-    {
-        return cast_helper_visitor<const T>(env, e);    
-    }
-}
-
-template <>
-auto cast<Identifier>(Environment& env, const Object& e)
- -> std::shared_ptr<Identifier>
-{
-    return std::dynamic_pointer_cast<Identifier>(e.expression);
-}
-
-template <>
-auto cast<class T>(Environment& env, const Object& e)
- -> std::shared_ptr<T>
-{
-    auto v = Identifier::unwrapIfId(e, env).expression;
-    return cast_impl::cast_helper_visitor<T>(env, v);
-}
-
-template <>
-auto cast<Identifier>(Environment& env, 
-                      const std::shared_ptr<Expression>& e)
- -> std::shared_ptr<Identifier>
-{
-    return std::dynamic_pointer_cast<Identifier>(e);
-}
-
-template <>
-auto cast<class T>(Environment& env, 
-                   const std::shared_ptr<Expression>& e)
- -> std::shared_ptr<T>
-{
-    auto v = Identifier::unwrapIfId(e, env).expression;
-    return cast_impl::cast_helper_visitor<T>(env, v);    
-}
-
-template <>
-auto cast<class T>(Environment& env, 
-                   const std::shared_ptr<const Expression>& e)
- -> std::shared_ptr<T>
-{
-    auto v = Identifier::unwrapIfId(e, env).expression;
-    return cast_impl::cast_helper_visitor<T>(env, v);    
-}
-
-// template <>
-// auto cast<class T, class F>(Environment& env, const std::shared_ptr<F>& e)
-//  -> std::shared_ptr<T>
-// {
-//     auto v = Identifier::unwrapIfId(e, env).expression;
-//     return cast_impl::cast_helper_visitor<T>(env, v);    
-// }
-
-// template <>
-// auto cast<class T, class F>(Environment& env, const std::shared_ptr<const F>& e)
-//  -> std::shared_ptr<const T>
-// {
-//     auto v = Identifier::unwrapIfId(c, env).expression;
-//     return cast_impl::cast_helper_visitor<const T>(env, v);    
-// }
-
-template <class T>
-bool checkType(Environment& env, const Object& e)
-{
-    return cast<T>(env, e) != nullptr;
 }
 
 template <class T>
