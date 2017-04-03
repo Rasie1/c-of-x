@@ -48,7 +48,7 @@ auto cast(Environment& env,
 }
 
 template <>
-auto cast<Identifier>(Environment& env, 
+inline auto cast<Identifier>(Environment& env, 
                       const std::shared_ptr<const Expression>& e)
  -> std::shared_ptr<Identifier>
 {
