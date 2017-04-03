@@ -20,12 +20,17 @@ BOOST_AUTO_TEST_CASE(newVariable)
     BOOST_REQUIRE(checkType<Any>(env, x));
 }
 
+auto execute(Environment& env, Object& e)
+{
+    e->eval(env); // probably not correct
+}
+
 BOOST_AUTO_TEST_CASE(assignment)
 {
     Environment env;
     Parser p;
     auto parsed = p.parse("x = 0", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
@@ -36,7 +41,7 @@ BOOST_AUTO_TEST_CASE(identityFunction)
     Environment env;
     Parser p;
     auto parsed = p.parse("i x = x", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Any>(env, x));
     auto i = env.getEqual("i");
@@ -70,7 +75,7 @@ BOOST_AUTO_TEST_CASE(twoArgumentFunction)
     Environment env;
     Parser p;
     auto parsed = p.parse("plus x y = x + y", env);
-    parsed;
+    execute(env, parsed);//
     auto applied = p.parse("plus 1 2", env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 3);
 }
@@ -80,7 +85,7 @@ BOOST_AUTO_TEST_CASE(typedArgument)
     Environment env;
     Parser p;
     auto parsed = p.parse("f (int x) = x + 1", env);
-    parsed;
+    execute(env, parsed);//
     auto applied = p.parse("f 0", env);
     BOOST_REQUIRE(checkType<Integer>(env, applied));
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 1);
@@ -166,7 +171,7 @@ BOOST_AUTO_TEST_CASE(unapplyPlus)
     Environment env;
     Parser p;
     auto parsed = p.parse("x + 2 = 0", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, -2);
@@ -177,7 +182,7 @@ BOOST_AUTO_TEST_CASE(unapplyPlusAsArgument)
     Environment env;
     Parser p;
     auto parsed = p.parse("f (x + 2) = x", env);
-    parsed;
+    execute(env, parsed);//
     parsed = p.parse("f 0", env);
     auto x = parsed;
     BOOST_REQUIRE(checkType<Integer>(env, x));
@@ -189,7 +194,7 @@ BOOST_AUTO_TEST_CASE(unapplyPartialPlus)
     Environment env;
     Parser p;
     auto parsed = p.parse("(+2) x = 0", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, -2);
@@ -200,7 +205,7 @@ BOOST_AUTO_TEST_CASE(unapplyPartialPlusAsArgument)
     Environment env;
     Parser p;
     auto parsed = p.parse("f ((+2) x) = x", env);
-    parsed;
+    execute(env, parsed);//
     parsed = p.parse("f 0", env);
     auto x = parsed;
     BOOST_REQUIRE(checkType<Integer>(env, x));
@@ -212,7 +217,7 @@ BOOST_AUTO_TEST_CASE(reverseApplication)
     Environment env;
     Parser p;
     auto parsed = p.parse("x = 2 : (+3) : (+4)", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 9);
 }
@@ -223,25 +228,25 @@ BOOST_AUTO_TEST_CASE(typedVariables)
     Environment env;
     Parser p;
     auto parsed = p.parse("int x = 0", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
 
     parsed = p.parse("y : int = 0", env);
-    parsed;
+    execute(env, parsed);//
     auto y = env.getEqual("y");
     BOOST_REQUIRE(checkType<Integer>(env, y));
     BOOST_CHECK_EQUAL(cast<Integer>(env, y)->value, 0);
 
     parsed = p.parse("int (x0 = 0)", env);
-    parsed;
+    execute(env, parsed);//
     auto x0 = env.getEqual("x0");
     BOOST_REQUIRE(checkType<Integer>(env, x0));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x0)->value, 0);
 
     parsed = p.parse("(int x1) = 0", env);
-    parsed;
+    execute(env, parsed);//
     auto x1 = env.getEqual("x1");
     BOOST_REQUIRE(checkType<Integer>(env, x1));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x1)->value, 0);
@@ -256,7 +261,7 @@ BOOST_AUTO_TEST_CASE(typedVariables)
 //     Parser p;
 
 //     auto parsed = p.parse("f ('(1 + 2)) = 4", env);
-//     parsed;
+//     parsexecute(env, ed);//
 //     parsed = p.parse("f (1 + 2)", env);
 //     auto c = parsed;
 //     BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 4);
@@ -275,7 +280,7 @@ BOOST_AUTO_TEST_CASE(typedVariables)
 //     Parser p;
 
 //     auto parsed = p.parse("token ('x) = 0", env);
-//     parsed;
+//     parsexecute(env, ed);//
 //     parsed = p.parse("token c", env);
 //     auto c = parsed;
 //     BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 0);
@@ -367,13 +372,13 @@ BOOST_AUTO_TEST_CASE(functionOverloading)
     Environment env;
     Parser p;
     auto parsed = p.parse("f 1 = 1", env);
-    parsed;
+    execute(env, parsed);//
     auto applied0 = p.parse("f 1", env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied0)->value, 1);
     auto applied1 = p.parse("f 2", env);
     BOOST_CHECK(cast<Void>(env, applied1));
     parsed = p.parse("f 2 = 2", env);
-    parsed;
+    execute(env, parsed);//
     auto applied2 = p.parse("f 1", env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied2)->value, 1);
     auto applied3 = p.parse("f 2", env);
@@ -387,7 +392,7 @@ BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
     Environment env;
     Parser p;
     auto parsed = p.parse("f (1 | 2) = 3", env);
-    parsed;
+    execute(env, parsed);//
     auto applied0 = p.parse("f 1", env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied0)->value, 3);
     auto applied1 = p.parse("f 2", env);
@@ -401,7 +406,7 @@ BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
     Environment env;
     Parser p;
     auto parsed = p.parse("f (!1) = 3", env);
-    parsed;
+    execute(env, parsed);//
     auto applied0 = p.parse("f 2", env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied0)->value, 3);
     auto applied2 = p.parse("f 1", env);
@@ -413,7 +418,7 @@ BOOST_AUTO_TEST_CASE(simpleInverseFunction)
     Environment env;
     Parser p;
     auto parsed = p.parse("f (int x) = x + 1", env);
-    parsed;
+    execute(env, parsed);//
     auto applied = p.parse("(inverse f) 0", env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, -1);
 }
@@ -423,10 +428,10 @@ BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
     Environment env;
     Parser p;
     auto parsed = p.parse("f x = x + 10", env);
-    parsed;
+    execute(env, parsed);//
     {
         parsed = p.parse("m (int x) = f 10 + f 17", env);
-        parsed;
+        execute(env, parsed);//
         auto applied = p.parse("(inverse m) 47", env);
         BOOST_REQUIRE(checkType<ValueInSet>(env, applied));
         applied = p.parse("(inverse m) 46", env);
@@ -434,7 +439,7 @@ BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
     }
     {
         parsed = p.parse("n 0 = f 10 + f 17", env);
-        parsed;
+        execute(env, parsed);//
         auto applied = p.parse("(inverse n) 47", env);
         BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 0);
         applied = p.parse("(inverse n) 46", env);
@@ -495,9 +500,9 @@ BOOST_AUTO_TEST_CASE(closurePredicate)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : (x => (x = 0))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 0", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Integer>(env, x));
         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
@@ -506,7 +511,7 @@ BOOST_AUTO_TEST_CASE(closurePredicate)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : (x => (x = 0))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 1", env);
         parsed;
         auto x = env.getEqual("x");
@@ -576,9 +581,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : ((>0) & (<10))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 5", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Integer>(env, x));
         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 5);
@@ -587,9 +592,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : ((>0) & (<10))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 0", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Void>(env, x));
     }
@@ -597,9 +602,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : ((>0) & (<10))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 10", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Void>(env, x));
     }
@@ -612,9 +617,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((=0) | (=5))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 5", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Integer>(env, x));
 //         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 5);
@@ -623,9 +628,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((=0) | (=5))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 0", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Integer>(env, x));
 //         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
@@ -634,9 +639,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((=1) | (=2))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 0", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Void>(env, x));
 //     }
@@ -644,9 +649,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((=9) | (=11))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 10", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Void>(env, x));
 //     }
@@ -658,9 +663,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((x => (x > 0)) & (x => (x < 10)))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 5", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Integer>(env, x));
 //         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 5);
@@ -669,9 +674,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((x => (x > 0)) & (x => (x < 10)))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 0", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Void>(env, x));
 //     }
@@ -679,9 +684,9 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 //         Environment env;
 //         Parser p;
 //         auto parsed = p.parse("x : ((x => int x) & (>0))", env);
-//         parsed;
+//         execute(env, parsed);//
 //         parsed = p.parse("x = 0", env);
-//         parsed;
+//         execute(env, parsed);//
 //         auto x = env.getEqual("x");
 //         BOOST_REQUIRE(checkType<Void>(env, x));
 //     }
@@ -693,9 +698,9 @@ BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
     Parser p;
     {
         auto parsed = p.parse("y = 1", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = ((+1) y) + ((+1) y)", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Integer>(env, x));
         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 4);
@@ -705,9 +710,9 @@ BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
     }
     {
         auto parsed = p.parse("z = 2", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("w = (int z) + (int z)", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("w");
         BOOST_REQUIRE(checkType<Integer>(env, x));
         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 4);
@@ -719,9 +724,9 @@ BOOST_AUTO_TEST_CASE(simpleLet)
     Environment env;
     Parser p;
     auto parsed = p.parse("f x = let (a = x + 2) a", env);
-    parsed;
+    execute(env, parsed);//
     parsed = p.parse("z = f 1", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("z");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 3);
@@ -732,7 +737,7 @@ BOOST_AUTO_TEST_CASE(letSharing)
     Environment env;
     Parser p;
     auto parsed = p.parse("let (x = 3)", env);
-    parsed;
+    execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 3);
@@ -744,9 +749,9 @@ BOOST_AUTO_TEST_CASE(contains)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : (=(1 | 2))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 1", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Integer>(env, x));
         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 1);
@@ -755,9 +760,9 @@ BOOST_AUTO_TEST_CASE(contains)
         Environment env;
         Parser p;
         auto parsed = p.parse("x : (=(1 | 2 | (2 + 1) | (2 + 2) | 5))", env);
-        parsed;
+        execute(env, parsed);//
         parsed = p.parse("x = 3", env);
-        parsed;
+        execute(env, parsed);//
         auto x = env.getEqual("x");
         BOOST_REQUIRE(checkType<Integer>(env, x));
         BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 3);
