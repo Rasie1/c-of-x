@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(VariableTest)
     Parser p;
     auto parsed = p.parse("x", env);
 
-    auto x = cast<Identifier>(env, parsed);
+    auto x = castNoEval<Identifier>(parsed);
     BOOST_REQUIRE(x != nullptr);
     BOOST_CHECK_EQUAL(x->name, "x");
 }
@@ -31,13 +31,13 @@ BOOST_AUTO_TEST_CASE(ApplicationTest)
     Parser p;
     auto parsed = p.parse("f x", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, op->op));
-    BOOST_CHECK(checkType<Identifier>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->right)->name, "x");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(SimpleBracesTest)
@@ -46,13 +46,13 @@ BOOST_AUTO_TEST_CASE(SimpleBracesTest)
     Parser p;
     auto parsed = p.parse("(f x)", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, op->op));
-    BOOST_CHECK(checkType<Identifier>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->right)->name, "x");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(VoidTest)
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(VoidTest)
     Parser p;
     auto parsed = p.parse("()", env);
 
-    BOOST_CHECK(checkType<Void>(env, parsed));
+    BOOST_CHECK(checkTypeNoEval<Void>(parsed));
 }
 
 BOOST_AUTO_TEST_CASE(BracesTest)
@@ -70,18 +70,18 @@ BOOST_AUTO_TEST_CASE(BracesTest)
     Parser p;
     auto parsed = p.parse("g (f x)", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, op->op));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "g");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(op->op));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "g");
 
 
-    auto f_x = cast<Operation>(env, op->right);
-    BOOST_CHECK(checkType<Application>(env, f_x->op));
-    BOOST_CHECK(checkType<Identifier>(env, f_x->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, f_x->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x->right)->name, "x");
+    auto f_x = castNoEval<Operation>(op->right);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(MultipleApplication)
@@ -90,38 +90,38 @@ BOOST_AUTO_TEST_CASE(MultipleApplication)
     Parser p;
     auto parsed = p.parse("f x y (a b) z", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
 
-    auto f_x_y_oa_bc_z = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, f_x_y_oa_bc_z->op));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y_oa_bc_z->left));
-    BOOST_CHECK(checkType<Identifier>(env, f_x_y_oa_bc_z->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x_y_oa_bc_z->right)->name, "z");
+    auto f_x_y_oa_bc_z = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x_y_oa_bc_z->op));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y_oa_bc_z->left));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x_y_oa_bc_z->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
 
-    auto f_x_y_oa_bc = cast<Operation>(env, f_x_y_oa_bc_z->left);
-    BOOST_CHECK(checkType<Application>(env, f_x_y_oa_bc->op));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y_oa_bc->left));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y_oa_bc->right));
+    auto f_x_y_oa_bc = castNoEval<Operation>(f_x_y_oa_bc_z->left);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x_y_oa_bc->op));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y_oa_bc->left));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y_oa_bc->right));
 
-    auto f_x_y = cast<Operation>(env, f_x_y_oa_bc->left);
-    BOOST_CHECK(checkType<Application>(env, f_x_y->op));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y->left));
-    BOOST_CHECK(checkType<Identifier>(env, f_x_y->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x_y->right)->name, "y");
+    auto f_x_y = castNoEval<Operation>(f_x_y_oa_bc->left);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x_y->op));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y->left));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x_y->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x_y->right)->name, "y");
 
-    auto a_b = cast<Operation>(env, f_x_y_oa_bc->right);
-    BOOST_CHECK(checkType<Application>(env, a_b->op));
-    BOOST_CHECK(checkType<Identifier>(env, a_b->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, a_b->left)->name, "a");
-    BOOST_CHECK(checkType<Identifier>(env, a_b->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, a_b->right)->name, "b");
+    auto a_b = castNoEval<Operation>(f_x_y_oa_bc->right);
+    BOOST_CHECK(checkTypeNoEval<Application>(a_b->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(a_b->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(a_b->left)->name, "a");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(a_b->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(a_b->right)->name, "b");
 
-    auto f_x = cast<Operation>(env, f_x_y->left);
-    BOOST_CHECK(checkType<Application>(env, f_x->op));
-    BOOST_CHECK(checkType<Identifier>(env, f_x->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, f_x->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x->right)->name, "x");
+    auto f_x = castNoEval<Operation>(f_x_y->left);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(ParenthesesParse)
@@ -130,38 +130,38 @@ BOOST_AUTO_TEST_CASE(ParenthesesParse)
     Parser p;
     auto parsed = p.parse("(f x y (( (a) ((b)))) (((z))))", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
 
-    auto f_x_y_oa_bc_z = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, f_x_y_oa_bc_z->op));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y_oa_bc_z->left));
-    BOOST_CHECK(checkType<Identifier>(env, f_x_y_oa_bc_z->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x_y_oa_bc_z->right)->name, "z");
+    auto f_x_y_oa_bc_z = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x_y_oa_bc_z->op));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y_oa_bc_z->left));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x_y_oa_bc_z->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x_y_oa_bc_z->right)->name, "z");
 
-    auto f_x_y_oa_bc = cast<Operation>(env, f_x_y_oa_bc_z->left);
-    BOOST_CHECK(checkType<Application>(env, f_x_y_oa_bc->op));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y_oa_bc->left));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y_oa_bc->right));
+    auto f_x_y_oa_bc = castNoEval<Operation>(f_x_y_oa_bc_z->left);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x_y_oa_bc->op));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y_oa_bc->left));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y_oa_bc->right));
 
-    auto f_x_y = cast<Operation>(env, f_x_y_oa_bc->left);
-    BOOST_CHECK(checkType<Application>(env, f_x_y->op));
-    BOOST_CHECK(checkType<Operation>(env, f_x_y->left));
-    BOOST_CHECK(checkType<Identifier>(env, f_x_y->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x_y->right)->name, "y");
+    auto f_x_y = castNoEval<Operation>(f_x_y_oa_bc->left);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x_y->op));
+    BOOST_CHECK(checkTypeNoEval<Operation>(f_x_y->left));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x_y->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x_y->right)->name, "y");
 
-    auto a_b = cast<Operation>(env, f_x_y_oa_bc->right);
-    BOOST_CHECK(checkType<Application>(env, a_b->op));
-    BOOST_CHECK(checkType<Identifier>(env, a_b->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, a_b->left)->name, "a");
-    BOOST_CHECK(checkType<Identifier>(env, a_b->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, a_b->right)->name, "b");
+    auto a_b = castNoEval<Operation>(f_x_y_oa_bc->right);
+    BOOST_CHECK(checkTypeNoEval<Application>(a_b->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(a_b->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(a_b->left)->name, "a");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(a_b->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(a_b->right)->name, "b");
 
-    auto f_x = cast<Operation>(env, f_x_y->left);
-    BOOST_CHECK(checkType<Application>(env, f_x->op));
-    BOOST_CHECK(checkType<Identifier>(env, f_x->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, f_x->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, f_x->right)->name, "x");
+    auto f_x = castNoEval<Operation>(f_x_y->left);
+    BOOST_CHECK(checkTypeNoEval<Application>(f_x->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(f_x->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(f_x->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(XPlusY)
@@ -170,13 +170,13 @@ BOOST_AUTO_TEST_CASE(XPlusY)
     Parser p;
     auto parsed = p.parse("x + y", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Addition>(env, op->op));
-    BOOST_CHECK(checkType<Identifier>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "x");
-    BOOST_CHECK(checkType<Identifier>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->right)->name, "y");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Addition>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "x");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->right)->name, "y");
 }
 
 BOOST_AUTO_TEST_CASE(NumbersOperation)
@@ -185,13 +185,13 @@ BOOST_AUTO_TEST_CASE(NumbersOperation)
     Parser p;
     auto parsed = p.parse("1 + 2", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Addition>(env, op->op));
-    BOOST_CHECK(checkType<Integer>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Integer>(env, op->left)->value, 1);
-    BOOST_CHECK(checkType<Integer>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Integer>(env, op->right)->value, 2);
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Addition>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Integer>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Integer>(op->left)->value, 1);
+    BOOST_CHECK(checkTypeNoEval<Integer>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Integer>(op->right)->value, 2);
 }
 
 BOOST_AUTO_TEST_CASE(HighPriorityUsage)
@@ -210,13 +210,13 @@ BOOST_AUTO_TEST_CASE(MultilineApplication)
     auto parsed = p.parse("f\n"
                           "  x", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, op->op));
-    BOOST_CHECK(checkType<Identifier>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->right)->name, "x");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(MultilineApplication2)
@@ -227,13 +227,13 @@ BOOST_AUTO_TEST_CASE(MultilineApplication2)
     auto parsed = p.parse("f x\n"
                           "  y", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, op->op));
-    BOOST_CHECK(checkType<Identifier>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->right)->name, "x");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(MultilineApplicationSeparate)
@@ -245,13 +245,13 @@ BOOST_AUTO_TEST_CASE(MultilineApplicationSeparate)
                           "  x"
                           "y", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Application>(env, op->op));
-    BOOST_CHECK(checkType<Identifier>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->left)->name, "f");
-    BOOST_CHECK(checkType<Identifier>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Identifier>(env, op->right)->name, "x");
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Application>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->left)->name, "f");
+    BOOST_CHECK(checkTypeNoEval<Identifier>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Identifier>(op->right)->name, "x");
 }
 
 BOOST_AUTO_TEST_CASE(AdditionSection)
@@ -262,17 +262,17 @@ BOOST_AUTO_TEST_CASE(AdditionSection)
     auto parsed = p.parse("1 + 2\n"
                           "    3", env);
 
-    BOOST_CHECK(checkType<Operation>(env, parsed));
-    auto op = cast<Operation>(env, parsed);
-    BOOST_CHECK(checkType<Addition>(env, op->op));
-    BOOST_CHECK(checkType<Integer>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Integer>(env, op->left)->value, 1);
-    BOOST_CHECK(checkType<Integer>(env, op->right));
-    BOOST_CHECK(checkType<Operation>(env, op->right));
-    op = cast<Operation>(env, op->right);
-    BOOST_CHECK(checkType<DefaultOperator>(env, op->op));
-    BOOST_CHECK(checkType<Integer>(env, op->left));
-    BOOST_CHECK_EQUAL(cast<Integer>(env, op->left)->value, 2);
-    BOOST_CHECK(checkType<Integer>(env, op->right));
-    BOOST_CHECK_EQUAL(cast<Integer>(env, op->right)->value, 3);
+    BOOST_CHECK(checkTypeNoEval<Operation>(parsed));
+    auto op = castNoEval<Operation>(parsed);
+    BOOST_CHECK(checkTypeNoEval<Addition>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Integer>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Integer>(op->left)->value, 1);
+    BOOST_CHECK(checkTypeNoEval<Integer>(op->right));
+    BOOST_CHECK(checkTypeNoEval<Operation>(op->right));
+    op = castNoEval<Operation>(op->right);
+    BOOST_CHECK(checkTypeNoEval<DefaultOperator>(op->op));
+    BOOST_CHECK(checkTypeNoEval<Integer>(op->left));
+    BOOST_CHECK_EQUAL(castNoEval<Integer>(op->left)->value, 2);
+    BOOST_CHECK(checkTypeNoEval<Integer>(op->right));
+    BOOST_CHECK_EQUAL(castNoEval<Integer>(op->right)->value, 3);
 }

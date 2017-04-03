@@ -28,8 +28,6 @@ namespace cast_impl
      -> std::shared_ptr<T>;
 }
 
-
-
 template <class T>
 auto cast(Environment& env, const Object& e)
  -> std::shared_ptr<T>
@@ -96,4 +94,32 @@ template <class T>
 bool checkType(Environment& env, const std::shared_ptr<const Expression>& e)
 {
     return cast<const T>(env, e) != nullptr;
+}
+
+template <class T>
+auto castNoEval(const std::shared_ptr<Expression>& e) 
+ -> std::shared_ptr<T>
+{
+    return std::dynamic_pointer_cast<T>(e);
+}
+
+template <class T>
+auto checkTypeNoEval(const std::shared_ptr<Expression>& e) 
+ -> bool
+{
+    return castNoEval<T>(e) != nullptr;
+}
+
+template <class T>
+auto castNoEval(const Object& e) 
+ -> std::shared_ptr<T>
+{
+    return std::dynamic_pointer_cast<T>(e.expression);
+}
+
+template <class T>
+auto checkTypeNoEval(const Object& e) 
+ -> bool
+{
+    return castNoEval<T>(e.expression) != nullptr;
 }
