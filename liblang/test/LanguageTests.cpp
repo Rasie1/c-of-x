@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(newVariable)
     BOOST_REQUIRE(checkType<Any>(env, x));
 }
 
-auto execute(Environment& env, Object& e)
+auto execute(Environment& env, const Object& e)
 {
     e->eval(env); // probably not correct
 }
@@ -53,10 +53,11 @@ BOOST_AUTO_TEST_CASE(identityType)
 {
     Environment env;
     Parser p;
-    p.parse("i x = x", env);
-    p.parse("a = 5",   env);
+    execute(env, p.parse("i x = x", env));
+    execute(env, p.parse("a = 5",   env));
     auto a = p.parse("i a", env);
     BOOST_REQUIRE(checkType<Identifier>(env, a));
+    BOOST_CHECK_EQUAL(cast<Integer>(env, a)->value, 5);
 }
 
 BOOST_AUTO_TEST_CASE(indirection)

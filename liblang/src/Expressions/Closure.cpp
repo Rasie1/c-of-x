@@ -72,7 +72,10 @@ Object Closure::apply(const Object& e, Environment& env)
         return makeOperation<Application>(thisObject(), e);
     }
 
-    return Identifier::unwrapIfId(evaluated, newEnv);
+    auto ret = Identifier::unwrapIfId(evaluated, newEnv);
+
+    return ret;
+//    if (checkTypeNoEval<Identifier>(e))
 }
 
 std::string Closure::show() const
