@@ -76,7 +76,8 @@ BOOST_AUTO_TEST_CASE(identityType)
     Parser p;
     execute(env, p.parse("i x = x", env));
     execute(env, p.parse("a = 5",   env));
-    auto a = p.parse("i a", env);
+    execute(env, p.parse("i a",   env));
+    auto a = p.parse("a", env);
     BOOST_REQUIRE(checkType<Identifier>(env, a));
     BOOST_CHECK_EQUAL(cast<Integer>(env, a)->value, 5);
 }
