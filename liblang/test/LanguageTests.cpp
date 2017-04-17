@@ -13,6 +13,16 @@
 #include "Expressions/Less.h"
 #include "System/Cast.h"
 
+BOOST_AUTO_TEST_CASE(castIdentifier)
+{
+    Environment env;
+    Parser p;
+    auto x = p.parse("x", env);
+    BOOST_CHECK(checkType<Identifier>(env, x));
+    auto o = p.parse("0", env);
+    BOOST_CHECK(!checkType<Identifier>(env, o));
+}
+
 BOOST_AUTO_TEST_CASE(newVariable)
 {
     Environment env;

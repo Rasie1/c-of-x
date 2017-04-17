@@ -46,12 +46,19 @@ auto cast(Environment& env,
 }
 
 template <>
-inline auto cast<Identifier>(Environment& env, 
+inline auto cast<Identifier>(Environment& env,
                       const std::shared_ptr<const Expression>& e)
  -> std::shared_ptr<Identifier>
 {
     return std::const_pointer_cast<Identifier>(
         std::dynamic_pointer_cast<const Identifier>(e));
+}
+
+template <>
+inline auto cast<Identifier>(Environment& env, const Object& e)
+ -> std::shared_ptr<Identifier>
+{
+    return std::dynamic_pointer_cast<Identifier>(e.expression);
 }
 
 template <class T>

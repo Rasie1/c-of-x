@@ -59,15 +59,17 @@ Object Closure::apply(const Object& e, Environment& env)
 
     auto evaluated = body->eval(newEnv);
 
-    if (checkType<Identifier>(env, evaluated) && 
-        *evaluated == *this->argument)
+    if (auto id = cast<Identifier>(env, evaluated))
     {
-        auto id = cast<Identifier>(env, evaluated);
-        auto value = Identifier::unwrapIfId(evaluated, newEnv);
-        env.addEqual(id->name, value);
-        return e;
+        // cast with identifier doesn't work
+        if (*id == *this->argument)
+        {
+            auto value = Identifier::unwrapIfId(evaluated, newEnv);
+            env.addEqual(id->name, value);
+            return e;
+        }
     }
-    else if (checkType<Operation>(env, evaluated))
+    if (checkType<Operation>(env, evaluated))
     {
         return makeOperation<Application>(thisObject(), e);
     }
@@ -75,7 +77,6 @@ Object Closure::apply(const Object& e, Environment& env)
     auto ret = Identifier::unwrapIfId(evaluated, newEnv);
 
     return ret;
-//    if (checkTypeNoEval<Identifier>(e))
 }
 
 std::string Closure::show() const
