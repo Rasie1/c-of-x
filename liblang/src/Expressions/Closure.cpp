@@ -61,12 +61,14 @@ Object Closure::apply(const Object& e, Environment& env)
 
     if (auto id = cast<Identifier>(env, evaluated))
     {
-        // cast with identifier doesn't work
         if (*id == *this->argument)
         {
-            auto value = Identifier::unwrapIfId(evaluated, newEnv);
-            env.addEqual(id->name, value);
-            return e;
+            if (auto input = cast<Identifier>(env, e))
+            {
+                auto value = Identifier::unwrapIfId(evaluated, newEnv);
+                env.addEqual(input->name, value);
+                return e;
+            }
         }
     }
     if (checkType<Operation>(env, evaluated))

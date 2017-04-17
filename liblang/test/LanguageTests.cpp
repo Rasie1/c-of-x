@@ -13,6 +13,11 @@
 #include "Expressions/Less.h"
 #include "System/Cast.h"
 
+auto execute(Environment& env, const Object& e)
+{
+    e->eval(env); // probably not correct
+}
+
 BOOST_AUTO_TEST_CASE(castIdentifier)
 {
     Environment env;
@@ -23,16 +28,22 @@ BOOST_AUTO_TEST_CASE(castIdentifier)
     BOOST_CHECK(!checkType<Identifier>(env, o));
 }
 
+BOOST_AUTO_TEST_CASE(castSearch)
+{
+    Environment env;
+    Parser p;
+    execute(env, p.parse("a = 0", env));
+    execute(env, p.parse("a = 0", env));
+    auto a = env.getEqual("a");
+
+    BOOST_CHECK_EQUAL(cast<Integer>(env, a)->value, 0);
+}
+
 BOOST_AUTO_TEST_CASE(newVariable)
 {
     Environment env;
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Any>(env, x));
-}
-
-auto execute(Environment& env, const Object& e)
-{
-    e->eval(env); // probably not correct
 }
 
 BOOST_AUTO_TEST_CASE(assignment)
