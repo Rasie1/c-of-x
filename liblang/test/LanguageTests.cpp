@@ -149,6 +149,18 @@ BOOST_AUTO_TEST_CASE(then)
 //    BOOST_REQUIRE(checkType<Void>(env, applied1));
 //}
 
+BOOST_AUTO_TEST_CASE(contradiction)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("y = 0", env);
+    execute(env, parsed);
+    parsed = p.parse("y = 1", env);
+    execute(env, parsed);
+    auto y = makeObject<Identifier>("y");
+    BOOST_REQUIRE(checkType<Void>(env, y));
+}
+
 BOOST_AUTO_TEST_CASE(moreThan)
 {
     Environment env;
