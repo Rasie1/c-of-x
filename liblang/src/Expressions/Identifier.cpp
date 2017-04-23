@@ -65,3 +65,9 @@ bool Identifier::unapplyVariables(const Object& e, Environment& env)
 
     return true;
 }
+
+Object Identifier::apply(const Object& other, Environment& env)
+{
+    auto x = unwrapIfId(thisObject(), env);
+    return x->apply(other, env);
+}

@@ -153,17 +153,22 @@ BOOST_AUTO_TEST_CASE(moreThan)
 {
     Environment env;
     Parser p;
-    p.parse("x > 10", env);
-    auto applied0 = p.parse("x = 100", env);
-    BOOST_REQUIRE(checkType<Identifier>(env, applied0));
-    auto x = env.getEqual("x");
-    BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 100);
-
-    p.parse("y > 10", env);
-    auto applied1 = p.parse("y = 0", env);
-    BOOST_REQUIRE(checkType<Identifier>(env, applied1));
-    auto y = env.getEqual("y");
-    BOOST_REQUIRE(checkType<Void>(env, y));
+    {
+        auto parsed = p.parse("x > 10", env);
+        execute(env, parsed);
+        parsed = p.parse("x = 100", env);
+        execute(env, parsed);
+        auto x = makeObject<Identifier>("x");
+        BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 100);
+    }
+    {
+        auto parsed = p.parse("y > 10", env);
+        execute(env, parsed);
+        parsed = p.parse("y = 0", env);
+        execute(env, parsed);
+        auto y = makeObject<Identifier>("y");
+        BOOST_REQUIRE(checkType<Void>(env, y));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(DoubleNegative)
