@@ -213,6 +213,7 @@ void Environment::addDefaultDefinitions()
     addVariable<More>(this);
     addVariable<Let>(this);
     addVariable<Any>(this);
+    addVariable<CastToInt>(this);
     addVariable<PrintInfo>(this);
     addVariable<PrintEnv>(this);
     addVariable<ReverseApplication>(this);

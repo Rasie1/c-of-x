@@ -4,6 +4,7 @@
 #include "Expressions/Identifier.h"
 #include "Expressions/Void.h"
 #include "Expressions/Any.h"
+#include "Expressions/Integer.h"
 #include "System/Cast.h"
 
 Object Print::apply(const Object& e, Environment& env)
@@ -25,6 +26,18 @@ std::string Print::show() const
 
 const std::string Print::defaultName = "print";
 
+Object CastToInt::apply(const Object& e, Environment& env)
+{
+    auto ret = cast<Integer>(env, e);
+    return Object(ret);
+}
+
+std::string CastToInt::show() const
+{
+    return defaultName;
+}
+
+const std::string CastToInt::defaultName = "toInt";
 
 Object PrintInfo::apply(const Object& e, Environment& env)
 {
