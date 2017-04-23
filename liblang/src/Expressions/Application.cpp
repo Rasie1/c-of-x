@@ -52,7 +52,7 @@ Object Application::operate(const Object& first,
     left = Identifier::unwrapIfId(Identifier::unwrapIfId(first, env), env);
     right = second;
 
-    if (checkType<Any>(env, left) || checkType<Any>(env, right))
+    if (checkTypeNoEval<Any>(left) || checkTypeNoEval<Any>(right))
         return makeOperation<Application>(left, right);
 
     std::vector<Object> expressions;
