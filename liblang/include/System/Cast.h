@@ -81,10 +81,10 @@ namespace cast_impl
         if (auto op = std::dynamic_pointer_cast<const Operation>(e))
         if (typeEquals<const Intersection>(op->op))
         {
-            if (auto l = cast<T>(env, op->left))
+            auto l = cast<T>(env, op->left);
+            auto r = cast<T>(env, op->right);
+            if (l && r)
                 return l;
-            if (auto r = cast<T>(env, op->right))
-                return r;
         }
 
         auto casted = std::dynamic_pointer_cast<Expression>(e);
