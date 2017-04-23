@@ -86,9 +86,10 @@ BOOST_AUTO_TEST_CASE(indirection)
 {
     Environment env;
     Parser p;
-    p.parse("i x = x", env);
-    p.parse("x = 5", env);
-    auto parsed = p.parse("i x", env);
+    execute(env, p.parse("i x = x", env));
+    execute(env, p.parse("x = 5", env));
+    execute(env, p.parse("i x", env));
+    auto parsed = p.parse("x", env);
     auto result = Identifier::unwrapIfId(parsed, env);
     BOOST_CHECK_EQUAL(cast<Integer>(env, result)->value, 5);
 }
@@ -100,6 +101,7 @@ BOOST_AUTO_TEST_CASE(twoArgumentFunction)
     auto parsed = p.parse("plus x y = x + y", env);
     execute(env, parsed);//
     auto applied = p.parse("plus 1 2", env);
+    execute(env, applied);//
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 3);
 }
 
@@ -110,6 +112,7 @@ BOOST_AUTO_TEST_CASE(typedArgument)
     auto parsed = p.parse("f (int x) = x + 1", env);
     execute(env, parsed);//
     auto applied = p.parse("f 0", env);
+    execute(env, applied);//
     BOOST_REQUIRE(checkType<Integer>(env, applied));
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 1);
 }

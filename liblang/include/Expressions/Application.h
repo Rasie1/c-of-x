@@ -10,6 +10,7 @@ public:
                    const Object& second,
                    Environment& env) override;
 
+    Object apply(const Object& l, const Object& r, const Object& e, Environment &env) override;
     bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
     std::string show() const override;

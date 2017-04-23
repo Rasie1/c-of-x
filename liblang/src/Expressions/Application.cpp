@@ -97,6 +97,15 @@ Object Application::operate(const Object& first,
     return ret;
 }
 
+Object Application::apply(const Object& l, const Object& r, const Object& e, Environment &env)
+{
+    auto envc = env;
+    auto lApplied = l->apply(r, env);
+    auto result = lApplied->apply(e, env);
+
+    return result;
+}
+
 std::string Application::show() const
 {
     return "";

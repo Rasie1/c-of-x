@@ -10,7 +10,7 @@ public:
                    const Object& second,
                    Environment& env) override;
     
-    Object apply(const Object& l, const Object& r, const Object& e, Environment &env);
+    Object apply(const Object& l, const Object& r, const Object& e, Environment &env) override;
     Object intersect(const Object& l, const Object& r, const Object& e, Environment &env);
     bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env) override;
 
