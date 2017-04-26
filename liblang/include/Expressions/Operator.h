@@ -19,6 +19,7 @@ public:
 
     virtual Object apply(const Object& l, const Object& r, const Object& e, Environment &env);
     virtual Object intersect(const Object& l, const Object& r, const Object& e, Environment &env);
+    virtual Object element(const Object& l, const Object& r, Environment &env);
     virtual bool unapplyVariables(const Object& e, const Object& l, const Object& r, Environment &env);
 
     virtual Object partialApplyLeft  (const Object& e, Environment& env);

@@ -111,3 +111,15 @@ Object Intersection::intersect(const Object& l, const Object& r, const Object& e
 
     return result;
 }
+
+Object Intersection::element(const Object& l, const Object& r, Environment &env)
+{
+    auto envc = env;
+    auto rElement = r->element(env);
+    auto lElement = l->element(env);
+
+    auto operation = makeOperation<Intersection>(lElement, rElement);
+    auto result = operation;
+
+    return result;
+}

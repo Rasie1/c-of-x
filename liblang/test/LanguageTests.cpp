@@ -36,6 +36,7 @@ BOOST_AUTO_TEST_CASE(castSearch)
     execute(env, p.parse("a = 0", env));
     auto a = env.getEqual("a");
 
+    BOOST_REQUIRE(checkType<Integer>(env, a));
     BOOST_CHECK_EQUAL(cast<Integer>(env, a)->value, 0);
 }
 

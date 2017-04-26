@@ -14,6 +14,7 @@ public:
 
     Object apply(const Object& other, Environment& env) override;
     Object intersect(const Object& other, const Environment& env) override;
+    Object element(const Environment& env) override;
     bool hasFreeVariables(const Environment& env) const;
     bool unapplyVariables(const Object& e, Environment& env) override;
 

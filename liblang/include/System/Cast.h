@@ -84,7 +84,10 @@ namespace cast_impl
             auto l = cast<T>(env, op->left);
             auto r = cast<T>(env, op->right);
             if (l && r)
+            if (*l == *r)
                 return l;
+
+            return nullptr;
         }
 
         auto casted = std::dynamic_pointer_cast<Expression>(e);

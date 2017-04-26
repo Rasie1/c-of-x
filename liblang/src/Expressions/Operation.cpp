@@ -63,6 +63,12 @@ Object Operation::intersect(const Object& other, const Environment& envc)
     return op->intersect(left, right, other, env);
 }
 
+Object Operation::element(const Environment& envc)
+{
+    auto env = envc;
+    return op->element(left, right, env);
+}
+
 Object Operation::apply(const Object& other, Environment& env)
 {
     return op->apply(left, right, other, env);
