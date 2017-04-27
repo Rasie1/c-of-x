@@ -101,9 +101,9 @@ namespace cast_impl
         }
 
         if (ret == nullptr)
-            env.debugPrint("unable to cast");
+            env.debugPrint("unable to cast\n");
         else
-            env.debugPrint("result: " + ret->show());
+            env.debugPrint("result: " + ret->show() + "\n");
         env.decreaseDebugIndentation();
 
         return ret;
