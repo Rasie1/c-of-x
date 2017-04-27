@@ -75,28 +75,38 @@ namespace cast_impl
                              const std::shared_ptr<Expression>& e)
      -> std::shared_ptr<T>
     {
-        if (auto casted = std::dynamic_pointer_cast<T>(e))
-            return casted;
-        
-        if (auto op = std::dynamic_pointer_cast<const Operation>(e))
-        if (typeEquals<const Intersection>(op->op))
-        {
-            auto l = cast<T>(env, op->left);
-            auto r = cast<T>(env, op->right);
-            if (l && r)
-            if (*l == *r)
-                return l;
+        env.debugPrint("cast " + e->show() + " to " + std::string(typeid(T).name()) + "\n");
+        env.increaseDebugIndentation();
 
-            return nullptr;
+        std::shared_ptr<T> ret;
+
+        ret = std::dynamic_pointer_cast<T>(e);
+
+        if (!ret)
+        {
+            // if (auto op = std::dynamic_pointer_cast<const Operation>(e))
+            // if (typeEquals<const Intersection>(op->op))
+            // {
+            //     auto l = cast<T>(env, op->left);
+            //     auto r = cast<T>(env, op->right);
+            //     if (l && r)
+            //         return l;
+            // }
+
+            auto casted = std::dynamic_pointer_cast<Expression>(e);
+            auto evaluated = casted->eval(env);
+
+            if (evaluated.expression != e)
+                ret = cast<T>(env, evaluated);
         }
 
-        auto casted = std::dynamic_pointer_cast<Expression>(e);
-        auto evaluated = casted->eval(env);
-
-        if (evaluated.expression != e) // temp
-            return cast<T>(env, evaluated);
+        if (ret == nullptr)
+            env.debugPrint("unable to cast");
         else
-            return nullptr;
+            env.debugPrint("result: " + ret->show());
+        env.decreaseDebugIndentation();
+
+        return ret;
     }
 }
 

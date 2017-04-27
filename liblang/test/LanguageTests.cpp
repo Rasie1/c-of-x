@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(moreThan)
     }
 }
 
-BOOST_AUTO_TEST_CASE(DoubleNegative)
+BOOST_AUTO_TEST_CASE(doubleNegative)
 {
     Environment env;
     Parser p;
