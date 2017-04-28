@@ -204,6 +204,7 @@ BOOST_AUTO_TEST_CASE(substitutionInPartialApplication)
     Parser p;
     p.parse("arg = 3", env);
     auto applied0 = p.parse("x = (+1) arg", env);
+    execute(env, applied0);
     BOOST_REQUIRE(checkType<Identifier>(env, applied0));
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
