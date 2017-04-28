@@ -45,3 +45,8 @@ Object Complement::complement(const Environment& env)
 {
     return e;
 }
+
+Object Complement::eval(Environment& env)
+{
+    return e->complement(env);
+}

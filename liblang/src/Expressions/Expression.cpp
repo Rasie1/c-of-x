@@ -53,14 +53,16 @@ Object Expression::unionize(const Object& other, const Environment& env)
     return makeOperation<Union>(thisObject(), other);
 }
 
-Object Expression::complement(const Environment& env)
+Object Expression::complement(const Environment& envc)
 {
-    return makeObject<Complement>(thisObject());
+    auto env = envc;
+    return makeObject<Complement>(eval(env));
 }
 
-Object Expression::element(const Environment& env)
+Object Expression::element(const Environment& envc)
 {
-    return makeObject<ValueInSet>(thisObject());
+    auto env = envc;
+    return makeObject<ValueInSet>(eval(env));
 }
 
 Object Expression::apply(const Object& other, Environment& env)
