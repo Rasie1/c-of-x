@@ -13,6 +13,8 @@
 #include "Expressions/Less.h"
 #include "System/Cast.h"
 
+
+
 auto execute(Environment& env, const Object& e)
 {
     e->eval(env); // probably not correct
@@ -202,7 +204,8 @@ BOOST_AUTO_TEST_CASE(substitutionInPartialApplication)
 {
     Environment env;
     Parser p;
-    p.parse("arg = 3", env);
+    auto arg = p.parse("arg = 3", env);
+    execute(env, arg);
     auto applied0 = p.parse("x = (+1) arg", env);
     execute(env, applied0);
     BOOST_REQUIRE(checkType<Identifier>(env, applied0));

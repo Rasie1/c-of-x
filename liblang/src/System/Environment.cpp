@@ -49,11 +49,14 @@ inline Object intersect(const Object& l, const Object& r, Environment env)
     return result;
 }
 
-Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter) :
+Environment::Environment(const std::shared_ptr<DebugPrinter>& debugPrinter,
+                         bool debugPrintEnabled) :
     debugPrinter(debugPrinter),
     defaultOperator(std::make_shared<Then>())
 {
     addDefaultDefinitions();
+
+    setDebugPrint(debugPrintEnabled);
 }
 
 void Environment::clear()

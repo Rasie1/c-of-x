@@ -26,7 +26,8 @@ class DebugPrinter;
 class Environment
 {
 public:
-    Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout));
+    Environment(const std::shared_ptr<DebugPrinter>& debugPrinter = std::make_shared<DebugPrinter>(&std::cout),
+                bool debugPrintEnabled = false);
 
     void add(const std::string& key, const Object& predicate, bool excluding = true);
     void addEqual(const std::string& key, const Object& value, bool excluding = true);
