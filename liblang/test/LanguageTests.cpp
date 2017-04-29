@@ -271,35 +271,54 @@ BOOST_AUTO_TEST_CASE(reverseApplication)
 }
 
 
-BOOST_AUTO_TEST_CASE(typedVariables)
+BOOST_AUTO_TEST_CASE(typedVariables0)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
+
     auto parsed = p.parse("int x = 0", env);
     execute(env, parsed);//
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Integer>(env, x));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
+}
 
-    parsed = p.parse("y : int = 0", env);
+BOOST_AUTO_TEST_CASE(typedVariables1)
+{
+    Environment env;
+    Parser p;
+
+    auto parsed = p.parse("y : int = 0", env);
     execute(env, parsed);//
     auto y = env.getEqual("y");
     BOOST_REQUIRE(checkType<Integer>(env, y));
     BOOST_CHECK_EQUAL(cast<Integer>(env, y)->value, 0);
+}
 
-    parsed = p.parse("int (x0 = 0)", env);
+BOOST_AUTO_TEST_CASE(typedVariables2)
+{
+    Environment env;
+    Parser p;
+
+    auto parsed = p.parse("int (x0 = 0)", env);
     execute(env, parsed);//
     auto x0 = env.getEqual("x0");
     BOOST_REQUIRE(checkType<Integer>(env, x0));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x0)->value, 0);
+}
 
-    parsed = p.parse("(int x1) = 0", env);
+BOOST_AUTO_TEST_CASE(typedVariable3)
+{
+    Environment env;
+    Parser p;
+
+    auto parsed = p.parse("(int x1) = 0", env);
     execute(env, parsed);//
     auto x1 = env.getEqual("x1");
     BOOST_REQUIRE(checkType<Integer>(env, x1));
     BOOST_CHECK_EQUAL(cast<Integer>(env, x1)->value, 0);
 }
+
 
 // recursion test
 // re x y = (((x < 11) \ (0)) | ((x > 10) \ (re (x - 1) (print x))) ) x
