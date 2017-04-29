@@ -14,5 +14,5 @@ private:
 class PlainData : public Data
 {
 public:
-    virtual Object intersect(const Object& other, const Environment& env) override;
+    virtual Object intersect(const Object& other, Environment& env) override;
 };

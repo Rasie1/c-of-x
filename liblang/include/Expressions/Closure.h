@@ -13,7 +13,7 @@ public:
     ~Closure();
 
     Object apply(const Object& e, Environment& env) override;
-    // Object intersect(const Object& other, const Environment& env) override;
+    // Object intersect(const Object& other, Environment& env) override;
     std::string show() const override;
     bool operator==(const Expression& other) const override;
     bool unapplyVariables(const Object& e, Environment& env) override;

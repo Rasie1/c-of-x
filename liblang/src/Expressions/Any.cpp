@@ -17,7 +17,7 @@ bool Any::unapplyVariables(const Object& e, Environment& env)
     return true;
 }
 
-Object Any::intersect(const Object& other, const Environment& env)
+Object Any::intersect(const Object& other, Environment& env)
 {
     return other;
 }

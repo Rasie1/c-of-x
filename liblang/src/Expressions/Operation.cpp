@@ -57,7 +57,7 @@ bool Operation::hasFreeVariables(const Environment& env) const
     return left->hasFreeVariables(env) || right->hasFreeVariables(env);
 }
 
-Object Operation::intersect(const Object& other, const Environment& envc)
+Object Operation::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     return op->intersect(left, right, other, env);

@@ -43,7 +43,7 @@ std::string Equals::show() const
 
 const std::string Equals::defaultName = "=";
 
-Object Equals::intersect(const Object& other, const Environment& envc)
+Object Equals::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     if (checkType<Any>(env, value))

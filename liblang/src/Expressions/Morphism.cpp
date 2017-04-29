@@ -13,7 +13,7 @@
 #include "Expressions/Not.h"
 #include "System/Cast.h"
 
-Object Morphism::intersect(const Object& other, const Environment& envc)
+Object Morphism::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     auto value = Identifier::unwrapIfId(other, env);

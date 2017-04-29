@@ -33,7 +33,7 @@ bool Complement::unapplyVariables(const Object& e, Environment& env)
     return !result;
 }
 
-Object Complement::intersect(const Object& other, const Environment& env)
+Object Complement::intersect(const Object& other, Environment& env)
 {
     if (*e == *other)
         return makeObject<Void>();

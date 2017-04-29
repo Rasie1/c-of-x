@@ -42,7 +42,7 @@ std::string LessThan::show() const
 
 const std::string LessThan::defaultName = "lessThan";
 
-Object LessThan::intersect(const Object& other, const Environment& envc)
+Object LessThan::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     if (auto p = cast<LessThan>(env, other))
@@ -71,7 +71,7 @@ Object LessThan::intersect(const Object& other, const Environment& envc)
     return makeOperation<Intersection>(thisObject(), other);
 }
 
-Object LessThan::unionize(const Object& other, const Environment& env)
+Object LessThan::unionize(const Object& other, Environment& env)
 {
     auto envc = env;
     if (auto p = cast<LessThan>(envc, other))
@@ -159,7 +159,7 @@ std::string LessOrEqualThan::show() const
 
 const std::string LessOrEqualThan::defaultName = "lessOrEqualThan";
 
-Object LessOrEqualThan::intersect(const Object& other, const Environment& envc)
+Object LessOrEqualThan::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     if (auto p = cast<LessOrEqualThan>(env, other))
@@ -188,7 +188,7 @@ Object LessOrEqualThan::intersect(const Object& other, const Environment& envc)
     return makeOperation<Intersection>(thisObject(), other);
 }
 
-Object LessOrEqualThan::unionize(const Object& other, const Environment& env)
+Object LessOrEqualThan::unionize(const Object& other, Environment& env)
 {
     auto envc = env;
     if (auto p = cast<LessOrEqualThan>(envc, other))

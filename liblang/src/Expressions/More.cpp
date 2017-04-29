@@ -42,7 +42,7 @@ std::string MoreThan::show() const
 
 const std::string MoreThan::defaultName = "moreThan";
 
-Object MoreThan::intersect(const Object& other, const Environment& envc)
+Object MoreThan::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     if (auto p = cast<MoreThan>(env, other))
@@ -71,7 +71,7 @@ Object MoreThan::intersect(const Object& other, const Environment& envc)
     return makeOperation<Intersection>(thisObject(), other);
 }
 
-Object MoreThan::unionize(const Object& other, const Environment& env)
+Object MoreThan::unionize(const Object& other, Environment& env)
 {
     auto envc = env;
     if (auto p = cast<MoreThan>(envc, other))
@@ -156,7 +156,7 @@ std::string MoreOrEqualThan::show() const
 
 const std::string MoreOrEqualThan::defaultName = "moreOrEqualThan";
 
-Object MoreOrEqualThan::intersect(const Object& other, const Environment& envc)
+Object MoreOrEqualThan::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     if (auto p = cast<MoreOrEqualThan>(env, other))
@@ -185,7 +185,7 @@ Object MoreOrEqualThan::intersect(const Object& other, const Environment& envc)
     return makeOperation<Intersection>(thisObject(), other);
 }
 
-Object MoreOrEqualThan::unionize(const Object& other, const Environment& env)
+Object MoreOrEqualThan::unionize(const Object& other, Environment& env)
 {
     auto envc = env;
     if (auto p = cast<MoreOrEqualThan>(envc, other))

@@ -19,7 +19,7 @@ public:
     virtual std::string show() const;
     static const std::string defaultName;
     
-    virtual Object intersect(const Object& other, const Environment& env) override;
+    virtual Object intersect(const Object& other, Environment& env) override;
     Object complement(const Environment& env) override;
     Object eval(Environment& env) override;
 

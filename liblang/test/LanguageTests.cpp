@@ -274,6 +274,7 @@ BOOST_AUTO_TEST_CASE(reverseApplication)
 BOOST_AUTO_TEST_CASE(typedVariables)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("int x = 0", env);
     execute(env, parsed);//

@@ -43,14 +43,14 @@ bool Expression::hasFreeVariables(const Environment& env)
     return false;
 }
 
-Object Expression::intersect(const Object& other, const Environment& env)
+Object Expression::intersect(const Object& other, Environment& env)
 {
-    return makeOperation<Intersection>(thisObject(), other);
+    return makeOperation<Intersection>(eval(env), other);
 }
 
-Object Expression::unionize(const Object& other, const Environment& env)
+Object Expression::unionize(const Object& other, Environment& env)
 {
-    return makeOperation<Union>(thisObject(), other);
+    return makeOperation<Union>(eval(env), other);
 }
 
 Object Expression::complement(const Environment& envc)

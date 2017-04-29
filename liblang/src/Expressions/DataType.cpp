@@ -18,7 +18,7 @@ bool Data::unapplyVariables(const Object& e, Environment& env)
 }
 
 
-Object PlainData::intersect(const Object& other, const Environment& env)
+Object PlainData::intersect(const Object& other, Environment& env)
 {
     if (*other == *this)
         return other;

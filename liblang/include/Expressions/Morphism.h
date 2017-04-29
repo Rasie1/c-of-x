@@ -4,7 +4,7 @@
 class Morphism : public Data
 {
 public:
-    virtual Object intersect(const Object& other, const Environment& env) override;
+    virtual Object intersect(const Object& other, Environment& env) override;
     virtual Object codomain();
     virtual Object domain();
     virtual Object inverse();

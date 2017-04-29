@@ -1,7 +1,7 @@
 #include "Expressions/Void.h"
 
 
-Object Void::intersect(const Object& other, const Environment& env)
+Object Void::intersect(const Object& other, Environment& env)
 {
     return thisObject();
 }

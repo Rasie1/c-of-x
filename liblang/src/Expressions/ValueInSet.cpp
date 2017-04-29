@@ -30,7 +30,7 @@ bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
 
 }
 
-Object ValueInSet::intersect(const Object& other, const Environment& env)
+Object ValueInSet::intersect(const Object& other, Environment& env)
 {
     auto envc = env;
     if (checkType<Any>(envc, this->set))

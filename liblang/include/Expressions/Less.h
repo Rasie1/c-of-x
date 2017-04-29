@@ -13,8 +13,8 @@ public:
 
     Object value;
 
-    Object intersect(const Object& other, const Environment& env) override;
-    Object unionize(const Object& other, const Environment& env) override;
+    Object intersect(const Object& other, Environment& env) override;
+    Object unionize(const Object& other, Environment& env) override;
     Object complement(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
@@ -34,8 +34,8 @@ public:
 
     Object value;
 
-    Object intersect(const Object& other, const Environment& env) override;
-    Object unionize(const Object& other, const Environment& env) override;
+    Object intersect(const Object& other, Environment& env) override;
+    Object unionize(const Object& other, Environment& env) override;
     Object complement(const Environment& env) override;
     bool operator==(const Expression& other) const;
 
