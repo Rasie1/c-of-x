@@ -67,19 +67,19 @@ void Environment::clear()
 
 static Object unwrapEqual(const Object& value, Environment& env)
 {
-    if (auto eq = cast<Equals>(env, value))
+    if (auto eq = castNoEval<Equals>(value))
         return eq->value;
-    else if (checkType<Any>(env, value))
+    else if (checkTypeNoEval<Any>(value))
         return value;
     
-    if (auto operation = cast<Operation>(env, value))
-    if (checkType<Union>(env, operation->op))
+    if (auto operation = castNoEval<Operation>(value))
+    if (checkTypeNoEval<Union>(operation->op))
     {
         auto l = unwrapEqual(operation->left, env);
         auto r = unwrapEqual(operation->right, env);
         return makeOperation<Union>(l, r);
     }
-    if (checkType<Void>(env, value))
+    if (checkTypeNoEval<Void>(value))
         return value;
     
     return makeObject<ValueInSet>(value);
