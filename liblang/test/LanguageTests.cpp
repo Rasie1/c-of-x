@@ -307,7 +307,7 @@ BOOST_AUTO_TEST_CASE(typedVariables2)
     BOOST_CHECK_EQUAL(cast<Integer>(env, x0)->value, 0);
 }
 
-BOOST_AUTO_TEST_CASE(typedVariable3)
+BOOST_AUTO_TEST_CASE(typedVariables3)
 {
     Environment env;
     Parser p;
