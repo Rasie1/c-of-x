@@ -3,11 +3,11 @@
 #include "Expressions/Expression.h"
 #include "Expressions/Operation.h"
 #include "Expressions/Intersection.h"
+#include "Expressions/Union.h"
 #include "Expressions/Equality.h"
 #include "Expressions/Identifier.h"
 #include "System/Environment.h"
 #include "System/Object.h"
-
 template <class T>
 constexpr bool typeEquals(const std::shared_ptr<const Expression>& e)
 {
@@ -99,6 +99,19 @@ namespace cast_impl
             //     auto r = cast<T>(env, op->right);
             //     if (l && r)
             //         return l;
+            // }
+            // if (auto op = std::dynamic_pointer_cast<const Operation>(e))
+            // if (typeEquals<const Union>(op->op))
+            // {
+            //     auto l = cast<T>(env, op->left);
+            //     auto r = cast<T>(env, op->right);
+            //     // if (l && r)
+            //     //     ret = makeOperation<Union>(Object(l), 
+            //     //                                 Object(r));
+            //     if (l)
+            //         ret = l;
+            //     if (r)
+            //         ret = r;
             // }
 
             auto casted = std::dynamic_pointer_cast<Expression>(e);

@@ -459,6 +459,7 @@ BOOST_AUTO_TEST_CASE(functionOverloading)
 BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f (1 | 2) = 3", env);
     execute(env, parsed);//

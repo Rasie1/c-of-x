@@ -30,13 +30,18 @@ Object Operation::eval(Environment& env)
 
     env.increaseDebugIndentation();
     ret = op->operate(left, right, env);
-    // save identity
+    env.decreaseDebugIndentation();
+
+    // preserve identity
     if (auto operation = std::dynamic_pointer_cast<Operation>(ret.expression))
     if (typeid(*(operation->op)) == typeid(*(this->op)))
     if (operation->left == left)
     if (operation->right == right)
+    {
+        env.debugPrint("identity restored\n");
         ret = thisObject();
-    env.decreaseDebugIndentation();
+    }
+
 
     env.debugPrint("RES: " + ret->show() + '\n', true);
 

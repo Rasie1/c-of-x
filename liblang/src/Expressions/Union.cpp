@@ -134,10 +134,17 @@ Object Union::operate(const Object& first,
                       const Object& second,
                       Environment& env)
 {
-    auto l = first;
-    auto r = second;
+    if (auto idL = cast<Identifier>(env, first))
+    if (auto idR = cast<Identifier>(env, second))
+    if (idL->name == idR->name)
+        return first;
+
+    auto l = Identifier::unwrapIfId(first, env);
+    auto r = Identifier::unwrapIfId(second, env);
 
     auto lr = l->unionize(r, env);
+
+    return lr;
 
     bool lf = false;
     bool rf = false;
