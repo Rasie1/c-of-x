@@ -310,7 +310,6 @@ BOOST_AUTO_TEST_CASE(typedVariables2)
 BOOST_AUTO_TEST_CASE(typedVariables3)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
 
     auto parsed = p.parse("(int x1) = 0", env);
@@ -407,6 +406,7 @@ BOOST_AUTO_TEST_CASE(operatorAsNonInfix)
 BOOST_AUTO_TEST_CASE(firstOrderOperator)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     p.parse("f op x y = op x y", env);
     auto parsed = p.parse("f (+) 2 3", env);
