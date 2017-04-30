@@ -48,7 +48,13 @@ Object Complement::complement(const Environment& env)
 
 Object Complement::eval(Environment& env)
 {
-    return e->complement(env);
+    auto ret = e->complement(env);
+
+    if (auto complement = castNoEval<Complement>(ret))
+    if (*complement->e == *this->e)
+        ret = thisObject();
+
+    return ret;
 }
 
 bool Complement::operator==(const Expression& other) const
