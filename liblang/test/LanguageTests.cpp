@@ -473,7 +473,6 @@ BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
 BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f (!1) = 3", env);
     execute(env, parsed);//
@@ -493,31 +492,35 @@ BOOST_AUTO_TEST_CASE(simpleInverseFunction)
     BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, -1);
 }
 
-BOOST_AUTO_TEST_CASE(evaluatingInverseFunction)
+BOOST_AUTO_TEST_CASE(evaluatingInverseFunction0)
 {
     Environment env;
     Parser p;
     auto parsed = p.parse("f x = x + 10", env);
     execute(env, parsed);//
-    {
-        parsed = p.parse("m (int x) = f 10 + f 17", env);
-        execute(env, parsed);//
-        auto applied = p.parse("(inverse m) 47", env);
-        BOOST_REQUIRE(checkType<ValueInSet>(env, applied));
-        applied = p.parse("(inverse m) 46", env);
-        BOOST_REQUIRE(checkType<Void>(env, applied));
-    }
-    {
-        parsed = p.parse("n 0 = f 10 + f 17", env);
-        execute(env, parsed);//
-        auto applied = p.parse("(inverse n) 47", env);
-        BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 0);
-        applied = p.parse("(inverse n) 46", env);
-        BOOST_REQUIRE(checkType<Void>(env, applied));
-    }
+    parsed = p.parse("m (int x) = f 10 + f 17", env);
+    execute(env, parsed);//
+    auto applied = p.parse("(inverse m) 47", env);
+    BOOST_REQUIRE(checkType<ValueInSet>(env, applied));
+    applied = p.parse("(inverse m) 46", env);
+    BOOST_REQUIRE(checkType<Void>(env, applied));
 }
 
-BOOST_AUTO_TEST_CASE(simpleClosure)
+BOOST_AUTO_TEST_CASE(evaluatingInverseFunction1)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("f x = x + 10", env);
+    execute(env, parsed);//
+    parsed = p.parse("n 0 = f 10 + f 17", env);
+    execute(env, parsed);//
+    auto applied = p.parse("(inverse n) 47", env);
+    BOOST_CHECK_EQUAL(cast<Integer>(env, applied)->value, 0);
+    applied = p.parse("(inverse n) 46", env);
+    BOOST_REQUIRE(checkType<Void>(env, applied));
+}
+
+BOOST_AUTO_TEST_CASE(simpleClosure0)
 {
     Environment env;
     Parser p;
@@ -526,11 +529,23 @@ BOOST_AUTO_TEST_CASE(simpleClosure)
         auto c = parsed;
         BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 3);
     }
+}
+
+BOOST_AUTO_TEST_CASE(simpleClosure1)
+{
+    Environment env;
+    Parser p;
     {
         auto parsed = p.parse("(3 => 3) 3", env);
         auto c = parsed;
         BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 3);
     }
+}
+
+BOOST_AUTO_TEST_CASE(simpleClosure2)
+{
+    Environment env;
+    Parser p;
     {
         auto parsed = p.parse("(2 => 3) 3", env);
         auto c = parsed;
@@ -538,7 +553,7 @@ BOOST_AUTO_TEST_CASE(simpleClosure)
     }
 }
 
-BOOST_AUTO_TEST_CASE(complexClosure)
+BOOST_AUTO_TEST_CASE(complexClosure0)
 {
     Environment env;
     Parser p;
@@ -547,16 +562,34 @@ BOOST_AUTO_TEST_CASE(complexClosure)
         auto c = parsed;
         BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 3);
     }
+}
+
+BOOST_AUTO_TEST_CASE(complexClosure1)
+{
+    Environment env;
+    Parser p;
     {
         auto parsed = p.parse("(2|3 => 3) 3", env);
         auto c = parsed;
         BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 3);
     }
+}
+
+BOOST_AUTO_TEST_CASE(complexClosure2)
+{
+    Environment env;
+    Parser p;
     {
         auto parsed = p.parse("(1|2 => 3) 3", env);
         auto c = parsed;
         BOOST_REQUIRE(checkType<Void>(env, c));
     }
+}
+
+BOOST_AUTO_TEST_CASE(complexClosure3)
+{
+    Environment env;
+    Parser p;
     {
         auto parsed = p.parse("(int x => 3) \"abc\"", env);
         auto c = parsed;
@@ -564,29 +597,29 @@ BOOST_AUTO_TEST_CASE(complexClosure)
     }
 }
 
-BOOST_AUTO_TEST_CASE(closurePredicate)
+BOOST_AUTO_TEST_CASE(closurePredicate0)
 {
-    {
-        Environment env;
-        Parser p;
-        auto parsed = p.parse("x : (x => (x = 0))", env);
-        execute(env, parsed);//
-        parsed = p.parse("x = 0", env);
-        execute(env, parsed);//
-        auto x = env.getEqual("x");
-        BOOST_REQUIRE(checkType<Integer>(env, x));
-        BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
-    }
-    {
-        Environment env;
-        Parser p;
-        auto parsed = p.parse("x : (x => (x = 0))", env);
-        execute(env, parsed);//
-        parsed = p.parse("x = 1", env);
-        parsed;
-        auto x = env.getEqual("x");
-        BOOST_REQUIRE(checkType<Void>(env, x));
-    }
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x : (x => (x = 0))", env);
+    execute(env, parsed);//
+    parsed = p.parse("x = 0", env);
+    execute(env, parsed);//
+    auto x = env.getEqual("x");
+    BOOST_REQUIRE(checkType<Integer>(env, x));
+    BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 0);
+}
+
+BOOST_AUTO_TEST_CASE(closurePredicate1)
+{
+    Environment env;
+    Parser p;
+    auto parsed = p.parse("x : (x => (x = 0))", env);
+    execute(env, parsed);//
+    parsed = p.parse("x = 1", env);
+    parsed;
+    auto x = env.getEqual("x");
+    BOOST_REQUIRE(checkType<Void>(env, x));
 }
 
 BOOST_AUTO_TEST_CASE(intersectionMorphism)
