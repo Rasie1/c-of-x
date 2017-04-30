@@ -298,6 +298,7 @@ BOOST_AUTO_TEST_CASE(typedVariables1)
 BOOST_AUTO_TEST_CASE(typedVariables2)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
 
     auto parsed = p.parse("int (x0 = 0)", env);

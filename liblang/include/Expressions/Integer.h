@@ -1,8 +1,10 @@
 #pragma once
-#include "Expressions/DataType.h"
+#include "Expressions/TypedData.h"
 #include "Expressions/Iterable.h"
+#include "Expressions/IntegerType.h"
+
 class Integer :
-        public PlainData,
+        public TypedData<IntegerType>,
         public ValueInIterableSet
 {
 public:

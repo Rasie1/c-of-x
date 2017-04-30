@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/DataType.h"
+#include "Expressions/Expression.h"
 
-class ValueInSet : public Data
+class ValueInSet : public Expression
 {
 public:
     ValueInSet(const Object& set) : set(set) {}

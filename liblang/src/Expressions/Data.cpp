@@ -1,4 +1,4 @@
-#include "Expressions/DataType.h"
+#include "Expressions/Data.h"
 #include "System/Environment.h"
 #include "Expressions/Void.h"
 #include "Expressions/Not.h"
@@ -15,13 +15,4 @@ bool Data::unapplyVariables(const Object& e, Environment& env)
     if (checkType<Any>(env, e))
         return true;
     return *this == *e;
-}
-
-
-Object PlainData::intersect(const Object& other, Environment& env)
-{
-    if (*other == *this)
-        return other;
-    else
-        return makeObject<Void>();
 }

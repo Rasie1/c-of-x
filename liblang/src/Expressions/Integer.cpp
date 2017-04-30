@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <iostream>
 #include "System/Cast.h"
+#include "Expressions/IntegerType.h"
 
-Integer::Integer(long long value)
-    : value(value)
+Integer::Integer(long long value) :
+    value(value)
 {
 }
 

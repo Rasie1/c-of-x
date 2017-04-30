@@ -1,5 +1,5 @@
 #pragma once
-#include "Expressions/DataType.h"
+#include "Expressions/Data.h"
 
 class Void : public Data
 {
