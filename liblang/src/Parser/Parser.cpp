@@ -35,10 +35,7 @@ static bool isOperator(Object e, Environment& env)
     if (!e)
         return false;
     e = Identifier::unwrapIfId(e, env);
-    if (cast<Operator>(env, e))
-        return true;
-    else
-        return false;
+    return checkTypeNoEval<Operator>(e);
 }
 
 Object Parser::parseFile(const std::string& filename, Environment& env)
@@ -93,7 +90,7 @@ Object Parser::parse(const vector<Token>::iterator& begin,
 
             // Handle force-eval operator
             bool evalForce = false;
-            if (auto variable = cast<Identifier>(env, left))
+            if (auto variable = castNoEval<Identifier>(left))
                 evalForce = variable->name == "#";
             if (evalForce)
                 q.push_back(right);
@@ -191,10 +188,10 @@ Object Parser::parse(const vector<Token>::iterator& begin,
         {
             applicationFlag = false;
 
-            auto op = cast<Operator>(env, e);
+            auto op = castNoEval<Operator>(e);
             if (!op)
-            if (auto id = cast<Identifier>(env, e))
-                op = cast<Operator>(env, env.getEqual(id->name));
+            if (auto id = castNoEval<Identifier>(e))
+                op = castNoEval<Operator>(env.getEqual(id->name));
 
             while (!operatorStack.empty() &&
                    env.compareOperators(op, operatorStack.top()))

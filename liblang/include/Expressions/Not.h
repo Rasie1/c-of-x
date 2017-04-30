@@ -23,6 +23,8 @@ public:
     Object complement(const Environment& env) override;
     Object eval(Environment& env) override;
 
+    bool operator==(const Expression& other) const override;
+
     bool unapplyVariables(const Object& e, Environment& env) override;
 
     Object e;

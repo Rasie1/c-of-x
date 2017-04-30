@@ -50,3 +50,17 @@ Object Complement::eval(Environment& env)
 {
     return e->complement(env);
 }
+
+bool Complement::operator==(const Expression& other) const
+{
+    return typeid(*this) == (typeid(other));
+    try
+    {
+        auto x = dynamic_cast<const Complement&>(other);
+        return x.e == this->e;
+    }
+    catch (std::bad_cast&)
+    {
+        return false;
+    }
+}
