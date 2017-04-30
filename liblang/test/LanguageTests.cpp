@@ -406,11 +406,11 @@ BOOST_AUTO_TEST_CASE(operatorAsNonInfix)
 BOOST_AUTO_TEST_CASE(firstOrderOperator)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
-    p.parse("f op x y = op x y", env);
-    auto parsed = p.parse("f (+) 2 3", env);
-    auto c = parsed;
+    auto parsed = p.parse("f op x y = op x y", env);
+    execute(env, parsed);
+    auto c = p.parse("f (+) 2 3", env);
+    BOOST_REQUIRE(checkType<Integer>(env, c));
     BOOST_CHECK_EQUAL(cast<Integer>(env, c)->value, 5);
 }
 
