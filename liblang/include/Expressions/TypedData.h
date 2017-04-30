@@ -10,11 +10,13 @@ class TypedData : public Data
 public:
     Object intersect(const Object& other, Environment& env) override
     {
-        if (*other == *this)
+        if (auto otherCasted = cast<TypedData<Type>>(env, other))
+        if (*otherCasted == *this)
             return thisObject();
+            
         if (auto valueInSet = cast<ValueInSet>(env, other))
-            if (cast<Type>(env, valueInSet->set))
-                return thisObject();
+        if (cast<Type>(env, valueInSet->set))
+            return thisObject();
 
         return makeObject<Void>();
     }
