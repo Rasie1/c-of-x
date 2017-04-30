@@ -11,7 +11,7 @@
 
 std::string ValueInSet::show() const
 {
-    return "(\u0251 : " + this->set->show() + ")";
+    return "(_ : " + this->set->show() + ")";
 }
 
 bool ValueInSet::unapplyVariables(const Object& e, Environment& env)
