@@ -473,6 +473,7 @@ BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
 BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f (!1) = 3", env);
     execute(env, parsed);//
@@ -495,6 +496,7 @@ BOOST_AUTO_TEST_CASE(simpleInverseFunction)
 BOOST_AUTO_TEST_CASE(evaluatingInverseFunction0)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f x = x + 10", env);
     execute(env, parsed);//

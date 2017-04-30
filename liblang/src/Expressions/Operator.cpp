@@ -5,6 +5,7 @@
 #include "Expressions/Intersection.h"
 #include "Expressions/Operation.h"
 #include "Expressions/ValueInSet.h"
+#include "Expressions/Application.h"
 #include "System/Cast.h"
 
 Operator::Operator(bool isRightAssociative, int priority, bool splitting)
@@ -84,5 +85,5 @@ Object Operator::element(const Object& l, const Object& r, Environment &env)
 
 Object Operator::apply(const Object& l, const Object& r, const Object& e, Environment &env) 
 {
-    return makeObject<Void>();
+    return makeOperation<Application>(operate(l, r, env), e);
 }
