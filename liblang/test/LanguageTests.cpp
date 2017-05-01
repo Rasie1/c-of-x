@@ -496,7 +496,6 @@ BOOST_AUTO_TEST_CASE(simpleInverseFunction)
 BOOST_AUTO_TEST_CASE(evaluatingInverseFunction0)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f x = x + 10", env);
     execute(env, parsed);//
@@ -615,10 +614,12 @@ BOOST_AUTO_TEST_CASE(closurePredicate0)
 BOOST_AUTO_TEST_CASE(closurePredicate1)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("x : (x => (x = 0))", env);
     execute(env, parsed);//
     parsed = p.parse("x = 1", env);
+    execute(env, parsed);//
     parsed;
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Void>(env, x));

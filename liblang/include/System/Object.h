@@ -15,10 +15,7 @@ private:
 public:
     Object() {}
     
-    explicit Object(const std::shared_ptr<Expression>& e) :
-        expression(e)
-    {
-    }
+    explicit Object(const std::shared_ptr<Expression>& e);
 
     template <class T, class... Args>
     static constexpr Object makeObject(Args&&... args)

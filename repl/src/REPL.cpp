@@ -52,6 +52,7 @@ void REPL::start()
                 auto evaluated = expression->eval(env);
                 cout << endl << "evaluated: ";
                 cout << evaluated->show();
+                cout << endl;
                 if (auto id = cast<Identifier>(env, evaluated))
                 {
                     auto previousDebugPrint = env.getDebugPrint();
