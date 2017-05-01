@@ -48,7 +48,10 @@ Object ValueInSet::eval(Environment& env)
 
     if (auto v = std::dynamic_pointer_cast<ValueInSet>(result.expression))
     if (v->set == set)
+    {
+        env.debugPrint("identity restored\n");
         return thisObject();
+    }
 
     return result;
 }

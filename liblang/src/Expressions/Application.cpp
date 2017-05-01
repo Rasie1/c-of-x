@@ -74,8 +74,11 @@ Object Application::operate(const Object& first,
         expressions.push_back(operate(left, opr, env));
     }
 
+    auto applied = left->apply(right, env);
+
+
     // is that needed?
-    expressions.push_back(left->apply(right, env));
+    expressions.push_back(applied);
         // if (auto function = cast<Morphism>(env, left))
         // {
         //     expressions.push_back(left->apply(right, env));

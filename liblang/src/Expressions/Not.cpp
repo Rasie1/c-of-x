@@ -52,7 +52,10 @@ Object Complement::eval(Environment& env)
 
     if (auto complement = castNoEval<Complement>(ret))
     if (*complement->e == *this->e)
+    {
+        env.debugPrint("identity restored\n");
         ret = thisObject();
+    }
 
     return ret;
 }
