@@ -14,6 +14,7 @@ public:
     virtual Object apply(const Object& other, Environment& env);
     virtual Object intersect(const Object& other, Environment& env);
     virtual Object unionize(const Object& other, Environment& env);
+    virtual Object equals(const Object& other, Environment& env);
     virtual Object complement(const Environment& env);
     virtual Object element(const Environment& env);
 

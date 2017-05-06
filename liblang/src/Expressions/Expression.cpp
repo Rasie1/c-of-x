@@ -10,6 +10,7 @@
 #include "Expressions/Union.h"
 #include "Expressions/Void.h"
 #include "Expressions/Not.h"
+#include "Expressions/Equality.h"
 
 using namespace std;
 
@@ -51,6 +52,13 @@ Object Expression::intersect(const Object& other, Environment& env)
 Object Expression::unionize(const Object& other, Environment& env)
 {
     return makeOperation<Union>(eval(env), other);
+}
+
+Object Expression::equals(const Object& other, Environment& env)
+{
+    if (*this == *other)
+        return other;
+    return makeOperation<Equality>(eval(env), other);
 }
 
 Object Expression::complement(const Environment& envc)

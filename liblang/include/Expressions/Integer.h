@@ -10,6 +10,7 @@ class Integer :
 public:
     Integer(long long value = 0);
 
+    Object equals(const Object& other, Environment& env) override;
     bool operator==(const Expression& other) const override;
     std::string show() const override;
 
