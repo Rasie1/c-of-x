@@ -94,6 +94,11 @@ Object Intersection::apply(const Object& l, const Object& r, const Object& e, En
     auto lApplied = l->apply(e, env);
     auto rApplied = r->apply(e, env);
 
+    if (checkType<Void>(env, lApplied) ||
+        checkType<Void>(env, rApplied))
+        return makeObject<Void>();
+
+
     auto operation = makeOperation<Intersection>(lApplied, rApplied);
     auto result = operation;
 

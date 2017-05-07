@@ -13,8 +13,13 @@
 optional<bool> Equals::holds(const Object& e, Environment& envc)
 {
     auto env = envc;
-    if (*value == *e)
-        return make_optional(true);
+    if (auto eq = value->equals(e, env))
+    {
+        if (checkType<Void>(env, eq))
+            return make_optional(false);
+        else
+            return make_optional(true);
+    }
 
     // auto operation = makeOperation<Intersection>(value, e);
     // auto intersection = operation->eval(const_cast<Environment&>(env));

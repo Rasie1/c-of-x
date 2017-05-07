@@ -17,11 +17,12 @@ Object Lambda::operate(const Object& first,
                        Environment& env)
 {
     auto newEnv = env;
-    auto arg = first->eval(newEnv);
-    if (auto id = cast<Identifier>(env, arg))
+//    auto arg = first->eval(newEnv);
+    if (auto id = cast<Identifier>(env, first))
         newEnv.erase(id->name);
-    arg = first->eval(newEnv); // not really good. Should detect bound variables
-                               // and erase them
+//    arg = first->eval(newEnv); // not really good. Should detect bound variables
+//                                and erase them
+    auto arg  = first;
     auto body = second;
     auto ret = makeObject<Closure>(arg, body, newEnv);
     return ret;

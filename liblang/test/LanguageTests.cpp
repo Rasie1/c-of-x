@@ -473,7 +473,6 @@ BOOST_AUTO_TEST_CASE(unionAsFunctionArgumentSimple)
 BOOST_AUTO_TEST_CASE(simpleComplementAsArgument)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f (!1) = 3", env);
     execute(env, parsed);//
@@ -620,7 +619,6 @@ BOOST_AUTO_TEST_CASE(closurePredicate1)
     execute(env, parsed);//
     parsed = p.parse("x = 1", env);
     execute(env, parsed);//
-    parsed;
     auto x = env.getEqual("x");
     BOOST_REQUIRE(checkType<Void>(env, x));
 }
