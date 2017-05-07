@@ -17,7 +17,8 @@
 
 auto execute(Environment& env, const Object& e)
 {
-    e->eval(env); // probably not correct
+    // probably not correct
+    e->eval(env)->eval(env)->eval(env)->eval(env);
 }
 
 BOOST_AUTO_TEST_CASE(castIdentifier)
@@ -613,7 +614,6 @@ BOOST_AUTO_TEST_CASE(closurePredicate0)
 BOOST_AUTO_TEST_CASE(closurePredicate1)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("x : (x => (x = 0))", env);
     execute(env, parsed);//
