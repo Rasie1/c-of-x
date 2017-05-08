@@ -11,18 +11,6 @@ Integer::Integer(long long value) :
 {
 }
 
-Object Integer::equals(const Object& other, Environment& env)
-{
-    if (auto i = cast<Integer>(env, other))
-    {
-        if (*this == *i)
-            return thisObject();
-        else
-            return makeObject<Void>();
-    }
-    return makeOperation<Equality>(thisObject(), other);
-}
-
 bool Integer::operator==(const Expression& other) const
 {
     if (typeid(other) == typeid(*this))

@@ -1,8 +1,8 @@
 #pragma once
-#include "Expressions/Data.h"
+#include "Expressions/Void.h"
 #include <string>
 
-class Error : public Data
+class Error : public Void
 {
 public:
     Error() {}

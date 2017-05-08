@@ -17,10 +17,16 @@ Object Morphism::intersect(const Object& other, Environment& envc)
 {
     auto env = envc;
     auto value = Identifier::unwrapIfId(other, env);
-    env.debugPrint("Intersecting function:" + this->show() + "\n");
+    env.debugPrint("Intersecting function: " + this->show() + "\n");
     env.debugPrint("WITH: " + other->show() + "\n");
 
 
+
+    if (this->equals(other, env))
+    {
+        std::cout << "ololol" << std::endl;
+        return thisObject();
+    }
 
 
     // For some reason, here intersection of function and argument gives us the result.

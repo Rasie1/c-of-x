@@ -3,6 +3,7 @@
 #include "Expressions/ValueInSet.h"
 #include "Expressions/Void.h"
 #include "System/Cast.h"
+#include "Expressions/Equality.h"
 
 template<typename Type>
 class TypedData : public Data
@@ -19,5 +20,17 @@ public:
             return thisObject();
 
         return makeObject<Void>();
+    }
+
+    Object equals(const Object& other, Environment& env) override
+    {
+        if (auto i = cast<TypedData<Type>>(env, other))
+        {
+            if (*this == *i)
+                return thisObject();
+            else
+                return makeObject<Void>();
+        }
+        return makeOperation<Equality>(thisObject(), other);
     }
 };

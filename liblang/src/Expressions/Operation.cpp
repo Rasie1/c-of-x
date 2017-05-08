@@ -18,6 +18,22 @@ Operation::Operation(const std::shared_ptr<Operator>& op,
 
 }
 
+static bool matches(const std::shared_ptr<const Expression>& l,
+                    const std::shared_ptr<const Expression>& r)
+{
+    if (l == r)
+        return true;
+
+    if (auto lo = std::dynamic_pointer_cast<const Operation>(l))
+    if (auto ro = std::dynamic_pointer_cast<const Operation>(r))
+    if (typeid(*(lo->op)) == typeid(*(ro->op)))
+    if (matches(lo->left.expression, ro->left.expression))
+    if (matches(lo->right.expression, ro->right.expression))
+        return true;
+
+    return false;
+}
+
 Object Operation::eval(Environment& env)
 {
     Object ret;
@@ -33,10 +49,7 @@ Object Operation::eval(Environment& env)
     env.decreaseDebugIndentation();
 
     // preserve identity
-    if (auto operation = std::dynamic_pointer_cast<Operation>(ret.expression))
-    if (typeid(*(operation->op)) == typeid(*(this->op)))
-    if (operation->left == left)
-    if (operation->right == right)
+    if (matches(shared_from_this(), ret.expression))
     {
         env.debugPrint("identity restored\n");
         ret = thisObject();
