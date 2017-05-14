@@ -24,7 +24,6 @@ Object Morphism::intersect(const Object& other, Environment& envc)
 
     if (this->equals(other, env))
     {
-        std::cout << "ololol" << std::endl;
         return thisObject();
     }
 

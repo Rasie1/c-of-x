@@ -4,6 +4,7 @@
 #include "Expressions/Void.h"
 #include "System/Cast.h"
 #include "Expressions/Equality.h"
+#include "Expressions/Operation.h"
 
 template<typename Type>
 class TypedData : public Data

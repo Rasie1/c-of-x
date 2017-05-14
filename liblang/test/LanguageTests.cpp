@@ -799,7 +799,6 @@ BOOST_AUTO_TEST_CASE(intersectionType)
 BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
     {
         auto parsed = p.parse("y = 1", env);

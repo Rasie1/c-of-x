@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
 #include "Expressions/Expression.h"
-#include "Expressions/Operation.h"
-#include "Expressions/Intersection.h"
-#include "Expressions/Union.h"
-#include "Expressions/Equality.h"
+// #include "Expressions/Operation.h"
+// #include "Expressions/Intersection.h"
+// #include "Expressions/Union.h"
+// #include "Expressions/Equality.h"
 #include "Expressions/Identifier.h"
 #include "System/Environment.h"
 #include "System/Object.h"
