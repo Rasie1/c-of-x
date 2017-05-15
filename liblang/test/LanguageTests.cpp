@@ -730,7 +730,6 @@ BOOST_AUTO_TEST_CASE(evaluatingInverseFunction0)
 BOOST_AUTO_TEST_CASE(evaluatingInverseFunction1)
 {
     Environment env;
-    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("f x = x + 10", env);
     execute(env, parsed);//
