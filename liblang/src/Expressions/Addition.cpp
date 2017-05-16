@@ -50,6 +50,21 @@ bool Addition::unapplyVariables(const Object& e, const Object& l, const Object& 
         return r->unapplyVariables(value, env);
     }
 
-    return l->unapplyVariables(e, env)
-        && r->unapplyVariables(e, env);
+    // possible infinite recursion
+    return calculate(l, r, env)->unapplyVariables(e, env);
+//    return l->unapplyVariables(e, env)
+//        && r->unapplyVariables(e, env);
+
+    // wtf is going on here
+//    auto evaluated = makeOperation<Addition>(l, r);
+
+
+
+//    if (auto op = cast<Operation>(env, evaluated))
+//    {
+//        if (checkType<Addition>(env, op->op))
+//            return op->left->unapplyVariables(l, env)
+//                && op->right->unapplyVariables(r, env);
+//    }
+//    return evaluated->unapplyVariables(e, env);
 }

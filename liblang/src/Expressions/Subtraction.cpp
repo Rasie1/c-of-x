@@ -54,13 +54,10 @@ bool Subtraction::unapplyVariables(const Object& e, const Object& l, const Objec
         return r->unapplyVariables(value, env);
     }
 
-    auto evaluated = makeOperation<Subtraction>(l, r);
+    // possible infinite recursion
+    return calculate(l, r, env)->unapplyVariables(e, env);
 
-    if (auto op = cast<Operation>(env, evaluated))
-    {
-        if (checkType<Subtraction>(env, op->op))
-            return op->left->unapplyVariables(l, env)
-                && op->right->unapplyVariables(r, env);
-    }
-    return evaluated->unapplyVariables(e, env);
+    //return l->unapplyVariables(e, env)
+    //    && r->unapplyVariables(e, env);
+
 }
