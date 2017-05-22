@@ -12,17 +12,6 @@ public:
     static const std::string defaultName;
 };
 
-class CastToInt : public Morphism
-{
-public:
-    CastToInt() {}
-
-    Object apply(const Object& e,
-                 Environment& env) override;
-    virtual std::string show() const;
-    static const std::string defaultName;
-};
-
 class PrintInfo : public Morphism
 {
 public:

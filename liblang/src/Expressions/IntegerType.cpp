@@ -27,3 +27,17 @@ std::string IntegerType::show() const
 }
 
 const std::string IntegerType::defaultName = "int";
+
+
+Object CastToInt::apply(const Object& e, Environment& env)
+{
+    auto ret = cast<Integer>(env, e);
+    return Object(ret);
+}
+
+std::string CastToInt::show() const
+{
+    return defaultName;
+}
+
+const std::string CastToInt::defaultName = "toInt";
