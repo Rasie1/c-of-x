@@ -30,7 +30,7 @@ Object Predicate::apply(const Object& e, Environment& env)
     else if (auto id = cast<Identifier>(env, evaluated))
     {
         env.add(id->name, thisObject());
-        return Object(id);
+        return evaluated;
     }
     else
     {

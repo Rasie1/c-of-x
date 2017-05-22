@@ -94,16 +94,14 @@ Object Operation::apply(const Object& other, Environment& env)
 
 bool Operation::operator==(const Expression& other) const
 {
-    return typeid(*this) == (typeid(other));
-    try
-    {
-        auto x = dynamic_cast<const Operation&>(other);
-        return x.op == op && x.left == left && x.right == right;
-    }
-    catch (std::bad_cast&)
-    {
+    if (typeid(*this) != typeid(other))
         return false;
-    }
+
+    auto o = static_cast<const Operation&>(other);
+    
+    return *op == *o.op
+       &&  *left.expression == *o.left.expression 
+       &&  *right.expression == *o.right.expression;
 }
 
 bool Operation::unapplyVariables(const Object& e, Environment& env)

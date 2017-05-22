@@ -516,31 +516,36 @@ BOOST_AUTO_TEST_CASE(simpleClosure2)
     }
 }
 
-BOOST_AUTO_TEST_CASE(noEnvironmentSharing)
+BOOST_AUTO_TEST_CASE(noEnvironmentSharing0)
 {
     Environment env;
     Parser p;
-    {
-        auto parsed = p.parse("y = 1", env);
-        execute(env, parsed);//
-        parsed = p.parse("x = ((+1) y) + ((+1) y)", env);
-        execute(env, parsed);//
-        auto x = env.getEqual("x");
-        BOOST_REQUIRE(checkType<Integer>(env, x));
-        BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 4);
-        auto y = env.getEqual("y");
-        BOOST_REQUIRE(checkType<Integer>(env, y));
-        BOOST_CHECK_EQUAL(cast<Integer>(env, y)->value, 1);
-    }
-    {
-        auto parsed = p.parse("z = 2", env);
-        execute(env, parsed);//
-        parsed = p.parse("w = (int z) + (int z)", env);
-        execute(env, parsed);//
-        auto x = env.getEqual("w");
-        BOOST_REQUIRE(checkType<Integer>(env, x));
-        BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 4);
-    }
+
+    auto parsed = p.parse("y = 1", env);
+    execute(env, parsed);//
+    parsed = p.parse("x = ((+1) y) + ((+1) y)", env);
+    execute(env, parsed);//
+    auto x = env.getEqual("x");
+    BOOST_REQUIRE(checkType<Integer>(env, x));
+    BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 4);
+    auto y = env.getEqual("y");
+    BOOST_REQUIRE(checkType<Integer>(env, y));
+    BOOST_CHECK_EQUAL(cast<Integer>(env, y)->value, 1);
+}
+
+BOOST_AUTO_TEST_CASE(noEnvironmentSharing1)
+{
+    Environment env;
+    env.toggleDebugPrint();
+    Parser p;
+
+    auto parsed = p.parse("z = 2", env);
+    execute(env, parsed);//
+    parsed = p.parse("w = (int z) + (int z)", env);
+    execute(env, parsed);//
+    auto x = env.getEqual("w");
+    BOOST_REQUIRE(checkType<Integer>(env, x));
+    BOOST_CHECK_EQUAL(cast<Integer>(env, x)->value, 4);
 }
 
 BOOST_AUTO_TEST_CASE(complexClosure0)
@@ -695,6 +700,7 @@ BOOST_AUTO_TEST_CASE(intersectionType1)
 BOOST_AUTO_TEST_CASE(intersectionType2)
 {
     Environment env;
+    env.toggleDebugPrint();
     Parser p;
     auto parsed = p.parse("x : ((>0) & (<10))", env);
     execute(env, parsed);//
