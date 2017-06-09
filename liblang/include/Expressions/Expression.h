@@ -17,6 +17,9 @@ public:
     virtual Object equals(const Object& other, Environment& env);
     virtual Object complement(const Environment& env);
     virtual Object element(const Environment& env);
+    virtual Object codomain();
+    virtual Object domain();
+    virtual Object inverse();
 
     virtual bool operator==(const Expression& other) const;
     virtual bool operator!=(const Expression& other) const { return !(*this == other); }

@@ -105,21 +105,6 @@ Object Morphism::intersect(const Object& other, Environment& envc)
 
 }
 
-Object Morphism::codomain()
-{
-    return makeObject<Any>();
-}
-
-Object Morphism::domain()
-{
-    return makeObject<Any>();
-}
-
-Object Morphism::inverse()
-{
-    return makeObject<Void>();
-}
-
 bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
 {
     // TODO

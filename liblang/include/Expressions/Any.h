@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Morphism.h"
+#include "Expressions/Data.h"
 
-class Any : public Morphism
+class Any : public Data
 {
 public:
 

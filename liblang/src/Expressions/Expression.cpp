@@ -10,6 +10,7 @@
 #include "Expressions/Union.h"
 #include "Expressions/Void.h"
 #include "Expressions/Not.h"
+#include "Expressions/Any.h"
 #include "Expressions/Equality.h"
 
 using namespace std;
@@ -87,4 +88,19 @@ bool Expression::unapplyVariables(const Object& e, Environment& env)
 Object Expression::thisObject()
 {
     return Object(shared_from_this());
+}
+
+Object Expression::codomain()
+{
+    return makeObject<Any>();
+}
+
+Object Expression::domain()
+{
+    return makeObject<Any>();
+}
+
+Object Expression::inverse()
+{
+    return makeObject<Void>();
 }
