@@ -122,7 +122,6 @@ Object Morphism::inverse()
 
 bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
 {
-    // throw std::logic_error("AAAAAAAA");
     // TODO
 //    return false;
     auto reversed = cast<Morphism>(env, inverse());
@@ -132,4 +131,16 @@ bool Isomorphism::unapplyVariables(const Object& e, Environment& env)
     auto ret = reversed->apply(e, env);
 
     return !checkType<Void>(env, ret);
+}
+
+Object Morphism::eval(Environment& env)
+{
+    return thisObject();
+}
+
+bool Morphism::unapplyVariables(const Object& e, Environment& env)
+{
+    if (checkType<Any>(env, e))
+        return true;
+    return *this == *e;
 }
