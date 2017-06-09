@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Expression.h"
+#include "Expressions/Morphism.h"
 
-class ValueInSet : public Expression
+class ValueInSet : public Morphism
 {
 public:
     ValueInSet(const Object& set) : set(set) {}

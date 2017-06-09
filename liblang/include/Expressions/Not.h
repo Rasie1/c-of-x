@@ -11,7 +11,7 @@ public:
     static const std::string defaultName;
 };
 
-class Complement : public Expression
+class Complement : public Morphism
 {
 public:
     Complement(const Object& e) : e(e) {}
