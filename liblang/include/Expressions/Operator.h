@@ -1,7 +1,7 @@
 #pragma once
-#include "Expressions/Morphism.h"
+#include "Expressions/Data.h"
 
-class Operator : public Morphism
+class Operator : public Data
 {
 public:
     Operator(bool isRightAssociative = false, int priority = 5, bool splitting = false);
