@@ -1,24 +1,28 @@
-cmake_minimum_required(VERSION 3.0)
-set (PROJECT_NAME "Language" CXX)
-project(${PROJECT_NAME})
+cmake_minimum_required(VERSION 3.14)
+project(main LANGUAGES CXX)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-option(COVERALLS "Generate coveralls data" OFF)
+include_directories(main 
+    third-party/PEGTL/include
+    third-party/robin-hood-hashing/src/include
+    third-party/yomm2/include
+)
 
-if (COVERALLS)
-    include(Coveralls)
-    coveralls_turn_on_coverage()
-endif()
+add_executable(main 
+    src/main.cpp
+    src/parser.cpp
+)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -g -Wall -Wextra -Wno-unused-parameter")
+target_link_libraries(main
+    ${CMAKE_SOURCE_DIR}/third-party/yomm2/build/src/libyomm2.a
+)
 
-enable_testing()
-
-add_subdirectory(liblang)
-add_subdirectory(repl)
-add_subdirectory(stdlib)
-
-if (COVERALLS)
-    file(GLOB_RECURSE COVERAGE_SRCS . *.cpp)
-    coveralls_setup("${COVERAGE_SRCS}" ON)
-endif()
+if (MSVC)
+    target_compile_options(
+        main
+        PRIVATE
+        /W4 /WX
+        /wd4459  # declaration of 'identifier' hides global declaration
+    )
+else ()
+    target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror -std=c++20)
+endif ()

@@ -1,17 +1,10 @@
-[![Build Status](https://travis-ci.org/Rasie1/c-of-x.svg?branch=master)](https://travis-ci.org/Rasie1/c-of-x.svg)
-[![Coverage Status](https://coveralls.io/repos/github/Rasie1/c-of-x/badge.svg?branch=master)](https://coveralls.io/github/Rasie1/c-of-x?branch=master)
-
 # Welcome
 
-This is an experimental programming language inspired by Haskell and C++ template metaprogramming.
+This is an experimental programming language inspired by Haskell / C++ template metaprogramming.
+
+**This is an in-progress rewrite**
 
 ## Build & Run
-
-### Dependencies
-
-- c++14 compiler
-- readline
-- boost
 
 ### How to build
 
