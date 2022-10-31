@@ -30,9 +30,9 @@ std::unique_ptr<cx::expression> build(const tao::pegtl::parse_tree::node& node) 
     } else if (node.type == "cx::parser::operators_8") {
         if (node.string() == "+")
             return mk(cx::addition{});
-        // else (node.string() == "-")
-        //     return 
-    } else if (node.type == "cx::operation_apply") {
+        else if (node.string() == "-")
+            return mk(cx::subtraction{});
+    } else if (node.type == "cx::operation_apply" || node.type == "cx::parser::definition") {
         // todo: no, application can have 3 children
         if (node.children.size() == 2) {
             return mk(cx::application{
@@ -40,13 +40,13 @@ std::unique_ptr<cx::expression> build(const tao::pegtl::parse_tree::node& node) 
                 std::move(build(*node.children[1]))
             });
         } else if (node.children.size() == 3) {
-            // auto l = build(*node.children[0]);
-            // auto o = build(*node.children[1]);
-            // auto r = build(*node.children[2]);
-            // return mk(cx::application{
-            //     mk(cx::application{std::move(o), std::move(l)},
-            //     std::move(r)
-            // });
+            auto l = build(*node.children[0]);
+            auto o = build(*node.children[1]);
+            auto r = build(*node.children[2]);
+            return mk(cx::application{
+                mk(cx::application{std::move(o), std::move(l)}),
+                std::move(r)
+            });
         }
     }
 

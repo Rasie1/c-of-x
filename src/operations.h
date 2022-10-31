@@ -28,12 +28,33 @@ inline expression Add(addition_with<datatype>&& function,
     }, move(argument));
 }
 
+
 inline expression MkAddition(expression&& argument) {
     return std::visit(overload{
         [](data<int>&& x) -> expression {
             return addition_with{x.data}; 
         },
         [](auto&& e) -> expression { return error{"error: can't make addition with " + Show(move(e))}; }
+    }, move(argument));
+}
+
+inline expression MkSubtraction(expression&& argument) {
+    return std::visit(overload{
+        [](data<int>&& x) -> expression {
+            return subtraction_with{x.data}; 
+        },
+        [](auto&& e) -> expression { return error{"error: can't make subtraction with " + Show(move(e))}; }
+    }, move(argument));
+}
+
+template <typename datatype>
+inline expression Subtract(subtraction_with<datatype>&& function,
+                                   expression&& argument) {
+    return std::visit(overload{
+        [&function](data<datatype>&& other) -> expression {
+            return data<datatype>{function.data - other.data}; 
+        },
+        [](auto&& e) -> expression { return error{std::string("error: can't subtract ") + Show(move(e))}; }
     }, move(argument));
 }
 
@@ -64,6 +85,10 @@ inline expression Apply(expression&& function,
         [&env, &argument](addition&&) { return MkAddition(Eval(move(argument), env)); },
         [&env, &argument](addition_with<int>&& function) { 
             return Add(move(function), Eval(move(argument), env));
+        },
+        [&env, &argument](subtraction&&) { return MkSubtraction(Eval(move(argument), env)); },
+        [&env, &argument](subtraction_with<int>&& function) { 
+            return Subtract(move(function), Eval(move(argument), env));
         },
         [&env, &argument](equality&&) { return MkEquals(Eval(move(argument), env)); },
         [&env, &argument](equals_to&& function) -> expression { 

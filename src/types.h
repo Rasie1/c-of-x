@@ -23,6 +23,9 @@ struct data { datatype data; };
 struct addition {};
 template <typename datatype>
 struct addition_with { datatype data; };
+struct subtraction {};
+template <typename datatype>
+struct subtraction_with { datatype data; };
 
 using expression = std::variant<
     identifier,
@@ -33,11 +36,13 @@ using expression = std::variant<
 
     application,
     addition,
+    subtraction,
     equality,
     equals_to,
 
     data<int>,
-    addition_with<int>
+    addition_with<int>,
+    subtraction_with<int>
 >;
 
 struct application {

@@ -49,7 +49,7 @@ using selector = tao::pegtl::parse_tree::selector<
         identifier,
         numeral, digits,
 
-        operation_apply, expression,
+        operation_apply,
         operators_8
     >,
     tao::pegtl::parse_tree::remove_content::on<

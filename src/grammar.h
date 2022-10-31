@@ -127,7 +127,7 @@ struct op_one : tao::pegtl::seq<tao::pegtl::one<O>, tao::pegtl::at<tao::pegtl::n
 template<char O, char P, char... N>
 struct op_two : tao::pegtl::seq<tao::pegtl::string<O, P>, tao::pegtl::at<tao::pegtl::not_one<N...>>> {};
 template<class S, class O>
-struct left_assoc : tao::pegtl::seq<S, seps, tao::pegtl::star_must<O, seps, S/*, seps*/>> {};
+struct left_assoc : tao::pegtl::seq<S, seps, tao::pegtl::star_must<O, seps, S, seps>> {};
 template<class S, class O>
 struct right_assoc : tao::pegtl::seq<S, seps, tao::pegtl::opt_must<O, seps, right_assoc<S, O>>> {};
 struct unary_operators : tao::pegtl::sor<tao::pegtl::one<'-'>,
@@ -152,14 +152,13 @@ struct operation_apply : tao::pegtl::seq<expr_12, tao::pegtl::star<seps, expr_12
 struct expr_11 : tao::pegtl::seq<operation_apply, seps, tao::pegtl::opt<tao::pegtl::one<'^'>, seps, expr_10, seps>> {};
 struct unary_apply : tao::pegtl::if_must<unary_operators, seps, expr_10, seps> {};
 struct expr_10 : tao::pegtl::sor<unary_apply, expr_11> {};
-struct operators_9 : tao::pegtl::sor<tao::pegtl::two<'/'>,
-                                        tao::pegtl::one<'/'>,
-                                        tao::pegtl::one<'*'>,
-                                        tao::pegtl::one<'%'>> {};
-struct expr_9 : left_assoc<expr_10, operators_9> {};
+struct operators_9 : tao::pegtl::sor<tao::pegtl::one<'/'>,
+                                     tao::pegtl::one<'*'>,
+                                     tao::pegtl::one<'%'>> {};
+struct expr_9 : left_assoc<operation_apply, operators_9> {};
 struct operators_8 : tao::pegtl::sor<tao::pegtl::one<'+'>,
                                      tao::pegtl::one<'-'>> {};
-struct expr_8 : left_assoc<operation_apply, operators_8> {};
+struct expr_8 : left_assoc<expr_9, operators_8> {};
 struct expr_7 : right_assoc<expr_8, op_two<'.', '.', '.'>> {};
 struct operators_6 : tao::pegtl::sor<tao::pegtl::two<'<'>,
                                                         tao::pegtl::two<'>'>> {};
