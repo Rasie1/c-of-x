@@ -1,7 +1,8 @@
 #pragma once
 #include <tao/pegtl.hpp>
 
-namespace cx {
+namespace cx::parser {
+
 struct str_and : TAO_PEGTL_STRING("and") {};
 struct str_break : TAO_PEGTL_STRING("break") {};
 struct str_do : TAO_PEGTL_STRING("do") {};
@@ -62,7 +63,6 @@ struct key_until : key<str_until> {};
 struct key_while : key<str_while> {};
 
 struct keyword : key<sor_keyword> {};
-
 
 // literals
 
@@ -158,7 +158,7 @@ struct operators_9 : tao::pegtl::sor<tao::pegtl::two<'/'>,
                                         tao::pegtl::one<'%'>> {};
 struct expr_9 : left_assoc<expr_10, operators_9> {};
 struct operators_8 : tao::pegtl::sor<tao::pegtl::one<'+'>,
-                                        tao::pegtl::one<'-'>> {};
+                                     tao::pegtl::one<'-'>> {};
 struct expr_8 : left_assoc<operation_apply, operators_8> {};
 struct expr_7 : right_assoc<expr_8, op_two<'.', '.', '.'>> {};
 struct operators_6 : tao::pegtl::sor<tao::pegtl::two<'<'>,
@@ -200,7 +200,7 @@ struct line : tao::pegtl::sor<empty_line, nonempty_line> {};
 
 struct grammar : tao::pegtl::until<tao::pegtl::eof, tao::pegtl::must<line>> {};
 
-enum class type
+enum class line_desc
 {
     def,
     if_,
@@ -211,13 +211,13 @@ enum class type
 
 struct entry
 {
-    entry(const std::size_t i, const cx::type t)
+    entry(const std::size_t i, const line_desc t)
         : indent(i),
             type(t)
     {}
 
     std::size_t indent;
-    cx::type type;
+    line_desc type;
 };
 
 struct state
@@ -225,7 +225,7 @@ struct state
     std::size_t current_indent = 0;  // Temporary value, the indentation of the current line.
     std::size_t minimum_indent = 0;  // Set to non-zero when the next line needs a greater indent.
 
-    std::vector<entry> stack = {entry(0, cx::type::expr)};  // Follows the nesting of the indented blocks.
+    std::vector<entry> stack = {entry(0, line_desc::expr)};  // Follows the nesting of the indented blocks.
 };
 
 template<class Rule>
@@ -237,7 +237,7 @@ struct action<definition>
 {
     static void apply0(state& s)
     {
-        s.stack.emplace_back(s.current_indent, type::expr);
+        s.stack.emplace_back(s.current_indent, line_desc::expr);
     }
 };
 
@@ -257,7 +257,7 @@ struct action<inc_indent>
     static void apply(const ActionInput& in, state& s)
     {
         // auto prev = s.stack.back().indent;
-        s.stack.emplace_back(s.current_indent, type::let);
+        s.stack.emplace_back(s.current_indent, line_desc::let);
         s.current_indent = in.size();
         // std::cout << "-i------------------ indent " << prev << " <- " << s.current_indent << " : " << in.position().line << ", " << in.position().column << std::endl;
     }
@@ -413,22 +413,4 @@ struct rearrange : tao::pegtl::parse_tree::apply<rearrange>
     }
 };
 
-template<class Rule>
-using selector = tao::pegtl::parse_tree::selector<
-    Rule,
-    tao::pegtl::parse_tree::store_content::on<
-        name,
-        operation_apply,
-        definition,
-        identifier,
-        numeral
-    >,
-    tao::pegtl::parse_tree::remove_content::on<
-    >/*,
-    rearrange::on<
-        definition
-    >*/
->;
-
-}  // namespace cx
-
+}  // namespace cx::parser
