@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     } else if (argc == 3) {
         cx::parser::trace(argv[1]);
     } else {
-        cx::parser::print_graphviz(argv[1]);
+        cx::parser::print_graphviz(argv[1], static_cast<int>(argc - 4));
     }
 
     return 0;

@@ -50,7 +50,9 @@ using selector = tao::pegtl::parse_tree::selector<
         numeral, digits,
 
         operation_apply,
-        operators_8
+        operators_8,
+        operators_9,
+        operators_0
     >,
     tao::pegtl::parse_tree::remove_content::on<
     >/*,
@@ -59,15 +61,32 @@ using selector = tao::pegtl::parse_tree::selector<
     >*/
 >;
 
-void print_graphviz(const char* file) {
+template<typename>
+using all_selector = std::true_type;
+
+void print_graphviz(const char* file, int level) {
     tao::pegtl::file_input in(file);
     cx::parser::state is;
-    auto root = tao::pegtl::parse_tree::parse<
-        cx::parser::grammar, 
-        cx::parser::selector, 
-        cx::parser::action>(in, is);
-    if (root)
-        tao::pegtl::parse_tree::print_dot(std::cout, *root);
+    std::unique_ptr<tao::pegtl::parse_tree::node> root;
+    if (level == 0) {
+        root = tao::pegtl::parse_tree::parse<
+            cx::parser::grammar,
+            cx::parser::graphviz_selector,
+            cx::parser::action>(in, is);
+    } else if (level == 1) {
+        root = tao::pegtl::parse_tree::parse<
+            cx::parser::grammar,
+            cx::parser::selector,
+            cx::parser::action>(in, is);
+    } else {
+        root = tao::pegtl::parse_tree::parse<
+            cx::parser::grammar,
+            all_selector,
+            cx::parser::action>(in, is);
+    }
+    if (!root)
+        throw std::runtime_error("couldn't parse");
+    tao::pegtl::parse_tree::print_dot(std::cout, *root);
 }
 
 std::shared_ptr<tao::pegtl::parse_tree::node> parse_file(const char* file) {

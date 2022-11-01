@@ -11,10 +11,12 @@ namespace cx::interpreter {
 
 using namespace cx;
 
-template <typename... Args>
-auto mk(Args&&... args) -> decltype(std::make_unique<cx::expression>(std::forward<Args>(args)...)) {
-    return std::make_unique<cx::expression>(std::forward<Args>(args)...);
-}
+// template <typename... Args>
+// auto mk(Args&&... args) -> decltype(std::make_unique<cx::expression>(std::forward<Args>(args)...)) {
+//     return std::make_unique<cx::expression>(std::forward<Args>(args)...);
+//     return cx::expression(args);
+// }
+auto mk(expression&& e) { return e; }
 
 void CheckEquals(expression&& l, expression&& r) {
     environment env;
@@ -54,27 +56,27 @@ void test() {
         application{
             mk(application{
                 mk(addition{}), 
-                mk(data{2})
+                mk(2)
             }),
             mk(application{
                 mk(addition_with{3}),
-                mk(data{5})
+                mk(5)
             })
         },
-        data{10}
+        10
     );
     CheckNotEquals(
         application{
             mk(application{
                 mk(addition{}), 
-                mk(data{2})
+                mk(2)
             }),
             mk(nothing{})
         },
-        data{10}
+        10
     );
-    CheckEquals(std::move(*cx::parser::build(*cx::parser::parse_code("1 + 2"))), 
-                data{3});
+    CheckEquals(std::move(cx::parser::build(*cx::parser::parse_code("1 + 2"))), 
+                3);
 }
 
 }
@@ -84,7 +86,7 @@ namespace cx {
 void eval(const char* code) {
     environment env;
     auto expr = cx::parser::build(*cx::parser::parse_code(code));
-    auto result = Eval(std::move(*expr), env);
+    auto result = Eval(std::move(expr), env);
     std::cout << Show(std::move(result)) << std::endl;
 }
 

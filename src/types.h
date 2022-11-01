@@ -2,6 +2,7 @@
 #include <vector>
 #include <utility>
 #include <variant>
+#include <boost/variant/recursive_wrapper.hpp>
 #include "util.h"
 
 namespace cx {
@@ -17,47 +18,53 @@ struct identifier { std::string name; };
 struct error      { std::string message; };
 struct equality {};
 
-template <typename datatype>
-struct data { datatype data; };
-
 struct addition {};
 template <typename datatype>
 struct addition_with { datatype data; };
 struct subtraction {};
 template <typename datatype>
 struct subtraction_with { datatype data; };
+struct multiplication {};
+template <typename datatype>
+struct multiplication_with { datatype data; };
+
+template <typename T>
+using rec = boost::recursive_wrapper<T>;
 
 using expression = std::variant<
     identifier,
     unit,
     error,
-    closure,
+    rec<closure>,
     nothing,
 
-    application,
+    rec<application>,
+    equality,
     addition,
     subtraction,
-    equality,
-    equals_to,
+    multiplication,
 
-    data<int>,
+    rec<equals_to>,
+
+    int,
     addition_with<int>,
-    subtraction_with<int>
+    subtraction_with<int>,
+    multiplication_with<int>
 >;
 
 struct application {
-    std::unique_ptr<expression> function;
-    std::unique_ptr<expression> argument;
+    expression function;
+    expression argument;
 };
 
-struct equals_to { std::unique_ptr<expression> x; };
+struct equals_to { expression x; };
 
 struct environment {
-    std::vector<std::pair<std::string, std::unique_ptr<expression>>> variables;
+    std::vector<std::pair<std::string, expression>> variables;
 };
 
 struct closure {
-    std::unique_ptr<expression> e;
+    expression e;
     environment env;
 };
 
