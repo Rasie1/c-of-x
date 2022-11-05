@@ -12,9 +12,11 @@ int main(int argc, char** argv)
     } else if (argc == 2) {
         cx::eval(argv[1]);
     } else if (argc == 3) {
+        cx::eval_file(argv[1]);
+    } else if (argc == 4) {
         cx::parser::trace(argv[1]);
     } else {
-        cx::parser::print_graphviz(argv[1], static_cast<int>(argc - 4));
+        cx::parser::print_graphviz(argv[1], static_cast<int>(argc - 5));
     }
 
     return 0;

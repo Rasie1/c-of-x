@@ -23,8 +23,7 @@ if (MSVC)
         main
         PRIVATE
         /W4 /WX
-        /wd4459  # declaration of 'identifier' hides global declaration
     )
 else ()
-    target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror -std=c++20)
+    target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror -g -O0 -std=c++20)
 endif ()

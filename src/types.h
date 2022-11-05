@@ -28,15 +28,18 @@ struct multiplication {};
 template <typename datatype>
 struct multiplication_with { datatype data; };
 
+struct show {};
+struct print {};
+
 template <typename T>
 using rec = boost::recursive_wrapper<T>;
 
 using expression = std::variant<
+    nothing,
     identifier,
     unit,
     error,
     rec<closure>,
-    nothing,
 
     rec<application>,
     equality,
@@ -49,7 +52,13 @@ using expression = std::variant<
     int,
     addition_with<int>,
     subtraction_with<int>,
-    multiplication_with<int>
+    multiplication_with<int>,
+
+    std::string,
+    addition_with<std::string>,
+
+    show,
+    print
 >;
 
 struct application {
@@ -61,6 +70,20 @@ struct equals_to { expression x; };
 
 struct environment {
     std::vector<std::pair<std::string, expression>> variables;
+
+    inline const expression* get(const std::string& key) const {
+        for (auto& [currentKey, value]: variables)
+            if (currentKey == key)
+                return &value;
+        return nullptr;
+    }
+    
+    inline expression* get(const std::string& key) {
+        for (auto& [currentKey, value]: variables)
+            if (currentKey == key)
+                return &value;
+        return nullptr;
+    }
 };
 
 struct closure {

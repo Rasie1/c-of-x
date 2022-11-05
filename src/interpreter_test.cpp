@@ -84,9 +84,38 @@ void test() {
 namespace cx {
 
 void eval(const char* code) {
+    auto parsed = cx::parser::parse_code(code);
+    if (!parsed)
+        throw std::runtime_error("couldn't parse code");
+        
+    auto expr = cx::parser::build(*parsed);
+
+    auto expr2 = expr;
+    std::cout << "Got expression:" << std::endl << 
+                 Show(std::move(expr2)) << std::endl;
+
     environment env;
-    auto expr = cx::parser::build(*cx::parser::parse_code(code));
     auto result = Eval(std::move(expr), env);
+    std::cout << "Evaluated:" << std::endl;
+
+    std::cout << Show(std::move(result)) << std::endl;
+}
+
+void eval_file(const char* path) {
+    auto parsed = cx::parser::parse_file(path);
+    if (!parsed)
+        throw std::runtime_error("couldn't parse file");
+
+    auto expr = cx::parser::build(*parsed);
+
+    auto expr2 = expr;
+    std::cout << "Got expression:" << std::endl << 
+                 Show(std::move(expr2)) << std::endl;
+
+    environment env;
+    auto result = Eval(std::move(expr), env);
+    std::cout << "Evaluated:" << std::endl;
+
     std::cout << Show(std::move(result)) << std::endl;
 }
 

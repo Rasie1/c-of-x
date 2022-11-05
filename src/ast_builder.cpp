@@ -7,14 +7,15 @@
 #include "types.h"
 #include "grammar.h"
 #include "util.h"
-// template <typename... Args>
-// auto mk(Args&&... args) -> decltype(std::make_unique<cx::expression>(std::forward<Args>(args)...)) {
-//     return std::make_unique<cx::expression>(std::forward<Args>(args)...);
-// }
-
-auto mk(cx::expression&& e) { return e; }
 
 namespace cx::parser {
+
+static cx::environment defaultEnvironment = {
+    {
+        {"show", cx::show{}},
+        {"print", cx::print{}},
+    }
+};
 
 cx::expression build(const tao::pegtl::parse_tree::node& node) {
     // std::cout << "{" << std::endl;
@@ -28,44 +29,109 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
         std::stringstream ss(node.string());
         int ret;
         ss >> ret;
-        return mk(ret);
+        return ret;
+    } else if (node.type == "cx::parser::literal_string") {
+        return node.string();
     } else if (node.type == "cx::parser::operators_0") {
         if (node.string() == "=")
-            return mk(cx::equality{});
+            return cx::equality{};
+    } else if (node.type == "cx::parser::identifier") {
+        if (auto builtIn = defaultEnvironment.get(node.string()))
+            return *builtIn;
+        return cx::identifier{node.string()};
     } else if (node.type == "cx::parser::operators_8") {
         if (node.string() == "+")
-            return mk(cx::addition{});
+            return cx::addition{};
         else if (node.string() == "-")
-            return mk(cx::subtraction{});
+            return cx::subtraction{};
     } else if (node.type == "cx::parser::operators_9") {
         if (node.string() == "*")
-            return mk(cx::multiplication{});
+            return cx::multiplication{};
         else if (node.string() == "/")
-            return mk(cx::multiplication{});
+            return cx::multiplication{};
         else if (node.string() == "%")
-            return mk(cx::multiplication{});
-    } else if (node.type == "cx::parser::operation_apply" || node.type == "cx::parser::definition") {
-        // todo: no, application can have 3 children
-        if (node.children.size() == 2) {
-            return mk(cx::application{
-                std::move(build(*node.children[0])),
-                std::move(build(*node.children[1]))
-            });
-        } else if (node.children.size() == 3) {
-            auto l = build(*node.children[0]);
-            auto o = build(*node.children[1]);
-            auto r = build(*node.children[2]);
-            return mk(cx::application{
-                mk(cx::application{std::move(o), std::move(l)}),
-                std::move(r)
-            });
+            return cx::multiplication{};
+    } else if (node.type == std::string("cx::parser::operation_apply") || 
+               node.type == std::string("cx::parser::definition") ||
+               node.type.starts_with("tao::pegtl::star_must<cx::parser::")) {
+        std::vector<const tao::pegtl::parse_tree::node*> relevantChildren;
+        for (const auto& child: node.children) {
+            if (child->has_content())
+            if (child->string() != "")
+                relevantChildren.push_back(child.get());
         }
+        // if (relevantChildren.size() == 2) {
+        //     return cx::application{
+        //         std::move(build(*relevantChildren[0])),
+        //         std::move(build(*relevantChildren[1]))
+        //     };
+        // } else 
+        if (relevantChildren.size() > 1) {
+            std::optional<cx::expression> ret;
+            std::optional<cx::expression> lastOperator;
+            for (size_t i = 0; i < relevantChildren.size(); ++i) {
+                const auto& child = *relevantChildren[i];
+                if (child.type.starts_with("cx::parser::operators_")) {
+                    if (i == 0)
+                        continue;
+                    if (lastOperator)
+                        throw std::runtime_error("parse error: two operators");
+                    lastOperator = {build(child)};
+                } else if (lastOperator) {
+                    auto right = build(child);
+                    ret = cx::application{
+                        cx::application{std::move(*lastOperator), std::move(*ret)},
+                        std::move(right)
+                    };
+                    lastOperator = std::nullopt;
+                } else if (!child.children.empty() &&
+                    child.children[0]->type.starts_with("cx::parser::operators_")) {
+                    auto op = build(*child.children[0]);
+                    auto right = build(child);
+                    ret = cx::application{
+                        cx::application{std::move(op), std::move(*ret)},
+                        std::move(right)
+                    };
+                } else if (ret) {
+                    ret = cx::application{
+                        std::move(*ret),
+                        std::move(build(child))
+                    };
+                } else {
+                    ret = build(child);
+                }
+            }
+            if (ret)
+                return *ret;
+            // auto l = build(relevantChildren[0]);
+            // auto o = build(relevantChildren[1]);
+            // auto r = build(relevantChildren[2]);
+            // return cx::application{
+            //     cx::application{std::move(o), std::move(l)},
+            //     std::move(r)
+            // };
+        }
+    // } else if ("tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>") {
+    //     for (const auto& child: relevantChildren) {
+    //         if (child->string_view().empty() || child->string_view() == std::string(" "))
+    //             continue;
+    //         if (child->string_view().starts_with("cx::parser::operators_") {
+    //             auto o = build(*child);
+    //         }
+    //     }
     }
+    // } else if ("tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>") {
+    // } else if ("tao::pegtl::star_must<cx::parser::operators_1, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>") {
+    // } else if ("tao::pegtl::star_must<cx::parser::operators_8, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>") {
+    // } else if ("tao::pegtl::star_must<cx::parser::operators_9, cx::parser::seps, cx::parser::operation_apply, cx::parser::seps>") {
+    // }
+    
 
     for (auto& child: node.children)
         return build(*child);
 
-    return mk(unit{});
+    throw std::runtime_error(std::string("empty leaf (") + node.type.data() + ")");
+    return unit{};
 }
 
 }

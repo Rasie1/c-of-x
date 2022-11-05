@@ -142,7 +142,7 @@ struct expr_13 : tao::pegtl::sor<
     // tao::pegtl::ellipsis,
     // numeral,
     digits,
-    // literal_string,
+    literal_string,
     expr_14> {};
 
 struct expr_12 : tao::pegtl::seq<expr_13,

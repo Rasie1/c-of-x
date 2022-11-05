@@ -12,7 +12,6 @@
 // #include <tao/pegtl/contrib/raw_string.hpp>
 
 #include "grammar.h"
-#include "ast_builder.h"
 
 namespace cx::parser {
 
@@ -29,15 +28,12 @@ using graphviz_selector = tao::pegtl::parse_tree::selector<
         name,
         definition,
         identifier,
-        numeral, digits,
+        numeral, digits, literal_string,
 
         operation_apply
     >,
     tao::pegtl::parse_tree::remove_content::on<
-    >/*,
-    rearrange::on<
-        definition
-    >*/
+    >
 >;
 
 template<class Rule>
@@ -47,18 +43,20 @@ using selector = tao::pegtl::parse_tree::selector<
         name,
         definition,
         identifier,
-        numeral, digits,
+        numeral, digits, literal_string,
 
         operation_apply,
         operators_8,
         operators_9,
-        operators_0
+        operators_0,
+
+        tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_1, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_8, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_9, cx::parser::seps, cx::parser::operation_apply, cx::parser::seps>
     >,
     tao::pegtl::parse_tree::remove_content::on<
-    >/*,
-    rearrange::on<
-        definition
-    >*/
+    >
 >;
 
 template<typename>
@@ -92,13 +90,21 @@ void print_graphviz(const char* file, int level) {
 std::shared_ptr<tao::pegtl::parse_tree::node> parse_file(const char* file) {
     tao::pegtl::file_input in(file);
     cx::parser::state is;
-    return tao::pegtl::parse_tree::parse<cx::parser::grammar, cx::parser::selector, cx::parser::action>(in, is);
+    auto root = tao::pegtl::parse_tree::parse<
+        cx::parser::grammar, 
+        cx::parser::selector, 
+        cx::parser::action>(in, is);
+    return root;
 }
 
 std::shared_ptr<tao::pegtl::parse_tree::node> parse_code(const char* code) {
     tao::pegtl::memory_input in(code, "");
     cx::parser::state is;
-    return tao::pegtl::parse_tree::parse<cx::parser::grammar, cx::parser::selector, cx::parser::action>(in, is);
+    auto root = tao::pegtl::parse_tree::parse<
+        cx::parser::grammar, 
+        cx::parser::selector, 
+        cx::parser::action>(in, is);
+    return root;
 }
 
 }
