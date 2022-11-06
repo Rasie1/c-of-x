@@ -63,19 +63,38 @@ inline expression GetElement(expression&& set) {
 // }
 
 inline expression Fix(expression&& expr, environment& env) {
+    // TODO: possibly this should be BFS
     return std::visit(overload{
         [&env](identifier&& e) -> expression { 
             if (auto expr = env.get(e.name)) {
-                auto copy = *expr;
-                auto evaluated = Eval(std::move(*expr), env);
-                if (&evaluated == expr)
-                    return evaluated;
-                else
-                    return Fix(std::move(evaluated), env);
+                return GetElement(Fix(std::move(*expr), env));
+                // auto copy = *expr;
+                // auto evaluated = Eval(std::move(*expr), env) ;
+                // if (evaluated == copy && !std::holds_alternative<identifier>(evaluated))
+                //     return GetElement(std::move(evaluated));
+                // else
+                //     return GetElement(std::move(Fix(std::move(evaluated), env)));
             }
             return error{std::string("undefined variable ") + e.name};
         },
-        // [](auto&&) -> expression { return error{"type error"}; }
+        [&env](rec<equals_to>&& function) -> expression {
+            function.get().x = Fix(std::move(function.get().x), env);
+            return function;
+        },
+        [&env](rec<intersection_with>&& function) -> expression {
+            function.get().x = Fix(std::move(function.get().x), env);
+            return function;
+        },
+        [&env](rec<application>&& e) -> expression {
+            e.get().function = Fix(std::move(e.get().function), env);
+            e.get().argument = Fix(std::move(e.get().argument), env);
+            return e;
+        },
+        [&env](rec<then>&& e) -> expression {
+            e.get().from = Fix(std::move(e.get().from), env);
+            e.get().to = Fix(std::move(e.get().to), env);
+            return e;
+        },
         [](auto&& e) -> expression { return e; }
     }, Eval(std::move(expr), env));
 }
@@ -172,7 +191,7 @@ inline expression MkEquals(expression&& argument) {
     return equals_to{expression(std::move(argument))};
 }
 
-inline std::optional<std::string> Refine(
+inline std::optional<std::string> ExtendEnvironment(
         expression&& function, 
         const expression& argument, 
         environment& env) {
@@ -205,21 +224,27 @@ inline expression Apply(expression&& function,
         },
         [&env, &argument](equality&&) { return MkEquals(Eval(std::move(argument), env)); },
         [&env, &argument](intersection&&) { return MkIntersection(Eval(std::move(argument), env)); },
-        [&env, &argument](show&&) -> expression { return Show(Eval(std::move(argument), env)); },
+        [&env, &argument](show&&) -> expression { return Show(Fix(std::move(argument), env)); },
         [&env, &argument](print&&) -> expression {
             auto evaluated = Fix(std::move(argument), env);
             if (auto s = std::get_if<std::string>(&evaluated)) {
                 std::cout << *s;
                 return unit{};
             } else {
-                return error{"print expects string"};
+                return error{"print expects string, and got " + Show(std::move(evaluated))};
             }
         },
         [&env, &argument](rec<equals_to>&& function) -> expression {
-            if (auto added = Refine(std::move(function), argument, env))
+
+            auto lCopy = function.get().x;
+            auto rCopy = argument;
+            if (auto added = ExtendEnvironment(std::move(function), argument, env)) {
+                ExtendEnvironment(equals_to{std::move(argument)}, lCopy, env);
                 return identifier{*added};
-            auto l = Eval(std::move(function.get().x), env); 
-            auto r = Eval(std::move(argument), env);
+            } else if (auto added = ExtendEnvironment(equals_to{std::move(argument)}, lCopy, env))
+                return identifier{*added};
+            auto l = Eval(std::move(lCopy), env); 
+            auto r = Eval(std::move(rCopy), env);
             if (auto expr = Equals(std::move(l), std::move(r))) {
                 return expr;
             } else {
@@ -264,7 +289,7 @@ inline expression Eval(expression&& e,
         },
         [&env](rec<then>&& e) {
             auto from = Eval(std::move(e.get().from), env);
-            if (std::get_if<nothing>(&from))
+            if (std::get_if<error>(&from))
                 return from;
             auto to = Eval(std::move(e.get().to), env);
             return to;
