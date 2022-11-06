@@ -10,13 +10,6 @@
 
 namespace cx::parser {
 
-static cx::environment defaultEnvironment = {
-    {
-        {"show", cx::show{}},
-        {"print", cx::print{}},
-    }
-};
-
 cx::expression build(const tao::pegtl::parse_tree::node& node) {
     // std::cout << "{" << std::endl;
     // std::cout << node.type << ", " << (node.has_content() ? node.string() : "") << std::endl;
@@ -25,20 +18,24 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
     // }
     // std::cout << "}" << std::endl;
 
-    if (node.type == "cx::parser::digits") {
+    if (node.is_root()) {
+    } else if (node.type == "cx::parser::digits") {
         std::stringstream ss(node.string());
         int ret;
         ss >> ret;
         return ret;
     } else if (node.type == "cx::parser::literal_string") {
-        return node.string();
+        return unescape(node.string().substr(1, node.string().size() - 2));
     } else if (node.type == "cx::parser::operators_0") {
         if (node.string() == "=")
             return cx::equality{};
     } else if (node.type == "cx::parser::identifier") {
-        if (auto builtIn = defaultEnvironment.get(node.string()))
-            return *builtIn;
-        return cx::identifier{node.string()};
+        if (node.string() == "show")
+            return cx::show{};
+        else if (node.string() == "print")
+            return cx::print{};
+        else
+            return cx::identifier{node.string()};
     } else if (node.type == "cx::parser::operators_8") {
         if (node.string() == "+")
             return cx::addition{};
@@ -49,6 +46,8 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::multiplication{};
         else if (node.string() == "/")
             return cx::multiplication{};
+        else if (node.string() == "&")
+            return cx::intersection{};
         else if (node.string() == "%")
             return cx::multiplication{};
     } else if (node.type == std::string("cx::parser::operation_apply") || 
@@ -103,32 +102,25 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             }
             if (ret)
                 return *ret;
-            // auto l = build(relevantChildren[0]);
-            // auto o = build(relevantChildren[1]);
-            // auto r = build(relevantChildren[2]);
-            // return cx::application{
-            //     cx::application{std::move(o), std::move(l)},
-            //     std::move(r)
-            // };
         }
-    // } else if ("tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>") {
-    //     for (const auto& child: relevantChildren) {
-    //         if (child->string_view().empty() || child->string_view() == std::string(" "))
-    //             continue;
-    //         if (child->string_view().starts_with("cx::parser::operators_") {
-    //             auto o = build(*child);
-    //         }
-    //     }
     }
-    // } else if ("tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>") {
-    // } else if ("tao::pegtl::star_must<cx::parser::operators_1, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>") {
-    // } else if ("tao::pegtl::star_must<cx::parser::operators_8, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>") {
-    // } else if ("tao::pegtl::star_must<cx::parser::operators_9, cx::parser::seps, cx::parser::operation_apply, cx::parser::seps>") {
-    // }
     
+    std::optional<cx::expression> ret;
+    for (auto& child: node.children) {
+        if (child->has_content() && child->string().empty())
+            continue;
+        if (ret) {
+            ret = cx::then{
+                std::move(*ret),
+                std::move(build(*child))
+            };
+        } else {
+            ret = build(*child);
+        }
+    }
 
-    for (auto& child: node.children)
-        return build(*child);
+    if (ret)
+        return *ret;
 
     throw std::runtime_error(std::string("empty leaf (") + node.type.data() + ")");
     return unit{};

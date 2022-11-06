@@ -1,5 +1,6 @@
 #include "interpreter_test.h"
 #include <iostream>
+#include <sstream>
 
 #include "types.h"
 #include "operations.h"
@@ -83,16 +84,15 @@ void test() {
 
 namespace cx {
 
-void eval(const char* code) {
-    auto parsed = cx::parser::parse_code(code);
+void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed) {
     if (!parsed)
-        throw std::runtime_error("couldn't parse code");
-        
+        throw std::runtime_error("couldn't parse file");
+
     auto expr = cx::parser::build(*parsed);
 
-    auto expr2 = expr;
+    auto copy = expr;
     std::cout << "Got expression:" << std::endl << 
-                 Show(std::move(expr2)) << std::endl;
+                 Show(std::move(copy)) << std::endl;
 
     environment env;
     auto result = Eval(std::move(expr), env);
@@ -101,22 +101,14 @@ void eval(const char* code) {
     std::cout << Show(std::move(result)) << std::endl;
 }
 
+void eval(const char* code) {
+    auto parsed = cx::parser::parse_code(code);
+    eval_and_print(parsed);
+}
+
 void eval_file(const char* path) {
     auto parsed = cx::parser::parse_file(path);
-    if (!parsed)
-        throw std::runtime_error("couldn't parse file");
-
-    auto expr = cx::parser::build(*parsed);
-
-    auto expr2 = expr;
-    std::cout << "Got expression:" << std::endl << 
-                 Show(std::move(expr2)) << std::endl;
-
-    environment env;
-    auto result = Eval(std::move(expr), env);
-    std::cout << "Evaluated:" << std::endl;
-
-    std::cout << Show(std::move(result)) << std::endl;
+    eval_and_print(parsed);
 }
 
 }

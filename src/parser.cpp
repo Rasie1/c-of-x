@@ -88,12 +88,14 @@ void print_graphviz(const char* file, int level) {
 }
 
 std::shared_ptr<tao::pegtl::parse_tree::node> parse_file(const char* file) {
-    tao::pegtl::file_input in(file);
+    // todo: output tree references something from the file
+    auto in = new tao::pegtl::file_input(file);
+    // tao::pegtl::file_input in(file);
     cx::parser::state is;
     auto root = tao::pegtl::parse_tree::parse<
         cx::parser::grammar, 
         cx::parser::selector, 
-        cx::parser::action>(in, is);
+        cx::parser::action>(*in, is);
     return root;
 }
 

@@ -154,6 +154,7 @@ struct unary_apply : tao::pegtl::if_must<unary_operators, seps, expr_10, seps> {
 struct expr_10 : tao::pegtl::sor<unary_apply, expr_11> {};
 struct operators_9 : tao::pegtl::sor<tao::pegtl::one<'/'>,
                                      tao::pegtl::one<'*'>,
+                                     tao::pegtl::one<'&'>,
                                      tao::pegtl::one<'%'>> {};
 struct expr_9 : left_assoc<operation_apply, operators_9> {};
 struct operators_8 : tao::pegtl::sor<tao::pegtl::one<'+'>,
