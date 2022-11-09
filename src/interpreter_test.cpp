@@ -92,12 +92,24 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed)
 
     auto copy = expr;
     std::cout << "Got expression:" << std::endl << 
-                 Show(std::move(copy)) << std::endl;
+                 Show(std::move(copy)) << std::endl << std::endl;
 
     environment env;
     auto result = Eval(std::move(expr), env);
-    std::cout << "Evaluated:" << std::endl;
+    copy = result;
 
+    std::cout << "Environment:" << std::endl;
+    for (auto [k, v]: env.variables) {
+        std::cout << k << ": " << Show(std::move(v)) << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << "Evaluated:" << std::endl;
+    std::cout << Show(std::move(result)) << std::endl << std::endl;
+
+    robin_hood::unordered_set<std::string> seen;
+    result = Fix(std::move(copy), env, seen);
+    std::cout << "Fixed:" << std::endl;
     std::cout << Show(std::move(result)) << std::endl;
 }
 

@@ -27,8 +27,14 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
     } else if (node.type == "cx::parser::literal_string") {
         return unescape(node.string().substr(1, node.string().size() - 2));
     } else if (node.type == "cx::parser::operators_0") {
-        if (node.string() == "=")
+        // if (node.string() == "=")
             return cx::equality{};
+    } else if (node.type == "cx::parser::operators_1") {
+        // if (node.string() == "=")
+            return cx::equality{}; // todo: application
+    } else if (node.type == "cx::parser::operators_2") {
+        // if (node.string() == "=")
+            return cx::abstraction{};
     } else if (node.type == "cx::parser::identifier") {
         if (node.string() == "show")
             return cx::show{};
@@ -52,6 +58,7 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::multiplication{};
     } else if (node.type == std::string("cx::parser::operation_apply") || 
                node.type == std::string("cx::parser::definition") ||
+               node.type == std::string("cx::parser::bracket_expr") ||
                node.type.starts_with("tao::pegtl::star_must<cx::parser::")) {
         std::vector<const tao::pegtl::parse_tree::node*> relevantChildren;
         for (const auto& child: node.children) {
@@ -85,12 +92,18 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
                     lastOperator = std::nullopt;
                 } else if (!child.children.empty() &&
                     child.children[0]->type.starts_with("cx::parser::operators_")) {
-                    auto op = build(*child.children[0]);
                     auto right = build(child);
-                    ret = cx::application{
-                        cx::application{std::move(op), std::move(*ret)},
-                        std::move(right)
-                    };
+                    if (child.children[0]->string() == "->") {
+                        ret = cx::abstraction{std::move(*ret), std::move(right)};
+                    } else if (child.children[0]->string() == ":") {
+                        ret = cx::application{std::move(right), std::move(*ret)};
+                    } else {
+                        auto op = build(*child.children[0]);
+                        ret = cx::application{
+                            cx::application{std::move(op), std::move(*ret)},
+                            std::move(right)
+                        };
+                    }
                 } else if (ret) {
                     ret = cx::application{
                         std::move(*ret),

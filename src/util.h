@@ -15,7 +15,6 @@ class rc {
 };
 
 template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
-template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
 inline std::string unescape(const std::string& s) {
     std::string res;

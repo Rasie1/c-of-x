@@ -28,6 +28,7 @@ using graphviz_selector = tao::pegtl::parse_tree::selector<
         name,
         definition,
         identifier,
+        bracket_expr,
         numeral, digits, literal_string,
 
         operation_apply
@@ -43,15 +44,19 @@ using selector = tao::pegtl::parse_tree::selector<
         name,
         definition,
         identifier,
+        bracket_expr,
         numeral, digits, literal_string,
 
         operation_apply,
         operators_8,
         operators_9,
+        operators_2,
+        operators_1,
         operators_0,
 
         tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>,
-        tao::pegtl::star_must<cx::parser::operators_1, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_1, cx::parser::seps, cx::parser::expr_2, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_2, cx::parser::seps, cx::parser::expr_8, cx::parser::seps>,
         tao::pegtl::star_must<cx::parser::operators_8, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>,
         tao::pegtl::star_must<cx::parser::operators_9, cx::parser::seps, cx::parser::operation_apply, cx::parser::seps>
     >,

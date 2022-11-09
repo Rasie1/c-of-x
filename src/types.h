@@ -8,19 +8,20 @@
 
 namespace cx {
 
+template <class Operator>
+struct GetOperation {};
+
 struct environment;
 struct application;
 struct closure;
 struct equals_to;
 struct then;
 struct intersection_with;
+struct abstraction;
 
-struct unit {
-    bool operator==(unit const&) const = default;
-};
-struct nothing {
-    bool operator==(nothing const&) const = default;
-};
+struct unit { bool operator==(unit const&) const = default; };
+struct any { bool operator==(any const&) const = default; };
+struct nothing { bool operator==(nothing const&) const = default; };
 struct identifier {
     std::string name; 
     bool operator==(identifier const&) const = default;
@@ -29,44 +30,29 @@ struct error {
     std::string message;
     bool operator==(error const&) const = default;
 };
-struct equality {
-    bool operator==(equality const&) const = default;
-};
-struct intersection {
-    bool operator==(intersection const&) const = default;
-};
-
-struct addition {
-    bool operator==(addition const&) const = default;
-};
+struct equality { bool operator==(equality const&) const = default; };
+struct intersection { bool operator==(intersection const&) const = default; };
+struct addition { bool operator==(addition const&) const = default; };
 template <typename datatype>
 struct addition_with {
     datatype data;
     bool operator==(addition_with<datatype> const&) const = default;
 };
-struct subtraction {
-    bool operator==(subtraction const&) const = default;
-};
+struct subtraction { bool operator==(subtraction const&) const = default; };
 template <typename datatype>
 struct subtraction_with {
     datatype data;
     bool operator==(subtraction_with<datatype> const&) const = default;
 };
-struct multiplication {
-    bool operator==(multiplication const&) const = default;
-};
+struct multiplication { bool operator==(multiplication const&) const = default; };
 template <typename datatype>
 struct multiplication_with {
     datatype data;
     bool operator==(multiplication_with<datatype> const&) const = default;
 };
 
-struct show {
-    bool operator==(show const&) const = default;
-};
-struct print {
-    bool operator==(print const&) const = default;
-};
+struct show { bool operator==(show const&) const = default; };
+struct print { bool operator==(print const&) const = default; };
 
 template <typename T>
 using rec = boost::recursive_wrapper<T>;
@@ -82,17 +68,19 @@ using expression = std::variant<
     unit,
     rec<then>,
     error,
-    rec<closure>,
+    any,
 
-    rec<application>,
     intersection,
     equality,
     addition,
     subtraction,
     multiplication,
 
+    rec<application>,
     rec<intersection_with>,
+    rec<abstraction>,
     rec<equals_to>,
+    rec<closure>,
 
     int,
     addition_with<int>,
@@ -112,6 +100,11 @@ struct application {
     bool operator==(application const&) const = default;
 };
 
+template <typename Op>
+expression make_operation(expression&& l, expression&& r) {
+    return application{Op{std::move(l)}, std::move(r)};
+}
+
 struct then {
     expression from;
     expression to;
@@ -123,10 +116,18 @@ struct intersection_with {
     bool operator==(intersection_with const&) const = default;
 };
 
+struct abstraction {
+    expression argument;
+    expression body;
+    bool operator==(abstraction const&) const = default;
+};
+
 struct equals_to {
     expression x;
     bool operator==(equals_to const&) const = default;
 };
+
+void DebugPrint(const std::string& msg, expression e);
 
 struct environment {
     std::vector<std::pair<std::string, expression>> variables;
@@ -138,20 +139,11 @@ struct environment {
         return nullptr;
     }
     
-    inline expression* get(const std::string& key) {
-        for (auto& [currentKey, value]: boost::adaptors::reverse(variables))
-            if (currentKey == key)
-                return &value;
-        return nullptr;
-    }
-
     inline bool add(const std::string& key, expression&& value) {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
-                oldValue = application{
-                    intersection_with{std::move(oldValue)},
-                    std::move(value)
-                };
+                oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
+                DebugPrint("refining", oldValue);
                 return false;
             }
         variables.push_back({key, std::move(value)});
@@ -161,7 +153,8 @@ struct environment {
 };
 
 struct closure {
-    expression e;
+    expression argument;
+    expression body;
     environment env;
     bool operator==(closure const&) const = default;
 };
