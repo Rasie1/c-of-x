@@ -10,6 +10,8 @@ include_directories(main
 add_executable(main 
     src/main.cpp
     src/parser.cpp
+    src/operations.cpp
+    src/io.cpp
     src/ast_builder.cpp
     src/interpreter_test.cpp
 )

@@ -178,7 +178,7 @@ struct operators_2 : tao::pegtl::string<'-', '>'> {};
 struct expr_2 : left_assoc<expr_8, operators_2> {};
 struct operators_1 : tao::pegtl::one<':'> {};
 struct expr_1 : left_assoc<expr_2, operators_1> {};
-struct operators_0 : tao::pegtl::one<'='> {};
+struct operators_0 : tao::pegtl::sor<tao::pegtl::one<'='>, tao::pegtl::string<'!', '='>> {};
 struct expr_0 : left_assoc<expr_1, operators_0> {};
 struct expression : expr_0 {};//left_assoc<expr_0, expression> {};
 

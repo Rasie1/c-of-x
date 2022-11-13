@@ -10,6 +10,25 @@
 
 namespace cx::parser {
 
+inline bool isFirstChildOperator(const tao::pegtl::parse_tree::node& child) {
+    return !child.children.empty() && child.children[0]->type.starts_with("cx::parser::operators_");
+}
+
+inline int getOperatorPriority(const cx::expression& e) {
+    return std::visit(overload{
+        [](const cx::addition&) { return 8; },
+        [](const cx::subtraction&) { return 8; },
+        [](const cx::equality&) { return 1; },
+        [](const cx::inequality&) { return 1; },
+        [](const cx::multiplication&) { return 9; },
+        [](const auto&) { return 99; }
+    }, e);
+}
+
+inline bool isHigherPriority(const cx::expression& l, const cx::expression& r) {
+    return getOperatorPriority(l) > getOperatorPriority(r);
+}
+
 cx::expression build(const tao::pegtl::parse_tree::node& node) {
     // std::cout << "{" << std::endl;
     // std::cout << node.type << ", " << (node.has_content() ? node.string() : "") << std::endl;
@@ -27,8 +46,10 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
     } else if (node.type == "cx::parser::literal_string") {
         return unescape(node.string().substr(1, node.string().size() - 2));
     } else if (node.type == "cx::parser::operators_0") {
-        // if (node.string() == "=")
+        if (node.string() == "=")
             return cx::equality{};
+        else if (node.string() == "!=")
+            return cx::inequality{};
     } else if (node.type == "cx::parser::operators_1") {
         // if (node.string() == "=")
             return cx::equality{}; // todo: application
@@ -74,35 +95,69 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
         // } else 
         if (relevantChildren.size() > 1) {
             std::optional<cx::expression> ret;
-            std::optional<cx::expression> lastOperator;
+            std::optional<cx::expression> currentOperator;
+            std::optional<cx::expression> previousOperator;
             for (size_t i = 0; i < relevantChildren.size(); ++i) {
                 const auto& child = *relevantChildren[i];
                 if (child.type.starts_with("cx::parser::operators_")) {
                     if (i == 0)
                         continue;
-                    if (lastOperator)
-                        throw std::runtime_error("parse error: two operators");
-                    lastOperator = {build(child)};
-                } else if (lastOperator) {
+                    if (currentOperator) {
+                        // two times operators in a row isn't correct, but this case is used with operator
+                        // prioriity
+                        continue;
+                    }
+                    currentOperator = {build(child)};
+                } else if (currentOperator) {
                     auto right = build(child);
                     ret = cx::application{
-                        cx::application{std::move(*lastOperator), std::move(*ret)},
+                        cx::application{std::move(*currentOperator), std::move(*ret)},
                         std::move(right)
                     };
-                    lastOperator = std::nullopt;
-                } else if (!child.children.empty() &&
-                    child.children[0]->type.starts_with("cx::parser::operators_")) {
+                    previousOperator = currentOperator;
+                    currentOperator = std::nullopt;
+                // } else if (isFirstChildOperator(child) && (i > 0 && i + 1 < relevantChildren.size()) && 
+                //          relevantChildren[i + 1]->type.starts_with("tao::pegtl::star_must<cx::parser::")) {
+                //     auto& nextChild = *relevantChildren[i + 1];
+                //     ret = cx::application{
+                //         std::move(*ret),
+                //         std::move(build(child))
+                //     };
+                //     // if (isFirstChildOperator(nextChild)) {
+                //         std::cout << "======================" << nextChild.children[0]->string() << std::endl;
+                //         auto op = build(*nextChild.children[0]);
+                //         ret = cx::application{
+                //             cx::application{std::move(op), std::move(*ret)},
+                //             std::move(build(nextChild))
+                //         };
+                //         ++i;
+                //     // }
+                } else if (isFirstChildOperator(child)) {
                     auto right = build(child);
+                    // if (child.type.starts_with("tao::pegtl::star_must<cx::parser::")) {
+                    //     // todo
                     if (child.children[0]->string() == "->") {
                         ret = cx::abstraction{std::move(*ret), std::move(right)};
                     } else if (child.children[0]->string() == ":") {
                         ret = cx::application{std::move(right), std::move(*ret)};
                     } else {
                         auto op = build(*child.children[0]);
-                        ret = cx::application{
-                            cx::application{std::move(op), std::move(*ret)},
-                            std::move(right)
-                        };
+                        if (previousOperator && !isHigherPriority(*previousOperator, op)) {
+                            auto previousApplication = std::get_if<cx::rec<cx::application>>(&*ret);
+                            if (!previousApplication)
+                                throw std::runtime_error("parse error");
+                            auto lhs = std::move(previousApplication->get().argument);
+                            auto rhs = cx::application{
+                                cx::application{std::move(op), std::move(lhs)},
+                                std::move(right)
+                            };
+                            previousApplication->get().argument = std::move(rhs);
+                        } else {
+                            ret = cx::application{
+                                cx::application{std::move(op), std::move(*ret)},
+                                std::move(right)
+                            };
+                        }
                     }
                 } else if (ret) {
                     ret = cx::application{

@@ -15,8 +15,12 @@ struct environment;
 struct application;
 struct closure;
 struct equals_to;
+struct negated;
 struct then;
 struct intersection_with;
+struct addition_with_expr;
+struct subtraction_with_expr;
+struct multiplication_with_expr;
 struct abstraction;
 
 struct unit { bool operator==(unit const&) const = default; };
@@ -31,6 +35,7 @@ struct error {
     bool operator==(error const&) const = default;
 };
 struct equality { bool operator==(equality const&) const = default; };
+struct inequality { bool operator==(inequality const&) const = default; };
 struct intersection { bool operator==(intersection const&) const = default; };
 struct addition { bool operator==(addition const&) const = default; };
 template <typename datatype>
@@ -72,6 +77,7 @@ using expression = std::variant<
 
     intersection,
     equality,
+    inequality,
     addition,
     subtraction,
     multiplication,
@@ -81,6 +87,10 @@ using expression = std::variant<
     rec<abstraction>,
     rec<equals_to>,
     rec<closure>,
+    rec<negated>,
+    rec<addition_with_expr>,
+    rec<multiplication_with_expr>,
+    rec<subtraction_with_expr>,
 
     int,
     addition_with<int>,
@@ -104,6 +114,10 @@ template <typename Op>
 expression make_operation(expression&& l, expression&& r) {
     return application{Op{std::move(l)}, std::move(r)};
 }
+template <typename Op>
+expression make_operation_binary(expression&& l, expression&& r) {
+    return application{application{Op{}, std::move(l)}, std::move(r)};
+}
 
 struct then {
     expression from;
@@ -114,6 +128,19 @@ struct then {
 struct intersection_with {
     expression x;
     bool operator==(intersection_with const&) const = default;
+};
+
+struct addition_with_expr {
+    expression x;
+    bool operator==(addition_with_expr const&) const = default;
+};
+struct sustraction_with_expr {
+    expression x;
+    bool operator==(sustraction_with_expr const&) const = default;
+};
+struct multiplication_with_expr {
+    expression x;
+    bool operator==(multiplication_with_expr const&) const = default;
 };
 
 struct abstraction {
@@ -127,7 +154,12 @@ struct equals_to {
     bool operator==(equals_to const&) const = default;
 };
 
-void DebugPrint(const std::string& msg, expression e);
+struct negated {
+    expression f;
+    bool operator==(negated const&) const = default;
+};
+
+// void DebugPrint(const std::string& msg, expression e, environment& env, int color = 1);
 
 struct environment {
     std::vector<std::pair<std::string, expression>> variables;
@@ -143,13 +175,18 @@ struct environment {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
                 oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
-                DebugPrint("refining", oldValue);
+                // DebugPrint("refining", oldValue, *this);
                 return false;
             }
         variables.push_back({key, std::move(value)});
         return true;
     }
     bool operator==(environment const&) const = default;
+
+    // debug-only
+    int debugIndentation{};
+    void increaseDebugIndentation() { debugIndentation++; }
+    void decreaseDebugIndentation() { debugIndentation--; }
 };
 
 struct closure {

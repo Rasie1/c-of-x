@@ -1,6 +1,5 @@
 #include "interpreter_test.h"
 #include <iostream>
-#include <sstream>
 
 #include "types.h"
 #include "operations.h"
@@ -107,8 +106,7 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed)
     std::cout << "Evaluated:" << std::endl;
     std::cout << Show(std::move(result)) << std::endl << std::endl;
 
-    robin_hood::unordered_set<std::string> seen;
-    result = Fix(std::move(copy), env, seen);
+    result = Fix(std::move(copy), env);
     std::cout << "Fixed:" << std::endl;
     std::cout << Show(std::move(result)) << std::endl;
 }
