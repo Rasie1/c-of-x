@@ -61,6 +61,8 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::show{};
         else if (node.string() == "print")
             return cx::print{};
+        else if (node.string() == "setTraceEnabled")
+            return cx::set_trace_enabled{};
         else
             return cx::identifier{node.string()};
     } else if (node.type == "cx::parser::operators_8") {

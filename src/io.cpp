@@ -14,7 +14,8 @@ std::string Show(expression&& e) {
             s << '\"' << escaped{x.c_str()} << '\"';
             return s.str();
         },
-        [](identifier&& e) { return std::string("id(") + e.name + ")"; },
+        // [](identifier&& e) { return std::string("id(") + e.name + ")"; },
+        [](identifier&& e) { return e.name; },
         [](rec<application>&& e) {
             return std::string("(")
                  + Show(std::move(e.get().function)) + " "
@@ -24,11 +25,31 @@ std::string Show(expression&& e) {
             return Show(std::move(e.get().from)) + "; "
                  + Show(std::move(e.get().to)); 
         },
+        [](rec<closure>&& e) {
+            return Show(std::move(e.get().argument)) + " ->' "
+                 + Show(std::move(e.get().body)); 
+        },
+        [](rec<abstraction>&& e) {
+            return Show(std::move(e.get().argument)) + " -> "
+                 + Show(std::move(e.get().body)); 
+        },
         [](rec<intersection_with>&& e) {
             return Show(std::move(e.get().x)) + std::string(" &"); 
         },
         [](rec<equals_to>&& e) {
             return Show(std::move(e.get().x)) + std::string(" ="); 
+        },
+        [](rec<negated>&& e) {
+            return std::string("!") + Show(std::move(e.get().f)); 
+        },
+        [](rec<addition_with>&& e) {
+            return Show(std::move(e.get().x)) + std::string(" +"); 
+        },
+        [](rec<subtraction_with>&& e) {
+            return Show(std::move(e.get().x)) + std::string(" -"); 
+        },
+        [](rec<multiplication_with>&& e) {
+            return Show(std::move(e.get().x)) + std::string(" *"); 
         },
         [](addition&&) -> std::string {
             return "+"; 
@@ -46,6 +67,8 @@ std::string Show(expression&& e) {
 
 
 void DebugPrint(const std::string& msg, expression e, environment& env, int color) {
+    if (!env.isTraceEnabled)
+        return;
     if (color == 1)
         std::cout << "\033[0;34m";
     else if (color == 2)
@@ -64,6 +87,16 @@ expression Print(expression&& e, environment& env) {
     } else {
         return error{"print expects string, and got " + Show(std::move(evaluated))};
     }
+}
+
+expression SetTraceEnabled(expression&& e, environment& env) {
+    auto evaluated = Fix(std::move(e), env);
+    if (auto s = std::get_if<int>(&evaluated)) {
+        env.isTraceEnabled = static_cast<bool>(s);
+    } else {
+        return error{"set_trace_enabled expects int, and got " + Show(std::move(evaluated))};
+    }
+    return unit{};
 }
 
 }

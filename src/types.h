@@ -18,9 +18,9 @@ struct equals_to;
 struct negated;
 struct then;
 struct intersection_with;
-struct addition_with_expr;
-struct subtraction_with_expr;
-struct multiplication_with_expr;
+struct addition_with;
+struct subtraction_with;
+struct multiplication_with;
 struct abstraction;
 
 struct unit { bool operator==(unit const&) const = default; };
@@ -38,26 +38,12 @@ struct equality { bool operator==(equality const&) const = default; };
 struct inequality { bool operator==(inequality const&) const = default; };
 struct intersection { bool operator==(intersection const&) const = default; };
 struct addition { bool operator==(addition const&) const = default; };
-template <typename datatype>
-struct addition_with {
-    datatype data;
-    bool operator==(addition_with<datatype> const&) const = default;
-};
-struct subtraction { bool operator==(subtraction const&) const = default; };
-template <typename datatype>
-struct subtraction_with {
-    datatype data;
-    bool operator==(subtraction_with<datatype> const&) const = default;
-};
 struct multiplication { bool operator==(multiplication const&) const = default; };
-template <typename datatype>
-struct multiplication_with {
-    datatype data;
-    bool operator==(multiplication_with<datatype> const&) const = default;
-};
+struct subtraction { bool operator==(subtraction const&) const = default; };
 
 struct show { bool operator==(show const&) const = default; };
 struct print { bool operator==(print const&) const = default; };
+struct set_trace_enabled { bool operator==(set_trace_enabled const&) const = default; };
 
 template <typename T>
 using rec = boost::recursive_wrapper<T>;
@@ -88,20 +74,16 @@ using expression = std::variant<
     rec<equals_to>,
     rec<closure>,
     rec<negated>,
-    rec<addition_with_expr>,
-    rec<multiplication_with_expr>,
-    rec<subtraction_with_expr>,
+    rec<addition_with>,
+    rec<multiplication_with>,
+    rec<subtraction_with>,
 
     int,
-    addition_with<int>,
-    subtraction_with<int>,
-    multiplication_with<int>,
-
     std::string,
-    addition_with<std::string>,
 
     show,
-    print
+    print,
+    set_trace_enabled
 >;
 
 struct application {
@@ -130,17 +112,17 @@ struct intersection_with {
     bool operator==(intersection_with const&) const = default;
 };
 
-struct addition_with_expr {
+struct addition_with {
     expression x;
-    bool operator==(addition_with_expr const&) const = default;
+    bool operator==(addition_with const&) const = default;
 };
-struct sustraction_with_expr {
+struct subtraction_with {
     expression x;
-    bool operator==(sustraction_with_expr const&) const = default;
+    bool operator==(subtraction_with const&) const = default;
 };
-struct multiplication_with_expr {
+struct multiplication_with {
     expression x;
-    bool operator==(multiplication_with_expr const&) const = default;
+    bool operator==(multiplication_with const&) const = default;
 };
 
 struct abstraction {
@@ -175,9 +157,16 @@ struct environment {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
                 oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
-                // DebugPrint("refining", oldValue, *this);
                 return false;
             }
+        variables.push_back({key, std::move(value)});
+        return true;
+    }
+
+    inline bool define(const std::string& key, expression&& value) {
+        for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
+            if (currentKey == key)
+                return false;
         variables.push_back({key, std::move(value)});
         return true;
     }
@@ -185,6 +174,7 @@ struct environment {
 
     // debug-only
     int debugIndentation{};
+    bool isTraceEnabled{};
     void increaseDebugIndentation() { debugIndentation++; }
     void decreaseDebugIndentation() { debugIndentation--; }
 };

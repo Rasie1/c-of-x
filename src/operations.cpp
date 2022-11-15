@@ -3,12 +3,73 @@
 
 namespace cx {
 
+
+template<typename datatype>
+struct intersect_for_datatype {
+    expression& r;
+    expression operator()(datatype&& l) {
+        return std::visit(overload{
+            [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
+            [&l](any&&) -> expression { return l; },
+            [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, std::move(v)); },
+            [](auto&&) -> expression { return nothing{}; }
+        }, std::move(r)); 
+    }
+};
+
+
+template<typename datatype>
+struct equals_for_datatype {
+    expression& r;
+    expression operator()(datatype&& l) {
+        return std::visit(overload{
+            [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
+            [&l](identifier&& v) -> expression { return make_operation<equals_to>(l, std::move(v)); },
+            [](auto&&) -> expression { return nothing{}; }
+        }, std::move(r)); 
+    }
+};
+
+template<typename datatype>
+struct addition_for_datatype {
+    expression& r;
+    expression operator()(datatype&& l) {
+        return std::visit(overload{
+            [&l](datatype&& r) -> expression { return l + r; },
+            [&l](identifier&& v) -> expression { return make_operation<addition_with>(l, std::move(v)); },
+            [](auto&&) -> expression { return nothing{}; }
+        }, std::move(r)); 
+    }
+};
+template<typename datatype>
+struct subtraction_for_datatype {
+    expression& r;
+    expression operator()(datatype&& l) {
+        return std::visit(overload{
+            [&l](datatype&& r) -> expression { return l - r; },
+            [&l](identifier&& v) -> expression { return make_operation<subtraction_with>(l, std::move(v)); },
+            [](auto&&) -> expression { return nothing{}; }
+        }, std::move(r)); 
+    }
+};
+template<typename datatype>
+struct multiplication_for_datatype {
+    expression& r;
+    expression operator()(datatype&& l) {
+        return std::visit(overload{
+            [&l](datatype&& r) -> expression { return l * r; },
+            [&l](identifier&& v) -> expression { return make_operation<multiplication_with>(l, std::move(v)); },
+            [](auto&&) -> expression { return nothing{}; }
+        }, std::move(r)); 
+    }
+};
+
 expression GetElement(expression&& set) {
     return std::visit(overload{
         [](rec<equals_to>&& e) { return e.get().x; },
-        [](auto&& e) -> expression {
-            return error{Show(std::move(e)) + " doesn't contain values"}; 
-        }
+        [](int&& e) -> expression { return error{Show(std::move(e)) + " doesn't contain values"}; },
+        [](std::string&& e) -> expression { return error{Show(std::move(e)) + " doesn't contain values"}; },
+        [](auto&& e) -> expression { return application{std::move(e), any{}}; }
     }, std::move(set));
 }
 
@@ -60,7 +121,7 @@ inline expression Fix(expression&& expr, environment& env, robin_hood::unordered
         [&env, &seen](identifier&& e) -> expression {
             DebugPrint("fixing in id", e, env);
             if (seen.contains(e.name))
-                return any{};
+                return any{}; // ?
             seen.insert(e.name);
             if (auto expr = env.get(e.name)) {
                 auto copy = *expr;
@@ -81,15 +142,15 @@ inline expression Fix(expression&& expr, environment& env, robin_hood::unordered
             function.get().x = Fix(std::move(function.get().x), env, seen);
             return function;
         },
-        [&env, &seen](rec<addition_with_expr>&& function) -> expression {
+        [&env, &seen](rec<addition_with>&& function) -> expression {
             function.get().x = Fix(std::move(function.get().x), env, seen);
             return function;
         },
-        [&env, &seen](rec<subtraction_with_expr>&& function) -> expression {
+        [&env, &seen](rec<subtraction_with>&& function) -> expression {
             function.get().x = Fix(std::move(function.get().x), env, seen);
             return function;
         },
-        [&env, &seen](rec<multiplication_with_expr>&& function) -> expression {
+        [&env, &seen](rec<multiplication_with>&& function) -> expression {
             function.get().x = Fix(std::move(function.get().x), env, seen);
             return function;
         },
@@ -118,38 +179,6 @@ expression Fix(expression&& expr, environment& env) {
     return Fix(std::move(expr), env, seen);
 }
 
-inline expression MkAddition(expression&& argument) {
-    return std::visit(overload{
-        [](int&& x) -> expression { return addition_with{x}; },
-        [](std::string&& x) -> expression { return addition_with{x}; },
-        [](auto&& e) -> expression { return addition_with_expr{std::move(e)}; }
-        // [](auto&& e) -> expression { return error{"can't make addition with " + Show(std::move(e))}; }
-    }, std::move(argument));
-}
-
-inline expression MkSubtraction(expression&& argument) {
-    return std::visit(overload{
-        [](int&& x) -> expression { return subtraction_with{x}; },
-        [](auto&& e) -> expression { return subtraction_with_expr{std::move(e)}; }
-        // [](auto&& e) -> expression { return error{"can't make subtraction with " + Show(std::move(e))}; }
-    }, std::move(argument));
-}
-
-inline expression MkMultiplication(expression&& argument) {
-    return std::visit(overload{
-        [](int&& x) -> expression { return multiplication_with{x}; },
-        [](auto&& e) -> expression { return multiplication_with_expr{std::move(e)}; }
-        // [](auto&& e) -> expression { return error{"can't make multiplication with " + Show(std::move(e))}; }
-    }, std::move(argument));
-}
-
-inline expression MkIntersection(expression&& argument) {
-    return std::visit(overload{
-        [](int&& x) -> expression { return intersection_with{x}; },
-        [](auto&& e) -> expression { return error{"can't make intersection with " + Show(std::move(e))}; }
-    }, std::move(argument));
-}
-
 inline expression Negate(expression&& f, environment&) {
     return std::visit(overload{
         [](int&&) -> expression { return nothing{}; },
@@ -158,6 +187,7 @@ inline expression Negate(expression&& f, environment&) {
         [](unit&&) -> expression { return nothing{}; },
         [](nothing&&) -> expression { return any{}; },
         [](identifier&& e) -> expression { return e; },
+        // [](rec<equals_to>&& e) -> expression { return e; },
         [](auto&& e) -> expression { return negated{std::move(e)}; }
         // [](auto&& e) -> expression { return error{"can't negate " + Show(std::move(e))}; }
     }, std::move(f));
@@ -180,28 +210,52 @@ std::optional<std::string> ExtendEnvironment(
 expression Equals(expression&& l,
                   expression&& r,
                   environment& env) {
+    l = std::move(Eval(std::move(l), env)); 
+    r = std::move(Eval(std::move(r), env));
+    if (l == r)
+        return r;
     expression lCopy = l;
     expression rCopy = r;
-    if (auto added = ExtendEnvironment(equals_to{std::move(l)}, r, env)) {
-        ExtendEnvironment(equals_to{std::move(r)}, lCopy, env);
-        return identifier{*added};
-    } else if (auto added = ExtendEnvironment(equals_to{std::move(r)}, lCopy, env)) {
-        return identifier{*added};
-    }
-    l = std::move(Eval(std::move(lCopy), env)); 
-    r = std::move(Eval(std::move(rCopy), env));
-
     DebugPrint("eq1", l, env);
     DebugPrint("eq2", r, env);
-    if (l == r)
-        return r; // TODO: is that really needed?
+    auto isUnapplySuccessful = Unapply(std::move(l), std::move(r), env);
+    if (isUnapplySuccessful)
+        return rCopy;
+    // return nothing{};
+
     return std::visit(overload{
-        equals_for_datatype<int>{r},
-        equals_for_datatype<std::string>{r},
-        [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
-        [&r](rec<application>&& e) -> expression { return make_operation<equals_to>(std::move(e), std::move(r)); },
+        equals_for_datatype<int>{rCopy},
+        equals_for_datatype<std::string>{rCopy},
+        [&rCopy](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(rCopy)); },
+        [&rCopy](rec<application>&& e) -> expression { return make_operation<equals_to>(std::move(e), std::move(rCopy)); },
         [](auto&&) -> expression { return nothing{}; }
-    }, std::move(l));
+    }, std::move(lCopy));
+
+
+    // probably should also use what's below instead of just returning rCopy or nothing
+
+    // expression lCopy = l;
+    // expression rCopy = r;
+    // if (auto added = ExtendEnvironment(equals_to{std::move(l)}, r, env)) {
+    //     ExtendEnvironment(equals_to{std::move(r)}, lCopy, env);
+    //     return identifier{*added};
+    // } else if (auto added = ExtendEnvironment(equals_to{std::move(r)}, lCopy, env)) {
+    //     return identifier{*added};
+    // }
+    // l = std::move(Eval(std::move(lCopy), env)); 
+    // r = std::move(Eval(std::move(rCopy), env));
+
+    // DebugPrint("eq1", l, env);
+    // DebugPrint("eq2", r, env);
+    // if (l == r)
+    //     return r; // TODO: is that really needed?
+    // return std::visit(overload{
+    //     equals_for_datatype<int>{r},
+    //     equals_for_datatype<std::string>{r},
+    //     [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
+    //     [&r](rec<application>&& e) -> expression { return make_operation<equals_to>(std::move(e), std::move(r)); },
+    //     [](auto&&) -> expression { return nothing{}; }
+    // }, std::move(l));
 }
 
 expression Intersect(expression&& l,
@@ -238,8 +292,17 @@ expression Intersect(expression&& l,
     }, std::move(l));
 }
 
-inline expression MkEquals(expression&& argument) {
-    return equals_to{expression(std::move(argument))};
+template <template<typename datatype> typename operation_for_datatype, typename functor>
+expression Calculate(expression&& l,
+                     expression&& r,
+                     environment& env) {
+    r = Eval(std::move(r), env);
+    return std::visit(overload{
+        operation_for_datatype<int>{r},
+        // operation_for_datatype<std::string>{r},
+        [&r](identifier&& v) -> expression { return make_operation<functor>(std::move(v), std::move(r)); },
+        [](auto&& e) -> expression { return error{std::string("can't do arithmetic with ") + Show(e)}; }
+    }, Eval(std::move(l), env));
 }
 
 inline bool IsError(expression& e) {
@@ -250,24 +313,6 @@ inline bool IsError(expression& e) {
     }, std::move(e));
 }
 
-// bool Unapply(expression&& pattern, 
-//                     expression&& match, 
-//                     environment& env) {
-//     return std::visit(overload{
-//         [&env, &match](identifier&& e) {
-//             auto newEnv = env;
-//             auto evaluated = Eval(std::move(match), newEnv);
-//             if (IsError(evaluated))
-//                 return false;
-//             // fix???
-//             env.add(e.name, std::move(evaluated));
-
-//             return true;
-//         },
-//         [](auto&& e) -> expression { return nothing{}; }
-//     }, std::move(pattern));
-// }
-
 expression Apply(expression&& function, 
                  expression&& argument, 
                  environment& env) {
@@ -276,49 +321,56 @@ expression Apply(expression&& function,
     return std::visit(overload{
         [&env, &argument](rec<closure>&& function) -> expression { 
             if (auto inputId = std::get_if<identifier>(&function.get().argument)) {
+                DebugPrint("applying closure", function, env);
                 if (auto argumentId = std::get_if<identifier>(&argument)) {
                     expression argumentValue = *env.get(argumentId->name);
                     function.get().env.add(inputId->name, std::move(argumentValue));
                 } else {
-                    function.get().env.add(inputId->name, std::move(argument));
+                    function.get().env.add(inputId->name, equals_to{std::move(argument)});
                 }
 
-                auto evaluated = Eval(std::move(function.get().body), function.get().env);
-                // return Fix(std::move(evaluated), function.get().env); // removes laziness :(
+                // auto evaluated = Eval(std::move(function.get().body), function.get().env);
+                return Fix(std::move(function.get().body), function.get().env); // removes laziness :(
 
-                if (auto outputId = std::get_if<identifier>(&evaluated)) {
-                    return *function.get().env.get(outputId->name); // todo: replace all variables. Fix?
-                } else {
-                    return evaluated;
-                }
+                // if (auto outputId = std::get_if<identifier>(&evaluated)) {
+                //     return *function.get().env.get(outputId->name); // todo: replace all variables. Fix?
+                // } else {
+                //     return evaluated;
+                // }
             } else {
                 return error{"pattern matching not yet implemented"};
             }
         },
-        [&env, &argument](addition&&) { return MkAddition(Eval(std::move(argument), env)); },
-        [&env, &argument](addition_with<int>&& function) {
-            return Add(std::move(function), Eval(std::move(argument), env));
+        [&env, &argument](addition&&) -> expression { return addition_with{Eval(std::move(argument), env)}; },
+        [&env, &argument](rec<addition_with>&& function) -> expression {
+            return Calculate<addition_for_datatype, addition_with>(std::move(function.get().x), std::move(argument), env);
         },
-        [&env, &argument](addition_with<std::string>&& function) {
-            return Add(std::move(function), Eval(std::move(argument), env));
+        [&env, &argument](subtraction&&) -> expression { return subtraction_with{Eval(std::move(argument), env)}; },
+        [&env, &argument](rec<subtraction_with>&& function) -> expression {
+            return Calculate<subtraction_for_datatype, subtraction_with>(std::move(function.get().x), std::move(argument), env);
         },
-        [&env, &argument](subtraction&&) { return MkSubtraction(Eval(std::move(argument), env)); },
-        [&env, &argument](subtraction_with<int>&& function) {
-            return Subtract(std::move(function), Eval(std::move(argument), env));
+        [&env, &argument](multiplication&&) -> expression { return multiplication_with{Eval(std::move(argument), env)}; },
+        [&env, &argument](rec<multiplication_with>&& function) -> expression {
+            return Calculate<multiplication_for_datatype, multiplication_with>(std::move(function.get().x), std::move(argument), env);
         },
-        [&env, &argument](multiplication&&) { return MkMultiplication(Eval(std::move(argument), env)); },
-        [&env, &argument](multiplication_with<int>&& function) {
-            return Multiply(std::move(function), Eval(std::move(argument), env));
+        [&env, &argument](equality&&) -> expression { return equals_to{Eval(std::move(argument), env)}; },
+        [&env, &argument](inequality&&) -> expression { return negated{
+                equals_to{Eval(std::move(argument), env)}
+            }; 
         },
-        [&env, &argument](equality&&) { return MkEquals(Eval(std::move(argument), env)); },
-                                            // todo: incorrect? should be evaluated?
-        [&env, &argument](inequality&&) -> expression { return negated{MkEquals(Eval(std::move(argument), env))}; },
-        [&env, &argument](intersection&&) { return MkIntersection(Eval(std::move(argument), env)); },
+        [&env, &argument](rec<application>&& e) -> expression {
+            // eval and apply already happened
+            return application{std::move(e), std::move(argument)};
+        },
+            // todo: isn't it evaluated already?
+        [&env, &argument](intersection&&) -> expression { return intersection_with{Eval(std::move(argument), env)}; },
         [&env, &argument](show&&) -> expression { return Show(Fix(std::move(argument), env)); },
         [&env, &argument](print&&) -> expression { return Print(std::move(argument), env); },
+        [&env, &argument](set_trace_enabled&&) -> expression { return SetTraceEnabled(std::move(argument), env); },
         [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(std::move(e.get().x), std::move(argument), env); },
         // [&env, &argument](rec<negated>&& e) -> expression { return Negate(std::move(e.get().f), env); },
         [&env, &argument](rec<intersection_with>&& function) -> expression {
+            // todo: isn't it evaluated already?
             auto l = Eval(std::move(function.get().x), env); 
             auto r = Eval(std::move(argument), env);
             return Intersect(std::move(l), std::move(r));
@@ -357,6 +409,49 @@ expression Eval(expression&& e,
     }, std::move(e));
     env.decreaseDebugIndentation();
     return ret;
+}
+
+template<typename datatype>
+struct unapply_for_datatype {
+    expression& match;
+    environment& env;
+    bool operator()(datatype&& pattern) {
+        return std::visit(overload{
+            [&pattern](datatype&& match) -> bool { return pattern == match; },
+            [&pattern, this](identifier&& match) -> bool { 
+                return static_cast<bool>(ExtendEnvironment(equals_to{std::move(match)}, std::move(pattern), env)); 
+            },
+            [](auto&&) -> bool { return false; }
+        }, std::move(match)); 
+    }
+};
+
+bool Unapply(expression&& pattern, 
+             expression&& match, 
+             environment& env) {
+    DebugPrint("unapply1", pattern, env);
+    DebugPrint("unapply2", match, env);
+    return std::visit(overload{
+        unapply_for_datatype<int>{match, env},
+        [&env, &match](identifier&& pattern) -> bool {
+            auto newEnv = env;
+            // fix or just eval???
+            auto evaluated = Fix(std::move(match), newEnv);
+            if (IsError(evaluated))
+                return false;
+            if (env.define(pattern.name, equals_to{std::move(evaluated)}))
+                return true;
+            else {
+                DebugPrint("already defined", pattern, env, 2);
+                return false;
+            }
+        },
+        [&env, &match](rec<application>&& pattern) -> bool { 
+            auto wrapped = abstraction{std::move(pattern.get().argument), match};
+            return Unapply(std::move(pattern.get().function), std::move(wrapped), env);
+        },
+        [](auto&&) -> bool { return false; }
+    }, std::move(pattern));
 }
 
 }
