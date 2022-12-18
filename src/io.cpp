@@ -26,8 +26,23 @@ std::string Show(expression&& e) {
                  + Show(std::move(e.get().to)); 
         },
         [](rec<closure>&& e) {
-            return Show(std::move(e.get().argument)) + " ->' "
-                 + Show(std::move(e.get().body)); 
+            std::stringstream out;
+            out << Show(std::move(e.get().argument))
+                << " ->' "
+                << Show(std::move(e.get().body));
+            if (!e.get().env.variables.empty()) {
+                out << " [";
+                // for (int i = e.get().env.size() - 1, n = std::max(0, i - 3); i >= n; --i) {
+                for (int i = e.get().env.variables.size() - 1; i >= 0; --i) {
+                    auto& var = e.get().env.variables[i];
+                    auto copy = var.second;
+                    out << var.first << ": " << Show(std::move(copy));
+                    if (i != 0)
+                        out << "; ";
+                }
+                out << "]";
+            }
+            return out.str();
         },
         [](rec<abstraction>&& e) {
             return Show(std::move(e.get().argument)) + " -> "
@@ -54,6 +69,9 @@ std::string Show(expression&& e) {
         [](rec<union_with>&& e) {
             return Show(std::move(e.get().x)) + std::string(" |"); 
         },
+        [](rec<implication_with>&& e) {
+            return Show(std::move(e.get().x)) + std::string(";"); 
+        },
         [](addition&&) -> std::string {
             return "+"; 
         },
@@ -62,6 +80,9 @@ std::string Show(expression&& e) {
         },
         [](multiplication&&) -> std::string {
             return "*"; 
+        },
+        [](implication&&) -> std::string {
+            return ";"; 
         },
         [](union_&&) -> std::string {
             return "|"; 

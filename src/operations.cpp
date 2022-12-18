@@ -6,9 +6,7 @@ namespace cx {
 template<typename operation_function>
 struct map_union_l {
     expression& r;
-    environment& env; // probably move out env and abstact operation away
-                      // then put the same function into
-                      // add union handling into operation_for_datatype?
+    environment& env;
     operation_function& operation;
     auto operator()(rec<application>&& lApplication) -> expression {
         auto& rUnion = lApplication.get().argument;
@@ -21,7 +19,7 @@ struct map_union_l {
                     std::move(rUnion), std::move(rCopy), env);
                 return make_operation<union_with>(std::move(lCalculated), std::move(rCalculated));
             },
-            [](auto&& e) -> expression { return error{std::string("calculation/union l error: ") + Show(e)};; }
+            [](auto&& e) -> expression { return error{std::string("calculation/union error (left): ") + Show(e)};; }
         }, std::move(lApplication.get().function));
     }
 };
@@ -38,7 +36,7 @@ struct map_union_r {
                 auto rCalculated = operation_for_datatype{rUnion}(std::move(lCopy));
                 return make_operation<union_with>(std::move(lCalculated), std::move(rCalculated));
             },
-            [](auto&& e) -> expression { return error{std::string("calculation/union r error: ") + Show(e)};; }
+            [](auto&& e) -> expression { return error{std::string("calculation/union error (right): ") + Show(e)};; }
         }, std::move(rApplication.get().function));
     }
 };
@@ -356,20 +354,6 @@ expression Calculate(expression&& l,
         // operation_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<functor>(std::move(v), std::move(r)); },
         map_union_l{r, env, Calculate<operation_for_datatype, functor>},
-        // [&r, &env](rec<application>&& lApplication) -> expression {
-        //     auto& rUnion = lApplication.get().argument;
-        //     return std::visit(overload{
-        //         [&r, &rUnion, &env](rec<union_with>&& lUnion) -> expression {
-        //             auto rCopy = r;
-        //             auto lCalculated = Calculate<operation_for_datatype, functor>(
-        //                 std::move(lUnion.get().x), std::move(r), env);
-        //             auto rCalculated = Calculate<operation_for_datatype, functor>(
-        //                 std::move(rUnion), std::move(rCopy), env);
-        //             return make_operation<union_with>(std::move(lCalculated), std::move(rCalculated));
-        //         },
-        //         [](auto&& e) -> expression { return error{std::string("calculation error: ") + Show(e)};; }
-        //     }, std::move(lApplication.get().function));
-        // },
         [](auto&& e) -> expression { return error{std::string("can't do arithmetic with ") + Show(e)}; }
     }, Eval(std::move(l), env));
 }
@@ -398,7 +382,11 @@ expression Apply(expression&& function,
                 argumentValue = std::move(argument);
             }
             if (Unapply(std::move(function.get().argument), std::move(argumentValue), function.get().env)) {
-                return Fix(std::move(function.get().body), function.get().env); // removes laziness :(
+                auto combinedEnv = env;
+                for (auto& v: function.get().env.variables) {
+                    combinedEnv.variables.push_back(std::move(v));
+                }
+                return Fix(std::move(function.get().body), combinedEnv);
             } else {
                 return error{std::string("can't apply ") 
                                            + Show(std::move(argumentValue)) + " to closure with signature "
@@ -545,7 +533,6 @@ bool Unapply(expression&& pattern,
         unapply_for_datatype<std::string>{match, env},
         [&env, &match](identifier&& pattern) -> bool {
             auto newEnv = env;
-            // fix or just eval???
             auto evaluated = Fix(std::move(match), newEnv);
             if (IsError(evaluated))
                 return false;
