@@ -48,15 +48,19 @@ using selector = tao::pegtl::parse_tree::selector<
         numeral, digits, literal_string,
 
         operation_apply,
-        operators_8,
         operators_9,
+        operators_8,
+        operators_7,
+        operators_3,
         operators_2,
         operators_1,
         operators_0,
 
         tao::pegtl::star_must<cx::parser::operators_0, cx::parser::seps, cx::parser::expr_1, cx::parser::seps>,
         tao::pegtl::star_must<cx::parser::operators_1, cx::parser::seps, cx::parser::expr_2, cx::parser::seps>,
-        tao::pegtl::star_must<cx::parser::operators_2, cx::parser::seps, cx::parser::expr_8, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_2, cx::parser::seps, cx::parser::expr_3, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_3, cx::parser::seps, cx::parser::expr_7, cx::parser::seps>,
+        tao::pegtl::star_must<cx::parser::operators_7, cx::parser::seps, cx::parser::expr_8, cx::parser::seps>,
         tao::pegtl::star_must<cx::parser::operators_8, cx::parser::seps, cx::parser::expr_9, cx::parser::seps>,
         tao::pegtl::star_must<cx::parser::operators_9, cx::parser::seps, cx::parser::operation_apply, cx::parser::seps>
     >,

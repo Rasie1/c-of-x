@@ -51,6 +51,9 @@ std::string Show(expression&& e) {
         [](rec<multiplication_with>&& e) {
             return Show(std::move(e.get().x)) + std::string(" *"); 
         },
+        [](rec<union_with>&& e) {
+            return Show(std::move(e.get().x)) + std::string(" |"); 
+        },
         [](addition&&) -> std::string {
             return "+"; 
         },
@@ -59,6 +62,9 @@ std::string Show(expression&& e) {
         },
         [](multiplication&&) -> std::string {
             return "*"; 
+        },
+        [](union_&&) -> std::string {
+            return "|"; 
         },
         [](error&& e) { return std::string("error(\"") + e.message + "\")"; },
         [](auto&& e)  { return boost::core::demangle(typeid(decltype(e)).name()); }

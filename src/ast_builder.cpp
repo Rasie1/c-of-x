@@ -25,6 +25,13 @@ inline int getOperatorPriority(const cx::expression& e) {
     }, e);
 }
 
+inline bool isLeftAssociative(const cx::expression& e) {
+    return std::visit(overload{
+        [](const cx::subtraction&) { return true; },
+        [](const auto&) { return false; }
+    }, e);
+}
+
 inline bool isHigherPriority(const cx::expression& l, const cx::expression& r) {
     return getOperatorPriority(l) > getOperatorPriority(r);
 }
@@ -46,15 +53,18 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
     } else if (node.type == "cx::parser::literal_string") {
         return unescape(node.string().substr(1, node.string().size() - 2));
     } else if (node.type == "cx::parser::operators_0") {
+        // if (node.string() == ";")
+            return cx::implication{};
+    } else if (node.type == "cx::parser::operators_1") {
         if (node.string() == "=")
             return cx::equality{};
         else if (node.string() == "!=")
             return cx::inequality{};
-    } else if (node.type == "cx::parser::operators_1") {
-        // if (node.string() == "=")
-            return cx::equality{}; // todo: application
     } else if (node.type == "cx::parser::operators_2") {
-        // if (node.string() == "=")
+        // if (node.string() == ":")
+            return cx::equality{}; // todo: application
+    } else if (node.type == "cx::parser::operators_3") {
+        // if (node.string() == "->")
             return cx::abstraction{};
     } else if (node.type == "cx::parser::identifier") {
         if (node.string() == "show")
@@ -65,11 +75,11 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::set_trace_enabled{};
         else
             return cx::identifier{node.string()};
+    } else if (node.type == "cx::parser::operators_7") {
+        return cx::union_{};
     } else if (node.type == "cx::parser::operators_8") {
         if (node.string() == "+")
             return cx::addition{};
-        else if (node.string() == "-")
-            return cx::subtraction{};
     } else if (node.type == "cx::parser::operators_9") {
         if (node.string() == "*")
             return cx::multiplication{};

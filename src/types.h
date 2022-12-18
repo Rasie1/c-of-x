@@ -18,9 +18,12 @@ struct equals_to;
 struct negated;
 struct then;
 struct intersection_with;
+struct union_with;
+struct tuple;
 struct addition_with;
 struct subtraction_with;
 struct multiplication_with;
+struct implication_with;
 struct abstraction;
 
 struct unit { bool operator==(unit const&) const = default; };
@@ -37,9 +40,11 @@ struct error {
 struct equality { bool operator==(equality const&) const = default; };
 struct inequality { bool operator==(inequality const&) const = default; };
 struct intersection { bool operator==(intersection const&) const = default; };
+struct union_ { bool operator==(union_ const&) const = default; };
 struct addition { bool operator==(addition const&) const = default; };
 struct multiplication { bool operator==(multiplication const&) const = default; };
 struct subtraction { bool operator==(subtraction const&) const = default; };
+struct implication { bool operator==(implication const&) const = default; };
 
 struct show { bool operator==(show const&) const = default; };
 struct print { bool operator==(print const&) const = default; };
@@ -62,14 +67,18 @@ using expression = std::variant<
     any,
 
     intersection,
+    union_,
     equality,
     inequality,
     addition,
     subtraction,
     multiplication,
+    implication,
 
     rec<application>,
     rec<intersection_with>,
+    rec<union_with>,
+    rec<tuple>,
     rec<abstraction>,
     rec<equals_to>,
     rec<closure>,
@@ -77,6 +86,7 @@ using expression = std::variant<
     rec<addition_with>,
     rec<multiplication_with>,
     rec<subtraction_with>,
+    rec<implication_with>,
 
     int,
     std::string,
@@ -112,6 +122,16 @@ struct intersection_with {
     bool operator==(intersection_with const&) const = default;
 };
 
+struct union_with {
+    expression x;
+    bool operator==(union_with const&) const = default;
+};
+
+struct tuple {
+    std::vector<expression> xs;
+    bool operator==(tuple const&) const = default;
+};
+
 struct addition_with {
     expression x;
     bool operator==(addition_with const&) const = default;
@@ -123,6 +143,10 @@ struct subtraction_with {
 struct multiplication_with {
     expression x;
     bool operator==(multiplication_with const&) const = default;
+};
+struct implication_with {
+    expression x;
+    bool operator==(implication_with const&) const = default;
 };
 
 struct abstraction {

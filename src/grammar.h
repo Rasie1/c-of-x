@@ -157,9 +157,11 @@ struct operators_9 : tao::pegtl::sor<tao::pegtl::one<'/'>,
                                      tao::pegtl::one<'&'>,
                                      tao::pegtl::one<'%'>> {};
 struct expr_9 : left_assoc<operation_apply, operators_9> {};
-struct operators_8 : tao::pegtl::sor<tao::pegtl::one<'+'>/*,
-                                     tao::pegtl::one<'-'>*/> {};
+struct operators_8 : tao::pegtl::sor<tao::pegtl::one<'+'>,
+                                     tao::pegtl::one<'~'>> {};
 struct expr_8 : left_assoc<expr_9, operators_8> {};
+struct operators_7 : tao::pegtl::one<'|'> {};
+struct expr_7 : left_assoc<expr_8, operators_7> {};
 // struct expr_7 : right_assoc<expr_8, op_two<'.', '.', '.'>> {};
 // struct operators_6 : tao::pegtl::sor<tao::pegtl::two<'<'>,
 //                                                         tao::pegtl::two<'>'>> {};
@@ -174,11 +176,13 @@ struct expr_8 : left_assoc<expr_9, operators_8> {};
 //                                         op_one<'>', '>'>,
 //                                         tao::pegtl::string<'~', '='>> {};
 // struct expr_2 : left_assoc<expr_3, operators_2> {};
-struct operators_2 : tao::pegtl::string<'-', '>'> {};
-struct expr_2 : left_assoc<expr_8, operators_2> {};
-struct operators_1 : tao::pegtl::one<':'> {};
+struct operators_3 : tao::pegtl::string<'-', '>'> {};
+struct expr_3 : left_assoc<expr_7, operators_3> {};
+struct operators_2 : tao::pegtl::one<':'> {};
+struct expr_2 : left_assoc<expr_3, operators_2> {};
+struct operators_1 : tao::pegtl::sor<tao::pegtl::one<'='>, tao::pegtl::string<'!', '='>> {};
 struct expr_1 : left_assoc<expr_2, operators_1> {};
-struct operators_0 : tao::pegtl::sor<tao::pegtl::one<'='>, tao::pegtl::string<'!', '='>> {};
+struct operators_0 : tao::pegtl::one<';'> {};
 struct expr_0 : left_assoc<expr_1, operators_0> {};
 struct expression : expr_0 {};//left_assoc<expr_0, expression> {};
 
