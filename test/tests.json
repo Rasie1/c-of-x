@@ -1,0 +1,95 @@
+[
+    {
+        "name": "Parsing",
+        "expr": "15 = 1 + 2 + 3 * 4; 103 = 3 + 10 * 5 + (5 + 5) * 5",
+        "result" : "103"
+    },
+    {
+        "name": "Variable propagation test",
+        "expr": "a = 2; b = a; c = b; c = 2"
+    },
+    {
+        "name": "Inequality",
+        "expr": "2 != 3"
+    },
+    {
+        "name": "Inequality failed",
+        "expr": "2 != 2",
+        "result": "cx::nothing"
+    },
+    {
+        "name": "Application test",
+        "expr": "x = show 3; x = \"3\"",
+        "result": "\"3\""
+    },
+    {
+        "name": "Function variable test",
+        "expr": "f = show; f 3 = \"3\"",
+        "result": "\"3\""
+    },
+    {
+        "name": "Identity test",
+        "expr": "id = x -> x; id 3 = 3",
+        "result": "3"
+    },
+    {
+        "name": "Identity + variable test",
+        "expr": "x = 3; id = x -> x; id x = 3",
+        "result": "3"
+    },
+    {
+        "name": "Lambda",
+        "expr": "id = x -> (x + 2); id 1 = 3",
+        "result": "3"
+    },
+    {
+        "name": "Function definition via unapply",
+        "expr": "f x = x + 2; f 1 = 3",
+        "result": "3"
+    },
+    {
+        "name": "Function definition with 2 arguments",
+        "expr": "f x y = x + y; f 1 2 = 3",
+        "result": "3"
+    },
+    {
+        "name": "Function definition with 3 arguments",
+        "expr": "f x y z = x + y + z; f 1 1 1 = 3",
+        "result": "3"
+    },
+    {
+        "name": "Closure environment",
+        "expr": "f a = 3; f 5 = 3; a = 1; a = 1",
+        "result": "1"
+    },
+    {
+        "name": "Addition unapplication",
+        "expr": "f (x + 1) = x; f 4",
+        "result": "3"
+    },
+    {
+        "name": "Non-determinism",
+        "expr": "(2|3) + 1",
+        "result": "(3 | 4)"
+    },
+    {
+        "name": "Non-determinism 2",
+        "expr": "1 + (2|3)",
+        "result": "(3 | 4)"
+    },
+    {
+        "name": "Non-determinism with functions",
+        "expr": "f x = (g y = 20 + y; g x); f (1|3)",
+        "result": "(21 | 23)"
+    },
+    {
+        "name": "Non-determinism with functions 2",
+        "expr": "f x = (g y = x + y; g x); f (1|3)",
+        "result": "(2 | 6)"
+    },
+    {
+        "name": "Inequality 2",
+        "expr": "x = 2; x != 3",
+        "result": "2"
+    }
+]

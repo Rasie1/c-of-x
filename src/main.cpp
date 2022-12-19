@@ -37,10 +37,10 @@ int main(int argc, char** argv)
         cx::parser::print_graphviz(filename, 0);
     } else if (auto filename = get_option(argv, argv + argc, "-graph-all")) {
         cx::parser::print_graphviz(filename, 2);
-    } else if (argc == 2) {
+    } else if (argc == 2 || argc == 3) {
         cx::eval(argv[1], verbosity);
     } else {
-        std::cout << "./c-of-x [expr]" << std::endl
+        std::cout << "./c-of-x [expr] [args]" << std::endl
                   << "         -f          - open file"               << std::endl
                   << "         -log        - print verbose debug log" << std::endl
                   << "         -logstate   - print general state"     << std::endl
