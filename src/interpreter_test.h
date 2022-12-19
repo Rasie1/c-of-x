@@ -8,7 +8,7 @@ void test();
 
 namespace cx {
 
-void eval(const char* code);
-void eval_file(const char* path);
+void eval(const char* code, int verbosity);
+void eval_file(const char* path, int verbosity);
 
 }

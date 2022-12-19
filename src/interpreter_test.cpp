@@ -83,42 +83,52 @@ void test() {
 
 namespace cx {
 
-void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed) {
+void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed, int verbosity) {
     if (!parsed)
         throw std::runtime_error("couldn't parse file");
 
     auto expr = cx::parser::build(*parsed);
-
     auto copy = expr;
-    std::cout << "Got expression:" << std::endl << 
-                 Show(std::move(copy)) << std::endl << std::endl;
+
+    if (verbosity) {
+        std::cout << "Got expression:" << std::endl << 
+                    Show(std::move(copy)) << std::endl << std::endl;
+    }
 
     environment env;
+    if (verbosity >= 2)
+        env.isTraceEnabled = true;
+
     auto result = Eval(std::move(expr), env);
     copy = result;
 
-    std::cout << "Environment:" << std::endl;
-    for (auto [k, v]: env.variables) {
-        std::cout << k << ": " << Show(std::move(v)) << std::endl;
-    }
-    std::cout << std::endl;
+    if (verbosity) {
+        std::cout << "Environment:" << std::endl;
+        for (auto [k, v]: env.variables) {
+            std::cout << k << ": " << Show(std::move(v)) << std::endl;
+        }
+        std::cout << std::endl;
 
-    std::cout << "Evaluated:" << std::endl;
-    std::cout << Show(std::move(result)) << std::endl << std::endl;
+        std::cout << "Evaluated:" << std::endl;
+        std::cout << Show(std::move(result)) << std::endl << std::endl;
+    }
 
     result = Fix(std::move(copy), env);
-    std::cout << "Fixed:" << std::endl;
+
+    if (verbosity)
+        std::cout << "Fixed:" << std::endl;
+
     std::cout << Show(std::move(result)) << std::endl;
 }
 
-void eval(const char* code) {
+void eval(const char* code, int verbosity) {
     auto parsed = cx::parser::parse_code(code);
-    eval_and_print(parsed);
+    eval_and_print(parsed, verbosity);
 }
 
-void eval_file(const char* path) {
+void eval_file(const char* path, int verbosity) {
     auto parsed = cx::parser::parse_file(path);
-    eval_and_print(parsed);
+    eval_and_print(parsed, verbosity);
 }
 
 }
