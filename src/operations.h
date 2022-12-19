@@ -1,12 +1,15 @@
 #pragma once
 #include <optional>
 #include "types.h"
-#include "util.h"
 #include "io.h"
+
+#include "apply.h"
+#include "eval.h"
+#include "unapply.h"
+#include "equality.h"
 
 namespace cx {
 
-expression Eval(expression&& e, environment& env);
 expression GetElement(expression&& set);
 expression Fix(expression&& expr, environment& env);
 
@@ -14,19 +17,10 @@ std::optional<std::string> ExtendEnvironment(
         expression&& function, 
         const expression& argument, 
         environment& env);
-expression Equals(expression&& l,
-                  expression&& r,
-                  environment& env);
 
 expression Intersect(expression&& l, expression&& r);
 bool IsError(expression& e);
-expression Apply(expression&& function, 
-                 expression&& argument, 
-                 environment& env);
-bool Unapply(expression&& pattern, 
-             expression&& match, 
-             environment& env);
-expression Eval(expression&& e, 
-                environment& env);
+expression Negate(expression&& f, environment& env);
+expression Union(expression&& l, expression&& r);
 
 }

@@ -32,14 +32,17 @@ std::string Show(expression&& e) {
                 << Show(std::move(e.get().body));
             if (!e.get().env.variables.empty()) {
                 out << " [";
-                // for (int i = e.get().env.size() - 1, n = std::max(0, i - 3); i >= n; --i) {
-                for (int i = e.get().env.variables.size() - 1; i >= 0; --i) {
+                int i = e.get().env.variables.size() - 1;
+                int lastVariableToPrint = std::max(0, i - 1);
+                for (; i >= lastVariableToPrint; --i) {
                     auto& var = e.get().env.variables[i];
                     auto copy = var.second;
                     out << var.first << ": " << Show(std::move(copy));
-                    if (i != 0)
+                    if (i != lastVariableToPrint)
                         out << "; ";
                 }
+                if (lastVariableToPrint > 0)
+                    out << "; ...";
                 out << "]";
             }
             return out.str();
@@ -55,7 +58,7 @@ std::string Show(expression&& e) {
             return Show(std::move(e.get().x)) + std::string(" ="); 
         },
         [](rec<negated>&& e) {
-            return std::string("!") + Show(std::move(e.get().f)); 
+            return std::string("!(") + Show(std::move(e.get().f)) + ")"; 
         },
         [](rec<addition_with>&& e) {
             return Show(std::move(e.get().x)) + std::string(" +"); 

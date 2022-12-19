@@ -11,6 +11,10 @@ add_executable(main
     src/main.cpp
     src/parser.cpp
     src/operations.cpp
+    src/eval.cpp
+    src/apply.cpp
+    src/unapply.cpp
+    src/equality.cpp
     src/io.cpp
     src/ast_builder.cpp
     src/interpreter_test.cpp
