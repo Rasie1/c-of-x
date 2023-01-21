@@ -12,6 +12,7 @@ namespace cx {
 
 expression GetElement(expression&& set);
 expression Fix(expression&& expr, environment& env);
+std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env);
 
 std::optional<std::string> ExtendEnvironment(
         expression&& function, 

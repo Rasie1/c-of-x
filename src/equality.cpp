@@ -10,9 +10,18 @@ struct equals_with_negated {
     inline auto operator()(rec<negated>&& e) -> expression { 
         DebugPrint("eq with negated", e.get().f, env);
         auto falseEnv = env;
-        auto eq = IsEqual(std::move(r), std::move(e.get().f), falseEnv);
+        auto [evaluatedl, lvar] = FixWithVariable(std::move(r), falseEnv);
+        auto [evaluatedr, rvar] = FixWithVariable(std::move(std::move(e.get().f)), falseEnv);
+        auto eq = IsEqual(std::move(evaluatedl), std::move(evaluatedr), falseEnv);
         return std::visit(overload{
-            [](nothing&&) -> expression { return any{}; }, // todo: preserve data
+            [&lvar, &rvar](nothing&&) -> expression { 
+                if (lvar)
+                    return identifier{*lvar};
+                else if (rvar)
+                    return identifier{*rvar};
+                else
+                    return any{}; 
+            },
             [](identifier&& e) -> expression { return negated{std::move(e)}; },
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(eq));

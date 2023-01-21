@@ -100,12 +100,24 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
     if (!env.isTraceEnabled)
         return;
     if (color == 1)
-        std::cout << "\033[0;34m";
+        std::cout << "\033[0;36m";
     else if (color == 2)
         std::cout << "\033[0;35m";
     for (int indentation = 0; indentation < env.debugIndentation; ++indentation)
         std::cout << ". ";
-    std::cout << msg << ": \033[1;30m" << Show(std::move(e)) << std::endl;
+    std::cout << msg << ": \033[1;37m" << Show(std::move(e));
+    if (!env.variables.empty()) {
+        std::cout << "        \033[0;34m[ ";
+        for (auto& v: env.variables) {
+            auto value = v.second;
+            // std::cout << "\033[1;34m";
+            std::cout << v.first;
+            // std::cout << "\033[0;34m";
+            std::cout << ": " << Show(std::move(value)) << "; ";
+        }
+        std::cout << "]";
+    }
+    std::cout << std::endl;
     std::cout << "\033[0m";
 }
 

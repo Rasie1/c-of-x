@@ -18,6 +18,21 @@ expression Calculate(expression&& l,
     }, Eval(std::move(l), env));
 }
 
+inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue) {
+    if (Unapply(std::move(function.argument), std::move(argumentValue), function.env)) {
+        auto combinedEnv = env;
+        for (auto& v: function.env.variables) {
+            combinedEnv.variables.push_back(std::move(v));
+        }
+        return Fix(std::move(function.body), combinedEnv);
+    } else {
+        // use after move?
+        return error{std::string("can't apply ") 
+                + Show(std::move(argumentValue)) + " to closure with signature "
+                + Show(std::move(function.argument))};
+    }
+}
+
 expression Apply(expression&& function, 
                  expression&& argument, 
                  environment& env) {
@@ -26,46 +41,28 @@ expression Apply(expression&& function,
     env.increaseDebugIndentation();
     auto ret = std::visit(overload{
         [&env, &argument](rec<closure>&& function) -> expression {
-            expression argumentValue;
-
-            if (auto argumentId = std::get_if<identifier>(&argument)) {
-                argumentValue = *env.get(argumentId->name);
-                argumentValue = GetElement(std::move(argumentValue));
-            } else {
-                argumentValue = std::move(argument);
-            }
-            if (Unapply(std::move(function.get().argument), std::move(argumentValue), function.get().env)) {
-                auto combinedEnv = env;
-                for (auto& v: function.get().env.variables) {
-                    combinedEnv.variables.push_back(std::move(v));
+            return std::visit(overload{
+                [&env, &function](identifier&& id) -> expression {
+                    auto argumentValue = *env.get(id.name);
+                    argumentValue = GetElement(std::move(argumentValue));
+                    return ApplyToClosure(env, std::move(function.get()), std::move(argumentValue));
+                },
+                [&env, &function](rec<application>&& app) -> expression {
+                    if (auto unionWith = std::get_if<rec<union_with>>(&app.get().function)) {
+                        auto l = Eval(std::move(unionWith->get().x), env);
+                        auto r = Eval(std::move(app.get().argument), env);
+                        auto functionCopy = function;
+                        auto lApplied = Apply(std::move(function),     std::move(l), env);
+                        auto rApplied = Apply(std::move(functionCopy), std::move(r), env);
+                        return Union(std::move(lApplied), std::move(rApplied));
+                    } else {
+                        return error{std::string("can't apply application to closure")};
+                    }
+                },
+                [&env, &function](auto&& argument) -> expression {
+                    return ApplyToClosure(env, std::move(function.get()), std::move(argument));
                 }
-                return Fix(std::move(function.get().body), combinedEnv);
-            } else {
-                return error{std::string("can't apply ") 
-                     + Show(std::move(argumentValue)) + " to closure with signature "
-                     + Show(std::move(function.get().argument))};
-            }
-            // unapply should be here
-            // if (auto inputId = std::get_if<identifier>(&function.get().argument)) {
-            //     DebugPrint("applying closure", function, env);
-            //     if (auto argumentId = std::get_if<identifier>(&argument)) {
-            //         expression argumentValue = *env.get(argumentId->name);
-            //         function.get().env.add(inputId->name, std::move(argumentValue));
-            //     } else {
-            //         function.get().env.add(inputId->name, equals_to{std::move(argument)});
-            //     }
-
-            //     // auto evaluated = Eval(std::move(function.get().body), function.get().env);
-            //     return Fix(std::move(function.get().body), function.get().env); // removes laziness :(
-
-            //     // if (auto outputId = std::get_if<identifier>(&evaluated)) {
-            //     //     return *function.get().env.get(outputId->name); // todo: replace all variables. Fix?
-            //     // } else {
-            //     //     return evaluated;
-            //     // }
-            // } else {
-            //     return error{"pattern matching not yet implemented"};
-            // }
+            }, std::move(argument));
         },
         [&env, &argument](addition&&) -> expression { return addition_with{Eval(std::move(argument), env)}; },
         [&env, &argument](rec<addition_with>&& function) -> expression {

@@ -14,6 +14,7 @@ for test_config in data:
     stream = os.popen('./main \'' + test_config["expr"] + '\'')
     output = stream.read()
     def fail():
+        print("==========================================")
         print("Failed test: " + test_config["name"])
         if "result" in test_config:
             print("Expected:    " + test_config["result"])

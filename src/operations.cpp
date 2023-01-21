@@ -50,7 +50,7 @@ expression GetElement(expression&& set) {
 //     }, std::move(expr));
 // }
 
-inline expression Fix(expression&& expr, environment& env, robin_hood::unordered_set<std::string>& seen) {
+inline expression Fix(expression&& expr, environment& env, std::vector<std::string>& seen) {
     // TODO: possibly this should be BFS
     DebugPrint("fix - evaluating", expr, env);
     env.increaseDebugIndentation();
@@ -61,9 +61,9 @@ inline expression Fix(expression&& expr, environment& env, robin_hood::unordered
     auto fixed = std::visit(overload{
         [&env, &seen](identifier&& e) -> expression {
             DebugPrint("fixing in id", e, env);
-            if (seen.contains(e.name))
+            if (std::find(seen.begin(), seen.end(), e.name) != seen.end())
                 return any{}; // ?
-            seen.insert(e.name);
+            seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
                 auto copy = *expr;
                 DebugPrint("fixing in id, got from env", *expr, env);
@@ -120,8 +120,16 @@ inline expression Fix(expression&& expr, environment& env, robin_hood::unordered
 }
 
 expression Fix(expression&& expr, environment& env) {
-    robin_hood::unordered_set<std::string> seen;
+    std::vector<std::string> seen;
     return Fix(std::move(expr), env, seen);
+}
+
+std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env) {
+    std::vector<std::string> seen;
+    std::optional<std::string> variable;
+    if (!seen.empty())
+        variable = seen.front();
+    return {Fix(std::move(expr), env, seen), variable};
 }
 
 expression Negate(expression&& f, environment& env) {

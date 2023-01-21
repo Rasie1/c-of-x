@@ -71,10 +71,19 @@ bool Unapply(expression&& pattern,
         is_equal_with_negated{match, env},
         [&env, &match](identifier&& pattern) -> bool {
             auto newEnv = env;
-            auto evaluated = Fix(std::move(match), newEnv);
+            auto oldEvaluated = Eval(std::move(match), newEnv);
+            auto oldCopy = oldEvaluated;
+            auto evaluated = Fix(std::move(oldEvaluated), newEnv); // danger
+            // bind variable too
             if (IsError(evaluated))
                 return false;
-            if (env.define(pattern.name, equals_to{std::move(evaluated)}))
+            expression newVariable;
+            if (oldCopy == evaluated)
+                newVariable = std::move(evaluated);
+            else
+                newVariable = make_operation<intersection_with>(std::move(oldCopy), std::move(evaluated));
+            DebugPrint(std::string("defining variable ") + pattern.name, newVariable, env, 2);
+            if (env.define(pattern.name, equals_to{std::move(newVariable)}))
                 return true;
             else {
                 DebugPrint("already defined", pattern, env, 2);

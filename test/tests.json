@@ -88,6 +88,11 @@
         "result": "(2 | 6)"
     },
     {
+        "name": "Non-determinism variable binding",
+        "expr": "x = (y|1); y = (100|110); x+y",
+        "result": "(101 | 111 | 200 | 220)"
+    },
+    {
         "name": "Inequality 2",
         "expr": "x = 2; x != 3",
         "result": "2"
