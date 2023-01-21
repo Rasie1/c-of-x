@@ -12,6 +12,7 @@ struct intersect_for_datatype {
             [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
             [&l](any&&) -> expression { return l; },
             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, std::move(v)); },
+            map_union_r<intersect_for_datatype<datatype>, datatype>{l},
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(r)); 
     }

@@ -50,6 +50,8 @@ expression GetElement(expression&& set) {
 //     }, std::move(expr));
 // }
 
+// TODO: there seems to be no point in "seen"
+
 inline expression Fix(expression&& expr, environment& env, std::vector<std::string>& seen) {
     // TODO: possibly this should be BFS
     DebugPrint("fix - evaluating", expr, env);
@@ -61,8 +63,8 @@ inline expression Fix(expression&& expr, environment& env, std::vector<std::stri
     auto fixed = std::visit(overload{
         [&env, &seen](identifier&& e) -> expression {
             DebugPrint("fixing in id", e, env);
-            if (std::find(seen.begin(), seen.end(), e.name) != seen.end())
-                return any{}; // ?
+            // if (std::find(seen.begin(), seen.end(), e.name) != seen.end())
+            //     return any{}; // ?
             seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
                 auto copy = *expr;
@@ -128,7 +130,7 @@ std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& e
     std::vector<std::string> seen;
     std::optional<std::string> variable;
     if (!seen.empty())
-        variable = seen.front();
+        variable = seen.back();
     return {Fix(std::move(expr), env, seen), variable};
 }
 
@@ -155,7 +157,7 @@ std::optional<std::string> ExtendEnvironment(
         environment& env) {
     if (auto id = std::get_if<identifier>(&argument)) {
         DebugPrint("extending", argument, env, 2);
-        DebugPrint("new complonent", function, env, 2);
+        DebugPrint("new component", function, env, 2);
         return env.add(id->name, std::move(function))
              ? std::optional<std::string>(id->name)
              : std::nullopt;
@@ -164,32 +166,34 @@ std::optional<std::string> ExtendEnvironment(
 }
 
 expression Intersect(expression&& l,
-                     expression&& r) {
-    // DebugPrint("intersect1", l);
-    // DebugPrint("intersect2", r);
+                     expression&& r,
+                     environment& env) {
+    DebugPrint("intersect1", l, env);
+    DebugPrint("intersect2", r, env);
     if (l == r)
         return r; // TODO: is that really needed?
     return std::visit(overload{
         intersect_for_datatype<int>{r},
         intersect_for_datatype<std::string>{r},
-        [&r](rec<equals_to>&& l) -> expression {
+        [&r, &env](rec<equals_to>&& l) -> expression {
             return std::visit(overload{
-                [&l](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x))}; },
+                [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
                 [](auto&&) -> expression { return nothing{}; }
             }, std::move(r)); 
         },
-        [&r](rec<intersection_with>&& l) -> expression {
+        [&r, &env](rec<intersection_with>&& l) -> expression {
             return std::visit(overload{
-                [&l](rec<intersection_with>&& r) -> expression { 
-                    return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x))}; 
+                [&l, &env](rec<intersection_with>&& r) -> expression { 
+                    return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; 
                 },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
                 [](auto&&) -> expression { return nothing{}; }
             }, std::move(r)); 
         },
+        map_union_l{r, env, Intersect},
         [&r](any&&) -> expression { return r; },
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         [](nothing&& e) -> expression { return e; },

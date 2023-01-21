@@ -19,17 +19,40 @@ expression Calculate(expression&& l,
 }
 
 inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue) {
-    if (Unapply(std::move(function.argument), std::move(argumentValue), function.env)) {
+    // doesn't shadow env. Should remove old variable
+
+    // auto envCopy = env;
+    DebugPrint("in closure", function, env);
+    auto& pattern = function.argument;
+    // auto [fixed, variable] = FixWithVariable(std::move(pattern), env);
+    // if (variable)
+    //     pattern = identifier{*variable};
+    // else
+    //     pattern = std::move(function.argument);
+
+    // a bug is here. It unapplies it and a variable is already defined
+    // could be fixed by searching for this specific variable or by transfering info instead of bool
+    auto [unapplied, conflictingVariable] = Unapply(std::move(pattern), std::move(argumentValue), function.env);
+
+    if (unapplied) {
         auto combinedEnv = env;
         for (auto& v: function.env.variables) {
             combinedEnv.variables.push_back(std::move(v));
         }
         return Fix(std::move(function.body), combinedEnv);
+    } else if (!conflictingVariable.empty()) {
+        auto combinedEnv = env;
+        for (auto& v: function.env.variables) {
+            if (v.first == conflictingVariable)
+                continue;
+            combinedEnv.variables.push_back(std::move(v));
+        }
+        return Fix(std::move(function.body), combinedEnv);
     } else {
-        // use after move?
+        // use after move? then why does it work?
         return error{std::string("can't apply ") 
                 + Show(std::move(argumentValue)) + " to closure with signature "
-                + Show(std::move(function.argument))};
+                + Show(std::move(pattern))};
     }
 }
 
@@ -100,7 +123,7 @@ expression Apply(expression&& function,
             // todo: isn't it evaluated already?
             auto l = Eval(std::move(function.get().x), env);
             auto r = Eval(std::move(argument), env);
-            return Intersect(std::move(l), std::move(r));
+            return Intersect(std::move(l), std::move(r), env);
         },
         [&env, &argument](rec<union_with>&& function) -> expression {
             // todo: isn't it evaluated already?

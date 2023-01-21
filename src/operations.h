@@ -19,7 +19,7 @@ std::optional<std::string> ExtendEnvironment(
         const expression& argument, 
         environment& env);
 
-expression Intersect(expression&& l, expression&& r);
+expression Intersect(expression&& l, expression&& r, environment& env);
 bool IsError(expression& e);
 expression Negate(expression&& f, environment& env);
 expression Union(expression&& l, expression&& r);

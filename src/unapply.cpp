@@ -15,13 +15,17 @@ template<typename datatype>
 struct unapply_for_datatype {
     expression& match;
     environment& env;
-    bool operator()(datatype&& pattern) {
+    unapply_result operator()(datatype&& pattern) {
         return std::visit(overload{
-            [&pattern](datatype&& match) -> bool { return pattern == match; },
-            [&pattern, this](identifier&& match) -> bool { 
-                return static_cast<bool>(ExtendEnvironment(equals_to{std::move(match)}, std::move(pattern), env)); 
+            [&pattern](datatype&& match) -> unapply_result { return {pattern == match, {}}; },
+            [&pattern, this](identifier&& match) -> unapply_result { 
+                auto defined = ExtendEnvironment(equals_to{std::move(match)}, std::move(pattern), env);
+                if (defined)
+                    return {true, {}};
+                else
+                    return {false, match.name};
             },
-            [](auto&&) -> bool { return false; }
+            [](auto&&) -> unapply_result { return {}; }
         }, std::move(match)); 
     }
 };
@@ -45,38 +49,45 @@ std::optional<expression> Inverse(expression& e) {
 struct is_equal_with_negated {
     expression& r;
     environment& env;
-    inline auto operator()(rec<negated>&& e) -> bool { 
+    inline auto operator()(rec<negated>&& e) -> unapply_result { 
         DebugPrint("is equal with negated", e.get().f, env);
         auto falseEnv = env;
         auto eq = IsEqual(std::move(r), std::move(e.get().f), falseEnv);
         DebugPrint("is equal result", eq, env);
         return std::visit(overload{
-            [](nothing&&) { return true; },
-            [](identifier&&) { return true; },
-            [](auto&&) { return false; }
+            [](nothing&&) -> unapply_result { return {true, {}}; },
+            [](identifier&&) -> unapply_result { return {true, {}}; },
+            [](auto&&) -> unapply_result { return {}; }
         }, std::move(eq));
     }
 };
 
-bool Unapply(expression&& pattern, 
-             expression&& match, 
-             environment& env) {
+unapply_result Unapply(expression&& pattern, 
+                       expression&& match, 
+                       environment& env) {
     DebugPrint("unapply1", pattern, env);
+    // env.increaseDebugIndentation();
+    // auto [fixed, variable] = FixWithVariable(std::move(pattern), env);
+    // if (variable)
+    //     pattern = identifier{*variable};
+    // else
+    //     pattern = std::move(fixed);
+    // env.decreaseDebugIndentation();
     DebugPrint("unapply2", match, env);
     env.increaseDebugIndentation();
     auto ret = std::visit(overload{
         unapply_for_datatype<int>{match, env},
         unapply_for_datatype<std::string>{match, env},
-        [](any&&) { return true; },
+        [](any&&) -> unapply_result { return {true, {}}; },
         is_equal_with_negated{match, env},
-        [&env, &match](identifier&& pattern) -> bool {
+        [&env, &match](identifier&& pattern) -> unapply_result {
             auto newEnv = env;
             auto oldEvaluated = Eval(std::move(match), newEnv);
             auto oldCopy = oldEvaluated;
             auto evaluated = Fix(std::move(oldEvaluated), newEnv); // danger
             // bind variable too
             if (IsError(evaluated))
-                return false;
+                return {};
             expression newVariable;
             if (oldCopy == evaluated)
                 newVariable = std::move(evaluated);
@@ -84,33 +95,21 @@ bool Unapply(expression&& pattern,
                 newVariable = make_operation<intersection_with>(std::move(oldCopy), std::move(evaluated));
             DebugPrint(std::string("defining variable ") + pattern.name, newVariable, env, 2);
             if (env.define(pattern.name, equals_to{std::move(newVariable)}))
-                return true;
+                return {true, {}};
             else {
                 DebugPrint("already defined", pattern, env, 2);
-                return false;
+                return {false, pattern.name};
             }
         },
-        // [&env, &match](rec<addition_with>&& pattern) -> bool {
+
+        // something wrong with associativity in parser and this doesn't work as expected
+        // [&env, &match](rec<addition_with>&& pattern) -> unapply_result {
         //     auto wrapped = make_operation<subtraction_with>(std::move(match), std::move(pattern.get().x));
         //     DebugPrint("moved addition", wrapped, env);
         //     return Unapply(std::move(pattern.get().function), std::move(wrapped), env);
         // },
 
-        // this is a bad idea because intersection is moved anyway
-        // [&env, &match](rec<intersection_with>&& pattern) -> bool {
-        //     // auto ret = std::visit(overload{
-        //     //     [&env](rec<abstraction>&& match) {
-
-        //     //     }
-        //     // }, std::move(match));
-
-        //     auto [argument, body] = std::get<rec<abstraction>>(match).get();
-        //     auto bodyCopy = body;
-        //     return Unapply(std::move(pattern.get().x), std::move(body), env) 
-        //         && Unapply(std::move(argument), std::move(bodyCopy), env);
-        // },
-
-        [&env, &match](rec<application>&& pattern) -> bool {
+        [&env, &match](rec<application>&& pattern) -> unapply_result {
             // isn't it a mix of two concepts in one? "constrainted definitions" and "curried function definitions"
             // or this conditional is enough to distinct between them?
             DebugPrint("unapplying application", pattern.get(), env);
@@ -124,9 +123,9 @@ bool Unapply(expression&& pattern,
                 return Unapply(std::move(pattern.get().function), std::move(wrapped), env);
             }
         },
-        [&env](auto&& e) -> bool { 
+        [&env](auto&& e) -> unapply_result { 
             DebugPrint("couldn't unapply", e, env);
-            return false; 
+            return {}; 
         }
     }, std::move(pattern));
     env.decreaseDebugIndentation();

@@ -11,9 +11,9 @@ expression Eval(expression&& e,
         [&env](rec<application>&& e) {
             // auto envCopy = env;
             auto function = Eval(std::move(e.get().function), env);
-            // auto argument = Eval(std::move(e.get().argument), env);
+            auto argument = Eval(std::move(e.get().argument), env);
             // auto function = std::move(e.get().function);
-            auto argument = std::move(e.get().argument);
+            // auto argument = std::move(e.get().argument);
             return Apply(std::move(function), std::move(argument), env);
         },
         [&env](rec<then>&& e) {
