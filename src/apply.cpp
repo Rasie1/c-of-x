@@ -120,15 +120,18 @@ expression Apply(expression&& function,
             return Apply(Negate(std::move(e.get().f), env), std::move(argument), env); 
         },
         [&env, &argument](rec<intersection_with>&& function) -> expression {
-            // todo: isn't it evaluated already?
             auto l = Eval(std::move(function.get().x), env);
             auto r = Eval(std::move(argument), env);
+            
             return Intersect(std::move(l), std::move(r), env);
         },
         [&env, &argument](rec<union_with>&& function) -> expression {
-            // todo: isn't it evaluated already?
             auto l = Eval(std::move(function.get().x), env);
             auto r = Eval(std::move(argument), env);
+
+            // DebugPrint("union l", l, env);
+            // DebugPrint("union r", r, env);
+
             return Union(std::move(l), std::move(r));
         },
         [&argument](identifier&& f) -> expression { return application{std::move(f), std::move(argument)}; },

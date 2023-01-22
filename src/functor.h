@@ -21,9 +21,13 @@ struct map_union_l {
                     std::move(lUnion.get().x), std::move(r), env);
                 auto rCalculated = operation(
                     std::move(rUnion), std::move(rCopy), env);
-                return make_operation<union_with>(std::move(lCalculated), std::move(rCalculated));
+                return Union(std::move(lCalculated), std::move(rCalculated));
             },
-            [](auto&& e) -> expression { return error{std::string("calculation/union error (left): ") + Show(e)};; }
+            [&lApplication](auto&& e) -> expression { 
+                return application{e, std::move(lApplication.get().argument)};
+                // return error{std::string("calculation/union error (left): ") + Show(e)};
+            }
+            // [](auto&& e) -> expression { return error{std::string("calculation/union error (left): ") + Show(e)};; }
         }, std::move(lApplication.get().function));
     }
 };
@@ -38,7 +42,7 @@ struct map_union_r {
                 auto lCopy = l;
                 auto lCalculated = operation_for_datatype{lUnion.get().x}(std::move(l));
                 auto rCalculated = operation_for_datatype{rUnion}(std::move(lCopy));
-                return make_operation<union_with>(std::move(lCalculated), std::move(rCalculated));
+                return Union(std::move(lCalculated), std::move(rCalculated));
             },
             [](auto&& e) -> expression { return error{std::string("calculation/union error (right): ") + Show(e)};; }
         }, std::move(rApplication.get().function));

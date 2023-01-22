@@ -9,6 +9,10 @@
         "expr": "a = 2; b = a; c = b; c = 2"
     },
     {
+        "name": "Variable propagation test 2",
+        "expr": "x = 1; y = x + 10; y"
+    },
+    {
         "name": "Inequality",
         "expr": "2 != 3"
     },
@@ -93,6 +97,16 @@
         "result": "2"
     },
     {
+        "name": "Union and intersection 4",
+        "expr": "x = (1 | 2); x & 1",
+        "result": "1"
+    },
+    {
+        "name": "Union and intersection 5",
+        "expr": "x = (1 | 2); 1 & x",
+        "result": "1"
+    },
+    {
         "name": "Non-determinism with functions",
         "expr": "f x = (g y = 20 + y; g x); f (1|3)",
         "result": "(21 | 23)"
@@ -110,6 +124,11 @@
     {
         "name": "Inequality 2",
         "expr": "x = 2; x != 3",
+        "result": "2"
+    },
+    {
+        "name": "Inequality 3",
+        "expr": "x = 2; 3 != x",
         "result": "2"
     }
 ]

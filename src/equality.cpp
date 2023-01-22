@@ -10,8 +10,8 @@ struct equals_with_negated {
     inline auto operator()(rec<negated>&& e) -> expression { 
         DebugPrint("eq with negated", e.get().f, env);
         auto falseEnv = env;
-        auto [evaluatedl, lvar] = FixWithVariable(std::move(r), falseEnv);
-        auto [evaluatedr, rvar] = FixWithVariable(std::move(std::move(e.get().f)), falseEnv);
+        auto [evaluatedl, lvar] = FixWithVariable(std::move(std::move(e.get().f)), falseEnv);
+        auto [evaluatedr, rvar] = FixWithVariable(std::move(r), falseEnv);
         auto eq = IsEqual(std::move(evaluatedl), std::move(evaluatedr), falseEnv);
         return std::visit(overload{
             [&lvar, &rvar](nothing&&) -> expression { 
@@ -22,7 +22,8 @@ struct equals_with_negated {
                 else
                     return any{}; 
             },
-            [](identifier&& e) -> expression { return negated{std::move(e)}; },
+            // [](identifier&& e) -> expression { return negated{std::move(e)}; },
+            [](identifier&& e) -> expression { return e; },
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(eq));
     }
@@ -43,7 +44,7 @@ expression IsEqual(expression&& l,
         //     auto unionWithL = Equals(std::move(e.x), std::move(r);
         //     auto unionWithR = Equals(std::move(e.x), std::move(r);
         // },
-        equals_with_negated{r, env},
+        // equals_with_negated{r, env},
         [](auto&&) -> expression { return nothing{}; }
     }, std::move(l));
 }
@@ -61,9 +62,12 @@ expression Equals(expression&& l,
         return r;
     expression lCopy = l;
     expression rCopy = r;
-    auto isUnapplySuccessful = Unapply(std::move(l), std::move(r), env);
-    if (isUnapplySuccessful)
+    auto [isUnapplySuccessful, id] = Unapply(std::move(l), std::move(r), env);
+    if (isUnapplySuccessful) {
+        if (!id.empty())
+            return identifier{id};
         return rCopy;
+    }
 
     auto ret = IsEqual(std::move(lCopy), std::move(rCopy), env);
 

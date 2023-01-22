@@ -46,17 +46,48 @@ std::optional<expression> Inverse(expression& e) {
     }, e);
 }
 
-struct is_equal_with_negated {
+
+// struct is_equal_with_negated {
+//     expression& r;
+//     environment& env;
+//     inline auto operator()(rec<negated>&& e) -> unapply_result { 
+//         DebugPrint("is equal with negated", e.get().f, env);
+//         auto falseEnv = env;
+//         auto eq = IsEqual(std::move(r), std::move(e.get().f), falseEnv);
+//         DebugPrint("is equal result", eq, env);
+//         return std::visit(overload{
+//             [](nothing&&) -> unapply_result { return {true, {}}; },
+//             [](identifier&&) -> unapply_result { return {true, {}}; },
+//             [](auto&&) -> unapply_result { return {}; }
+//         }, std::move(eq));
+//     }
+// };
+
+struct equals_with_negated {
     expression& r;
     environment& env;
     inline auto operator()(rec<negated>&& e) -> unapply_result { 
         DebugPrint("is equal with negated", e.get().f, env);
         auto falseEnv = env;
-        auto eq = IsEqual(std::move(r), std::move(e.get().f), falseEnv);
-        DebugPrint("is equal result", eq, env);
+        auto [evaluatedl, lvar] = FixWithVariable(std::move(e.get().f), falseEnv);
+        auto [evaluatedr, rvar] = FixWithVariable(std::move(r), falseEnv);
+        DebugPrint(std::string("unapply ne, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
+        DebugPrint(std::string("unapply ne, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
+        auto eq = IsEqual(std::move(evaluatedl), std::move(evaluatedr), falseEnv);
+        DebugPrint("unapply ne, is equal", eq, env);
         return std::visit(overload{
-            [](nothing&&) -> unapply_result { return {true, {}}; },
-            [](identifier&&) -> unapply_result { return {true, {}}; },
+            [&lvar, &rvar](nothing&&) -> unapply_result { 
+                if (lvar)
+                    return {true, {*lvar}};
+                else if (rvar)
+                    return {true, {*rvar}};
+                else
+                    return {true, {}};
+            },
+            // map union
+            // map intersection
+            // [](identifier&& e) -> unapply_result { return negated{std::move(e)}; },
+            [](identifier&& e) -> unapply_result { return {false, {e.name}}; },
             [](auto&&) -> unapply_result { return {}; }
         }, std::move(eq));
     }
@@ -79,7 +110,7 @@ unapply_result Unapply(expression&& pattern,
         unapply_for_datatype<int>{match, env},
         unapply_for_datatype<std::string>{match, env},
         [](any&&) -> unapply_result { return {true, {}}; },
-        is_equal_with_negated{match, env},
+        equals_with_negated{match, env},
         [&env, &match](identifier&& pattern) -> unapply_result {
             auto newEnv = env;
             auto oldEvaluated = Eval(std::move(match), newEnv);

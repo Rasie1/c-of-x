@@ -129,9 +129,10 @@ expression Fix(expression&& expr, environment& env) {
 std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env) {
     std::vector<std::string> seen;
     std::optional<std::string> variable;
+    auto fixed = Fix(std::move(expr), env, seen);
     if (!seen.empty())
         variable = seen.back();
-    return {Fix(std::move(expr), env, seen), variable};
+    return {std::move(fixed), variable};
 }
 
 expression Negate(expression&& f, environment& env) {
@@ -164,6 +165,8 @@ std::optional<std::string> ExtendEnvironment(
     }
     return std::nullopt;
 }
+
+// the bug is that if lhs is an application, it won't do anything if there is a variable
 
 expression Intersect(expression&& l,
                      expression&& r,
