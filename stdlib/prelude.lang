@@ -1,3 +1,0 @@
-plus a b = a + b
-i x = x
-succ x = x + 1
