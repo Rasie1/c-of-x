@@ -89,6 +89,12 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::intersection{};
         else if (node.string() == "%")
             return cx::multiplication{};
+    } else if (node.type == std::string("cx::parser::curly_brace_expr")) {
+        if (node.children.empty())
+            return cx::nothing{};
+        else
+            return cx::equals_to{build(*node.children.front())};
+            // return cx::set{node.children.front()};
     } else if (node.type == std::string("cx::parser::operation_apply") || 
                node.type == std::string("cx::parser::definition") ||
                node.type == std::string("cx::parser::bracket_expr") ||

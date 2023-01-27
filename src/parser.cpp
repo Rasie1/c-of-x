@@ -29,6 +29,7 @@ using graphviz_selector = tao::pegtl::parse_tree::selector<
         definition,
         identifier,
         bracket_expr,
+        curly_brace_expr,
         numeral, digits, literal_string,
 
         operation_apply
@@ -45,6 +46,7 @@ using selector = tao::pegtl::parse_tree::selector<
         definition,
         identifier,
         bracket_expr,
+        curly_brace_expr,
         numeral, digits, literal_string,
 
         operation_apply,

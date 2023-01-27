@@ -121,6 +121,7 @@ struct sep : tao::pegtl::ascii::blank {};
 struct seps : tao::pegtl::star<sep> {};
 
 struct bracket_expr : tao::pegtl::if_must<tao::pegtl::one<'('>, seps, expression, seps, tao::pegtl::one<')'>> {};
+struct curly_brace_expr : tao::pegtl::if_must<tao::pegtl::one<'{'>, seps, expression, seps, tao::pegtl::one<'}'>> {};
 
 template<char O, char... N>
 struct op_one : tao::pegtl::seq<tao::pegtl::one<O>, tao::pegtl::at<tao::pegtl::not_one<N...>>> {};
@@ -136,7 +137,8 @@ struct unary_operators : tao::pegtl::sor<tao::pegtl::one<'-'>,
 struct expr_10;
 struct expr_0;
 
-struct expr_14 : tao::pegtl::sor<bracket_expr, identifier> {};
+struct expr_15 : tao::pegtl::sor<bracket_expr, identifier> {};
+struct expr_14 : tao::pegtl::sor<curly_brace_expr, expr_15> {};
 struct expr_13 : tao::pegtl::sor<
     // key_true, key_false,
     // tao::pegtl::ellipsis,

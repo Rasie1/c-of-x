@@ -51,11 +51,14 @@ std::string Show(expression&& e) {
             return Show(std::move(e.get().argument)) + " -> "
                  + Show(std::move(e.get().body)); 
         },
+        // [](rec<set>&& e) {
+        //     return std::string("{") + Show(std::move(e.get().x)) + std::string("}"); 
+        // },
         [](rec<intersection_with>&& e) {
             return Show(std::move(e.get().x)) + std::string(" &"); 
         },
         [](rec<equals_to>&& e) {
-            return Show(std::move(e.get().x)) + std::string(" ="); 
+            return std::string("{") + Show(std::move(e.get().x)) + std::string("}"); 
         },
         [](rec<negated>&& e) {
             return std::string("!(") + Show(std::move(e.get().f)) + ")"; 

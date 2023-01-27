@@ -12,7 +12,10 @@ struct equals_with_negated {
         auto falseEnv = env;
         auto [evaluatedl, lvar] = FixWithVariable(std::move(std::move(e.get().f)), falseEnv);
         auto [evaluatedr, rvar] = FixWithVariable(std::move(r), falseEnv);
+        DebugPrint(std::string("eq with negated, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
+        DebugPrint(std::string("eq with negated, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
         auto eq = IsEqual(std::move(evaluatedl), std::move(evaluatedr), falseEnv);
+        DebugPrint("eq with negated, is equal", eq, env);
         return std::visit(overload{
             [&lvar, &rvar](nothing&&) -> expression { 
                 if (lvar)
@@ -22,13 +25,11 @@ struct equals_with_negated {
                 else
                     return any{}; 
             },
-            // [](identifier&& e) -> expression { return negated{std::move(e)}; },
             [](identifier&& e) -> expression { return e; },
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(eq));
     }
 };
-
 
 expression IsEqual(expression&& l,
                    expression&& r,
@@ -39,12 +40,8 @@ expression IsEqual(expression&& l,
         equals_for_datatype<int>{r},
         equals_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
-        [&r](rec<application>&& e) -> expression { return make_operation<equals_to>(std::move(e), std::move(r)); },
-        // [&r](rec<union_with>&& e) -> expression { should just work via unapply
-        //     auto unionWithL = Equals(std::move(e.x), std::move(r);
-        //     auto unionWithR = Equals(std::move(e.x), std::move(r);
-        // },
-        // equals_with_negated{r, env},
+        map_union_l{r, env, IsEqual},
+        equals_with_negated{r, env},
         [](auto&&) -> expression { return nothing{}; }
     }, std::move(l));
 }

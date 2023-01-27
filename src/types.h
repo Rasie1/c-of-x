@@ -25,6 +25,7 @@ struct subtraction_with;
 struct multiplication_with;
 struct implication_with;
 struct abstraction;
+struct set;
 
 struct unit { bool operator==(unit const&) const = default; };
 struct any { bool operator==(any const&) const = default; };
@@ -87,6 +88,7 @@ using expression = std::variant<
     rec<multiplication_with>,
     rec<subtraction_with>,
     rec<implication_with>,
+    rec<set>,
 
     int,
     std::string,
@@ -153,6 +155,11 @@ struct abstraction {
     expression argument;
     expression body;
     bool operator==(abstraction const&) const = default;
+};
+
+struct set {
+    std::vector<expression> x;
+    bool operator==(set const&) const = default;
 };
 
 struct equals_to {

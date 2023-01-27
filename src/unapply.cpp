@@ -30,20 +30,39 @@ struct unapply_for_datatype {
     }
 };
 
-std::optional<expression> Inverse(expression& e) {
+std::optional<expression> Inverse(expression&& e) {
     // can't fix because we still need variables
     return std::visit(overload{
         // the case with strings is a bit different, but if I express subtraction
         // correctly, there can be the same code for both integers addition and
         // strings matching
-        [](rec<addition_with>& f) -> std::optional<expression> { 
+        [](rec<addition_with>&& f) -> std::optional<expression> { 
             return subtraction_with{std::move(f.get().x)}; 
             // return abstraction{
                 
             // };
         },
-        [](auto&) -> std::optional<expression> { return std::nullopt; }
-    }, e);
+        [](rec<application>&& app) -> std::optional<expression> {
+            return std::visit(overload{
+                [&app](rec<union_with>&& lUnion) -> std::optional<expression> {
+                    auto leftInverse = Inverse(std::move(lUnion.get()));
+                    // if (!leftInverse)
+                    //     return std::nullopt;
+                    auto rightInverse = Inverse(std::move(app.get().argument));
+                    // if (!rightInverse)
+                    //     return std::nullopt;
+                    if (leftInverse && rightInverse)
+                        return application{union_with{*leftInverse}, *rightInverse};
+                    else if (leftInverse)
+                        return leftInverse;
+                    else
+                        return rightInverse;
+                },
+                [](auto&&) -> std::optional<expression> { return std::nullopt; }
+            }, std::move(app.get().function));
+        },
+        [](auto&&) -> std::optional<expression> { return std::nullopt; }
+    }, std::move(e));
 }
 
 
@@ -62,6 +81,30 @@ std::optional<expression> Inverse(expression& e) {
 //         }, std::move(eq));
 //     }
 // };
+
+
+struct map_unapply_union_l {
+    expression& r;
+    environment& env;
+    auto operator()(rec<application>&& lApplication) -> unapply_result {
+        auto& rUnion = lApplication.get().argument;
+        return std::visit(overload{
+            [this, &rUnion](rec<union_with>&& lUnion) -> unapply_result {
+                auto rCopy = r;
+                auto lCalculated = Unapply(
+                    std::move(lUnion.get().x), std::move(r), env);
+                auto rCalculated = Unapply(
+                    std::move(rUnion), std::move(rCopy), env);
+                return {lCalculated.success || rCalculated.success, 
+                        lCalculated.conflictingVariable.empty() ? rCalculated.conflictingVariable : lCalculated.conflictingVariable 
+                };
+            },
+            [](auto&&) -> unapply_result { 
+                return {};
+            }
+        }, std::move(lApplication.get().function));
+    }
+};
 
 struct equals_with_negated {
     expression& r;
@@ -84,7 +127,7 @@ struct equals_with_negated {
                 else
                     return {true, {}};
             },
-            // map union
+            map_unapply_union_l{r, env},
             // map intersection
             // [](identifier&& e) -> unapply_result { return negated{std::move(e)}; },
             [](identifier&& e) -> unapply_result { return {false, {e.name}}; },
@@ -97,13 +140,6 @@ unapply_result Unapply(expression&& pattern,
                        expression&& match, 
                        environment& env) {
     DebugPrint("unapply1", pattern, env);
-    // env.increaseDebugIndentation();
-    // auto [fixed, variable] = FixWithVariable(std::move(pattern), env);
-    // if (variable)
-    //     pattern = identifier{*variable};
-    // else
-    //     pattern = std::move(fixed);
-    // env.decreaseDebugIndentation();
     DebugPrint("unapply2", match, env);
     env.increaseDebugIndentation();
     auto ret = std::visit(overload{
@@ -116,7 +152,6 @@ unapply_result Unapply(expression&& pattern,
             auto oldEvaluated = Eval(std::move(match), newEnv);
             auto oldCopy = oldEvaluated;
             auto evaluated = Fix(std::move(oldEvaluated), newEnv); // danger
-            // bind variable too
             if (IsError(evaluated))
                 return {};
             expression newVariable;
@@ -144,7 +179,8 @@ unapply_result Unapply(expression&& pattern,
             // isn't it a mix of two concepts in one? "constrainted definitions" and "curried function definitions"
             // or this conditional is enough to distinct between them?
             DebugPrint("unapplying application", pattern.get(), env);
-            if (auto inversed = Inverse(pattern.get().function)) {
+            auto functionCopy = pattern.get().function;
+            if (auto inversed = Inverse(std::move(functionCopy))) {
                 auto wrapped = application{std::move(*inversed), match};
                 DebugPrint("got inverse", wrapped, env);
                 return Unapply(std::move(pattern.get().argument), std::move(wrapped), env);
