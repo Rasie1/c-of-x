@@ -89,15 +89,10 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::intersection{};
         else if (node.string() == "%")
             return cx::multiplication{};
-    } else if (node.type == std::string("cx::parser::curly_brace_expr")) {
-        if (node.children.empty())
-            return cx::nothing{};
-        else
-            return cx::equals_to{build(*node.children.front())};
-            // return cx::set{node.children.front()};
     } else if (node.type == std::string("cx::parser::operation_apply") || 
                node.type == std::string("cx::parser::definition") ||
                node.type == std::string("cx::parser::bracket_expr") ||
+               node.type == std::string("cx::parser::curly_brace_expr") ||
                node.type.starts_with("tao::pegtl::star_must<cx::parser::")) {
         std::vector<const tao::pegtl::parse_tree::node*> relevantChildren;
         for (const auto& child: node.children) {
@@ -186,8 +181,11 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
                     ret = build(child);
                 }
             }
-            if (ret)
+            if (ret) {
+                if (node.type == std::string("cx::parser::curly_brace_expr"))
+                    return cx::equals_to{build(*node.children.front())};
                 return *ret;
+            }
         }
     }
     

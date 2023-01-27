@@ -130,5 +130,50 @@
         "name": "Inequality 3",
         "expr": "x = 2; 3 != x",
         "result": "2"
+    },
+    {
+        "name": "Inequality and union",
+        "expr": "x = 2; (3|4) != x",
+        "result": "2"
+    },
+    {
+        "name": "Inequality and union 2",
+        "expr": "x = 2; x != (3|4)",
+        "result": "2"
+    },
+    {
+        "name": "Union and intersection 6",
+        "expr": "(3|4) & (4|5)",
+        "result": "4"
+    },
+    {
+        "name": "Set",
+        "expr": "3: {3}",
+        "result": "3"
+    },
+    {
+        "name": "Set 2",
+        "expr": "3: {3} & {3}",
+        "result": "3"
+    },
+    {
+        "name": "Set 3",
+        "expr": "3: {3} & {3|4}",
+        "result": "3"
+    },
+    {
+        "name": "Set 4",
+        "expr": "3: {3|5} & {3}",
+        "result": "3"
+    },
+    {
+        "name": "Set 5",
+        "expr": "3: {3|5} & {3|1|2}",
+        "result": "3"
+    },
+    {
+        "name": "Set 6",
+        "expr": "{3|5|2} & {2|3}",
+        "result": "{(2 | 3)}"
     }
 ]
