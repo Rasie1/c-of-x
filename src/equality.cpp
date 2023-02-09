@@ -36,7 +36,7 @@ expression IsEqual(expression&& l,
                    environment& env) {
     DebugPrint("is equal 1", l, env);
     DebugPrint("is equal 2", r, env);
-    return std::visit(overload{
+    auto result = std::visit(overload{
         equals_for_datatype<int>{r},
         equals_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
@@ -44,6 +44,9 @@ expression IsEqual(expression&& l,
         equals_with_negated{r, env},
         [](auto&&) -> expression { return nothing{}; }
     }, std::move(l));
+    DebugPrint("is equal result", result, env);
+
+    return result;
 }
 
 expression Equals(expression&& l,

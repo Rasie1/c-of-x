@@ -174,8 +174,14 @@ expression Intersect(expression&& l,
     DebugPrint("intersect1", l, env);
     DebugPrint("intersect2", r, env);
     if (l == r)
-        return r; // TODO: is that really needed?
-    return std::visit(overload{
+        return r;
+
+    // todo: perhaps it's an extra eval here, but it seems to work with it
+    l = Eval(std::move(l), env);
+    r = Eval(std::move(r), env);
+    if (l == r)
+        return r;
+    auto result = std::visit(overload{
         intersect_for_datatype<int>{r},
         intersect_for_datatype<std::string>{r},
         [&r, &env](rec<equals_to>&& l) -> expression {
@@ -202,6 +208,8 @@ expression Intersect(expression&& l,
         [](nothing&& e) -> expression { return e; },
         [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
     }, std::move(l));
+    DebugPrint("intersect result", result, env);
+    return result;
 }
 
 expression Union(expression&& l, expression&& r) {

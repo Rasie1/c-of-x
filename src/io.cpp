@@ -8,13 +8,14 @@ namespace cx {
 
 std::string Show(expression&& e) {
     return std::visit(overload{
+        [](basic_type<int>&&) -> std::string { return "Int"; },
         [](int&& x)  { return std::to_string(x); },
+        [](basic_type<std::string>&&) -> std::string { return "String"; },
         [](std::string&& x)  {
             std::stringstream s;
             s << '\"' << escaped{x.c_str()} << '\"';
             return s.str();
         },
-        // [](identifier&& e) { return std::string("id(") + e.name + ")"; },
         [](identifier&& e) { return e.name; },
         [](rec<application>&& e) {
             return std::string("(")
@@ -78,21 +79,12 @@ std::string Show(expression&& e) {
         [](rec<implication_with>&& e) {
             return Show(std::move(e.get().x)) + std::string(";"); 
         },
-        [](addition&&) -> std::string {
-            return "+"; 
-        },
-        [](equality&&) -> std::string {
-            return "="; 
-        },
-        [](multiplication&&) -> std::string {
-            return "*"; 
-        },
-        [](implication&&) -> std::string {
-            return ";"; 
-        },
-        [](union_&&) -> std::string {
-            return "|"; 
-        },
+        [](addition&&) -> std::string { return "+"; },
+        [](equality&&) -> std::string { return "="; },
+        [](multiplication&&) -> std::string { return "*"; },
+        [](implication&&) -> std::string { return ";"; },
+        [](union_&&) -> std::string { return "|"; },
+        [](nothing&&) -> std::string { return "void"; },
         [](error&& e) { return std::string("error(\"") + e.message + "\")"; },
         [](auto&& e)  { return boost::core::demangle(typeid(decltype(e)).name()); }
     }, std::move(e));

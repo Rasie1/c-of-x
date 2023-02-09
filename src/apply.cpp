@@ -56,6 +56,20 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     }
 }
 
+template<typename datatype>
+struct check_datatype {
+    environment& env;
+    expression& argument;
+    expression operator()(basic_type<datatype>&&) {
+        auto evaluated = Eval(std::move(argument), env);
+        return std::visit(overload{
+            [](datatype&& r) -> expression { return r; }, // todo: union
+            [](identifier&& v) -> expression { return v; }, 
+            [](auto&&) -> expression { return nothing{}; }
+        }, std::move(evaluated)); 
+    }
+};
+
 expression Apply(expression&& function, 
                  expression&& argument, 
                  environment& env) {
@@ -99,6 +113,8 @@ expression Apply(expression&& function,
         [&env, &argument](rec<multiplication_with>&& function) -> expression {
             return Calculate<multiplication_for_datatype, multiplication_with>(std::move(function.get().x), std::move(argument), env);
         },
+        check_datatype<int>{env, argument},
+        check_datatype<std::string>{env, argument},
         [&env, &argument](implication&&) -> expression { return implication_with{Eval(std::move(argument), env)}; },
         [&env, &argument](rec<implication_with>&& function) -> expression {
             return Eval(then{std::move(function.get().x), std::move(argument)}, env);

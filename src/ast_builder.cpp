@@ -73,6 +73,8 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             return cx::print{};
         else if (node.string() == "setTraceEnabled")
             return cx::set_trace_enabled{};
+        else if (node.string() == "Int")
+            return cx::basic_type<int>{};
         else
             return cx::identifier{node.string()};
     } else if (node.type == "cx::parser::operators_7") {
@@ -97,15 +99,9 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
         std::vector<const tao::pegtl::parse_tree::node*> relevantChildren;
         for (const auto& child: node.children) {
             if (child->has_content())
-            if (child->string() != "")
+            if (!child->string().empty())
                 relevantChildren.push_back(child.get());
         }
-        // if (relevantChildren.size() == 2) {
-        //     return cx::application{
-        //         std::move(build(*relevantChildren[0])),
-        //         std::move(build(*relevantChildren[1]))
-        //     };
-        // } else 
         if (relevantChildren.size() > 1) {
             std::optional<cx::expression> ret;
             std::optional<cx::expression> currentOperator;
@@ -183,7 +179,7 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             }
             if (ret) {
                 if (node.type == std::string("cx::parser::curly_brace_expr"))
-                    return cx::equals_to{build(*node.children.front())};
+                    return cx::equals_to{*ret};
                 return *ret;
             }
         }
@@ -203,8 +199,11 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
         }
     }
 
-    if (ret)
+    if (ret) {
+        if (node.type == std::string("cx::parser::curly_brace_expr"))
+            return cx::equals_to{*ret};
         return *ret;
+    }
 
     throw std::runtime_error(std::string("empty leaf (") + node.type.data() + ")");
     return unit{};

@@ -28,11 +28,34 @@ struct unapply_for_datatype {
             [](auto&&) -> unapply_result { return {}; }
         }, std::move(match)); 
     }
+
+    unapply_result operator()(basic_type<datatype>&& pattern) {
+        DebugPrint("typechecking", pattern, env);
+        DebugPrint("typechecking value", match, env);
+        return std::visit(overload{
+            [&pattern, this](rec<abstraction>&& e) -> unapply_result { 
+                auto a = e.get();
+                auto bodyCopy = a.body;
+                auto applied = Apply(std::move(pattern), std::move(a.body), env);
+                DebugPrint("typechecking apply result", applied, env);
+                if (applied == bodyCopy)
+                    return Unapply(std::move(a.argument), std::move(applied), env);
+                else 
+                    return {};
+                // std::string variable;
+                // if (auto id = std::get_if<identifier>(&a.argument))
+                //     variable = id->name;
+                // return {applied == bodyCopy, variable};
+            },
+            [](auto&&) -> unapply_result { return {}; }
+        }, std::move(match)); 
+    }
 };
 
-std::optional<expression> Inverse(expression&& e) {
-    // can't fix because we still need variables
-    return std::visit(overload{
+std::optional<expression> Inverse(expression&& e, environment& env) {
+    DebugPrint("inverting", e, env);
+    env.increaseDebugIndentation();
+    auto result = std::visit(overload{
         // the case with strings is a bit different, but if I express subtraction
         // correctly, there can be the same code for both integers addition and
         // strings matching
@@ -42,13 +65,14 @@ std::optional<expression> Inverse(expression&& e) {
                 
             // };
         },
-        [](rec<application>&& app) -> std::optional<expression> {
+        [&env](rec<application>&& app) -> std::optional<expression> {
+            DebugPrint("inverting application", app.get(), env);
             return std::visit(overload{
-                [&app](rec<union_with>&& lUnion) -> std::optional<expression> {
-                    auto leftInverse = Inverse(std::move(lUnion.get()));
+                [&app, &env](rec<union_with>&& lUnion) -> std::optional<expression> {
+                    auto leftInverse = Inverse(std::move(lUnion.get()), env);
                     // if (!leftInverse)
                     //     return std::nullopt;
-                    auto rightInverse = Inverse(std::move(app.get().argument));
+                    auto rightInverse = Inverse(std::move(app.get().argument), env);
                     // if (!rightInverse)
                     //     return std::nullopt;
                     if (leftInverse && rightInverse)
@@ -61,8 +85,15 @@ std::optional<expression> Inverse(expression&& e) {
                 [](auto&&) -> std::optional<expression> { return std::nullopt; }
             }, std::move(app.get().function));
         },
+        [](int&& x) -> std::optional<expression> { return x; },
+        [](std::string&& x) -> std::optional<expression> { return x; },
+        // [](rec<union_with>&& x) -> std::optional<expression> { return x; },
         [](auto&&) -> std::optional<expression> { return std::nullopt; }
     }, std::move(e));
+    if (result)
+        DebugPrint("inverse result", *result, env);
+    env.decreaseDebugIndentation();
+    return result;
 }
 
 
@@ -178,9 +209,9 @@ unapply_result Unapply(expression&& pattern,
         [&env, &match](rec<application>&& pattern) -> unapply_result {
             // isn't it a mix of two concepts in one? "constrainted definitions" and "curried function definitions"
             // or this conditional is enough to distinct between them?
-            DebugPrint("unapplying application", pattern.get(), env);
+            // also, destructuring should go here as well... just remove part if it's the same as in match?
             auto functionCopy = pattern.get().function;
-            if (auto inversed = Inverse(std::move(functionCopy))) {
+            if (auto inversed = Inverse(std::move(functionCopy), env)) {
                 auto wrapped = application{std::move(*inversed), match};
                 DebugPrint("got inverse", wrapped, env);
                 return Unapply(std::move(pattern.get().argument), std::move(wrapped), env);
