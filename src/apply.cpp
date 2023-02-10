@@ -65,7 +65,7 @@ struct check_datatype {
         return std::visit(overload{
             [](datatype&& r) -> expression { return r; }, // todo: union
             [](identifier&& v) -> expression { return v; }, 
-            [](auto&&) -> expression { return nothing{}; }
+            [](auto&&) -> expression { return error{"type error"}; }
         }, std::move(evaluated)); 
     }
 };

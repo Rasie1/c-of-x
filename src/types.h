@@ -204,6 +204,10 @@ struct environment {
         variables.push_back({key, std::move(value)});
         return true;
     }
+
+    // inline bool remove(const std::string& key) {
+    // }
+
     bool operator==(environment const&) const = default;
 
     // debug-only

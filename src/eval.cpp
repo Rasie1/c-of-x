@@ -3,6 +3,74 @@
 
 namespace cx {
 
+template<class f>
+void traverse(expression& e, f&& function) {
+    std::visit(overload{function, [](auto&){}}, e);
+    
+    return std::visit(overload{
+        [&function](rec<intersection_with>& e) {
+            traverse(e.get().x, function);
+        },
+        [&function](rec<union_with>& e) {
+            traverse(e.get().x, function);
+        },
+        // [&function](rec<tuple>& e) {
+        // },
+        [&function](rec<equals_to>& e) {
+            traverse(e.get().x, function);
+        },
+        [&function](rec<closure>& e) {
+            traverse(e.get().argument, function);
+            traverse(e.get().body, function);
+        },
+        [&function](rec<addition_with>& e) {
+            traverse(e.get().x, function);
+        },
+        [&function](rec<multiplication_with>& e) {
+            traverse(e.get().x, function);
+        },
+        [&function](rec<subtraction_with>& e) {
+            traverse(e.get().x, function);
+        },
+        [&function](rec<implication_with>& e) {
+            traverse(e.get().x, function);
+        },
+        // [&function](rec<set>& e) {
+
+        // },
+
+        [&function](rec<application>& e) {
+            traverse(e.get().function, function);
+            traverse(e.get().argument, function);
+        },
+        [&function](rec<then>& e) {
+            traverse(e.get().from, function);
+            traverse(e.get().to, function);
+        },
+        [&function](rec<negated>& e) { 
+            traverse(e.get().f, function);
+        },
+        [&function](rec<abstraction>& e) {
+            traverse(e.get().argument, function);
+            traverse(e.get().body, function);
+        },
+        [](auto&){}
+    }, e);
+}
+
+void shadowVariables(expression& e) {
+    traverse(e, [](identifier& id){
+        id.name += '\'';
+    });
+}
+
+void shadowVariable(expression& e, const std::string& name) {
+    traverse(e, [&name](identifier& id){
+        if (name == id.name)
+            id.name += '\'';
+    });
+}
+
 expression Eval(expression&& e, 
                 environment& env) {
     DebugPrint("eval", e, env);
@@ -31,10 +99,30 @@ expression Eval(expression&& e,
         },
         [&env](rec<abstraction>&& e) -> expression {
             DebugPrint("-- Constructing closure", 0, env, 2);
-            for (auto& [k, v]: env.variables) {
+            for (auto& [k, v]: env.variables) 
                 DebugPrint(k, v, env);
+
+            auto newEnv = env;
+
+            // shadowVariables(e.get().argument);
+            // shadowVariables(e.get().body);
+
+            auto pattern = Eval(std::move(e.get().argument), newEnv);
+
+            // todo: shadowing 
+            if (auto id = std::get_if<identifier>(&pattern)) {
+                for (auto& [variable, value]: newEnv.variables) {
+                    if (variable == id->name) {
+                        // shadowVariable(value, variable);
+                        shadowVariable(pattern, variable);
+                        shadowVariable(e.get().body, variable);
+                        // variable += '\'';
+                        break;
+                    }
+                }
             }
-            return closure{std::move(e.get().argument), std::move(e.get().body), env}; 
+
+            return closure{pattern, std::move(e.get().body), newEnv}; 
         },
         [](auto&& e) -> expression { return e; }
     }, std::move(e));

@@ -84,6 +84,7 @@ std::string Show(expression&& e) {
         [](multiplication&&) -> std::string { return "*"; },
         [](implication&&) -> std::string { return ";"; },
         [](union_&&) -> std::string { return "|"; },
+        [](any&&) -> std::string { return "any"; },
         [](nothing&&) -> std::string { return "void"; },
         [](error&& e) { return std::string("error(\"") + e.message + "\")"; },
         [](auto&& e)  { return boost::core::demangle(typeid(decltype(e)).name()); }

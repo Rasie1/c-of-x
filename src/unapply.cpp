@@ -42,10 +42,17 @@ struct unapply_for_datatype {
                     return Unapply(std::move(a.argument), std::move(applied), env);
                 else 
                     return {};
-                // std::string variable;
-                // if (auto id = std::get_if<identifier>(&a.argument))
-                //     variable = id->name;
-                // return {applied == bodyCopy, variable};
+            },
+            [&pattern, this](rec<closure>&& e) -> unapply_result { 
+                auto a = e.get();
+                auto bodyCopy = a.body;
+                // TODO: something could wrong with env. Should they be merged?
+                auto applied = Apply(std::move(pattern), std::move(a.body), env);
+                DebugPrint("typechecking apply result", applied, env);
+                if (applied == bodyCopy)
+                    return Unapply(std::move(a.argument), std::move(applied), env);
+                else 
+                    return {};
             },
             [](auto&&) -> unapply_result { return {}; }
         }, std::move(match)); 
@@ -191,11 +198,21 @@ unapply_result Unapply(expression&& pattern,
             else
                 newVariable = make_operation<intersection_with>(std::move(oldCopy), std::move(evaluated));
             DebugPrint(std::string("defining variable ") + pattern.name, newVariable, env, 2);
+            auto newVariableCopy = newVariable;
             if (env.define(pattern.name, equals_to{std::move(newVariable)}))
                 return {true, {}};
             else {
                 DebugPrint("already defined", pattern, env, 2);
-                return {false, pattern.name};
+
+                auto fromEnv = *env.get(pattern.name); // todo: incorrect, there is extra set
+                auto value = Apply(std::move(fromEnv), any{}, env);
+                auto unapplied = Unapply(std::move(value), std::move(newVariableCopy), env);
+
+                // if (unapplied.conflictingVariable.empty())
+                //     unapplied.conflictingVariable = pattern.name;
+                unapplied.conflictingVariable = pattern.name;
+
+                return unapplied;
             }
         },
 

@@ -42,7 +42,13 @@ expression IsEqual(expression&& l,
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         map_union_l{r, env, IsEqual},
         equals_with_negated{r, env},
-        [](auto&&) -> expression { return nothing{}; }
+        [&r](any&&) -> expression { return r; },
+        [&r](auto&& a) -> expression { 
+            if (std::get_if<any>(&r))
+                return a;
+
+            return nothing{}; 
+        }
     }, std::move(l));
     DebugPrint("is equal result", result, env);
 

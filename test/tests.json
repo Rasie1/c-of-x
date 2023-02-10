@@ -127,6 +127,16 @@
         "result": "2"
     },
     {
+        "name": "any",
+        "expr": "{2} any",
+        "result": "2"
+    },
+    {
+        "name": "any 2",
+        "expr": "x = 2; f x = x + 3; f any",
+        "result": "error(\"can't do arithmetic with any\")"
+    },
+    {
         "name": "Inequality 3",
         "expr": "x = 2; 3 != x",
         "result": "2"
@@ -207,6 +217,26 @@
         "result": "{(3 | 2)}"
     },
     {
+        "name": "Int",
+        "expr": "Int 3",
+        "result": "3"
+    },
+    {
+        "name": "String type error",
+        "expr": "String 3",
+        "result": "error(\"type error\")"
+    },
+    {
+        "name": "Int variable",
+        "expr": "Int x; x = 3",
+        "result": "3"
+    },
+    {
+        "name": "String type error 2",
+        "expr": "String x; x = 3",
+        "result": "error(\"type error\")"
+    },
+    {
         "name": "Int lambda",
         "expr": "((x: Int) -> x + 1) 2",
         "result": "3"
@@ -219,6 +249,11 @@
     {
         "name": "Int function",
         "expr": "f (x: Int) = x + 1; f 2",
+        "result": "3"
+    },
+    {
+        "name": "Type alias",
+        "expr": "integer = Int; f (x: integer) = x + 1; f 2",
         "result": "3"
     }
 ]

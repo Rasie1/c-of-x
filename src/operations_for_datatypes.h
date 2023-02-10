@@ -25,6 +25,7 @@ struct equals_for_datatype {
         return std::visit(overload{
             [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
             [&l](identifier&& v) -> expression { return make_operation<equals_to>(l, std::move(v)); },
+            [&l](any&&) -> expression { return l; },
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(r)); 
     }
@@ -37,6 +38,7 @@ struct calculation_for_datatype {
         return std::visit(overload{
             [&l](datatype&& r) -> expression { return calculation::calculate(std::move(l), std::move(r)); },
             [&l](identifier&& r) -> expression { return make_operation<calculation_function>(l, std::move(r)); },
+            // [](any&& v) -> expression { return v; },
             map_union_r<calculation, datatype>{l},
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(r)); 
