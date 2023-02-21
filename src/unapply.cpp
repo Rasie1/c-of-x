@@ -204,13 +204,18 @@ unapply_result Unapply(expression&& pattern,
             else {
                 DebugPrint("already defined", pattern, env, 2);
 
-                auto fromEnv = *env.get(pattern.name); // todo: incorrect, there is extra set
-                auto value = Apply(std::move(fromEnv), any{}, env);
+                auto fromEnv = *env.get(pattern.name);
+                // todo: use variable instead of any? it's getting lost
+                // probably no. But we just unpacked it! anyway, it's not getting sent out
+                // auto value = Apply(std::move(fromEnv), any{}, env);
+                auto value = Apply(std::move(fromEnv), identifier{pattern.name}, env);
                 auto unapplied = Unapply(std::move(value), std::move(newVariableCopy), env);
 
                 // if (unapplied.conflictingVariable.empty())
                 //     unapplied.conflictingVariable = pattern.name;
                 unapplied.conflictingVariable = pattern.name;
+
+                DebugPrint("Unapplied variable", unapplied.conflictingVariable, env);
 
                 return unapplied;
             }

@@ -232,6 +232,26 @@
         "result": "3"
     },
     {
+        "name": "Int variable intersection",
+        "expr": "Int x & 3",
+        "result": "3"
+    },
+    {
+        "name": "Int variable intersection 2",
+        "expr": "3 & Int x",
+        "result": "3"
+    },
+    {
+        "name": "String variable intersection",
+        "expr": "String x & 3",
+        "result": "error(\"type error\")"
+    },
+    {
+        "name": "String variable intersection 2",
+        "expr": "3 & String x",
+        "result": "error(\"type error\")"
+    },
+    {
         "name": "String type error 2",
         "expr": "String x; x = 3",
         "result": "error(\"type error\")"

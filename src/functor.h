@@ -4,9 +4,6 @@
 
 namespace cx {
 
-template <typename F>
-expression struct_map(equals_to&& e) { return equals_to{F{std::move(e.x)}}; }
-
 template<typename operation_function>
 struct map_union_l {
     expression& r;
@@ -50,9 +47,12 @@ struct map_union_r {
 template <typename container, typename F>
 struct unmapped {
     environment& env;
-    expression operator()(rec<container>&& e) { 
-        return Eval(struct_map<F>(std::move(e.get())), env); 
+    expression operator()(rec<container>&& e) {
+        auto wrapped = wrap(std::move(e.get()));
+        return Eval(std::move(wrapped), env);
     }
+private:
+    expression wrap(equals_to&& e) { return equals_to{F{std::move(e.x)}}; }
 };
 
 }

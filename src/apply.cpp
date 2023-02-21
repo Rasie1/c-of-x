@@ -30,30 +30,36 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     // else
     //     pattern = std::move(function.argument);
 
-    // a bug is here. It unapplies it and a variable is already defined
-    // could be fixed by searching for this specific variable or by transfering info instead of bool
     auto [unapplied, conflictingVariable] = Unapply(std::move(pattern), std::move(argumentValue), function.env);
 
-    if (unapplied) {
-        auto combinedEnv = env;
-        for (auto& v: function.env.variables) {
-            combinedEnv.variables.push_back(std::move(v));
-        }
-        return Fix(std::move(function.body), combinedEnv);
-    } else if (!conflictingVariable.empty()) {
-        auto combinedEnv = env;
-        for (auto& v: function.env.variables) {
-            if (v.first == conflictingVariable)
-                continue;
-            combinedEnv.variables.push_back(std::move(v));
-        }
-        return Fix(std::move(function.body), combinedEnv);
-    } else {
-        // use after move? then why does it work?
-        return error{std::string("can't apply ") 
-                + Show(std::move(argumentValue)) + " to closure with signature "
-                + Show(std::move(pattern))};
-    }
+    auto combinedEnv = env;
+    for (auto& v: function.env.variables)
+        combinedEnv.variables.push_back(std::move(v));
+        
+    return Fix(std::move(function.body), combinedEnv);
+
+    // todo: now conflicting variables and so on seem to be not needed because they're shadiw
+
+    // if (unapplied) {
+    //     auto combinedEnv = env;
+    //     for (auto& v: function.env.variables) {
+    //         combinedEnv.variables.push_back(std::move(v));
+    //     }
+    //     return Fix(std::move(function.body), combinedEnv);
+    // } else if (!conflictingVariable.empty()) {
+    //     auto combinedEnv = env;
+    //     for (auto& v: function.env.variables) {
+    //         if (v.first == conflictingVariable) // todo: seems unnecesary
+    //             continue;
+    //         combinedEnv.variables.push_back(std::move(v));
+    //     }
+    //     return Fix(std::move(function.body), combinedEnv);
+    // } else {
+    //     // use after move? then why does it work?
+    //     return error{std::string("can't apply ") 
+    //             + Show(std::move(argumentValue)) + " to closure with signature "
+    //             + Show(std::move(pattern))};
+    // }
 }
 
 template<typename datatype>
@@ -63,8 +69,14 @@ struct check_datatype {
     expression operator()(basic_type<datatype>&&) {
         auto evaluated = Eval(std::move(argument), env);
         return std::visit(overload{
-            [](datatype&& r) -> expression { return r; }, // todo: union
-            [](identifier&& v) -> expression { return v; }, 
+            // todo: union
+            [](datatype&& r) -> expression { return r; },
+            [](any&&) -> expression { return application{basic_type<datatype>{}, any{}}; },
+            [](nothing&& v) -> expression { return v; },
+            [this](identifier&& v) -> expression { 
+                ExtendEnvironment(basic_type<datatype>{}, v, env);
+                return v; 
+            }, 
             [](auto&&) -> expression { return error{"type error"}; }
         }, std::move(evaluated)); 
     }

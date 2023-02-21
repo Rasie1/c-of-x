@@ -14,8 +14,6 @@ void traverse(expression& e, f&& function) {
         [&function](rec<union_with>& e) {
             traverse(e.get().x, function);
         },
-        // [&function](rec<tuple>& e) {
-        // },
         [&function](rec<equals_to>& e) {
             traverse(e.get().x, function);
         },
@@ -35,10 +33,6 @@ void traverse(expression& e, f&& function) {
         [&function](rec<implication_with>& e) {
             traverse(e.get().x, function);
         },
-        // [&function](rec<set>& e) {
-
-        // },
-
         [&function](rec<application>& e) {
             traverse(e.get().function, function);
             traverse(e.get().argument, function);
@@ -80,9 +74,13 @@ expression Eval(expression&& e,
             // auto envCopy = env;
             auto function = Eval(std::move(e.get().function), env);
             auto argument = Eval(std::move(e.get().argument), env);
-            // auto function = std::move(e.get().function);
-            // auto argument = std::move(e.get().argument);
-            return Apply(std::move(function), std::move(argument), env);
+
+            auto applied = Apply(std::move(function), std::move(argument), env);
+
+            // if (std::get_if
+            // ExtendEnvironment(function, applied, env);
+
+            return applied;
         },
         [&env](rec<then>&& e) {
             auto from = Eval(std::move(e.get().from), env);
@@ -104,19 +102,13 @@ expression Eval(expression&& e,
 
             auto newEnv = env;
 
-            // shadowVariables(e.get().argument);
-            // shadowVariables(e.get().body);
-
             auto pattern = Eval(std::move(e.get().argument), newEnv);
 
-            // todo: shadowing 
             if (auto id = std::get_if<identifier>(&pattern)) {
                 for (auto& [variable, value]: newEnv.variables) {
                     if (variable == id->name) {
-                        // shadowVariable(value, variable);
                         shadowVariable(pattern, variable);
                         shadowVariable(e.get().body, variable);
-                        // variable += '\'';
                         break;
                     }
                 }
