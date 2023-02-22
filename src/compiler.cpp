@@ -32,30 +32,30 @@ std::string Compile(expression&& e) {
     //         if (auto expr = env.get(e.name)) {
     //             auto copy = *expr;
     //             DebugPrint("fixing in id, got from env", *expr, env);
-    //             return GetElement(Fix(std::move(copy), env, seen));
+    //             return GetElement(SubstituteVariables(std::move(copy), env, seen));
     //         }
     //         return error{std::string("undefined variable \"") + e.name + "\""};
     //     },
     //     [&env, &seen](rec<equals_to>&& function) -> expression {
-    //         function.get().x = Fix(std::move(function.get().x), env, seen);
+    //         function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
     //         return function;
     //     },
     //     [&env, &seen](rec<negated>&& function) -> expression {
-    //         function.get().f = Fix(std::move(function.get().f), env, seen);
+    //         function.get().f = SubstituteVariables(std::move(function.get().f), env, seen);
     //         return function;
     //     },
     //     [&env, &seen](rec<intersection_with>&& function) -> expression {
-    //         function.get().x = Fix(std::move(function.get().x), env, seen);
+    //         function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
     //         return function;
     //     },
     //     [&env, &seen](rec<application>&& e) -> expression {
-    //         e.get().function = Fix(std::move(e.get().function), env, seen);
-    //         e.get().argument = Fix(std::move(e.get().argument), env, seen);
+    //         e.get().function = SubstituteVariables(std::move(e.get().function), env, seen);
+    //         e.get().argument = SubstituteVariables(std::move(e.get().argument), env, seen);
     //         return e;
     //     },
     //     [&env, &seen](rec<then>&& e) -> expression {
-    //         e.get().from = Fix(std::move(e.get().from), env, seen);
-    //         e.get().to = Fix(std::move(e.get().to), env, seen);
+    //         e.get().from = SubstituteVariables(std::move(e.get().from), env, seen);
+    //         e.get().to = SubstituteVariables(std::move(e.get().to), env, seen);
     //         return e;
     //     },
     //     [](auto&& e) -> expression { return e; }

@@ -113,7 +113,7 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
         std::cout << Show(std::move(result)) << std::endl << std::endl;
     }
 
-    result = Fix(std::move(copy), env);
+    result = SubstituteVariables(std::move(copy), env);
 
     if (verbosity)
         std::cout << "Fixed:" << std::endl;

@@ -4,12 +4,14 @@
 
 namespace cx {
 
+
 template<typename operation_function>
 struct map_union_l {
     expression& r;
     environment& env;
     operation_function& operation;
     auto operator()(rec<application>&& lApplication) -> expression {
+        DebugPrint("map_union_l, r", r, env);
         auto& rUnion = lApplication.get().argument;
         return std::visit(overload{
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
@@ -29,6 +31,7 @@ template<typename operation_for_datatype, typename datatype>
 struct map_union_r {
     datatype& l;
     auto operator()(rec<application>&& rApplication) -> expression { 
+        // DebugPrint("map_union_r, l", l, env);
         auto& rUnion = rApplication.get().argument;
         return std::visit(overload{
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {

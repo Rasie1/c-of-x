@@ -232,6 +232,11 @@
         "result": "3"
     },
     {
+        "name": "Int variable 2",
+        "expr": "x = 3; Int x",
+        "result": "3"
+    },
+    {
         "name": "Int variable intersection",
         "expr": "Int x & 3",
         "result": "3"

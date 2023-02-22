@@ -189,7 +189,7 @@ unapply_result Unapply(expression&& pattern,
             auto newEnv = env;
             auto oldEvaluated = Eval(std::move(match), newEnv);
             auto oldCopy = oldEvaluated;
-            auto evaluated = Fix(std::move(oldEvaluated), newEnv); // danger
+            auto evaluated = SubstituteVariables(std::move(oldEvaluated), newEnv); // danger
             if (IsError(evaluated))
                 return {};
             expression newVariable;

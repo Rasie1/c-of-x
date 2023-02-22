@@ -36,7 +36,7 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     for (auto& v: function.env.variables)
         combinedEnv.variables.push_back(std::move(v));
         
-    return Fix(std::move(function.body), combinedEnv);
+    return SubstituteVariables(std::move(function.body), combinedEnv);
 
     // todo: now conflicting variables and so on seem to be not needed because they're shadiw
 
@@ -45,7 +45,7 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     //     for (auto& v: function.env.variables) {
     //         combinedEnv.variables.push_back(std::move(v));
     //     }
-    //     return Fix(std::move(function.body), combinedEnv);
+    //     return SubstituteVariables(std::move(function.body), combinedEnv);
     // } else if (!conflictingVariable.empty()) {
     //     auto combinedEnv = env;
     //     for (auto& v: function.env.variables) {
@@ -53,7 +53,7 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     //             continue;
     //         combinedEnv.variables.push_back(std::move(v));
     //     }
-    //     return Fix(std::move(function.body), combinedEnv);
+    //     return SubstituteVariables(std::move(function.body), combinedEnv);
     // } else {
     //     // use after move? then why does it work?
     //     return error{std::string("can't apply ") 
@@ -140,7 +140,7 @@ expression Apply(expression&& function,
             // todo: isn't it evaluated already?
         [&env, &argument](intersection&&) -> expression { return intersection_with{Eval(std::move(argument), env)}; },
         [&env, &argument](union_&&) -> expression { return union_with{Eval(std::move(argument), env)}; },
-        [&env, &argument](show&&) -> expression { return Show(Fix(std::move(argument), env)); },
+        [&env, &argument](show&&) -> expression { return Show(SubstituteVariables(std::move(argument), env)); },
         [&env, &argument](print&&) -> expression { return Print(std::move(argument), env); },
         [&env, &argument](set_trace_enabled&&) -> expression { return SetTraceEnabled(std::move(argument), env); },
         [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(std::move(e.get().x), std::move(argument), env); },

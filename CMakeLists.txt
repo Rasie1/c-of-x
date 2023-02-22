@@ -31,5 +31,5 @@ if (MSVC)
         /W4 /WX
     )
 else ()
-    target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror -g -O0 -std=c++20)
+    target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror -g -O0 -std=c++23)
 endif ()

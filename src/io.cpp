@@ -118,7 +118,7 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
 }
 
 expression Print(expression&& e, environment& env) {
-    auto evaluated = Fix(std::move(e), env);
+    auto evaluated = SubstituteVariables(std::move(e), env);
     if (auto s = std::get_if<std::string>(&evaluated)) {
         std::cout << *s;
         return unit{};
@@ -128,7 +128,7 @@ expression Print(expression&& e, environment& env) {
 }
 
 expression SetTraceEnabled(expression&& e, environment& env) {
-    auto evaluated = Fix(std::move(e), env);
+    auto evaluated = SubstituteVariables(std::move(e), env);
     if (auto s = std::get_if<int>(&evaluated)) {
         env.isTraceEnabled = static_cast<bool>(s);
     } else {

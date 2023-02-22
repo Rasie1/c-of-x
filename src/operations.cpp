@@ -2,6 +2,7 @@
 #include "robin_hood.h"
 #include "functor.h"
 #include "operations_for_datatypes.h"
+#include "unapply.h"
 
 namespace cx {
 
@@ -52,7 +53,7 @@ expression GetElement(expression&& set) {
 
 // TODO: there seems to be no point in "seen"
 
-inline expression Fix(expression&& expr, environment& env, std::vector<std::string>& seen) {
+inline expression SubstituteVariables(expression&& expr, environment& env, std::vector<std::string>& seen) {
     // TODO: possibly this should be BFS
     DebugPrint("fix - evaluating", expr, env);
     env.increaseDebugIndentation();
@@ -69,46 +70,46 @@ inline expression Fix(expression&& expr, environment& env, std::vector<std::stri
             if (auto expr = env.get(e.name)) {
                 auto copy = *expr;
                 DebugPrint("fixing in id, got from env", *expr, env);
-                return GetElement(Fix(std::move(copy), env, seen));
+                return GetElement(SubstituteVariables(std::move(copy), env, seen));
             }
             return error{std::string("undefined variable \"") + e.name + "\""};
         },
         [&env, &seen](rec<equals_to>&& function) -> expression {
-            function.get().x = Fix(std::move(function.get().x), env, seen);
+            function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
             return function;
         },
         [&env, &seen](rec<negated>&& function) -> expression {
-            function.get().f = Fix(std::move(function.get().f), env, seen);
+            function.get().f = SubstituteVariables(std::move(function.get().f), env, seen);
             return function;
         },
         [&env, &seen](rec<intersection_with>&& function) -> expression {
-            function.get().x = Fix(std::move(function.get().x), env, seen);
+            function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
             return function;
         },
         [&env, &seen](rec<union_with>&& function) -> expression {
-            function.get().x = Fix(std::move(function.get().x), env, seen);
+            function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
             return function;
         },
         [&env, &seen](rec<addition_with>&& function) -> expression {
-            function.get().x = Fix(std::move(function.get().x), env, seen);
+            function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
             return function;
         },
         [&env, &seen](rec<subtraction_with>&& function) -> expression {
-            function.get().x = Fix(std::move(function.get().x), env, seen);
+            function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
             return function;
         },
         [&env, &seen](rec<multiplication_with>&& function) -> expression {
-            function.get().x = Fix(std::move(function.get().x), env, seen);
+            function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
             return function;
         },
         [&env, &seen](rec<application>&& e) -> expression {
-            e.get().function = Fix(std::move(e.get().function), env, seen);
-            e.get().argument = Fix(std::move(e.get().argument), env, seen);
+            e.get().function = SubstituteVariables(std::move(e.get().function), env, seen);
+            e.get().argument = SubstituteVariables(std::move(e.get().argument), env, seen);
             return e;
         },
         [&env, &seen](rec<then>&& e) -> expression {
-            e.get().from = Fix(std::move(e.get().from), env, seen);
-            e.get().to = Fix(std::move(e.get().to), env, seen);
+            e.get().from = SubstituteVariables(std::move(e.get().from), env, seen);
+            e.get().to = SubstituteVariables(std::move(e.get().to), env, seen);
             return e;
         },
         [](auto&& e) -> expression { return e; }
@@ -121,15 +122,15 @@ inline expression Fix(expression&& expr, environment& env, std::vector<std::stri
     return ret;
 }
 
-expression Fix(expression&& expr, environment& env) {
+expression SubstituteVariables(expression&& expr, environment& env) {
     std::vector<std::string> seen;
-    return Fix(std::move(expr), env, seen);
+    return SubstituteVariables(std::move(expr), env, seen);
 }
 
 std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env) {
     std::vector<std::string> seen;
     std::optional<std::string> variable;
-    auto fixed = Fix(std::move(expr), env, seen);
+    auto fixed = SubstituteVariables(std::move(expr), env, seen);
     if (!seen.empty())
         variable = seen.back();
     return {std::move(fixed), variable};
@@ -168,6 +169,11 @@ std::optional<std::string> ExtendEnvironment(
 
 // the bug is that if lhs is an application, it won't do anything if there is a variable
 
+auto copy(auto& x) {
+    auto xCopy = x;
+    return xCopy;
+}
+
 expression Intersect(expression&& l,
                      expression&& r,
                      environment& env) {
@@ -181,6 +187,18 @@ expression Intersect(expression&& l,
     r = Eval(std::move(r), env);
     if (l == r)
         return r;
+    {
+        auto rCopy = r;
+        auto lCopy = l;
+        if (Unapply(std::move(lCopy), std::move(rCopy), env))
+            return r;
+    }
+    {
+        auto rCopy = r;
+        auto lCopy = l;
+        if (Unapply(std::move(rCopy), std::move(lCopy), env))
+            return l;
+    }
     auto result = std::visit(overload{
         intersect_for_datatype<int>{r},
         intersect_for_datatype<std::string>{r},
@@ -202,7 +220,13 @@ expression Intersect(expression&& l,
                 [](auto&&) -> expression { return nothing{}; }
             }, std::move(r)); 
         },
-        map_union_l{r, env, Intersect},
+        [&r, &env](rec<application>&& lApplication) -> expression {
+            auto rCopy = r;
+            // auto unapplied = Unapply(std::move(lApplication.get()), std::move(r), env);
+            // if (unapplied)
+            //     return rCopy;
+            return map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
+        },
         [&r](any&&) -> expression { return r; },
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         [](nothing&& e) -> expression { return e; },
