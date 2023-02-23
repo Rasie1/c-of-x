@@ -249,17 +249,17 @@
     {
         "name": "String variable intersection",
         "expr": "String x & 3",
-        "result": "error(\"type error\")"
+        "result": "void"
     },
     {
         "name": "String variable intersection 2",
         "expr": "3 & String x",
-        "result": "error(\"type error\")"
+        "result": "void"
     },
     {
         "name": "String type error 2",
         "expr": "String x; x = 3",
-        "result": "error(\"type error\")"
+        "result": "void"
     },
     {
         "name": "Int lambda",
@@ -279,6 +279,16 @@
     {
         "name": "Type alias",
         "expr": "integer = Int; f (x: integer) = x + 1; f 2",
+        "result": "3"
+    },
+    {
+        "name": "Intersection doesn't change environment",
+        "expr": "x = 3; x & 2; x",
+        "result": "3"
+    },
+    {
+        "name": "Intersection doesn't change environment 2",
+        "expr": "x = 3; 2 & x; x",
         "result": "3"
     }
 ]

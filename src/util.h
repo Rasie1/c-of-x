@@ -113,4 +113,18 @@ struct escaped {
     }
 };
 
+#ifndef defer
+struct defer_dummy {};
+template <class F> struct deferrer { F f; ~deferrer() { f(); } };
+template <class F> deferrer<F> operator*(defer_dummy, F f) { return {f}; }
+#define DEFER_HELPER1(LINE) zz_defer##LINE
+#define DEFER_HELPER2(LINE) DEFER_HELPER1(LINE)
+#define defer auto DEFER_HELPER2(__LINE__) = defer_dummy{} *[&]()
+#endif // defer
+
+auto copy(const auto& x) {
+    auto xCopy = x;
+    return xCopy;
+}
+
 }

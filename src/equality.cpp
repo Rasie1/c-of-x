@@ -39,6 +39,7 @@ expression IsEqual(expression&& l,
     auto result = std::visit(overload{
         equals_for_datatype<int>{r},
         equals_for_datatype<std::string>{r},
+        equals_for_datatype<basic_type<int>>{r},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         map_union_l{r, env, IsEqual},
         equals_with_negated{r, env},
@@ -60,51 +61,25 @@ expression Equals(expression&& l,
                   environment& env) {
     DebugPrint("equality", equality{}, env);
     env.increaseDebugIndentation();
+    defer { env.decreaseDebugIndentation(); };
+
     l = std::move(Eval(std::move(l), env)); 
     r = std::move(Eval(std::move(r), env));
     DebugPrint("eq1", l, env);
     DebugPrint("eq2", r, env);
     if (l == r)
         return r;
-    expression lCopy = l;
-    expression rCopy = r;
-    auto [isUnapplySuccessful, id] = Unapply(std::move(l), std::move(r), env);
+
+    auto [isUnapplySuccessful, id] = Unapply(copy(l), copy(r), env);
     if (isUnapplySuccessful) {
         if (!id.empty())
             return identifier{id};
-        return rCopy;
+        return r;
     }
 
-    auto ret = IsEqual(std::move(lCopy), std::move(rCopy), env);
-
-    env.decreaseDebugIndentation();
+    auto ret = IsEqual(std::move(l), std::move(r), env);
     DebugPrint("equality result", ret, env);
     return ret;
-
-    // probably should also use what's below instead of just returning rCopy or nothing
-
-    // expression lCopy = l;
-    // expression rCopy = r;
-    // if (auto added = ExtendEnvironment(equals_to{std::move(l)}, r, env)) {
-    //     ExtendEnvironment(equals_to{std::move(r)}, lCopy, env);
-    //     return identifier{*added};
-    // } else if (auto added = ExtendEnvironment(equals_to{std::move(r)}, lCopy, env)) {
-    //     return identifier{*added};
-    // }
-    // l = std::move(Eval(std::move(lCopy), env)); 
-    // r = std::move(Eval(std::move(rCopy), env));
-
-    // DebugPrint("eq1", l, env);
-    // DebugPrint("eq2", r, env);
-    // if (l == r)
-    //     return r; // TODO: is that really needed?
-    // return std::visit(overload{
-    //     equals_for_datatype<int>{r},
-    //     equals_for_datatype<std::string>{r},
-    //     [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
-    //     [&r](rec<application>&& e) -> expression { return make_operation<equals_to>(std::move(e), std::move(r)); },
-    //     [](auto&&) -> expression { return nothing{}; }
-    // }, std::move(l));
 }
 
 }

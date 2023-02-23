@@ -15,44 +15,6 @@ expression GetElement(expression&& set) {
     }, std::move(set));
 }
 
-// inline expression Substitute(expression&& expr, environment& env) {
-//     return std::visit(overload{
-//         [&env, &seen](identifier&& e) -> expression {
-//             if (auto expr = env.get(e.name)) {
-//                 auto copy = *expr;
-//                 DebugPrint("fixing in id, got from env", *expr, env);
-//                 return GetElement(Substitute(std::move(copy), env, seen));
-//             }
-//             return error{std::string("undefined variable \"") + e.name + "\""};
-//         },
-//         [&env, &seen](rec<equals_to>&& function) -> expression {
-//             function.get().x = Substitute(std::move(function.get().x), env, seen);
-//             return function;
-//         },
-//         [&env, &seen](rec<negated>&& function) -> expression {
-//             function.get().f = Substitute(std::move(function.get().f), env, seen);
-//             return function;
-//         },
-//         [&env, &seen](rec<intersection_with>&& function) -> expression {
-//             function.get().x = Substitute(std::move(function.get().x), env, seen);
-//             return function;
-//         },
-//         [&env, &seen](rec<application>&& e) -> expression {
-//             e.get().function = Substitute(std::move(e.get().function), env, seen);
-//             e.get().argument = Substitute(std::move(e.get().argument), env, seen);
-//             return e;
-//         },
-//         [&env, &seen](rec<then>&& e) -> expression {
-//             e.get().from = Substitute(std::move(e.get().from), env, seen);
-//             e.get().to = Substitute(std::move(e.get().to), env, seen);
-//             return e;
-//         },
-//         [](auto&& e) -> expression { return e; }
-//     }, std::move(expr));
-// }
-
-// TODO: there seems to be no point in "seen"
-
 inline expression SubstituteVariables(expression&& expr, environment& env, std::vector<std::string>& seen) {
     // TODO: possibly this should be BFS
     DebugPrint("fix - evaluating", expr, env);
@@ -68,9 +30,8 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
             //     return any{}; // ?
             seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
-                auto copy = *expr;
                 DebugPrint("fixing in id, got from env", *expr, env);
-                return GetElement(SubstituteVariables(std::move(copy), env, seen));
+                return GetElement(SubstituteVariables(copy(*expr), env, seen));
             }
             return error{std::string("undefined variable \"") + e.name + "\""};
         },
@@ -167,13 +128,6 @@ std::optional<std::string> ExtendEnvironment(
     return std::nullopt;
 }
 
-// the bug is that if lhs is an application, it won't do anything if there is a variable
-
-auto copy(auto& x) {
-    auto xCopy = x;
-    return xCopy;
-}
-
 expression Intersect(expression&& l,
                      expression&& r,
                      environment& env) {
@@ -188,15 +142,17 @@ expression Intersect(expression&& l,
     if (l == r)
         return r;
     {
-        auto rCopy = r;
-        auto lCopy = l;
-        if (Unapply(std::move(lCopy), std::move(rCopy), env))
+        DebugPrint("intersect unapply l", l, env);
+        env.increaseDebugIndentation();
+        defer { env.decreaseDebugIndentation(); };
+        if (Unapply(copy(l), copy(r), env))
             return r;
     }
     {
-        auto rCopy = r;
-        auto lCopy = l;
-        if (Unapply(std::move(rCopy), std::move(lCopy), env))
+        DebugPrint("intersect unapply r", r, env);
+        env.increaseDebugIndentation();
+        defer { env.decreaseDebugIndentation(); };
+        if (Unapply(copy(r), copy(l), env))
             return l;
     }
     auto result = std::visit(overload{
@@ -208,7 +164,7 @@ expression Intersect(expression&& l,
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
                 [](auto&&) -> expression { return nothing{}; }
-            }, std::move(r)); 
+            }, std::move(r));
         },
         [&r, &env](rec<intersection_with>&& l) -> expression {
             return std::visit(overload{
@@ -218,14 +174,15 @@ expression Intersect(expression&& l,
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
                 [](auto&&) -> expression { return nothing{}; }
-            }, std::move(r)); 
+            }, std::move(r));
         },
         [&r, &env](rec<application>&& lApplication) -> expression {
             auto rCopy = r;
-            // auto unapplied = Unapply(std::move(lApplication.get()), std::move(r), env);
-            // if (unapplied)
-            //     return rCopy;
-            return map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
+            auto lCopy = lApplication.get();
+            auto mapped = map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
+            if (mapped == expression{lCopy})
+                return nothing{};
+            return mapped;
         },
         [&r](any&&) -> expression { return r; },
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },

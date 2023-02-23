@@ -54,6 +54,10 @@ struct unapply_for_datatype {
                 else 
                     return {};
             },
+            [&pattern, this](rec<equals_to>&& e) -> unapply_result { 
+                auto newPattern = application{std::move(pattern), any{}};
+                return Unapply(std::move(newPattern), std::move(e.get().x), env);
+            },
             [](auto&&) -> unapply_result { return {}; }
         }, std::move(match)); 
     }

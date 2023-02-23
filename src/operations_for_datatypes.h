@@ -12,7 +12,14 @@ struct intersect_for_datatype {
             [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
             [&l](any&&) -> expression { return l; },
             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, std::move(v)); },
-            map_union_r<intersect_for_datatype<datatype>, datatype>{l},
+            [&l](rec<application>&& rApplication) -> expression { 
+                auto lCopy = l;
+                auto rCopy = rApplication.get();
+                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{lCopy}(rApplication.get());
+                if (mapped == expression{rCopy})
+                    return nothing{};
+                return mapped;
+            },
             [](auto&&) -> expression { return nothing{}; }
         }, std::move(r)); 
     }
