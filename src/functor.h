@@ -13,7 +13,7 @@ struct map_union_l {
     auto operator()(rec<application>&& lApplication) -> expression {
         DebugPrint("map_union_l, r", r, env);
         auto& rUnion = lApplication.get().argument;
-        return std::visit(overload{
+        return match(std::move(lApplication.get().function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
                 auto rCopy = r;
                 auto lCalculated = operation(std::move(lUnion.get().x), std::move(r),     env);
@@ -23,7 +23,7 @@ struct map_union_l {
             [&lApplication](auto&& e) -> expression { 
                 return application{e, std::move(lApplication.get().argument)};
             }
-        }, std::move(lApplication.get().function));
+        );
     }
 };
 
@@ -33,7 +33,7 @@ struct map_union_r {
     auto operator()(rec<application>&& rApplication) -> expression { 
         // DebugPrint("map_union_r, l", l, env);
         auto& rUnion = rApplication.get().argument;
-        return std::visit(overload{
+        return match(std::move(rApplication.get().function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
                 auto lCopy = l;
                 auto lCalculated = operation_for_datatype{lUnion.get().x}(std::move(l));
@@ -43,7 +43,7 @@ struct map_union_r {
             [&rApplication](auto&& e) -> expression { 
                 return application{e, std::move(rApplication.get().argument)};
             }
-        }, std::move(rApplication.get().function));
+        );
     }
 };
 

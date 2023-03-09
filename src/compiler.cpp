@@ -23,7 +23,7 @@ std::string Compile(expression&& e) {
     // env.decreaseDebugIndentation();
     // DebugPrint("fixing", evaluated, env);
     // env.increaseDebugIndentation();
-    // auto fixed = std::visit(overload{
+    // auto fixed = match(std::move(evaluated),
     //     [&env, &seen](identifier&& e) -> expression {
     //         DebugPrint("fixing in id", e, env);
     //         if (seen.contains(e.name))
@@ -59,7 +59,7 @@ std::string Compile(expression&& e) {
     //         return e;
     //     },
     //     [](auto&& e) -> expression { return e; }
-    // }, std::move(evaluated));
+    // );
     // env.decreaseDebugIndentation();
     // DebugPrint("fix - evaluating at the end", fixed, env);
     // env.increaseDebugIndentation();

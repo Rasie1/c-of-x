@@ -7,12 +7,12 @@
 namespace cx {
 
 expression GetElement(expression&& set) {
-    return std::visit(overload{
+    return match(std::move(set),
         [](rec<equals_to>&& e) { return e.get().x; },
         [](int&& e) -> expression { return error{Show(std::move(e)) + " doesn't contain values"}; },
         [](std::string&& e) -> expression { return error{Show(std::move(e)) + " doesn't contain values"}; },
         [](auto&& e) -> expression { return application{std::move(e), any{}}; }
-    }, std::move(set));
+    );
 }
 
 inline expression SubstituteVariables(expression&& expr, environment& env, std::vector<std::string>& seen) {
@@ -23,7 +23,7 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
     env.decreaseDebugIndentation();
     DebugPrint("fixing", evaluated, env);
     env.increaseDebugIndentation();
-    auto fixed = std::visit(overload{
+    auto fixed = match(std::move(evaluated),
         [&env, &seen](identifier&& e) -> expression {
             DebugPrint("fixing in id", e, env);
             // if (std::find(seen.begin(), seen.end(), e.name) != seen.end())
@@ -74,7 +74,7 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
             return e;
         },
         [](auto&& e) -> expression { return e; }
-    }, std::move(evaluated));
+    );
     env.decreaseDebugIndentation();
     DebugPrint("fix - evaluating at the end", fixed, env);
     env.increaseDebugIndentation();
@@ -99,7 +99,8 @@ std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& e
 
 expression Negate(expression&& f, environment& env) {
     DebugPrint("negating", f, env, 2);
-    return std::visit(overload{
+    auto evaluated = Eval(std::move(f), env);
+    return match(std::move(evaluated),
         // [](int&&) -> expression { return nothing{}; },
         // [](std::string&&) -> expression { return nothing{}; },
         [](any&&) -> expression { return nothing{}; },
@@ -111,7 +112,7 @@ expression Negate(expression&& f, environment& env) {
         // [](auto&& e) -> expression { return make_operation<intersection_with>(any{}, negated{std::move(e)}); }
         [](auto&& e) -> expression { return negated{std::move(e)}; }
         // [](auto&& e) -> expression { return error{"can't negate " + Show(std::move(e))}; }
-    }, Eval(std::move(f), env));
+    );
 }
 
 std::optional<std::string> ExtendEnvironment(
@@ -128,54 +129,55 @@ std::optional<std::string> ExtendEnvironment(
     return std::nullopt;
 }
 
-expression IntersectFind(expression&& l,
-                     expression&& r,
-                     environment& env) {
-    DebugPrint("intersect1", l, env);
-    DebugPrint("intersect2", r, env);
-    if (l == r)
-        return r;
+// expression IntersectFind(expression&& l,
+//                    expression&& r,
+//                    environment& env) {
+    // DebugPrint("intersect find1", l, env);
+    // DebugPrint("intersect find2", r, env);
+    // if (l == r)
+    //     return true;
 
-    auto result = std::visit(overload{
-        intersect_for_datatype<int>{r},
-        intersect_for_datatype<basic_type<int>>{r},
-        intersect_for_datatype<std::string>{r},
-        intersect_for_datatype<basic_type<std::string>>{r},
-        [&r, &env](rec<equals_to>&& l) -> expression {
-            return std::visit(overload{
-                [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
-                [&l](any&&) -> expression { return l; },
-                [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
-                [](auto&&) -> expression { return nothing{}; }
-            }, std::move(r));
-        },
-        [&r, &env](rec<intersection_with>&& l) -> expression {
-            return std::visit(overload{
-                [&l, &env](rec<intersection_with>&& r) -> expression { 
-                    return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; 
-                },
-                [&l](any&&) -> expression { return l; },
-                [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
-                [](auto&&) -> expression { return nothing{}; }
-            }, std::move(r));
-        },
-        [&r, &env](rec<application>&& lApplication) -> expression {
-            auto rCopy = r;
-            auto lCopy = lApplication.get();
-            auto mapped = map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
-            if (mapped == expression{lCopy})
-                return nothing{};
-            return mapped;
-        },
-        [&r](any&&) -> expression { return r; },
-        [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
-        [](nothing&& e) -> expression { return e; },
-        [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
-    }, std::move(l));
-    DebugPrint("intersect find result", result, env);
+    // auto result = match(std::move(l),
+    //     intersect_for_datatype<int>{r},
+    //     intersect_for_datatype<basic_type<int>>{r},
+    //     intersect_for_datatype<std::string>{r},
+    //     intersect_for_datatype<basic_type<std::string>>{r},
+    //     [&r, &env](rec<equals_to>&& l) -> expression {
+    //         return match(std::move(r),
+    //             [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
+    //             [&l](any&&) -> expression { return l; },
+    //             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
+    //             [](auto&&) -> expression { return nothing{}; }
+    //         );
+    //     },
+    //     [&r, &env](rec<intersection_with>&& l) -> expression {
+    //         return match(std::move(r),
+    //             [&l, &env](rec<intersection_with>&& r) -> expression {
+    //                 // return IntersectFind(
+    //                 return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; 
+    //             },
+    //             [&l](any&&) -> expression { return l; },
+    //             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
+    //             [](auto&&) -> expression { return nothing{}; }
+    //         );
+    //     },
+    //     [&r, &env](rec<application>&& lApplication) -> expression {
+    //         auto rCopy = r;
+    //         auto lCopy = lApplication.get();
+    //         auto mapped = map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
+    //         if (mapped == expression{lCopy})
+    //             return nothing{};
+    //         return mapped;
+    //     },
+    //     [&r](any&&) -> expression { return r; },
+    //     [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
+    //     [](nothing&& e) -> expression { return e; },
+    //     [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
+    // );
+    // DebugPrint("intersect find result", result, env);
 
-    return result;
-}
+    // return result;
+// }
 
 expression Intersect(expression&& l,
                      expression&& r,
@@ -204,28 +206,28 @@ expression Intersect(expression&& l,
         if (Unapply(copy(r), copy(l), env))
             return l;
     }
-    auto result = std::visit(overload{
+    auto result = match(std::move(l),
         intersect_for_datatype<int>{r},
         intersect_for_datatype<basic_type<int>>{r},
         intersect_for_datatype<std::string>{r},
         intersect_for_datatype<basic_type<std::string>>{r},
         [&r, &env](rec<equals_to>&& l) -> expression {
-            return std::visit(overload{
+            return match(std::move(r),
                 [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
                 [](auto&&) -> expression { return nothing{}; }
-            }, std::move(r));
+            );
         },
         [&r, &env](rec<intersection_with>&& l) -> expression {
-            return std::visit(overload{
+            return match(std::move(r),
                 [&l, &env](rec<intersection_with>&& r) -> expression { 
                     return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; 
                 },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
                 [](auto&&) -> expression { return nothing{}; }
-            }, std::move(r));
+            );
         },
         [&r, &env](rec<application>&& lApplication) -> expression {
             auto rCopy = r;
@@ -239,24 +241,24 @@ expression Intersect(expression&& l,
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         [](nothing&& e) -> expression { return e; },
         [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
-    }, std::move(l));
+    );
     DebugPrint("intersect result", result, env);
     
     return result;
 }
 
 expression Union(expression&& l, expression&& r) {
-    return std::visit(overload{
+    return match(std::move(l),
         [&r](nothing&&) -> expression { return r; },
         [](any&& e) -> expression { return e; },
         [&r](auto&& l) -> expression { 
-            return std::visit(overload{
+            return match(std::move(r),
                 [](any&& e) -> expression { return e; },
                 [&l](nothing&&) -> expression { return l; },
                 [&l](auto&& r) -> expression { return make_operation<union_with>(std::move(l), std::move(r)); }
-            }, std::move(r)); 
+            ); 
         }
-    }, std::move(l));
+    );
 }
 
 }

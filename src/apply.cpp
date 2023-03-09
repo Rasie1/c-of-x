@@ -9,13 +9,14 @@ expression Calculate(expression&& l,
                      expression&& r,
                      environment& env) {
     r = Eval(std::move(r), env);
-    return std::visit(overload{
+    l = Eval(std::move(l), env);
+    return match(std::move(l),
         operation_for_datatype<int>{r},
         // operation_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<functor>(std::move(v), std::move(r)); },
         map_union_l{r, env, Calculate<operation_for_datatype, functor>},
         [](auto&& e) -> expression { return error{std::string("can't do arithmetic with ") + Show(e)}; }
-    }, Eval(std::move(l), env));
+    );
 }
 
 inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue) {
@@ -68,7 +69,7 @@ struct check_datatype {
     expression& argument;
     expression operator()(basic_type<datatype>&&) {
         auto evaluated = Eval(std::move(argument), env);
-        return std::visit(overload{
+        return match(std::move(evaluated),
             // todo: union
             [](datatype&& r) -> expression { return r; },
             [](any&&) -> expression { return application{basic_type<datatype>{}, any{}}; },
@@ -78,7 +79,7 @@ struct check_datatype {
                 return v; 
             }, 
             [](auto&&) -> expression { return error{"type error"}; }
-        }, std::move(evaluated)); 
+        ); 
     }
 };
 
@@ -88,9 +89,9 @@ expression Apply(expression&& function,
     DebugPrint("apply function", function, env);
     DebugPrint("apply argument", argument, env);
     env.increaseDebugIndentation();
-    auto ret = std::visit(overload{
+    auto ret = match(std::move(function),
         [&env, &argument](rec<closure>&& function) -> expression {
-            return std::visit(overload{
+            return match(std::move(argument),
                 [&env, &function](identifier&& id) -> expression {
                     auto argumentValue = *env.get(id.name);
                     argumentValue = GetElement(std::move(argumentValue));
@@ -111,7 +112,7 @@ expression Apply(expression&& function,
                 [&env, &function](auto&& argument) -> expression {
                     return ApplyToClosure(env, std::move(function.get()), std::move(argument));
                 }
-            }, std::move(argument));
+            );
         },
         [&env, &argument](addition&&) -> expression { return addition_with{Eval(std::move(argument), env)}; },
         [&env, &argument](rec<addition_with>&& function) -> expression {
@@ -166,7 +167,7 @@ expression Apply(expression&& function,
         [&argument](auto&& e) -> expression {
             return error{"can't apply " + Show(std::move(e)) + " to " + Show(std::move(argument)) };
         }
-    }, std::move(function));
+    );
     env.decreaseDebugIndentation();
     DebugPrint("apply result", ret, env);
     

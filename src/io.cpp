@@ -7,7 +7,7 @@
 namespace cx {
 
 std::string Show(expression&& e) {
-    return std::visit(overload{
+    return match(std::move(e),
         [](basic_type<int>&&) -> std::string { return "Int"; },
         [](int&& x)  { return std::to_string(x); },
         [](basic_type<std::string>&&) -> std::string { return "String"; },
@@ -88,7 +88,7 @@ std::string Show(expression&& e) {
         [](nothing&&) -> std::string { return "void"; },
         [](error&& e) { return std::string("error(\"") + e.message + "\")"; },
         [](auto&& e)  { return boost::core::demangle(typeid(decltype(e)).name()); }
-    }, std::move(e));
+    );
 }
 
 

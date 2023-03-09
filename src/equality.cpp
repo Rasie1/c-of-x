@@ -16,7 +16,7 @@ struct equals_with_negated {
         DebugPrint(std::string("eq with negated, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
         auto eq = IsEqual(std::move(evaluatedl), std::move(evaluatedr), falseEnv);
         DebugPrint("eq with negated, is equal", eq, env);
-        return std::visit(overload{
+        return match(std::move(eq),
             [&lvar, &rvar](nothing&&) -> expression { 
                 if (lvar)
                     return identifier{*lvar};
@@ -27,7 +27,7 @@ struct equals_with_negated {
             },
             [](identifier&& e) -> expression { return e; },
             [](auto&&) -> expression { return nothing{}; }
-        }, std::move(eq));
+        );
     }
 };
 
@@ -36,7 +36,7 @@ expression IsEqual(expression&& l,
                    environment& env) {
     DebugPrint("is equal 1", l, env);
     DebugPrint("is equal 2", r, env);
-    auto result = std::visit(overload{
+    auto result = match(std::move(l),
         equals_for_datatype<int>{r},
         equals_for_datatype<basic_type<int>>{r},
         equals_for_datatype<std::string>{r},
@@ -59,7 +59,7 @@ expression IsEqual(expression&& l,
 
             return nothing{}; 
         }
-    }, std::move(l));
+    );
     DebugPrint("is equal result", result, env);
 
     return result;

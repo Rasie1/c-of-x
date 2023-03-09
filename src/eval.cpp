@@ -5,9 +5,9 @@ namespace cx {
 
 template<class f>
 void traverse(expression& e, f&& function) {
-    std::visit(overload{function, [](auto&){}}, e);
+    match(e, function, [](auto&){});
     
-    return std::visit(overload{
+    return match(e,
         [&function](rec<intersection_with>& e) {
             traverse(e.get().x, function);
         },
@@ -49,7 +49,7 @@ void traverse(expression& e, f&& function) {
             traverse(e.get().body, function);
         },
         [](auto&){}
-    }, e);
+    );
 }
 
 void shadowVariables(expression& e) {
@@ -69,7 +69,7 @@ expression Eval(expression&& e,
                 environment& env) {
     DebugPrint("eval", e, env);
     env.increaseDebugIndentation();
-    auto ret = std::visit(overload{
+    auto ret = match(std::move(e),
         [&env](rec<application>&& e) {
             // auto envCopy = env;
             // auto applicationCopy = e;
@@ -93,11 +93,11 @@ expression Eval(expression&& e,
         [&env](rec<then>&& e) {
             auto from = Eval(std::move(e.get().from), env);
             DebugPrint("then", 0, env, 2);
-            return std::visit(overload{
+            return match(std::move(from),
                 [](error&& x) -> expression { return x;},
                 [](nothing&&) -> expression { return error{}; },
                 [&e, &env](auto&&) -> expression { return Eval(std::move(e.get().to), env); }
-            }, std::move(from));
+            );
         },
         [&env](rec<negated>&& e) -> expression { 
             auto function = Eval(std::move(e.get().f), env);
@@ -125,7 +125,7 @@ expression Eval(expression&& e,
             return closure{pattern, std::move(e.get().body), newEnv}; 
         },
         [](auto&& e) -> expression { return e; }
-    }, std::move(e));
+    );
     env.decreaseDebugIndentation();
     DebugPrint("eval result", ret, env);
     return ret;

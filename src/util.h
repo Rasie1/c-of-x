@@ -16,6 +16,13 @@ class rc {
 
 template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
 
+template <typename Value, typename ...Patterns>
+auto match(Value&& value, Patterns&&... patterns) {
+    return std::visit(overload{
+        std::forward<Patterns>(patterns)...
+    }, std::forward<Value>(value));
+}
+
 inline std::string unescape(const std::string& s) {
     std::string res;
     auto it = s.begin();

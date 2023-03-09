@@ -15,21 +15,21 @@ inline bool isFirstChildOperator(const tao::pegtl::parse_tree::node& child) {
 }
 
 inline int getOperatorPriority(const cx::expression& e) {
-    return std::visit(overload{
+    return match(e,
         [](const cx::addition&) { return 8; },
         [](const cx::subtraction&) { return 8; },
         [](const cx::equality&) { return 1; },
         [](const cx::inequality&) { return 1; },
         [](const cx::multiplication&) { return 9; },
         [](const auto&) { return 99; }
-    }, e);
+    );
 }
 
 inline bool isLeftAssociative(const cx::expression& e) {
-    return std::visit(overload{
+    return match(e,
         [](const cx::subtraction&) { return true; },
         [](const auto&) { return false; }
-    }, e);
+    );
 }
 
 inline bool isHigherPriority(const cx::expression& l, const cx::expression& r) {
