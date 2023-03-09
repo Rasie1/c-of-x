@@ -11,6 +11,7 @@ data = json.load(f)
 for test_config in data:
     if "disabled" in test_config:
         continue
+    print("./main '" + test_config["expr"] + "' -log")
     stream = os.popen('./main \'' + test_config["expr"] + '\'')
     output = stream.read()
     def fail():

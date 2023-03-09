@@ -38,10 +38,19 @@ expression IsEqual(expression&& l,
     DebugPrint("is equal 2", r, env);
     auto result = std::visit(overload{
         equals_for_datatype<int>{r},
-        equals_for_datatype<std::string>{r},
         equals_for_datatype<basic_type<int>>{r},
+        equals_for_datatype<std::string>{r},
+        equals_for_datatype<basic_type<std::string>>{r},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         map_union_l{r, env, IsEqual},
+        // [&r, &env](rec<application>&& lApplication) -> expression {
+        //     auto rCopy = r;
+        //     auto lCopy = lApplication.get();
+        //     auto mapped = map_union_l{rCopy, env, IsEqual}(std::move(lApplication.get()));
+        //     if (mapped == expression{lCopy})
+        //         return nothing{};
+        //     return mapped;
+        // },
         equals_with_negated{r, env},
         [&r](any&&) -> expression { return r; },
         [&r](auto&& a) -> expression { 

@@ -177,6 +177,8 @@ struct negated {
 
 // void DebugPrint(const std::string& msg, expression e, environment& env, int color = 1);
 
+expression IntersectFind(expression&& l, expression&& r, environment& env);
+
 struct environment {
     std::vector<std::pair<std::string, expression>> variables;
 
@@ -190,7 +192,8 @@ struct environment {
     inline bool add(const std::string& key, expression&& value) {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
-                oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
+                // oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
+                oldValue = IntersectFind(std::move(oldValue), std::move(value), *this);
                 return false;
             }
         variables.push_back({key, std::move(value)});

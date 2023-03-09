@@ -128,6 +128,55 @@ std::optional<std::string> ExtendEnvironment(
     return std::nullopt;
 }
 
+expression IntersectFind(expression&& l,
+                     expression&& r,
+                     environment& env) {
+    DebugPrint("intersect1", l, env);
+    DebugPrint("intersect2", r, env);
+    if (l == r)
+        return r;
+
+    auto result = std::visit(overload{
+        intersect_for_datatype<int>{r},
+        intersect_for_datatype<basic_type<int>>{r},
+        intersect_for_datatype<std::string>{r},
+        intersect_for_datatype<basic_type<std::string>>{r},
+        [&r, &env](rec<equals_to>&& l) -> expression {
+            return std::visit(overload{
+                [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
+                [&l](any&&) -> expression { return l; },
+                [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
+                [](auto&&) -> expression { return nothing{}; }
+            }, std::move(r));
+        },
+        [&r, &env](rec<intersection_with>&& l) -> expression {
+            return std::visit(overload{
+                [&l, &env](rec<intersection_with>&& r) -> expression { 
+                    return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; 
+                },
+                [&l](any&&) -> expression { return l; },
+                [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
+                [](auto&&) -> expression { return nothing{}; }
+            }, std::move(r));
+        },
+        [&r, &env](rec<application>&& lApplication) -> expression {
+            auto rCopy = r;
+            auto lCopy = lApplication.get();
+            auto mapped = map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
+            if (mapped == expression{lCopy})
+                return nothing{};
+            return mapped;
+        },
+        [&r](any&&) -> expression { return r; },
+        [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
+        [](nothing&& e) -> expression { return e; },
+        [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
+    }, std::move(l));
+    DebugPrint("intersect find result", result, env);
+
+    return result;
+}
+
 expression Intersect(expression&& l,
                      expression&& r,
                      environment& env) {
@@ -157,7 +206,9 @@ expression Intersect(expression&& l,
     }
     auto result = std::visit(overload{
         intersect_for_datatype<int>{r},
+        intersect_for_datatype<basic_type<int>>{r},
         intersect_for_datatype<std::string>{r},
+        intersect_for_datatype<basic_type<std::string>>{r},
         [&r, &env](rec<equals_to>&& l) -> expression {
             return std::visit(overload{
                 [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
@@ -190,6 +241,7 @@ expression Intersect(expression&& l,
         [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
     }, std::move(l));
     DebugPrint("intersect result", result, env);
+    
     return result;
 }
 

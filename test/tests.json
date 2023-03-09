@@ -278,6 +278,11 @@
     },
     {
         "name": "Type alias",
+        "expr": "integer = Int; integer x = 3",
+        "result": "3"
+    },
+    {
+        "name": "Type alias 2",
         "expr": "integer = Int; f (x: integer) = x + 1; f 2",
         "result": "3"
     },
@@ -289,6 +294,11 @@
     {
         "name": "Intersection doesn't change environment 2",
         "expr": "x = 3; 2 & x; x",
+        "result": "3"
+    },
+    {
+        "name": "Wild intersection",
+        "expr": "(Int & (x -> 3)) 2",
         "result": "3"
     }
 ]

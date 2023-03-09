@@ -33,6 +33,15 @@ struct unapply_for_datatype {
         DebugPrint("typechecking", pattern, env);
         DebugPrint("typechecking value", match, env);
         return std::visit(overload{
+            [&pattern](basic_type<datatype>&& match) -> unapply_result { return {pattern == match, {}}; },
+            [&pattern, this](identifier&& match) -> unapply_result {
+                DebugPrint("type and identifier", pattern, env);
+                auto defined = ExtendEnvironment(equals_to{std::move(match)}, std::move(pattern), env);
+                if (defined)
+                    return {true, {}};
+                else
+                    return {false, match.name};
+            },
             [&pattern, this](rec<abstraction>&& e) -> unapply_result { 
                 auto a = e.get();
                 auto bodyCopy = a.body;
@@ -67,25 +76,15 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
     DebugPrint("inverting", e, env);
     env.increaseDebugIndentation();
     auto result = std::visit(overload{
-        // the case with strings is a bit different, but if I express subtraction
-        // correctly, there can be the same code for both integers addition and
-        // strings matching
         [](rec<addition_with>&& f) -> std::optional<expression> { 
             return subtraction_with{std::move(f.get().x)}; 
-            // return abstraction{
-                
-            // };
         },
         [&env](rec<application>&& app) -> std::optional<expression> {
             DebugPrint("inverting application", app.get(), env);
             return std::visit(overload{
                 [&app, &env](rec<union_with>&& lUnion) -> std::optional<expression> {
                     auto leftInverse = Inverse(std::move(lUnion.get()), env);
-                    // if (!leftInverse)
-                    //     return std::nullopt;
                     auto rightInverse = Inverse(std::move(app.get().argument), env);
-                    // if (!rightInverse)
-                    //     return std::nullopt;
                     if (leftInverse && rightInverse)
                         return application{union_with{*leftInverse}, *rightInverse};
                     else if (leftInverse)
@@ -98,7 +97,6 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
         },
         [](int&& x) -> std::optional<expression> { return x; },
         [](std::string&& x) -> std::optional<expression> { return x; },
-        // [](rec<union_with>&& x) -> std::optional<expression> { return x; },
         [](auto&&) -> std::optional<expression> { return std::nullopt; }
     }, std::move(e));
     if (result)
@@ -186,7 +184,9 @@ unapply_result Unapply(expression&& pattern,
     env.increaseDebugIndentation();
     auto ret = std::visit(overload{
         unapply_for_datatype<int>{match, env},
+        // unapply_for_datatype<basic_type<int>>{match, env},
         unapply_for_datatype<std::string>{match, env},
+        // unapply_for_datatype<basic_type<std::string>>{match, env},
         [](any&&) -> unapply_result { return {true, {}}; },
         equals_with_negated{match, env},
         [&env, &match](identifier&& pattern) -> unapply_result {
@@ -233,9 +233,6 @@ unapply_result Unapply(expression&& pattern,
         // },
 
         [&env, &match](rec<application>&& pattern) -> unapply_result {
-            // isn't it a mix of two concepts in one? "constrainted definitions" and "curried function definitions"
-            // or this conditional is enough to distinct between them?
-            // also, destructuring should go here as well... just remove part if it's the same as in match?
             auto functionCopy = pattern.get().function;
             if (auto inversed = Inverse(std::move(functionCopy), env)) {
                 auto wrapped = application{std::move(*inversed), match};
