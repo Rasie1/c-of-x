@@ -302,6 +302,11 @@
         "result": "3"
     },
     {
+        "name": "Function reuse",
+        "expr": "f = show; show 2; show 3",
+        "result": "\"3\""
+    },
+    {
         "name": "Wild intersection",
         "expr": "(Int & (x -> 3)) 2",
         "result": "3"

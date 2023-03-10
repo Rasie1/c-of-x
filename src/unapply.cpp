@@ -105,7 +105,6 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
     return result;
 }
 
-
 // struct is_equal_with_negated {
 //     expression& r;
 //     environment& env;
@@ -121,7 +120,6 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
 //         );
 //     }
 // };
-
 
 struct map_unapply_union_l {
     expression& r;
@@ -202,9 +200,15 @@ unapply_result Unapply(expression&& pattern,
             else
                 newVariable = make_operation<intersection_with>(std::move(oldCopy), std::move(evaluated));
             DebugPrint(std::string("defining variable ") + pattern.name, newVariable, env, 2);
-            if (env.define(pattern.name, equals_to{copy(newVariable)}))
+            // define only tries to add new data and it works
+            // add also adds checks about all calculations
+            // but these should be divided from predicates and not participate in env get
+            auto isEnvironmentExtended = env.add(pattern.name, equals_to{copy(newVariable)});
+            if (isEnvironmentExtended == environment::extension_result::Added) {
                 return {true, {}};
-            else {
+            } else if (isEnvironmentExtended == environment::extension_result::Void) {
+                return {};
+            } else {
                 DebugPrint("already defined", pattern, env, 2);
 
                 auto fromEnv = *env.get(pattern.name);

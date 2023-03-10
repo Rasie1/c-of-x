@@ -144,7 +144,7 @@ expression Apply(expression&& function,
                     DebugPrint("matched application intersection", lApplication, env);
                     auto l = Apply(std::move(lApplication.get().x), copy(argument), env); // todo: copy envs?
                     auto r = Apply(std::move(e.get().argument), std::move(argument), env);
-                    return make_operation<intersection_with>(std::move(l), std::move(r));
+                    return Intersect(std::move(l), std::move(r), env);
                 },
                 [&](auto&&) -> expression { return application{std::move(e), std::move(argument)}; }
             ); 
@@ -174,6 +174,7 @@ expression Apply(expression&& function,
             return Union(std::move(l), std::move(r));
         },
         [&argument](identifier&& f) -> expression { return application{std::move(f), std::move(argument)}; },
+        [&argument](nothing&& n) -> expression { return n; },
         [&argument](auto&& e) -> expression {
             return error{"can't apply " + Show(std::move(e)) + " to " + Show(std::move(argument)) };
         }

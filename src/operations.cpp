@@ -122,21 +122,38 @@ std::optional<std::string> ExtendEnvironment(
     if (auto id = std::get_if<identifier>(&argument)) {
         DebugPrint("extending", argument, env, 2);
         DebugPrint("new component", function, env, 2);
-        return env.add(id->name, std::move(function))
+        return env.add(id->name, std::move(function)) == environment::extension_result::Added
              ? std::optional<std::string>(id->name)
              : std::nullopt;
     }
     return std::nullopt;
 }
 
-expression IntersectFind(expression&& l,
-                   expression&& r,
-                   environment&) {
-    // DebugPrint("intersect-find", l, env);
-    // if (l == r)
-    //     return l;
-    // DebugPrint("intersect-find-2", r, env);
-    return make_operation<intersection_with>(std::move(l), std::move(r));
+std::optional<expression> IntersectFind(
+    expression&& l,
+    expression&& r,
+    environment& env) {
+    DebugPrint("intersect-find", l, env);
+    if (l == r)
+        return l;
+    DebugPrint("intersect-find-2", r, env);
+    // return make_operation<intersection_with>(std::move(l), std::move(r));
+    auto intersected = Intersect(std::move(l), std::move(r), env);
+    DebugPrint("intersect-find return", intersected, env);
+    return match(std::move(intersected),
+        [](error&&) -> std::optional<expression> { return {}; },
+        [](nothing&&) -> std::optional<expression> { return {}; },
+        [&](rec<equals_to>&& e) -> std::optional<expression> {
+            // todo: make it fully recursive
+            // DebugPrint("intersect-find eq", e, env);
+            return match(std::move(e.get().x),
+                [](error&&) -> std::optional<expression> { return {}; },
+                [](nothing&&) -> std::optional<expression> { return {}; },
+                [](auto&& e) -> std::optional<expression> { return {equals_to{std::move(e)}}; }
+            );
+        },
+        [](auto&& e) -> std::optional<expression> { return { e }; }
+    );
 }
 
 expression Intersect(expression&& l,

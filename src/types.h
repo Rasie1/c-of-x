@@ -2,6 +2,7 @@
 #include <vector>
 #include <utility>
 #include <variant>
+#include <optional>
 #include <boost/variant/recursive_wrapper.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 #include "util.h"
@@ -177,7 +178,7 @@ struct negated {
 
 // void DebugPrint(const std::string& msg, expression e, environment& env, int color = 1);
 
-expression IntersectFind(expression&& l, expression&& r, environment& env);
+std::optional<expression> IntersectFind(expression&& l, expression&& r, environment& env);
 
 struct environment {
     std::vector<std::pair<std::string, expression>> variables;
@@ -188,16 +189,26 @@ struct environment {
                 return &value;
         return nullptr;
     }
+
+    enum class extension_result {
+        NotAdded,
+        Added,
+        Void
+    };
     
-    inline bool add(const std::string& key, expression&& value) {
+    inline extension_result add(const std::string& key, expression&& value) {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
                 // oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
-                oldValue = IntersectFind(std::move(oldValue), std::move(value), *this);
-                return false;
+                if (auto intersected = IntersectFind(copy(oldValue), std::move(value), *this))
+                    oldValue = *intersected;
+                else
+                    return extension_result::Void;
+                    
+                return extension_result::NotAdded;
             }
         variables.push_back({key, std::move(value)});
-        return true;
+        return extension_result::Added;
     }
 
     inline bool define(const std::string& key, expression&& value) {
