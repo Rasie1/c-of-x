@@ -91,6 +91,25 @@ std::string Show(expression&& e) {
     );
 }
 
+expression Read(expression&& e, environment& env) {
+    if (!env.isExecuting)
+        return application{read{}, e};
+
+    return match(std::move(e),
+        [](basic_type<int>&&) -> expression { 
+            int x;
+            std::cin >> x; 
+            return x;
+        },
+        [](basic_type<std::string>&&) -> expression { 
+            std::string x;
+            std::cin >> x; 
+            return x; 
+        },
+        [](auto&&) -> expression { return nothing{}; }
+    );
+}
+
 
 void DebugPrint(const std::string& msg, expression e, environment& env, int color) {
     if (!env.isTraceEnabled)
@@ -118,6 +137,9 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
 }
 
 expression Print(expression&& e, environment& env) {
+    if (!env.isExecuting)
+        return application{print{}, e};
+
     auto evaluated = SubstituteVariables(std::move(e), env);
     if (auto s = std::get_if<std::string>(&evaluated)) {
         std::cout << *s;

@@ -31,7 +31,7 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     // else
     //     pattern = std::move(function.argument);
 
-    auto [unapplied, conflictingVariable] = Unapply(std::move(pattern), std::move(argumentValue), function.env);
+    auto [unapplied, outerVariable] = Unapply(std::move(pattern), std::move(argumentValue), function.env);
 
     auto combinedEnv = env;
     for (auto& v: function.env.variables)
@@ -47,10 +47,10 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     //         combinedEnv.variables.push_back(std::move(v));
     //     }
     //     return SubstituteVariables(std::move(function.body), combinedEnv);
-    // } else if (!conflictingVariable.empty()) {
+    // } else if (!outerVariable.empty()) {
     //     auto combinedEnv = env;
     //     for (auto& v: function.env.variables) {
-    //         if (v.first == conflictingVariable) // todo: seems unnecesary
+    //         if (v.first == outerVariable) // todo: seems unnecesary
     //             continue;
     //         combinedEnv.variables.push_back(std::move(v));
     //     }
@@ -153,6 +153,7 @@ expression Apply(expression&& function,
         [&env, &argument](union_&&) -> expression { return union_with{Eval(std::move(argument), env)}; },
         [&env, &argument](show&&) -> expression { return Show(SubstituteVariables(std::move(argument), env)); },
         [&env, &argument](print&&) -> expression { return Print(std::move(argument), env); },
+        [&env, &argument](read&&) -> expression { return Read(SubstituteVariables(std::move(argument), env), env); },
         [&env, &argument](set_trace_enabled&&) -> expression { return SetTraceEnabled(std::move(argument), env); },
         [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(std::move(e.get().x), std::move(argument), env); },
         [&env, &argument](rec<negated>&& e) -> expression { 

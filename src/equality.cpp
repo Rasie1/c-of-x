@@ -81,8 +81,10 @@ expression Equals(expression&& l,
 
     auto [isUnapplySuccessful, id] = Unapply(copy(l), copy(r), env);
     if (isUnapplySuccessful) {
-        if (!id.empty())
+        DebugPrint("eq, unapply success", id, env);
+        if (!id.empty()) {
             return identifier{id};
+        }
         return r;
     }
 

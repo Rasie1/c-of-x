@@ -134,7 +134,7 @@ struct map_unapply_union_l {
                 auto rCalculated = Unapply(
                     std::move(rUnion), std::move(rCopy), env);
                 return {lCalculated.success || rCalculated.success, 
-                        lCalculated.conflictingVariable.empty() ? rCalculated.conflictingVariable : lCalculated.conflictingVariable 
+                        lCalculated.outerVariable.empty() ? rCalculated.outerVariable : lCalculated.outerVariable 
                 };
             },
             [](auto&&) -> unapply_result { 
@@ -205,7 +205,7 @@ unapply_result Unapply(expression&& pattern,
             // but these should be divided from predicates and not participate in env get
             auto isEnvironmentExtended = env.add(pattern.name, equals_to{copy(newVariable)});
             if (isEnvironmentExtended == environment::extension_result::Added) {
-                return {true, {}};
+                return {true, pattern.name};
             } else if (isEnvironmentExtended == environment::extension_result::Void) {
                 return {};
             } else {
@@ -218,11 +218,11 @@ unapply_result Unapply(expression&& pattern,
                 auto value = Apply(std::move(fromEnv), identifier{pattern.name}, env);
                 auto unapplied = Unapply(std::move(value), std::move(newVariable), env);
 
-                // if (unapplied.conflictingVariable.empty())
-                //     unapplied.conflictingVariable = pattern.name;
-                unapplied.conflictingVariable = pattern.name;
+                // if (unapplied.outerVariable.empty())
+                //     unapplied.outerVariable = pattern.name;
+                unapplied.outerVariable = pattern.name;
 
-                DebugPrint("Unapplied variable", unapplied.conflictingVariable, env);
+                DebugPrint("Unapplied variable", unapplied.outerVariable, env);
 
                 return unapplied;
             }
@@ -262,7 +262,9 @@ unapply_result Unapply(expression&& pattern,
         }
     );
     env.decreaseDebugIndentation();
-    DebugPrint("unapply result", ret ? std::string("yes") : std::string("no"), env);
+    DebugPrint("unapply result", 
+                (ret ? std::string("yes") : std::string("no")) + (ret.outerVariable.empty() ? "" : (" " + ret.outerVariable)), 
+                env);
     return ret;
 }
 

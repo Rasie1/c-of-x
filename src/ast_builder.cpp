@@ -69,6 +69,8 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
     } else if (node.type == "cx::parser::identifier") {
         if (node.string() == "show")
             return cx::show{};
+        else if (node.string() == "read")
+            return cx::read{};
         else if (node.string() == "print")
             return cx::print{};
         else if (node.string() == "any")

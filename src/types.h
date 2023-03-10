@@ -52,6 +52,7 @@ template<typename datatype>
 struct basic_type { bool operator==(basic_type<datatype> const&) const = default; };
 
 struct show { bool operator==(show const&) const = default; };
+struct read { bool operator==(read const&) const = default; };
 struct print { bool operator==(print const&) const = default; };
 struct set_trace_enabled { bool operator==(set_trace_enabled const&) const = default; };
 
@@ -98,6 +99,7 @@ using expression = std::variant<
     std::string, basic_type<std::string>,
 
     show,
+    read,
     print,
     set_trace_enabled
 >;
@@ -230,6 +232,7 @@ struct environment {
     // debug-only
     int debugIndentation{};
     bool isTraceEnabled{};
+    bool isExecuting{};
     void increaseDebugIndentation() { debugIndentation++; }
     void decreaseDebugIndentation() { debugIndentation--; }
 };

@@ -8,7 +8,7 @@ expression Eval(expression&& e, environment& env);
 
 struct unapply_result {
     bool success;
-    std::string conflictingVariable;
+    std::string outerVariable;
 
     operator bool() const {
         return success;

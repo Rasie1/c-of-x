@@ -310,5 +310,15 @@
         "name": "Wild intersection",
         "expr": "(Int & (x -> 3)) 2",
         "result": "3"
+    },
+    {
+        "name": "Funcion declaration",
+        "expr": "f x = x",
+        "result": "x ->' x"
+    },
+    {
+        "name": "Side effects",
+        "expr": "f x = (print \"wrong\")",
+        "result": "x ->' (cx::print \"wrong\")"
     }
 ]
