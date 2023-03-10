@@ -202,8 +202,7 @@ unapply_result Unapply(expression&& pattern,
             else
                 newVariable = make_operation<intersection_with>(std::move(oldCopy), std::move(evaluated));
             DebugPrint(std::string("defining variable ") + pattern.name, newVariable, env, 2);
-            auto newVariableCopy = newVariable;
-            if (env.define(pattern.name, equals_to{std::move(newVariable)}))
+            if (env.define(pattern.name, equals_to{copy(newVariable)}))
                 return {true, {}};
             else {
                 DebugPrint("already defined", pattern, env, 2);
@@ -213,7 +212,7 @@ unapply_result Unapply(expression&& pattern,
                 // probably no. But we just unpacked it! anyway, it's not getting sent out
                 // auto value = Apply(std::move(fromEnv), any{}, env);
                 auto value = Apply(std::move(fromEnv), identifier{pattern.name}, env);
-                auto unapplied = Unapply(std::move(value), std::move(newVariableCopy), env);
+                auto unapplied = Unapply(std::move(value), std::move(newVariable), env);
 
                 // if (unapplied.conflictingVariable.empty())
                 //     unapplied.conflictingVariable = pattern.name;
@@ -239,9 +238,18 @@ unapply_result Unapply(expression&& pattern,
                 DebugPrint("got inverse", wrapped, env);
                 return Unapply(std::move(pattern.get().argument), std::move(wrapped), env);
             } else {
-                auto wrapped = abstraction{std::move(pattern.get().argument), std::move(valueToMatch)};
+                auto wrapped = abstraction{copy(pattern.get().argument), copy(valueToMatch)};
                 DebugPrint("moved abstraction", wrapped, env);
-                return Unapply(std::move(pattern.get().function), std::move(wrapped), env);
+                auto result = Unapply(copy(pattern.get().function), std::move(wrapped), env);
+                // if (result)
+                //     return result;
+                // auto intersected = make_operation<intersection_with>(std::move(pattern.get().function), std::move(valueToMatch));
+                // auto result2 = Unapply(std::move(pattern.get().argument), std::move(intersected), env);
+                // if (result2)
+                //     return result2;
+                return result;
+                // try to create something in env if it's application?
+                // or perhaps closure arg will become integer
             }
         },
         [&env](auto&& e) -> unapply_result { 

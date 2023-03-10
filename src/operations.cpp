@@ -129,55 +129,15 @@ std::optional<std::string> ExtendEnvironment(
     return std::nullopt;
 }
 
-// expression IntersectFind(expression&& l,
-//                    expression&& r,
-//                    environment& env) {
-    // DebugPrint("intersect find1", l, env);
-    // DebugPrint("intersect find2", r, env);
+expression IntersectFind(expression&& l,
+                   expression&& r,
+                   environment&) {
+    // DebugPrint("intersect-find", l, env);
     // if (l == r)
-    //     return true;
-
-    // auto result = match(std::move(l),
-    //     intersect_for_datatype<int>{r},
-    //     intersect_for_datatype<basic_type<int>>{r},
-    //     intersect_for_datatype<std::string>{r},
-    //     intersect_for_datatype<basic_type<std::string>>{r},
-    //     [&r, &env](rec<equals_to>&& l) -> expression {
-    //         return match(std::move(r),
-    //             [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
-    //             [&l](any&&) -> expression { return l; },
-    //             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
-    //             [](auto&&) -> expression { return nothing{}; }
-    //         );
-    //     },
-    //     [&r, &env](rec<intersection_with>&& l) -> expression {
-    //         return match(std::move(r),
-    //             [&l, &env](rec<intersection_with>&& r) -> expression {
-    //                 // return IntersectFind(
-    //                 return intersection_with{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; 
-    //             },
-    //             [&l](any&&) -> expression { return l; },
-    //             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
-    //             [](auto&&) -> expression { return nothing{}; }
-    //         );
-    //     },
-    //     [&r, &env](rec<application>&& lApplication) -> expression {
-    //         auto rCopy = r;
-    //         auto lCopy = lApplication.get();
-    //         auto mapped = map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
-    //         if (mapped == expression{lCopy})
-    //             return nothing{};
-    //         return mapped;
-    //     },
-    //     [&r](any&&) -> expression { return r; },
-    //     [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
-    //     [](nothing&& e) -> expression { return e; },
-    //     [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
-    // );
-    // DebugPrint("intersect find result", result, env);
-
-    // return result;
-// }
+    //     return l;
+    // DebugPrint("intersect-find-2", r, env);
+    return make_operation<intersection_with>(std::move(l), std::move(r));
+}
 
 expression Intersect(expression&& l,
                      expression&& r,
@@ -237,6 +197,21 @@ expression Intersect(expression&& l,
                 return nothing{};
             return mapped;
         },
+        [&r, &env](rec<closure>&& l) -> expression {
+            return make_operation<intersection_with>(std::move(l), std::move(r));
+        },
+        // [&r, &env](rec<closure>&& l) -> expression {
+        //     return match(std::move(r),
+        //         [&l, &env](rec<closure>&& r) -> expression { 
+        //             auto argument = Intersect(std::move(l.get().argument), std::move(r.get().argument), env);
+        //             // auto lBody = Eval(closure{copy(argument), l.get().body, l.get().env}, env);
+        //             // auto rBody = Eval(closure{copy(argument), r.get().body, r.get().env}, env);
+        //             // return Intersect(std::move(lBody), std::move(rBody), env);
+        //         },
+        //         [&l](any&&) -> expression { return l; },
+        //         [](auto&&) -> expression { return error{std::string("can't intersect closure")}; }
+        //     );
+        // },
         [&r](any&&) -> expression { return r; },
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         [](nothing&& e) -> expression { return e; },

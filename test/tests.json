@@ -82,6 +82,11 @@
         "result": "(3 | 4)"
     },
     {
+        "name": "Closure intersection",
+        "expr": "((x -> x) & (3 -> 3)) 3",
+        "result": "3"
+    },
+    {
         "name": "Union and intersection",
         "expr": "(1 | 2) & 2",
         "result": "2"

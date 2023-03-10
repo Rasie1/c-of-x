@@ -48,6 +48,11 @@ void traverse(expression& e, f&& function) {
             traverse(e.get().argument, function);
             traverse(e.get().body, function);
         },
+        [&function](rec<set>& e) { 
+            for (auto& x: e.get().x) {
+                traverse(x, function);
+            }
+        },
         [](auto&){}
     );
 }
@@ -71,16 +76,12 @@ expression Eval(expression&& e,
     env.increaseDebugIndentation();
     auto ret = match(std::move(e),
         [&env](rec<application>&& e) {
-            // auto envCopy = env;
-            // auto applicationCopy = e;
-
             DebugPrint("apply", e.get(), env, 2);
             env.increaseDebugIndentation();
             defer { env.decreaseDebugIndentation(); }; 
 
             auto function = Eval(std::move(e.get().function), env);
             auto argument = Eval(std::move(e.get().argument), env);
-
 
             auto applied = Apply(std::move(function), std::move(argument), env);
 

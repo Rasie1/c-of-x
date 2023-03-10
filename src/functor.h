@@ -3,8 +3,7 @@
 #include "types.h"
 
 namespace cx {
-
-
+    
 template<typename operation_function>
 struct map_union_l {
     expression& r;

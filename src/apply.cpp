@@ -137,8 +137,18 @@ expression Apply(expression&& function,
                 equals_to{Eval(std::move(argument), env)}
             }; 
         },
-        [&env, &argument](rec<application>&& e) -> expression { return application{std::move(e), std::move(argument)}; },
-            // todo: isn't it evaluated already?
+        [&env, &argument](rec<application>&& e) -> expression {
+            // return application{std::move(e), std::move(argument)}; 
+            return match(copy(e.get().function),
+                [&](rec<intersection_with>&& lApplication) -> expression { 
+                    DebugPrint("matched application intersection", lApplication, env);
+                    auto l = Apply(std::move(lApplication.get().x), copy(argument), env); // todo: copy envs?
+                    auto r = Apply(std::move(e.get().argument), std::move(argument), env);
+                    return make_operation<intersection_with>(std::move(l), std::move(r));
+                },
+                [&](auto&&) -> expression { return application{std::move(e), std::move(argument)}; }
+            ); 
+        },
         [&env, &argument](intersection&&) -> expression { return intersection_with{Eval(std::move(argument), env)}; },
         [&env, &argument](union_&&) -> expression { return union_with{Eval(std::move(argument), env)}; },
         [&env, &argument](show&&) -> expression { return Show(SubstituteVariables(std::move(argument), env)); },
