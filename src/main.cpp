@@ -27,6 +27,7 @@ int main(int argc, char** argv)
         verbosity = 2;
     if (option_exists(argv, argv + argc, "-test-interpreter")) {
         cx::interpreter::test();
+    // if (option_exists(argv, argv + argc, "-exec")) {
     } else if (auto filename = get_option(argv, argv + argc, "-f")) {
         cx::eval_file(filename, verbosity);
     } else if (auto filename = get_option(argv, argv + argc, "-trace-file")) {
@@ -42,6 +43,7 @@ int main(int argc, char** argv)
     } else {
         std::cout << "./c-of-x [expr] [args]" << std::endl
                   << "         -f          - open file"               << std::endl
+                //   << "         -exec       - omit eval result"        << std::endl
                   << "         -log        - print verbose debug log" << std::endl
                   << "         -logstate   - print general state"     << std::endl
                   << "         -trace-file - shows parser trace"      << std::endl

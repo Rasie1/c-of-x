@@ -91,7 +91,23 @@ std::string Show(expression&& e) {
     );
 }
 
+template<typename T>
+struct shows {
+    expression operator()(T&& e) { return Show(e); }
+};
+
+expression ShowSafe(expression&& e, environment& env) {
+    e = SubstituteVariables(std::move(e), env);
+    return match(std::move(e),
+        shows<int>{},
+        shows<std::string>{},
+        [](auto&& e) -> expression { return application{show{}, e}; }
+    );
+}
+
 expression Read(expression&& e, environment& env) {
+    e = SubstituteVariables(std::move(e), env);
+
     if (!env.isExecuting)
         return application{read{}, e};
 
@@ -137,15 +153,16 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
 }
 
 expression Print(expression&& e, environment& env) {
+    e = SubstituteVariables(std::move(e), env);
+
     if (!env.isExecuting)
         return application{print{}, e};
 
-    auto evaluated = SubstituteVariables(std::move(e), env);
-    if (auto s = std::get_if<std::string>(&evaluated)) {
+    if (auto s = std::get_if<std::string>(&e)) {
         std::cout << *s;
         return unit{};
     } else {
-        return error{"print expects string, and got " + Show(std::move(evaluated))};
+        return error{"print expects string, and got " + Show(std::move(e))};
     }
 }
 

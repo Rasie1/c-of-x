@@ -80,14 +80,16 @@ expression Eval(expression&& e,
             env.increaseDebugIndentation();
             defer { env.decreaseDebugIndentation(); }; 
 
-            auto function = Eval(std::move(e.get().function), env);
-            auto argument = Eval(std::move(e.get().argument), env);
+            expression function, argument;
+
+            {
+                stash executionState(env.isExecuting, false);
+                
+                function = Eval(std::move(e.get().function), env);
+                argument = Eval(std::move(e.get().argument), env);
+            }
 
             auto applied = Apply(std::move(function), std::move(argument), env);
-
-            // if (auto newApplication = std::get_if<rec<application>>(&applied))
-            // if (std::get_if<identifier>(&newApplication->get().function))
-            //     ExtendEnvironment(copy(newApplication->get().function), newApplication->get().argument, env);
 
             return applied;
         },
@@ -95,9 +97,17 @@ expression Eval(expression&& e,
             auto from = Eval(std::move(e.get().from), env);
             DebugPrint("then", 0, env, 2);
             return match(std::move(from),
-                [](error&& x) -> expression { return x;},
+                [](error&& x) -> expression { return x; },
                 [](nothing&&) -> expression { return error{}; },
-                [&e, &env](auto&&) -> expression { return Eval(std::move(e.get().to), env); }
+                [&e, &env](auto&& from) -> expression {
+                    auto to = Eval(std::move(e.get().to), env); 
+
+                    if (!env.isExecuting) {
+                        return then{std::move(from), std::move(to)};
+                    } else {
+                        return to;
+                    }
+                }
             );
         },
         [&env](rec<negated>&& e) -> expression { 
@@ -110,6 +120,7 @@ expression Eval(expression&& e,
                 DebugPrint(k, v, env);
 
             auto newEnv = env;
+            newEnv.isExecuting = false;
 
             auto pattern = Eval(std::move(e.get().argument), newEnv);
 

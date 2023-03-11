@@ -256,6 +256,18 @@ unapply_result Unapply(expression&& pattern,
                 // or perhaps closure arg will become integer
             }
         },
+
+        [&env, &valueToMatch](rec<then>&& e) -> unapply_result {
+            auto from = Eval(std::move(e.get().from), env);
+            DebugPrint("then unapply", from, env);
+            return match(std::move(from),
+                [](error&&) -> unapply_result { return {}; },
+                [](nothing&&) -> unapply_result { return {}; },
+                [&valueToMatch, &e, &env](auto&&) -> unapply_result {
+                    return Unapply(std::move(e.get().to), std::move(valueToMatch), env); 
+                }
+            );
+        },
         [&env](auto&& e) -> unapply_result { 
             DebugPrint("couldn't unapply", e, env);
             return {}; 

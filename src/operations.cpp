@@ -17,23 +17,22 @@ expression GetElement(expression&& set) {
 
 inline expression SubstituteVariables(expression&& expr, environment& env, std::vector<std::string>& seen) {
     // TODO: possibly this should be BFS
-    DebugPrint("fix - evaluating", expr, env);
+    DebugPrint("substitute - evaluating", expr, env);
     env.increaseDebugIndentation();
     auto evaluated = Eval(std::move(expr), env);
     env.decreaseDebugIndentation();
-    DebugPrint("fixing", evaluated, env);
+    DebugPrint("substituting", evaluated, env);
     env.increaseDebugIndentation();
     auto fixed = match(std::move(evaluated),
         [&env, &seen](identifier&& e) -> expression {
-            DebugPrint("fixing in id", e, env);
-            // if (std::find(seen.begin(), seen.end(), e.name) != seen.end())
-            //     return any{}; // ?
+            DebugPrint("substituting in id", e, env);
             seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
-                DebugPrint("fixing in id, got from env", *expr, env);
+                DebugPrint("substituting in id, got from env", *expr, env);
                 return GetElement(SubstituteVariables(copy(*expr), env, seen));
             }
-            return error{std::string("undefined variable \"") + e.name + "\""};
+            // return error{std::string("undefined variable \"") + e.name + "\""};
+            return e;
         },
         [&env, &seen](rec<equals_to>&& function) -> expression {
             function.get().x = SubstituteVariables(std::move(function.get().x), env, seen);
@@ -71,12 +70,13 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
         [&env, &seen](rec<then>&& e) -> expression {
             e.get().from = SubstituteVariables(std::move(e.get().from), env, seen);
             e.get().to = SubstituteVariables(std::move(e.get().to), env, seen);
-            return e;
+            // return e;
+            return e.get().to;
         },
         [](auto&& e) -> expression { return e; }
     );
     env.decreaseDebugIndentation();
-    DebugPrint("fix - evaluating at the end", fixed, env);
+    DebugPrint("substitute - evaluating at the end", fixed, env);
     env.increaseDebugIndentation();
     auto ret = Eval(std::move(fixed), env);
     env.decreaseDebugIndentation();

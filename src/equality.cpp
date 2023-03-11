@@ -43,15 +43,18 @@ expression IsEqual(expression&& l,
         equals_for_datatype<basic_type<std::string>>{r},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         map_union_l{r, env, IsEqual},
-        // [&r, &env](rec<application>&& lApplication) -> expression {
-        //     auto rCopy = r;
-        //     auto lCopy = lApplication.get();
-        //     auto mapped = map_union_l{rCopy, env, IsEqual}(std::move(lApplication.get()));
-        //     if (mapped == expression{lCopy})
-        //         return nothing{};
-        //     return mapped;
-        // },
         equals_with_negated{r, env},
+        [&r, &env](rec<then>&& e) -> expression {
+            auto from = Eval(std::move(e.get().from), env);
+            DebugPrint("then in is equal", 0, env, 2);
+            return match(std::move(from),
+                [](error&& x) -> expression { return x; },
+                [](nothing&&) -> expression { return error{}; },
+                [&e, &r, &env](auto&&) -> expression {
+                    return IsEqual(std::move(e.get().to), std::move(r), env);
+                }
+            );
+        },
         [&r](any&&) -> expression { return r; },
         [&r](auto&& a) -> expression { 
             if (std::get_if<any>(&r))
@@ -72,6 +75,8 @@ expression Equals(expression&& l,
     env.increaseDebugIndentation();
     defer { env.decreaseDebugIndentation(); };
 
+    stash executionState(env.isExecuting, false);
+    
     l = std::move(Eval(std::move(l), env)); 
     r = std::move(Eval(std::move(r), env));
     DebugPrint("eq1", l, env);
@@ -90,6 +95,7 @@ expression Equals(expression&& l,
 
     auto ret = IsEqual(std::move(l), std::move(r), env);
     DebugPrint("equality result", ret, env);
+
     return ret;
 }
 

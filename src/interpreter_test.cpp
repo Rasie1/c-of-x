@@ -96,6 +96,7 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
     }
 
     environment env;
+    env.isExecuting = true;
     if (verbosity >= 2)
         env.isTraceEnabled = true;
 

@@ -20,47 +20,15 @@ expression Calculate(expression&& l,
 }
 
 inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue) {
-    // doesn't shadow env. Should remove old variable
-
-    // auto envCopy = env;
     DebugPrint("in closure", function, env);
     auto& pattern = function.argument;
-    // auto [fixed, variable] = FixWithVariable(std::move(pattern), env);
-    // if (variable)
-    //     pattern = identifier{*variable};
-    // else
-    //     pattern = std::move(function.argument);
-
     auto [unapplied, outerVariable] = Unapply(std::move(pattern), std::move(argumentValue), function.env);
 
     auto combinedEnv = env;
     for (auto& v: function.env.variables)
         combinedEnv.variables.push_back(std::move(v));
-        
+       
     return SubstituteVariables(std::move(function.body), combinedEnv);
-
-    // todo: now conflicting variables and so on seem to be not needed because they're shadiw
-
-    // if (unapplied) {
-    //     auto combinedEnv = env;
-    //     for (auto& v: function.env.variables) {
-    //         combinedEnv.variables.push_back(std::move(v));
-    //     }
-    //     return SubstituteVariables(std::move(function.body), combinedEnv);
-    // } else if (!outerVariable.empty()) {
-    //     auto combinedEnv = env;
-    //     for (auto& v: function.env.variables) {
-    //         if (v.first == outerVariable) // todo: seems unnecesary
-    //             continue;
-    //         combinedEnv.variables.push_back(std::move(v));
-    //     }
-    //     return SubstituteVariables(std::move(function.body), combinedEnv);
-    // } else {
-    //     // use after move? then why does it work?
-    //     return error{std::string("can't apply ") 
-    //             + Show(std::move(argumentValue)) + " to closure with signature "
-    //             + Show(std::move(pattern))};
-    // }
 }
 
 template<typename datatype>
@@ -74,17 +42,17 @@ struct check_datatype {
             [](datatype&& r) -> expression { return r; },
             [](any&&) -> expression { return application{basic_type<datatype>{}, any{}}; },
             [](nothing&& v) -> expression { return v; },
-            [this](identifier&& v) -> expression { 
+            [this](identifier&& v) -> expression {
                 ExtendEnvironment(basic_type<datatype>{}, v, env);
-                return v; 
-            }, 
+                return v;
+            },
             [](auto&&) -> expression { return error{"type error"}; }
-        ); 
+        );
     }
 };
 
-expression Apply(expression&& function, 
-                 expression&& argument, 
+expression Apply(expression&& function,
+                 expression&& argument,
                  environment& env) {
     DebugPrint("apply function", function, env);
     DebugPrint("apply argument", argument, env);
@@ -132,37 +100,33 @@ expression Apply(expression&& function,
         [&env, &argument](rec<implication_with>&& function) -> expression {
             return Eval(then{std::move(function.get().x), std::move(argument)}, env);
         },
-        [&env, &argument](equality&&) -> expression { return equals_to{Eval(std::move(argument), env)}; },
-        [&env, &argument](inequality&&) -> expression { return negated{
-                equals_to{Eval(std::move(argument), env)}
-            }; 
-        },
+        [&env, &argument](equality&&) -> expression { return equals_to{ Eval(std::move(argument), env) }; },
+        [&env, &argument](inequality&&) -> expression { return negated{ equals_to{Eval(std::move(argument), env)} }; },
         [&env, &argument](rec<application>&& e) -> expression {
-            // return application{std::move(e), std::move(argument)}; 
             return match(copy(e.get().function),
-                [&](rec<intersection_with>&& lApplication) -> expression { 
+                [&](rec<intersection_with>&& lApplication) -> expression {
                     DebugPrint("matched application intersection", lApplication, env);
                     auto l = Apply(std::move(lApplication.get().x), copy(argument), env); // todo: copy envs?
                     auto r = Apply(std::move(e.get().argument), std::move(argument), env);
                     return Intersect(std::move(l), std::move(r), env);
                 },
                 [&](auto&&) -> expression { return application{std::move(e), std::move(argument)}; }
-            ); 
+            );
         },
         [&env, &argument](intersection&&) -> expression { return intersection_with{Eval(std::move(argument), env)}; },
         [&env, &argument](union_&&) -> expression { return union_with{Eval(std::move(argument), env)}; },
-        [&env, &argument](show&&) -> expression { return Show(SubstituteVariables(std::move(argument), env)); },
+        [&env, &argument](show&&) -> expression { return ShowSafe(std::move(argument), env); },
         [&env, &argument](print&&) -> expression { return Print(std::move(argument), env); },
-        [&env, &argument](read&&) -> expression { return Read(SubstituteVariables(std::move(argument), env), env); },
+        [&env, &argument](read&&) -> expression { return Read(std::move(argument), env); },
         [&env, &argument](set_trace_enabled&&) -> expression { return SetTraceEnabled(std::move(argument), env); },
         [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(std::move(e.get().x), std::move(argument), env); },
-        [&env, &argument](rec<negated>&& e) -> expression { 
-            return Apply(Negate(std::move(e.get().f), env), std::move(argument), env); 
+        [&env, &argument](rec<negated>&& e) -> expression {
+            return Apply(Negate(std::move(e.get().f), env), std::move(argument), env);
         },
         [&env, &argument](rec<intersection_with>&& function) -> expression {
             auto l = Eval(std::move(function.get().x), env);
             auto r = Eval(std::move(argument), env);
-            
+           
             return Intersect(std::move(l), std::move(r), env);
         },
         [&env, &argument](rec<union_with>&& function) -> expression {
@@ -182,7 +146,7 @@ expression Apply(expression&& function,
     );
     env.decreaseDebugIndentation();
     DebugPrint("apply result", ret, env);
-    
+   
     return ret;
 }
 

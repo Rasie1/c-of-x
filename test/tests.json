@@ -320,5 +320,15 @@
         "name": "Side effects",
         "expr": "f x = (print \"wrong\")",
         "result": "x ->' (cx::print \"wrong\")"
+    },
+    {
+        "name": "Side effects 2",
+        "expr": "f x = (print \"1\"; print \"2\"; print \"3\"); f 1",
+        "result": "123cx::unit"
+    },
+    {
+        "name": "Function renaming with argument",
+        "expr": "f x = show x; f 3",
+        "result": "\"3\""
     }
 ]
