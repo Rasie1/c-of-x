@@ -292,14 +292,19 @@
         "result": "3"
     },
     {
-        "name": "Intersection doesn't change environment",
-        "expr": "x = 3; x & 2; x",
+        "name": "Intersection doesn't corrupt environment",
+        "expr": "x = 3; x & 3; x",
         "result": "3"
     },
     {
-        "name": "Intersection doesn't change environment 2",
+        "name": "Zero intersection is not allowed",
+        "expr": "x = 3; x & 2; x",
+        "result": "error(\"incorrect implication\")"
+    },
+    {
+        "name": "Zero intersection is not allowed 2",
         "expr": "x = 3; 2 & x; x",
-        "result": "3"
+        "result": "error(\"incorrect implication\")"
     },
     {
         "name": "Function reuse",

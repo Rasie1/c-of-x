@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "robin_hood.h"
-#include "types.h"
+#include "environment.h"
 #include "grammar.h"
 #include "util.h"
 

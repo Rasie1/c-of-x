@@ -1,14 +1,7 @@
 #pragma once
 
-namespace cx::interpreter {
+namespace cx::interpreter_test {
 
 void test();
-
-}
-
-namespace cx {
-
-void eval(const char* code, int verbosity);
-void eval_file(const char* path, int verbosity);
 
 }

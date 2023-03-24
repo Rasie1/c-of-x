@@ -98,7 +98,7 @@ expression Eval(expression&& e,
             DebugPrint("then", 0, env, 2);
             return match(std::move(from),
                 [](error&& x) -> expression { return x; },
-                [](nothing&&) -> expression { return error{}; },
+                [](nothing&&) -> expression { return error{"incorrect implication"}; },
                 [&e, &env](auto&& from) -> expression {
                     auto to = Eval(std::move(e.get().to), env); 
 

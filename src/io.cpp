@@ -153,10 +153,12 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
 }
 
 expression Print(expression&& e, environment& env) {
-    e = SubstituteVariables(std::move(e), env);
+    e = Eval(std::move(e), env);
 
     if (!env.isExecuting)
         return application{print{}, e};
+
+    e = SubstituteVariables(std::move(e), env);
 
     if (auto s = std::get_if<std::string>(&e)) {
         std::cout << *s;

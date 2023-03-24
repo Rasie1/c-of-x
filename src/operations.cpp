@@ -70,8 +70,12 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
         [&env, &seen](rec<then>&& e) -> expression {
             e.get().from = SubstituteVariables(std::move(e.get().from), env, seen);
             e.get().to = SubstituteVariables(std::move(e.get().to), env, seen);
-            // return e;
-            return e.get().to;
+
+            if (!env.isExecuting) {
+                return then{std::move(e.get().from), std::move(e.get().to)};
+            } else {
+                return e.get().to;
+            }
         },
         [](auto&& e) -> expression { return e; }
     );

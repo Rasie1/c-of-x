@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "types.h"
+#include "environment.h"
 
 namespace tao::pegtl::parse_tree { struct node; }
 

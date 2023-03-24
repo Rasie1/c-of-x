@@ -17,6 +17,7 @@ add_executable(main
     src/equality.cpp
     src/io.cpp
     src/ast_builder.cpp
+    src/interpreter.cpp
     src/interpreter_test.cpp
 )
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include "parser.h"
+#include "interpreter.h"
 #include "interpreter_test.h"
 
 char* get_option(char** begin, char** end, const std::string& option) {
@@ -26,7 +27,7 @@ int main(int argc, char** argv)
     if (option_exists(argv, argv + argc, "-log"))
         verbosity = 2;
     if (option_exists(argv, argv + argc, "-test-interpreter")) {
-        cx::interpreter::test();
+        cx::interpreter_test::test();
     // if (option_exists(argv, argv + argc, "-exec")) {
     } else if (auto filename = get_option(argv, argv + argc, "-f")) {
         cx::eval_file(filename, verbosity);
