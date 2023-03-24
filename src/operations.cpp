@@ -6,11 +6,17 @@
 
 namespace cx {
 
-expression GetElement(expression&& set) {
+expression GetElement(expression&& set, environment& env) {
     return match(std::move(set),
         [](rec<equals_to>&& e) { return e.get().x; },
-        [](int&& e) -> expression { return error{Show(std::move(e)) + " doesn't contain values"}; },
-        [](std::string&& e) -> expression { return error{Show(std::move(e)) + " doesn't contain values"}; },
+        [&env](int&& e) -> expression {
+            env.errors.push_back(Show(std::move(e)) + " doesn't contain values");
+            return nothing{};
+        },
+        [&env](std::string&& e) -> expression {
+            env.errors.push_back(Show(std::move(e)) + " doesn't contain values");
+            return nothing{};
+        },
         [](auto&& e) -> expression { return application{std::move(e), any{}}; }
     );
 }
@@ -29,9 +35,8 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
             seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
                 DebugPrint("substituting in id, got from env", *expr, env);
-                return GetElement(SubstituteVariables(copy(*expr), env, seen));
+                return GetElement(SubstituteVariables(copy(*expr), env, seen), env);
             }
-            // return error{std::string("undefined variable \"") + e.name + "\""};
             return e;
         },
         [&env, &seen](rec<equals_to>&& function) -> expression {
@@ -115,7 +120,6 @@ expression Negate(expression&& f, environment& env) {
         unmapped<equals_to, negated>(env),
         // [](auto&& e) -> expression { return make_operation<intersection_with>(any{}, negated{std::move(e)}); }
         [](auto&& e) -> expression { return negated{std::move(e)}; }
-        // [](auto&& e) -> expression { return error{"can't negate " + Show(std::move(e))}; }
     );
 }
 
@@ -145,13 +149,11 @@ std::optional<expression> IntersectFind(
     auto intersected = Intersect(std::move(l), std::move(r), env);
     DebugPrint("intersect-find return", intersected, env);
     return match(std::move(intersected),
-        [](error&&) -> std::optional<expression> { return {}; },
         [](nothing&&) -> std::optional<expression> { return {}; },
         [&](rec<equals_to>&& e) -> std::optional<expression> {
             // todo: make it fully recursive
             // DebugPrint("intersect-find eq", e, env);
             return match(std::move(e.get().x),
-                [](error&&) -> std::optional<expression> { return {}; },
                 [](nothing&&) -> std::optional<expression> { return {}; },
                 [](auto&& e) -> std::optional<expression> { return {equals_to{std::move(e)}}; }
             );
@@ -221,22 +223,13 @@ expression Intersect(expression&& l,
         [&r, &env](rec<closure>&& l) -> expression {
             return make_operation<intersection_with>(std::move(l), std::move(r));
         },
-        // [&r, &env](rec<closure>&& l) -> expression {
-        //     return match(std::move(r),
-        //         [&l, &env](rec<closure>&& r) -> expression { 
-        //             auto argument = Intersect(std::move(l.get().argument), std::move(r.get().argument), env);
-        //             // auto lBody = Eval(closure{copy(argument), l.get().body, l.get().env}, env);
-        //             // auto rBody = Eval(closure{copy(argument), r.get().body, r.get().env}, env);
-        //             // return Intersect(std::move(lBody), std::move(rBody), env);
-        //         },
-        //         [&l](any&&) -> expression { return l; },
-        //         [](auto&&) -> expression { return error{std::string("can't intersect closure")}; }
-        //     );
-        // },
         [&r](any&&) -> expression { return r; },
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         [](nothing&& e) -> expression { return e; },
-        [](auto&& e) -> expression { return error{std::string("can't intersect ") + Show(e)}; }
+        [&env](auto&& e) -> expression {
+            env.errors.push_back(std::string("can't intersect ") + Show(e));
+            return nothing{};
+        }
     );
     DebugPrint("intersect result", result, env);
     

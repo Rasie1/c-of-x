@@ -57,14 +57,13 @@ struct environment {
 
     bool operator==(environment const&) const = default;
 
-    // debug-only
     int debugIndentation{};
     bool isTraceEnabled{};
     bool isExecuting{};
     void increaseDebugIndentation() { debugIndentation++; }
     void decreaseDebugIndentation() { debugIndentation--; }
 
-    std::vector<std::string> errorStack;
+    std::vector<std::string> errors;
 };
 
 struct closure {

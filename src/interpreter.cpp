@@ -32,10 +32,19 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
             std::cout << k << ": " << Show(std::move(v)) << std::endl;
         }
 
-        std::cout << std::endl;
-        std::cout << "Compiled:" << std::endl;
-        std::cout << Show(copy(result)) << std::endl;
-        std::cout << std::endl;
+        if (env.errors.empty()) {
+            std::cout << std::endl;
+            std::cout << "Compiled:" << std::endl;
+            std::cout << Show(copy(result)) << std::endl;
+            std::cout << std::endl;
+        } else {
+            std::cout << "Compile error:" << std::endl;
+            for (auto& error: env.errors) {
+                std::cout << error << std::endl;
+            }
+
+            return;
+        }
     }
 
     env.isExecuting = true;

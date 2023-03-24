@@ -86,7 +86,6 @@ std::string Show(expression&& e) {
         [](union_&&) -> std::string { return "|"; },
         [](any&&) -> std::string { return "any"; },
         [](nothing&&) -> std::string { return "void"; },
-        [](error&& e) { return std::string("error(\"") + e.message + "\")"; },
         [](auto&& e)  { return boost::core::demangle(typeid(decltype(e)).name()); }
     );
 }
@@ -164,7 +163,8 @@ expression Print(expression&& e, environment& env) {
         std::cout << *s;
         return unit{};
     } else {
-        return error{"print expects string, and got " + Show(std::move(e))};
+        env.errors.push_back("print expects string, and got " + Show(std::move(e)));
+        return nothing{};
     }
 }
 
@@ -173,7 +173,8 @@ expression SetTraceEnabled(expression&& e, environment& env) {
     if (auto s = std::get_if<int>(&evaluated)) {
         env.isTraceEnabled = static_cast<bool>(s);
     } else {
-        return error{"set_trace_enabled expects int, and got " + Show(std::move(evaluated))};
+        env.errors.push_back("set_trace_enabled expects int, and got " + Show(std::move(evaluated)));
+        return nothing{};
     }
     return unit{};
 }

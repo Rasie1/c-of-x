@@ -6,7 +6,6 @@ namespace cx {
 inline bool IsError(expression& e) {
     return match(std::move(e),
         [](nothing&&) { return true; },
-        [](error&&) { return true; },
         [](auto&&) { return false; }
     );
 }
@@ -261,7 +260,6 @@ unapply_result Unapply(expression&& pattern,
             auto from = Eval(std::move(e.get().from), env);
             DebugPrint("then unapply", from, env);
             return match(std::move(from),
-                [](error&&) -> unapply_result { return {}; },
                 [](nothing&&) -> unapply_result { return {}; },
                 [&valueToMatch, &e, &env](auto&&) -> unapply_result {
                     return Unapply(std::move(e.get().to), std::move(valueToMatch), env); 

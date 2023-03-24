@@ -34,10 +34,6 @@ struct identifier {
     std::string name; 
     bool operator==(identifier const&) const = default;
 };
-struct error {
-    std::string message;
-    bool operator==(error const&) const = default;
-};
 struct equality { bool operator==(equality const&) const = default; };
 struct inequality { bool operator==(inequality const&) const = default; };
 struct intersection { bool operator==(intersection const&) const = default; };
@@ -68,7 +64,6 @@ using expression = std::variant<
     identifier,
     unit,
     rec<then>,
-    error,
     any,
 
     intersection,

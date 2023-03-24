@@ -48,8 +48,10 @@ expression IsEqual(expression&& l,
             auto from = Eval(std::move(e.get().from), env);
             DebugPrint("then in is equal", 0, env, 2);
             return match(std::move(from),
-                [](error&& x) -> expression { return x; },
-                [](nothing&&) -> expression { return error{}; },
+                [&env](nothing&&) -> expression {
+                    env.errors.push_back("equality with nothing");
+                    return nothing{}; 
+                },
                 [&e, &r, &env](auto&&) -> expression {
                     return IsEqual(std::move(e.get().to), std::move(r), env);
                 }

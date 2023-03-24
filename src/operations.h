@@ -10,7 +10,7 @@
 
 namespace cx {
 
-expression GetElement(expression&& set);
+expression GetElement(expression&& set, environment& env);
 expression SubstituteVariables(expression&& expr, environment& env);
 std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env);
 

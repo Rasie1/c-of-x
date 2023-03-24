@@ -15,7 +15,10 @@ expression Calculate(expression&& l,
         // operation_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<functor>(std::move(v), std::move(r)); },
         map_union_l{r, env, Calculate<operation_for_datatype, functor>},
-        [](auto&& e) -> expression { return error{std::string("can't do arithmetic with ") + Show(e)}; }
+        [&env](auto&& e) -> expression { 
+            env.errors.push_back(std::string("can't do arithmetic with ") + Show(e));
+            return nothing{};
+        }
     );
 }
 
@@ -46,7 +49,12 @@ struct check_datatype {
                 ExtendEnvironment(basic_type<datatype>{}, v, env);
                 return v;
             },
-            [](auto&&) -> expression { return error{"type error"}; }
+            [this](auto&& e) -> expression { 
+                env.errors.push_back(
+                    std::string("expecting ") + Show(basic_type<datatype>{}) + ", got " + Show(std::move(e))
+                );
+                return nothing{};
+            }
         );
     }
 };
@@ -62,7 +70,7 @@ expression Apply(expression&& function,
             return match(std::move(argument),
                 [&env, &function](identifier&& id) -> expression {
                     auto argumentValue = *env.get(id.name);
-                    argumentValue = GetElement(std::move(argumentValue));
+                    argumentValue = GetElement(std::move(argumentValue), env);
                     return ApplyToClosure(env, std::move(function.get()), std::move(argumentValue));
                 },
                 [&env, &function](rec<application>&& app) -> expression {
@@ -74,7 +82,8 @@ expression Apply(expression&& function,
                         auto rApplied = Apply(std::move(functionCopy), std::move(r), env);
                         return Union(std::move(lApplied), std::move(rApplied));
                     } else {
-                        return error{std::string("can't apply application to closure")};
+                        env.errors.push_back("can't apply application to closure");
+                        return nothing{};
                     }
                 },
                 [&env, &function](auto&& argument) -> expression {
@@ -140,8 +149,11 @@ expression Apply(expression&& function,
         },
         [&argument](identifier&& f) -> expression { return application{std::move(f), std::move(argument)}; },
         [&argument](nothing&& n) -> expression { return n; },
-        [&argument](auto&& e) -> expression {
-            return error{"can't apply " + Show(std::move(e)) + " to " + Show(std::move(argument)) };
+        [&env, &argument](auto&& e) -> expression {
+            env.errors.push_back(
+                std::string("can't apply ") + Show(std::move(e)) + " to " + Show(std::move(argument))
+            );
+            return nothing{};
         }
     );
     env.decreaseDebugIndentation();
