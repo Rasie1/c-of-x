@@ -126,8 +126,8 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
                 } else if (currentOperator) {
                     auto right = build(child);
                     ret = cx::application{
-                        cx::application{std::move(*currentOperator), std::move(*ret)},
-                        std::move(right)
+                        cx::application{move(*currentOperator), move(*ret)},
+                        move(right)
                     };
                     previousOperator = currentOperator;
                     currentOperator = std::nullopt;
@@ -135,15 +135,15 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
                 //          relevantChildren[i + 1]->type.starts_with("tao::pegtl::star_must<cx::parser::")) {
                 //     auto& nextChild = *relevantChildren[i + 1];
                 //     ret = cx::application{
-                //         std::move(*ret),
-                //         std::move(build(child))
+                //         move(*ret),
+                //         move(build(child))
                 //     };
                 //     // if (isFirstChildOperator(nextChild)) {
                 //         std::cout << "======================" << nextChild.children[0]->string() << std::endl;
                 //         auto op = build(*nextChild.children[0]);
                 //         ret = cx::application{
-                //             cx::application{std::move(op), std::move(*ret)},
-                //             std::move(build(nextChild))
+                //             cx::application{move(op), move(*ret)},
+                //             move(build(nextChild))
                 //         };
                 //         ++i;
                 //     // }
@@ -152,32 +152,32 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
                     // if (child.type.starts_with("tao::pegtl::star_must<cx::parser::")) {
                     //     // todo
                     if (child.children[0]->string() == "->") {
-                        ret = cx::abstraction{std::move(*ret), std::move(right)};
+                        ret = cx::abstraction{move(*ret), move(right)};
                     } else if (child.children[0]->string() == ":") {
-                        ret = cx::application{std::move(right), std::move(*ret)};
+                        ret = cx::application{move(right), move(*ret)};
                     } else {
                         auto op = build(*child.children[0]);
                         if (previousOperator && !isHigherPriority(*previousOperator, op)) {
                             auto previousApplication = std::get_if<cx::rec<cx::application>>(&*ret);
                             if (!previousApplication)
                                 throw std::runtime_error("parse error");
-                            auto lhs = std::move(previousApplication->get().argument);
+                            auto lhs = move(previousApplication->get().argument);
                             auto rhs = cx::application{
-                                cx::application{std::move(op), std::move(lhs)},
-                                std::move(right)
+                                cx::application{move(op), move(lhs)},
+                                move(right)
                             };
-                            previousApplication->get().argument = std::move(rhs);
+                            previousApplication->get().argument = move(rhs);
                         } else {
                             ret = cx::application{
-                                cx::application{std::move(op), std::move(*ret)},
-                                std::move(right)
+                                cx::application{move(op), move(*ret)},
+                                move(right)
                             };
                         }
                     }
                 } else if (ret) {
                     ret = cx::application{
-                        std::move(*ret),
-                        std::move(build(child))
+                        move(*ret),
+                        move(build(child))
                     };
                 } else {
                     ret = build(child);
@@ -197,8 +197,8 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
             continue;
         if (ret) {
             ret = cx::then{
-                std::move(*ret),
-                std::move(build(*child))
+                move(*ret),
+                move(build(*child))
             };
         } else {
             ret = build(*child);

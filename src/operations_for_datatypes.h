@@ -9,10 +9,10 @@ struct intersect_for_datatype {
     expression& r;
     environment& env;
     expression operator()(datatype&& l) {
-        return match(std::move(r),
+        return match(move(r),
             [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
             [&l](any&&) -> expression { return l; },
-            [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, std::move(v)); },
+            [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, move(v)); },
             [this, &l](rec<application>&& rApplication) -> expression { 
                 auto lCopy = l;
                 auto rCopy = rApplication.get();
@@ -20,7 +20,7 @@ struct intersect_for_datatype {
                 return mapped;
             },
             [this, &l](auto&& r) -> expression { 
-                env.errors.push_back("can't intersect " + Show(std::move(l)) + " with " + Show(std::move(r)));
+                env.errors.push_back("can't intersect " + Show(move(l)) + " with " + Show(move(r)));
                 return nothing{}; 
             }
         ); 
@@ -32,12 +32,12 @@ struct calculation_for_datatype {
     expression& r;
     environment& env;
     expression operator()(datatype&& l) {
-        return match(std::move(r),
-            [&l](datatype&& r) -> expression { return calculation::calculate(std::move(l), std::move(r)); },
-            [&l](identifier&& r) -> expression { return make_operation<calculation_function>(l, std::move(r)); },
+        return match(move(r),
+            [&l](datatype&& r) -> expression { return calculation::calculate(move(l), move(r)); },
+            [&l](identifier&& r) -> expression { return make_operation<calculation_function>(l, move(r)); },
             map_union_r<calculation, datatype>{l, env},
             [this, &l](auto&&) -> expression { 
-                env.errors.push_back("types don't match for calculation: " + Show(std::move(l)) + " and " + Show(std::move(r)));
+                env.errors.push_back("types don't match for calculation: " + Show(move(l)) + " and " + Show(move(r)));
                 return nothing{}; 
             }
         ); 

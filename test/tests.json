@@ -138,6 +138,11 @@
     },
     {
         "name": "Non-determinism variable binding",
+        "expr": "y = (1|2); y + y",
+        "result": "(2 | 4)"
+    },
+    {
+        "name": "Non-determinism variable binding 2",
         "expr": "y = (100|110); x = (y|1); (x+y)",
         "result": "(101 | 111 | 200 | 220)"
     },

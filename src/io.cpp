@@ -7,7 +7,7 @@
 namespace cx {
 
 std::string Show(expression&& e) {
-    return match(std::move(e),
+    return match(move(e),
         [](basic_type<int>&&) -> std::string { return "Int"; },
         [](int&& x)  { return std::to_string(x); },
         [](basic_type<std::string>&&) -> std::string { return "String"; },
@@ -19,19 +19,19 @@ std::string Show(expression&& e) {
         [](identifier&& e) { return e.name; },
         [](rec<application>&& e) {
             return std::string("(")
-                 + Show(std::move(e.get().function)) + " "
-                 + Show(std::move(e.get().argument)) + ")"; 
+                 + Show(move(e.get().function)) + " "
+                 + Show(move(e.get().argument)) + ")"; 
         },
         [](rec<then>&& e) {
-            return Show(std::move(e.get().from)) + "; "
-                 + Show(std::move(e.get().to)); 
+            return Show(move(e.get().from)) + "; "
+                 + Show(move(e.get().to)); 
         },
         [](rec<closure>&& e) {
             std::stringstream out;
             out << "("
-                << Show(std::move(e.get().argument))
+                << Show(move(e.get().argument))
                 << " ->' "
-                << Show(std::move(e.get().body))
+                << Show(move(e.get().body))
                 << ")";
             if (!e.get().env.variables.empty()) {
                 out << " [";
@@ -40,7 +40,7 @@ std::string Show(expression&& e) {
                 for (; i >= lastVariableToPrint; --i) {
                     auto& var = e.get().env.variables[i];
                     auto copy = var.second;
-                    out << var.first << ": " << Show(std::move(copy));
+                    out << var.first << ": " << Show(move(copy));
                     if (i != lastVariableToPrint)
                         out << "; ";
                 }
@@ -52,36 +52,36 @@ std::string Show(expression&& e) {
         },
         [](rec<abstraction>&& e) {
             return std::string("(")
-                 + Show(std::move(e.get().argument)) + " -> "
-                 + Show(std::move(e.get().body))
+                 + Show(move(e.get().argument)) + " -> "
+                 + Show(move(e.get().body))
                  + ")"; 
         },
         // [](rec<set>&& e) {
-        //     return std::string("{") + Show(std::move(e.get().x)) + std::string("}"); 
+        //     return std::string("{") + Show(move(e.get().x)) + std::string("}"); 
         // },
         [](rec<intersection_with>&& e) {
-            return Show(std::move(e.get().x)) + std::string(" &"); 
+            return Show(move(e.get().x)) + std::string(" &"); 
         },
         [](rec<equals_to>&& e) {
-            return std::string("{") + Show(std::move(e.get().x)) + std::string("}"); 
+            return std::string("{") + Show(move(e.get().x)) + std::string("}"); 
         },
         [](rec<negated>&& e) {
-            return std::string("!(") + Show(std::move(e.get().f)) + ")"; 
+            return std::string("!(") + Show(move(e.get().f)) + ")"; 
         },
         [](rec<addition_with>&& e) {
-            return Show(std::move(e.get().x)) + std::string(" +"); 
+            return Show(move(e.get().x)) + std::string(" +"); 
         },
         [](rec<subtraction_with>&& e) {
-            return Show(std::move(e.get().x)) + std::string(" -"); 
+            return Show(move(e.get().x)) + std::string(" -"); 
         },
         [](rec<multiplication_with>&& e) {
-            return Show(std::move(e.get().x)) + std::string(" *"); 
+            return Show(move(e.get().x)) + std::string(" *"); 
         },
         [](rec<union_with>&& e) {
-            return Show(std::move(e.get().x)) + std::string(" |"); 
+            return Show(move(e.get().x)) + std::string(" |"); 
         },
         [](rec<implication_with>&& e) {
-            return Show(std::move(e.get().x)) + std::string(";"); 
+            return Show(move(e.get().x)) + std::string(";"); 
         },
         [](addition&&) -> std::string { return "+"; },
         [](equality&&) -> std::string { return "="; },
@@ -104,10 +104,10 @@ struct shows {
 
 expression ShowSafe(expression&& e, environment& env) {
     if (env.isExecuting)
-        e = SubstituteVariables(std::move(e), env);
+        e = SubstituteVariables(move(e), env);
     else
-        e = Eval(std::move(e), env);
-    return match(std::move(e),
+        e = Eval(move(e), env);
+    return match(move(e),
         shows<int>{},
         shows<std::string>{},
         [](auto&& e) -> expression { return application{show{}, e}; }
@@ -116,14 +116,14 @@ expression ShowSafe(expression&& e, environment& env) {
 
 expression Read(expression&& e, environment& env) {
     if (env.isExecuting)
-        e = SubstituteVariables(std::move(e), env);
+        e = SubstituteVariables(move(e), env);
     else
-        e = Eval(std::move(e), env);
+        e = Eval(move(e), env);
 
     if (!env.isExecuting)
         return application{read{}, e};
 
-    return match(std::move(e),
+    return match(move(e),
         [](basic_type<int>&&) -> expression { 
             int x;
             std::cin >> x; 
@@ -135,7 +135,7 @@ expression Read(expression&& e, environment& env) {
             return x; 
         },
         [&env](auto&& e) -> expression { 
-            env.errors.push_back("can't read value of set " + Show(std::move(e)));
+            env.errors.push_back("can't read value of set " + Show(move(e)));
             return nothing{}; 
         }
     );
@@ -151,7 +151,7 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
         std::cout << "\033[0;35m";
     for (int indentation = 0; indentation < env.debugIndentation; ++indentation)
         std::cout << ". ";
-    std::cout << msg << ": \033[1;37m" << Show(std::move(e));
+    std::cout << msg << ": \033[1;37m" << Show(move(e));
     if (!env.variables.empty()) {
         std::cout << "        \033[0;34m[ ";
         for (auto& v: env.variables) {
@@ -159,7 +159,7 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
             // std::cout << "\033[1;34m";
             std::cout << v.first;
             // std::cout << "\033[0;34m";
-            std::cout << ": " << Show(std::move(value)) << "; ";
+            std::cout << ": " << Show(move(value)) << "; ";
         }
         std::cout << "]";
     }
@@ -175,9 +175,9 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
 
 expression Print(expression&& e, environment& env) {
     if (env.isExecuting)
-        e = SubstituteVariables(std::move(e), env);
+        e = SubstituteVariables(move(e), env);
     else
-        e = Eval(std::move(e), env);
+        e = Eval(move(e), env);
 
     if (!env.isExecuting)
         return application{print{}, e};
@@ -186,17 +186,17 @@ expression Print(expression&& e, environment& env) {
         std::cout << *s;
         return unit{};
     } else {
-        env.errors.push_back("print expects string, and got " + Show(std::move(e)));
+        env.errors.push_back("print expects string, and got " + Show(move(e)));
         return nothing{};
     }
 }
 
 expression SetTraceEnabled(expression&& e, environment& env) {
-    auto evaluated = SubstituteVariables(std::move(e), env);
+    auto evaluated = SubstituteVariables(move(e), env);
     if (auto s = std::get_if<int>(&evaluated)) {
         env.isTraceEnabled = static_cast<bool>(s);
     } else {
-        env.errors.push_back("set_trace_enabled expects int, and got " + Show(std::move(evaluated)));
+        env.errors.push_back("set_trace_enabled expects int, and got " + Show(move(evaluated)));
         return nothing{};
     }
     return unit{};

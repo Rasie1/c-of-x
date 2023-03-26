@@ -29,15 +29,15 @@ struct environment {
     inline extension_result add(const std::string& key, expression&& value) {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
-                // oldValue = make_operation<intersection_with>(std::move(oldValue), std::move(value));
-                if (auto intersected = IntersectFind(copy(oldValue), std::move(value), *this))
+                // oldValue = make_operation<intersection_with>(move(oldValue), move(value));
+                if (auto intersected = IntersectFind(copy(oldValue), move(value), *this))
                     oldValue = *intersected;
                 else
                     return extension_result::Void;
                     
                 return extension_result::NotAdded;
             }
-        variables.push_back({key, std::move(value)});
+        variables.push_back({key, move(value)});
         return extension_result::Added;
     }
 
@@ -48,7 +48,7 @@ struct environment {
                 //     return true; // incorrect because no variable is defined?
                 return false;
             }
-        variables.push_back({key, std::move(value)});
+        variables.push_back({key, move(value)});
         return true;
     }
 

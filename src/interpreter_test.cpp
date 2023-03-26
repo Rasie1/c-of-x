@@ -17,15 +17,15 @@ void CheckEquals(expression&& l, expression&& r) {
     environment env;
     auto eq = Eval(
         application{
-            mk(equals_to{mk(std::move(l))}),
-            mk(std::move(r))
+            mk(equals_to{mk(move(l))}),
+            mk(move(r))
         },
         env
     );
     if (std::holds_alternative<nothing>(eq)) {
         std::cout << "Test failed: "     << std::endl << "    " 
-                  << Show(std::move(l)) << std::endl << "    " 
-                  << Show(std::move(r)) << std::endl;
+                  << Show(move(l)) << std::endl << "    " 
+                  << Show(move(r)) << std::endl;
     }
 }
 
@@ -33,15 +33,15 @@ void CheckNotEquals(expression&& l, expression&& r) {
     environment env;
     auto eq = Eval(
         application{
-            mk(equals_to{mk(std::move(l))}),
-            mk(std::move(r))
+            mk(equals_to{mk(move(l))}),
+            mk(move(r))
         },
         env
     );
     if (!std::holds_alternative<nothing>(eq)) {
         std::cout << "Test failed: "     << std::endl << "    " 
-                  << Show(std::move(l)) << std::endl << "    " 
-                  << Show(std::move(r)) << std::endl;
+                  << Show(move(l)) << std::endl << "    " 
+                  << Show(move(r)) << std::endl;
     }
 }
 
@@ -70,7 +70,7 @@ void test() {
         },
         10
     );
-    CheckEquals(std::move(cx::parser::build(*cx::parser::parse_code("1 + 2"))), 
+    CheckEquals(move(cx::parser::build(*cx::parser::parse_code("1 + 2"))), 
                 3);
 }
 

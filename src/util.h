@@ -6,6 +6,8 @@
 
 namespace cx {
 
+using std::move;
+
 class rc {
         mutable std::size_t count{0};
     public:

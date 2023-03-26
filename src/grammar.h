@@ -404,18 +404,18 @@ struct rearrange : tao::pegtl::parse_tree::apply<rearrange>
     static void transform(std::unique_ptr<Node>& n, States&&... st)
     {
         // if( n->children.size() == 1 ) {
-        //     n = std::move( n->children.back() );
+        //     n = move( n->children.back() );
         // }
         // else {
         //     n->remove_content();
         //     auto& c = n->children;
-        //     auto r = std::move( c.back() );
+        //     auto r = move( c.back() );
         //     c.pop_back();
-        //     auto o = std::move( c.back() );
+        //     auto o = move( c.back() );
         //     c.pop_back();
-        //     o->children.emplace_back( std::move( n ) );
-        //     o->children.emplace_back( std::move( r ) );
-        //     n = std::move( o );
+        //     o->children.emplace_back( move( n ) );
+        //     o->children.emplace_back( move( r ) );
+        //     n = move( o );
         //     transform( n->children.front(), st... );
         // }
     }

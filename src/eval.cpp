@@ -74,7 +74,7 @@ expression Eval(expression&& e,
                 environment& env) {
     DebugPrint("eval", e, env);
     env.increaseDebugIndentation();
-    auto ret = match(std::move(e),
+    auto ret = match(move(e),
         [&env](rec<application>&& e) {
             DebugPrint("apply", e.get(), env, 2);
             env.increaseDebugIndentation();
@@ -85,18 +85,18 @@ expression Eval(expression&& e,
             {
                 stash executionState(env.isExecuting, false);
                 
-                function = Eval(std::move(e.get().function), env);
-                argument = Eval(std::move(e.get().argument), env);
+                function = Eval(move(e.get().function), env);
+                argument = Eval(move(e.get().argument), env);
             }
 
-            auto applied = Apply(std::move(function), std::move(argument), env);
+            auto applied = Apply(move(function), move(argument), env);
 
             return applied;
         },
         [&env](rec<then>&& e) {
-            auto from = Eval(std::move(e.get().from), env);
+            auto from = Eval(move(e.get().from), env);
             DebugPrint("then", 0, env, 2);
-            return match(std::move(from),
+            return match(move(from),
                 [&env](nothing&&) -> expression { 
                     env.errors.push_back("incorrect implication");
                     return nothing{}; 
@@ -104,26 +104,26 @@ expression Eval(expression&& e,
                 [&e, &env](auto&& from) -> expression {
                     // bool wasExecuting = env.isExecuting;
                     // stash executionState(env.isExecuting, false);
-                    // auto to = Eval(std::move(e.get().to), env); 
+                    // auto to = Eval(move(e.get().to), env); 
                     // if (!wasExecuting) {
-                    //     return then{std::move(from), std::move(to)};
+                    //     return then{move(from), move(to)};
                     // } else {
                     //     return to;
                     // }
                     if (!env.isExecuting) {
                         stash executionState(env.isExecuting, false);
-                        auto to = Eval(std::move(e.get().to), env); 
-                        return then{std::move(from), std::move(to)};
+                        auto to = Eval(move(e.get().to), env); 
+                        return then{move(from), move(to)};
                     } else {
-                        auto to = Eval(std::move(e.get().to), env); 
+                        auto to = Eval(move(e.get().to), env); 
                         return to;
                     }
                 }
             );
         },
         [&env](rec<negated>&& e) -> expression { 
-            auto function = Eval(std::move(e.get().f), env);
-            return Negate(std::move(function), env); 
+            auto function = Eval(move(e.get().f), env);
+            return Negate(move(function), env); 
         },
         [&env](rec<abstraction>&& e) -> expression {
             DebugPrint("-- Constructing closure", 0, env, 2);
@@ -133,7 +133,7 @@ expression Eval(expression&& e,
             auto newEnv = env;
             newEnv.isExecuting = false;
 
-            auto pattern = Eval(std::move(e.get().argument), newEnv);
+            auto pattern = Eval(move(e.get().argument), newEnv);
 
             if (auto id = std::get_if<identifier>(&pattern)) {
                 for (auto& [variable, value]: newEnv.variables) {
@@ -145,7 +145,7 @@ expression Eval(expression&& e,
                 }
             }
 
-            return closure{pattern, std::move(e.get().body), newEnv}; 
+            return closure{pattern, move(e.get().body), newEnv}; 
         },
         [](auto&& e) -> expression { return e; }
     );

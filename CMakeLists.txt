@@ -32,5 +32,8 @@ if (MSVC)
         /W4 /WX
     )
 else ()
-    target_compile_options(main PRIVATE -Wall -Wextra -pedantic -Werror -g -O0 -std=c++23)
+    target_compile_options(main 
+        PRIVATE 
+        -Wall -Wextra -pedantic -Werror -g -O0 -std=c++23
+        -DBOOST_MOVE_USE_STANDARD_LIBRARY_MOVE)
 endif ()

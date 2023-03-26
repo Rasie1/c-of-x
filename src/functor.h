@@ -13,20 +13,19 @@ struct map_union_l {
     auto operator()(rec<application>&& lApplication) -> expression {
         DebugPrint("map_union_l, r", r, env);
         auto& rUnion = lApplication.get().argument;
-        return match(std::move(lApplication.get().function),
+        return match(move(lApplication.get().function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
-                auto rCopy = r;
                 env.increaseDebugIndentation();
                 defer { env.decreaseDebugIndentation(); };
-                auto lCalculated = operation(std::move(lUnion.get().x), std::move(r),     env);
-                auto rCalculated = operation(std::move(rUnion),         std::move(rCopy), env);
-                return Union(std::move(lCalculated), std::move(rCalculated));
+                auto lCalculated = operation(move(lUnion.get().x), copy(r),     env);
+                auto rCalculated = operation(move(rUnion),         move(r), env);
+                return Union(move(lCalculated), move(rCalculated));
             },
             [&lApplication, this](auto&& e) -> expression {
-                auto applied = application{e, std::move(lApplication.get().argument)};
+                auto applied = application{e, move(lApplication.get().argument)};
                 if constexpr (failOnUnknown) {
                     env.errors.push_back(
-                        "can't correlate " + Show(std::move(r)) + " and " + Show(std::move(applied))
+                        "can't correlate " + Show(move(r)) + " and " + Show(move(applied))
                     );
                     return nothing{};
                 } else {
@@ -45,24 +44,23 @@ struct map_union_r {
     auto operator()(rec<application>&& rApplication) -> expression { 
         DebugPrint("map_union_r, l", l, env);
         auto& rUnion = rApplication.get().argument;
-        return match(std::move(rApplication.get().function),
+        return match(move(rApplication.get().function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
-                auto lCopy = l;
                 DebugPrint("map_union_r, union_with, l", lUnion, env);
                 env.increaseDebugIndentation();
-                auto lCalculated = operation_for_datatype{lUnion.get().x, env}(std::move(l));
+                auto lCalculated = operation_for_datatype{lUnion.get().x, env}(copy(l));
                 env.decreaseDebugIndentation();
                 DebugPrint("map_union_r, union_with, r", rUnion, env);
                 env.increaseDebugIndentation();
-                auto rCalculated = operation_for_datatype{rUnion        , env}(std::move(lCopy));
+                auto rCalculated = operation_for_datatype{rUnion        , env}(move(l));
                 env.decreaseDebugIndentation();
-                return Union(std::move(lCalculated), std::move(rCalculated));
+                return Union(move(lCalculated), move(rCalculated));
             },
             [&rApplication, this](auto&& e) -> expression {
-                auto applied = application{e, std::move(rApplication.get().argument)};
+                auto applied = application{e, move(rApplication.get().argument)};
                 if constexpr (failOnUnknown) {
                     env.errors.push_back(
-                        "can't correlate " + Show(std::move(l)) + " and " + Show(std::move(applied))
+                        "can't correlate " + Show(move(l)) + " and " + Show(move(applied))
                     );
                     return nothing{};
                 } else {
@@ -77,11 +75,11 @@ template <typename container, typename F>
 struct unmapped {
     environment& env;
     expression operator()(rec<container>&& e) {
-        auto wrapped = wrap(std::move(e.get()));
-        return Eval(std::move(wrapped), env);
+        auto wrapped = wrap(move(e.get()));
+        return Eval(move(wrapped), env);
     }
 private:
-    expression wrap(equals_to&& e) { return equals_to{F{std::move(e.x)}}; }
+    expression wrap(equals_to&& e) { return equals_to{F{move(e.x)}}; }
 };
 
 }

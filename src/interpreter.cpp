@@ -29,7 +29,7 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
     if (verbosity) {
         std::cout << "Environment:" << std::endl;
         for (auto [k, v]: env.variables) {
-            std::cout << k << ": " << Show(std::move(v)) << std::endl;
+            std::cout << k << ": " << Show(move(v)) << std::endl;
         }
 
         if (env.errors.empty()) {
@@ -52,7 +52,7 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
     if (verbosity) {
         std::cout << "Environment:" << std::endl;
         for (auto [k, v]: checkingEnv.variables) {
-            std::cout << k << ": " << Show(std::move(v)) << std::endl;
+            std::cout << k << ": " << Show(move(v)) << std::endl;
         }
         if (checkingEnv.errors.empty()) {
             std::cout << std::endl;
@@ -71,12 +71,12 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
 
     env.isExecuting = true;
 
-    result = SubstituteVariables(std::move(result), env);
+    result = SubstituteVariables(move(result), env);
 
     if (verbosity)
         std::cout << "Executed:" << std::endl;
 
-    std::cout << Show(std::move(result)) << std::endl;
+    std::cout << Show(move(result)) << std::endl;
 }
 
 void eval(const char* code, int verbosity) {
