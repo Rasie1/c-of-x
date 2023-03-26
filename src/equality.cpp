@@ -14,7 +14,7 @@ struct equals_with_negated {
         auto [evaluatedr, rvar] = FixWithVariable(std::move(r), falseEnv);
         DebugPrint(std::string("eq with negated, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
         DebugPrint(std::string("eq with negated, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
-        auto eq = IsEqual(std::move(evaluatedl), std::move(evaluatedr), falseEnv);
+        auto eq = IsEqual(copy(evaluatedl), copy(evaluatedr), falseEnv);
         DebugPrint("eq with negated, is equal", eq, env);
         return match(std::move(eq),
             [&lvar, &rvar](nothing&&) -> expression { 
@@ -26,8 +26,29 @@ struct equals_with_negated {
                     return any{}; 
             },
             [](identifier&& e) -> expression { return e; },
-            [](auto&&) -> expression { return nothing{}; }
+            [this, &evaluatedl, &evaluatedr](auto&&) -> expression { 
+                env.errors.push_back(Show(std::move(evaluatedl)) + " is equals to " + Show(std::move(evaluatedr)));
+                return nothing{}; 
+            }
         );
+    }
+};
+
+template<typename datatype>
+struct equals_for_datatype {
+    expression& r;
+    environment& env;
+    expression operator()(datatype&& l) {
+        return match(std::move(r),
+            [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
+            [&l](identifier&& v) -> expression { return make_operation<equals_to>(l, std::move(v)); },
+            map_union_r<equals_for_datatype<datatype>, datatype>{l, env},
+            [&l](any&&) -> expression { return l; },
+            [this, &l](auto&& r) -> expression { 
+                env.errors.push_back(Show(std::move(l)) + " is not equal to " + Show(std::move(r)));
+                return nothing{}; 
+            }
+        ); 
     }
 };
 
@@ -37,13 +58,21 @@ expression IsEqual(expression&& l,
     DebugPrint("is equal 1", l, env);
     DebugPrint("is equal 2", r, env);
     auto result = match(std::move(l),
-        equals_for_datatype<int>{r},
-        equals_for_datatype<basic_type<int>>{r},
-        equals_for_datatype<std::string>{r},
-        equals_for_datatype<basic_type<std::string>>{r},
+        equals_for_datatype<int>{r, env},
+        equals_for_datatype<basic_type<int>>{r, env},
+        equals_for_datatype<std::string>{r, env},
+        equals_for_datatype<basic_type<std::string>>{r, env},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(v), std::move(r)); },
         map_union_l{r, env, IsEqual},
         equals_with_negated{r, env},
+        [&r, &env](rec<equals_to>&& e) -> expression {
+            auto element = GetElement(std::move(r), env);
+            auto result = IsEqual(std::move(e.get().x), std::move(element), env);
+            if (std::get_if<nothing>(&result))
+                return result;
+            else
+                return equals_to{std::move(result)};
+        },
         [&r, &env](rec<then>&& e) -> expression {
             auto from = Eval(std::move(e.get().from), env);
             DebugPrint("then in is equal", 0, env, 2);
@@ -58,10 +87,10 @@ expression IsEqual(expression&& l,
             );
         },
         [&r](any&&) -> expression { return r; },
-        [&r](auto&& a) -> expression { 
+        [&r, &env](auto&& a) -> expression { 
             if (std::get_if<any>(&r))
                 return a;
-
+            env.errors.push_back(Show(std::move(a)) + " is not equal to " + Show(std::move(r)));
             return nothing{}; 
         }
     );
@@ -94,6 +123,7 @@ expression Equals(expression&& l,
         }
         return r;
     }
+    env.errors.clear();
 
     auto ret = IsEqual(std::move(l), std::move(r), env);
     DebugPrint("equality result", ret, env);

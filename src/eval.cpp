@@ -102,11 +102,20 @@ expression Eval(expression&& e,
                     return nothing{}; 
                 },
                 [&e, &env](auto&& from) -> expression {
-                    auto to = Eval(std::move(e.get().to), env); 
-
+                    // bool wasExecuting = env.isExecuting;
+                    // stash executionState(env.isExecuting, false);
+                    // auto to = Eval(std::move(e.get().to), env); 
+                    // if (!wasExecuting) {
+                    //     return then{std::move(from), std::move(to)};
+                    // } else {
+                    //     return to;
+                    // }
                     if (!env.isExecuting) {
+                        stash executionState(env.isExecuting, false);
+                        auto to = Eval(std::move(e.get().to), env); 
                         return then{std::move(from), std::move(to)};
                     } else {
+                        auto to = Eval(std::move(e.get().to), env); 
                         return to;
                     }
                 }

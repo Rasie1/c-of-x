@@ -181,6 +181,7 @@ expression Intersect(expression&& l,
         defer { env.decreaseDebugIndentation(); };
         if (Unapply(copy(l), copy(r), env))
             return r;
+        env.errors.clear();
     }
     {
         DebugPrint("intersect unapply r", r, env);
@@ -188,18 +189,22 @@ expression Intersect(expression&& l,
         defer { env.decreaseDebugIndentation(); };
         if (Unapply(copy(r), copy(l), env))
             return l;
+        env.errors.clear();
     }
     auto result = match(std::move(l),
-        intersect_for_datatype<int>{r},
-        intersect_for_datatype<basic_type<int>>{r},
-        intersect_for_datatype<std::string>{r},
-        intersect_for_datatype<basic_type<std::string>>{r},
+        intersect_for_datatype<int>{r, env},
+        intersect_for_datatype<basic_type<int>>{r, env},
+        intersect_for_datatype<std::string>{r, env},
+        intersect_for_datatype<basic_type<std::string>>{r, env},
         [&r, &env](rec<equals_to>&& l) -> expression {
             return match(std::move(r),
                 [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(std::move(l.get().x), std::move(r.get().x), env)}; },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
-                [](auto&&) -> expression { return nothing{}; }
+                [&env](auto&& e) -> expression { 
+                    env.errors.push_back("can't intersect with " + Show(std::move(e)));
+                    return nothing{}; 
+                }
             );
         },
         [&r, &env](rec<intersection_with>&& l) -> expression {
@@ -209,15 +214,16 @@ expression Intersect(expression&& l,
                 },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(std::move(l), std::move(v)); },
-                [](auto&&) -> expression { return nothing{}; }
+                [&env](auto&& e) -> expression { 
+                    env.errors.push_back("can't intersect with " + Show(std::move(e)));
+                    return nothing{}; 
+                }
             );
         },
         [&r, &env](rec<application>&& lApplication) -> expression {
             auto rCopy = r;
             auto lCopy = lApplication.get();
-            auto mapped = map_union_l{rCopy, env, Intersect}(std::move(lApplication.get()));
-            if (mapped == expression{lCopy})
-                return nothing{};
+            auto mapped = map_union_l{rCopy, env, Intersect}.operator()<true>(std::move(lApplication.get()));
             return mapped;
         },
         [&r, &env](rec<closure>&& l) -> expression {

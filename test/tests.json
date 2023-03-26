@@ -19,7 +19,12 @@
     {
         "name": "Inequality failed",
         "expr": "2 != 2",
-        "result": "void"
+        "result": "Compile error:\n2 is equals to 2"
+    },
+    {
+        "name": "Datatypes",
+        "expr": "\"3\" = 3",
+        "result": "Compile error:\n\"3\" is not equal to 3"
     },
     {
         "name": "Application test",
@@ -112,6 +117,16 @@
         "result": "1"
     },
     {
+        "name": "Union and intersection 6",
+        "expr": "(1 | 2) & (1 | 2 | 3)",
+        "result": "(1 | 2)"
+    },
+    {
+        "name": "Union and intersection 7",
+        "expr": "(1 | 2 | 3) & (1 | 2)",
+        "result": "(1 | 2)"
+    },
+    {
         "name": "Non-determinism with functions",
         "expr": "f x = (g y = 20 + y; g x); f (1|3)",
         "result": "(21 | 23)"
@@ -123,7 +138,7 @@
     },
     {
         "name": "Non-determinism variable binding",
-        "expr": "y = (100|110); x = (y|1); x+y",
+        "expr": "y = (100|110); x = (y|1); (x+y)",
         "result": "(101 | 111 | 200 | 220)"
     },
     {
@@ -229,7 +244,7 @@
     {
         "name": "String type error",
         "expr": "String 3",
-        "result": "void"
+        "result": "Compile error:\nexpecting String, got 3"
     },
     {
         "name": "Int variable",
@@ -254,17 +269,17 @@
     {
         "name": "String variable intersection",
         "expr": "String x & 3",
-        "result": "void"
+        "result": "Compile error:\ncan't correlate 3 and (String any)"
     },
     {
         "name": "String variable intersection 2",
         "expr": "3 & String x",
-        "result": "void"
+        "result": "Compile error:\ncan't correlate 3 and (String any)"
     },
     {
         "name": "String type error 2",
         "expr": "String x; x = 3",
-        "result": "void"
+        "result": "Compile error:\ncan't correlate 3 and (String any)"
     },
     {
         "name": "Int lambda",
@@ -299,12 +314,12 @@
     {
         "name": "Zero intersection is not allowed",
         "expr": "x = 3; x & 2; x",
-        "result": "void"
+        "result": "Compile error:\nincorrect implication"
     },
     {
         "name": "Zero intersection is not allowed 2",
         "expr": "x = 3; 2 & x; x",
-        "result": "void"
+        "result": "Compile error:\nincorrect implication"
     },
     {
         "name": "Function reuse",
@@ -317,19 +332,34 @@
         "result": "3"
     },
     {
-        "name": "Funcion declaration",
+        "name": "Function declaration",
         "expr": "f x = x",
-        "result": "x ->' x"
+        "result": "(x ->' x)"
     },
     {
         "name": "Side effects",
         "expr": "f x = (print \"wrong\")",
-        "result": "x ->' (cx::print \"wrong\")"
+        "result": "(x ->' (print \"wrong\"))"
     },
     {
         "name": "Side effects 2",
         "expr": "f x = (print \"1\"; print \"2\"; print \"3\"); f 1",
         "result": "123cx::unit"
+    },
+    {
+        "name": "Side effects 3",
+        "expr": "(myFunction (x: Int) = print (show x)); i = 2; myFunction i",
+        "result": "2cx::unit"
+    },
+    {
+        "name": "Side effects 4",
+        "expr": "i = print \"3\"; (x -> show x) i",
+        "result": "3(show cx::unit)"
+    },
+    {
+        "name": "Side effects 5",
+        "expr": "i = print \"3\"; (x -> x) i",
+        "result": "33cx::unit"
     },
     {
         "name": "Function renaming with argument",

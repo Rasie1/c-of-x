@@ -28,9 +28,11 @@ std::string Show(expression&& e) {
         },
         [](rec<closure>&& e) {
             std::stringstream out;
-            out << Show(std::move(e.get().argument))
+            out << "("
+                << Show(std::move(e.get().argument))
                 << " ->' "
-                << Show(std::move(e.get().body));
+                << Show(std::move(e.get().body))
+                << ")";
             if (!e.get().env.variables.empty()) {
                 out << " [";
                 int i = e.get().env.variables.size() - 1;
@@ -49,8 +51,10 @@ std::string Show(expression&& e) {
             return out.str();
         },
         [](rec<abstraction>&& e) {
-            return Show(std::move(e.get().argument)) + " -> "
-                 + Show(std::move(e.get().body)); 
+            return std::string("(")
+                 + Show(std::move(e.get().argument)) + " -> "
+                 + Show(std::move(e.get().body))
+                 + ")"; 
         },
         // [](rec<set>&& e) {
         //     return std::string("{") + Show(std::move(e.get().x)) + std::string("}"); 
@@ -85,6 +89,9 @@ std::string Show(expression&& e) {
         [](implication&&) -> std::string { return ";"; },
         [](union_&&) -> std::string { return "|"; },
         [](any&&) -> std::string { return "any"; },
+        [](print&&) -> std::string { return "print"; },
+        [](show&&) -> std::string { return "show"; },
+        [](read&&) -> std::string { return "read"; },
         [](nothing&&) -> std::string { return "void"; },
         [](auto&& e)  { return boost::core::demangle(typeid(decltype(e)).name()); }
     );
@@ -96,7 +103,10 @@ struct shows {
 };
 
 expression ShowSafe(expression&& e, environment& env) {
-    e = SubstituteVariables(std::move(e), env);
+    if (env.isExecuting)
+        e = SubstituteVariables(std::move(e), env);
+    else
+        e = Eval(std::move(e), env);
     return match(std::move(e),
         shows<int>{},
         shows<std::string>{},
@@ -105,7 +115,10 @@ expression ShowSafe(expression&& e, environment& env) {
 }
 
 expression Read(expression&& e, environment& env) {
-    e = SubstituteVariables(std::move(e), env);
+    if (env.isExecuting)
+        e = SubstituteVariables(std::move(e), env);
+    else
+        e = Eval(std::move(e), env);
 
     if (!env.isExecuting)
         return application{read{}, e};
@@ -121,7 +134,10 @@ expression Read(expression&& e, environment& env) {
             std::cin >> x; 
             return x; 
         },
-        [](auto&&) -> expression { return nothing{}; }
+        [&env](auto&& e) -> expression { 
+            env.errors.push_back("can't read value of set " + Show(std::move(e)));
+            return nothing{}; 
+        }
     );
 }
 
@@ -147,17 +163,24 @@ void DebugPrint(const std::string& msg, expression e, environment& env, int colo
         }
         std::cout << "]";
     }
+    if (!env.errors.empty()) {
+        std::cout << "       \033[0;31m";
+        for (auto& error: env.errors) {
+            std::cout << " " << error;
+        }
+    }
     std::cout << std::endl;
     std::cout << "\033[0m";
 }
 
 expression Print(expression&& e, environment& env) {
-    e = Eval(std::move(e), env);
+    if (env.isExecuting)
+        e = SubstituteVariables(std::move(e), env);
+    else
+        e = Eval(std::move(e), env);
 
     if (!env.isExecuting)
         return application{print{}, e};
-
-    e = SubstituteVariables(std::move(e), env);
 
     if (auto s = std::get_if<std::string>(&e)) {
         std::cout << *s;

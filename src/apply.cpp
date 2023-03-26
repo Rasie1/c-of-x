@@ -11,7 +11,7 @@ expression Calculate(expression&& l,
     r = Eval(std::move(r), env);
     l = Eval(std::move(l), env);
     return match(std::move(l),
-        operation_for_datatype<int>{r},
+        operation_for_datatype<int>{r, env},
         // operation_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<functor>(std::move(v), std::move(r)); },
         map_union_l{r, env, Calculate<operation_for_datatype, functor>},
@@ -59,6 +59,24 @@ struct check_datatype {
     }
 };
 
+expression GetSet(expression&& e, environment& env) {
+    DebugPrint("getset", e, env);
+    auto ret = match(std::move(e),
+        [&env](rec<application>&& app) -> expression {
+            return match(std::move(app.get().function),
+                // todo: generalize and check function signatures
+                [&app](read&&) -> expression { return app.get().argument; },
+                [&app](show&&) -> expression { return basic_type<std::string>{}; },
+                [&app](print&&) -> expression { return cx::unit{}; },
+                [](auto&&) -> expression { return cx::any{}; }
+            );
+        },
+        [](auto&&) -> expression { return cx::any{}; }
+    );
+
+    return ret;
+}
+
 expression Apply(expression&& function,
                  expression&& argument,
                  environment& env) {
@@ -82,8 +100,20 @@ expression Apply(expression&& function,
                         auto rApplied = Apply(std::move(functionCopy), std::move(r), env);
                         return Union(std::move(lApplied), std::move(rApplied));
                     } else {
-                        env.errors.push_back("can't apply application to closure");
-                        return nothing{};
+                        // DebugPrint("======================", app, env);
+                        // extra typecheck can happen here. It tries to apply application that
+                        // can't be resolved to be applied the closure - e.g. with side effects
+                        // now we have to get some extra information about the set of that expr
+
+                        // auto set = GetSet(copy(app), env);
+                        // auto envForTypecheck = env;
+
+                        if (env.isExecuting) {
+                            env.errors.push_back("can't apply application to closure");
+                            return nothing{};
+                        } else {
+                            return app.get();
+                        }
                     }
                 },
                 [&env, &function](auto&& argument) -> expression {

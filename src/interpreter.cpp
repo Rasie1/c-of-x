@@ -24,7 +24,7 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
     if (verbosity >= 2)
         env.isTraceEnabled = true;
 
-    auto result = SubstituteVariables(copy(expr), env);
+    auto result = Eval(copy(expr), env);
 
     if (verbosity) {
         std::cout << "Environment:" << std::endl;
@@ -37,14 +37,36 @@ void eval_and_print(const std::shared_ptr<tao::pegtl::parse_tree::node>& parsed,
             std::cout << "Compiled:" << std::endl;
             std::cout << Show(copy(result)) << std::endl;
             std::cout << std::endl;
-        } else {
-            std::cout << "Compile error:" << std::endl;
-            for (auto& error: env.errors) {
-                std::cout << error << std::endl;
-            }
-
-            return;
         }
+    }
+    if (!env.errors.empty()) {
+        std::cout << "Compile error:" << std::endl;
+        for (auto& error: env.errors) {
+            std::cout << error << std::endl;
+        }
+        return;
+    }
+    
+    auto checkingEnv = env;
+    auto checked = SubstituteVariables(copy(result), checkingEnv);
+    if (verbosity) {
+        std::cout << "Environment:" << std::endl;
+        for (auto [k, v]: checkingEnv.variables) {
+            std::cout << k << ": " << Show(std::move(v)) << std::endl;
+        }
+        if (checkingEnv.errors.empty()) {
+            std::cout << std::endl;
+            std::cout << "Type checked:" << std::endl;
+            std::cout << Show(copy(checked)) << std::endl;
+            std::cout << std::endl;
+        }
+    }
+    if (!checkingEnv.errors.empty()) {
+        std::cout << "Compile error:" << std::endl;
+        for (auto& error: checkingEnv.errors) {
+            std::cout << error << std::endl;
+        }
+        return;
     }
 
     env.isExecuting = true;
