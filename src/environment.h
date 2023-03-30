@@ -20,15 +20,25 @@ struct environment {
         return nullptr;
     }
 
+    inline expression* get(const std::string& key) {
+        for (auto& [currentKey, value]: boost::adaptors::reverse(variables))
+            if (currentKey == key)
+                return &value;
+        return nullptr;
+    }
+
     enum class extension_result {
+        Match,
         NotAdded,
         Added,
-        Void
+        Void,
     };
     
     inline extension_result add(const std::string& key, expression&& value) {
         for (auto& [currentKey, oldValue]: boost::adaptors::reverse(variables))
             if (currentKey == key) {
+                if (oldValue == value)
+                    return extension_result::Match;
                 // oldValue = make_operation<intersection_with>(move(oldValue), move(value));
                 if (auto intersected = IntersectFind(copy(oldValue), move(value), *this))
                     oldValue = *intersected;

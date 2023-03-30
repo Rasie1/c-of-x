@@ -1,4 +1,4 @@
-#include "unapply.h"
+    #include "unapply.h"
 #include "operations.h"
 
 namespace cx {
@@ -24,6 +24,7 @@ struct unapply_for_datatype {
                 else
                     return {false, v.name};
             },
+            // [](any&&) -> unapply_result { return {true, {}}; },
             [](auto&&) -> unapply_result { return {}; }
         ); 
     }
@@ -35,11 +36,8 @@ struct unapply_for_datatype {
             [&pattern](basic_type<datatype>&& valueToMatch) -> unapply_result { return {pattern == valueToMatch, {}}; },
             [&pattern, this](identifier&& valueToMatch) -> unapply_result {
                 DebugPrint("type and identifier", pattern, env);
-                auto defined = ExtendEnvironment(equals_to{move(valueToMatch)}, move(pattern), env);
-                if (defined)
-                    return {true, {}};
-                else
-                    return {false, valueToMatch.name};
+                auto added = env.add(valueToMatch.name, equals_to{move(pattern)});
+                return {added != environment::extension_result::Void, valueToMatch.name};
             },
             [&pattern, this](rec<abstraction>&& e) -> unapply_result { // shouldn't this apply to above as well?
                 auto a = e.get();
@@ -66,6 +64,7 @@ struct unapply_for_datatype {
                 auto newPattern = application{move(pattern), any{}};
                 return Unapply(move(newPattern), move(e.get().x), env);
             },
+            // [](any&&) -> unapply_result { return {true, {}}; },
             [](auto&&) -> unapply_result { return {}; }
         ); 
     }
@@ -181,12 +180,13 @@ unapply_result Unapply(expression&& pattern,
     env.increaseDebugIndentation();
     auto ret = match(move(pattern),
         unapply_for_datatype<int>{valueToMatch, env},
-        // unapply_for_datatype<basic_type<int>>{valueToMatch, env},
         unapply_for_datatype<std::string>{valueToMatch, env},
-        // unapply_for_datatype<basic_type<std::string>>{valueToMatch, env},
         [](any&&) -> unapply_result { return {true, {}}; },
         equals_with_negated{valueToMatch, env},
         [&env, &valueToMatch](identifier&& pattern) -> unapply_result {
+            if (expression{pattern} == valueToMatch)
+                return {true, pattern.name};
+
             auto newEnv = env;
             auto oldEvaluated = Eval(move(valueToMatch), newEnv);
             auto oldCopy = oldEvaluated;
@@ -205,6 +205,8 @@ unapply_result Unapply(expression&& pattern,
             auto isEnvironmentExtended = env.add(pattern.name, equals_to{copy(newVariable)});
             if (isEnvironmentExtended == environment::extension_result::Added) {
                 return {true, pattern.name};
+            } else if (isEnvironmentExtended == environment::extension_result::Match) {
+                return {true, pattern.name};
             } else if (isEnvironmentExtended == environment::extension_result::Void) {
                 return {};
             } else {
@@ -221,10 +223,22 @@ unapply_result Unapply(expression&& pattern,
                 //     unapplied.outerVariable = pattern.name;
                 unapplied.outerVariable = pattern.name;
 
-                DebugPrint("Unapplied variable", unapplied.outerVariable, env);
+                DebugPrint("unapplied variable", unapplied.outerVariable, env);
 
                 return unapplied;
             }
+        },
+
+        // new stuff
+        [&env, &valueToMatch](rec<equals_to>&& pattern) -> unapply_result {
+            auto element = GetElement(move(valueToMatch), env);
+            auto intersection = Unapply(move(pattern.get().x), move(element), env);
+            return intersection;
+            // return Unapply(move(intersection), move(element), env);
+            // if (std::get_if<identifier>(&intersection))
+            //     return {true, {}};
+            // else 
+            //     return {};
         },
 
         // something wrong with associativity in parser and this doesn't work as expected
@@ -255,6 +269,39 @@ unapply_result Unapply(expression&& pattern,
                 // or perhaps closure arg will become integer
             }
         },
+        
+
+        // [&env, &valueToMatch](rec<closure>&& function) -> unapply_result {
+
+        //     auto combinedEnv = env;
+        //     for (auto& v: function.get().env.variables)
+        //         combinedEnv.variables.push_back(move(v));
+            
+        //     auto evaluated = SubstituteVariables(move(function.get().body), combinedEnv);
+
+        //     // todo: what if the output is an id?
+
+
+        //     auto set = Eval(copy(valueToMatch), env);
+        //     if (auto rightClosure = std::get_if<rec<closure>>(&set)) {
+        //         auto unappliedArgument = Unapply(move(function.get().argument), 
+        //                                          move(rightClosure->get().argument),
+        //                                          env);
+        //         if (!unappliedArgument.success) {
+        //             return {}; // error?
+        //         }
+        //     }
+        //     return Unapply(move(evaluated), GetElement(move(valueToMatch), env), env);
+
+        //     // return match(move(set),
+        //     //     [](rec<closure>&& e) { 
+        //     //         return e.get().x; 
+        //     //     },
+        //     //     [&env](auto&& e) -> expression { 
+        //     //         return GetElement(move(e), env); 
+        //     //     }
+        //     // );
+        // },
 
         [&env, &valueToMatch](rec<then>&& e) -> unapply_result {
             auto from = Eval(move(e.get().from), env);
@@ -273,7 +320,8 @@ unapply_result Unapply(expression&& pattern,
     );
     env.decreaseDebugIndentation();
     DebugPrint("unapply result", 
-                (ret ? std::string("yes") : std::string("no")) + (ret.outerVariable.empty() ? "" : (" " + ret.outerVariable)), 
+                (ret ? std::string("yes") : std::string("no")) + 
+                (ret.outerVariable.empty() ? "" : (", variable: " + ret.outerVariable)), 
                 env);
     return ret;
 }

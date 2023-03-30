@@ -15,7 +15,7 @@ expression Calculate(expression&& l,
         // operation_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<functor>(move(v), move(r)); },
         map_union_l{r, env, Calculate<operation_for_datatype, functor>},
-        [&env](auto&& e) -> expression { 
+        [&env](auto&& e) -> expression {
             env.errors.push_back(std::string("can't do arithmetic with ") + Show(e));
             return nothing{};
         }
@@ -26,6 +26,11 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     DebugPrint("in closure", function, env);
     auto& pattern = function.argument;
     auto [unapplied, outerVariable] = Unapply(move(pattern), move(argumentValue), function.env);
+
+    if (!unapplied) {
+        env.errors.push_back(std::string("couldn't apply argument"));
+        return nothing{};
+    }
 
     auto combinedEnv = env;
     for (auto& v: function.env.variables)

@@ -370,5 +370,25 @@
         "name": "Function renaming with argument",
         "expr": "f x = show x; f 3",
         "result": "\"3\""
+    },
+    {
+        "name": "Function type",
+        "expr": "(Int -> Int) (1 -> 1)",
+        "result": "(1 ->' 1)"
+    },
+    {
+        "name": "Function type 1",
+        "expr": "(Int -> Int) (\"1\" -> 1)",
+        "result": "Compile error"
+    },
+    {
+        "name": "Function type 2",
+        "expr": "(Int -> Int) (1 -> \"1\")",
+        "result": "Compile error"
+    },
+    {
+        "name": "Function type 3",
+        "expr": "(1 -> 1) (Int -> Int)",
+        "result": "Compile error"
     }
 ]

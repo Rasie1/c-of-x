@@ -7,6 +7,8 @@
 namespace cx {
 
 expression GetElement(expression&& set, environment& env) {
+    DebugPrint("get element", set, env);
+    set = Eval(move(set), env);
     return match(move(set),
         [](rec<equals_to>&& e) { return e.get().x; },
         [&env](int&& e) -> expression {
@@ -19,106 +21,6 @@ expression GetElement(expression&& set, environment& env) {
         },
         [](auto&& e) -> expression { return application{move(e), any{}}; }
     );
-}
-
-template<typename operation>
-expression map_union(operation&& op, expression&& e, environment& env) {
-    return match(move(e),
-        [&](rec<application>&& e) -> expression {
-            return op(move(e), env);
-        },
-        [&](auto&& e) -> expression {
-            return op(move(e), env);
-        }
-    );
-}
-
-inline expression SubstituteVariables(expression&& expr, environment& env, std::vector<std::string>& seen) {
-    // TODO: possibly this should be BFS
-    DebugPrint("substitute - evaluating", expr, env);
-    env.increaseDebugIndentation();
-    auto evaluated = Eval(move(expr), env);
-    env.decreaseDebugIndentation();
-    DebugPrint("substituting", evaluated, env);
-    env.increaseDebugIndentation();
-    auto fixed = match(move(evaluated),
-        [&env, &seen](identifier&& e) -> expression {
-            DebugPrint("substituting in id", e, env);
-            seen.push_back(e.name);
-            if (auto expr = env.get(e.name)) {
-                DebugPrint("substituting in id, got from env", *expr, env);
-                return map_union([&seen](expression&& expr, environment& env){
-                    return GetElement(SubstituteVariables(move(expr), env, seen), env);
-                }, copy(*expr), env);
-                // return GetElement(SubstituteVariables(copy(*expr), env, seen), env);
-            }
-            return e;
-        },
-        [&env, &seen](rec<equals_to>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<negated>&& function) -> expression {
-            function.get().f = SubstituteVariables(move(function.get().f), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<intersection_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<union_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<addition_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<subtraction_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<multiplication_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
-            return function;
-        },
-        [&env, &seen](rec<application>&& e) -> expression {
-            e.get().function = SubstituteVariables(move(e.get().function), env, seen);
-            e.get().argument = SubstituteVariables(move(e.get().argument), env, seen);
-            return e;
-        },
-        [&env, &seen](rec<then>&& e) -> expression {
-            e.get().from = SubstituteVariables(move(e.get().from), env, seen);
-            e.get().to = SubstituteVariables(move(e.get().to), env, seen);
-
-            if (!env.isExecuting) {
-                return then{move(e.get().from), move(e.get().to)};
-            } else {
-                return e.get().to;
-            }
-        },
-        [](auto&& e) -> expression { return e; }
-    );
-    env.decreaseDebugIndentation();
-    DebugPrint("substitute - evaluating at the end", fixed, env);
-    env.increaseDebugIndentation();
-    auto ret = Eval(move(fixed), env);
-    env.decreaseDebugIndentation();
-    return ret;
-}
-
-expression SubstituteVariables(expression&& expr, environment& env) {
-    std::vector<std::string> seen;
-    return SubstituteVariables(move(expr), env, seen);
-}
-
-std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env) {
-    std::vector<std::string> seen;
-    std::optional<std::string> variable;
-    auto fixed = SubstituteVariables(move(expr), env, seen);
-    if (!seen.empty())
-        variable = seen.back();
-    return {move(fixed), variable};
 }
 
 expression Negate(expression&& f, environment& env) {
@@ -138,27 +40,13 @@ expression Negate(expression&& f, environment& env) {
     );
 }
 
-std::optional<std::string> ExtendEnvironment(
-        expression&& function, 
-        const expression& argument, 
-        environment& env) {
-    if (auto id = std::get_if<identifier>(&argument)) {
-        DebugPrint("extending", argument, env, 2);
-        DebugPrint("new component", function, env, 2);
-        return env.add(id->name, move(function)) == environment::extension_result::Added
-             ? std::optional<std::string>(id->name)
-             : std::nullopt;
-    }
-    return std::nullopt;
-}
-
 std::optional<expression> IntersectFind(
     expression&& l,
     expression&& r,
     environment& env) {
-    DebugPrint("intersect-find", l, env);
-    if (l == r)
-        return l;
+    // DebugPrint("intersect-find", l, env);
+    // if (l == r)
+    //     return l;
     DebugPrint("intersect-find-2", r, env);
     // return make_operation<intersection_with>(move(l), move(r));
     auto intersected = Intersect(move(l), move(r), env);

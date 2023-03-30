@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
+
+# set(CMAKE_CXX_CLANG_TIDY
+#     clang-tidy;
+#     -checks=-bugprone-use-after-move,-modernize-use-trailing-return-type;)
+
 project(main LANGUAGES CXX)
 
 include_directories(main 
@@ -7,7 +12,7 @@ include_directories(main
     third-party/yomm2/include
 )
 
-add_executable(main 
+set(SRC_LIST
     src/main.cpp
     src/parser.cpp
     src/operations.cpp
@@ -15,11 +20,14 @@ add_executable(main
     src/apply.cpp
     src/unapply.cpp
     src/equality.cpp
+    src/substitution.cpp
     src/io.cpp
     src/ast_builder.cpp
     src/interpreter.cpp
     src/interpreter_test.cpp
 )
+
+add_executable(main ${SRC_LIST})
 
 target_link_libraries(main
     ${CMAKE_SOURCE_DIR}/third-party/yomm2/build/src/libyomm2.a
