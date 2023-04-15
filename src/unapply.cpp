@@ -40,7 +40,7 @@ struct unapply_for_datatype {
                 return {added != environment::extension_result::Void, valueToMatch.name};
             },
             [&pattern, this](rec<abstraction>&& e) -> unapply_result { // shouldn't this apply to above as well?
-                auto a = e.get();
+                auto a = *e;
                 auto bodyCopy = a.body;
                 DebugPrint("apply in {datatype}", pattern, env);
                 env.increaseDebugIndentation();
@@ -55,7 +55,7 @@ struct unapply_for_datatype {
                     return {};
             },
             [&pattern, this](rec<closure>&& e) -> unapply_result { 
-                auto a = e.get();
+                auto a = *e;
                 auto bodyCopy = a.body;
                 // TODO: something could wrong with env. Should they be merged?
                 auto applied = Apply(move(pattern), move(a.body), env);
@@ -67,7 +67,7 @@ struct unapply_for_datatype {
             },
             [&pattern, this](rec<equals_to>&& e) -> unapply_result { 
                 auto newPattern = application{move(pattern), any{}};
-                return Unapply(move(newPattern), move(e.get().x), env);
+                return Unapply(move(newPattern), move(e->x), env);
             },
             // [](any&&) -> unapply_result { return {true, {}}; },
             [](auto&&) -> unapply_result { return {}; }
@@ -80,14 +80,14 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
     env.increaseDebugIndentation();
     auto result = match(move(e),
         [](rec<addition_with>&& f) -> std::optional<expression> { 
-            return subtraction_with{move(f.get().x)}; 
+            return subtraction_with{move(f->x)}; 
         },
         [&env](rec<application>&& app) -> std::optional<expression> {
-            DebugPrint("inverting application", app.get(), env);
-            return match(move(move(app.get().function)),
+            DebugPrint("inverting application", *app, env);
+            return match(move(move(app->function)),
                 [&app, &env](rec<union_with>&& lUnion) -> std::optional<expression> {
-                    auto leftInverse = Inverse(move(lUnion.get()), env);
-                    auto rightInverse = Inverse(move(app.get().argument), env);
+                    auto leftInverse = Inverse(move(*lUnion), env);
+                    auto rightInverse = Inverse(move(app->argument), env);
                     if (leftInverse && rightInverse)
                         return application{union_with{*leftInverse}, *rightInverse};
                     else if (leftInverse)
@@ -112,9 +112,9 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
 //     expression& r;
 //     environment& env;
 //     inline auto operator()(rec<negated>&& e) -> unapply_result { 
-//         DebugPrint("is equal with negated", e.get().f, env);
+//         DebugPrint("is equal with negated", e->f, env);
 //         auto falseEnv = env;
-//         auto eq = IsEqual(move(r), move(e.get().f), falseEnv);
+//         auto eq = IsEqual(move(r), move(e->f), falseEnv);
 //         DebugPrint("is equal result", eq, env);
 //         return match(move(eq),
 //             [](nothing&&) -> unapply_result { return {true, {}}; },
@@ -128,12 +128,12 @@ struct map_unapply_union_l {
     expression& r;
     environment& env;
     auto operator()(rec<application>&& lApplication) -> unapply_result {
-        auto& rUnion = lApplication.get().argument;
-        return match(move(move(lApplication.get().function)),
+        auto& rUnion = lApplication->argument;
+        return match(move(move(lApplication->function)),
             [this, &rUnion](rec<union_with>&& lUnion) -> unapply_result {
                 auto rCopy = r;
                 auto lCalculated = Unapply(
-                    move(lUnion.get().x), move(r), env);
+                    move(lUnion->x), move(r), env);
                 auto rCalculated = Unapply(
                     move(rUnion), move(rCopy), env);
                 return {lCalculated.success || rCalculated.success, 
@@ -151,9 +151,9 @@ struct equals_with_negated {
     expression& r;
     environment& env;
     inline auto operator()(rec<negated>&& e) -> unapply_result { 
-        DebugPrint("is equal with negated", e.get().f, env);
+        DebugPrint("is equal with negated", e->f, env);
         auto falseEnv = env;
-        auto [evaluatedl, lvar] = FixWithVariable(move(e.get().f), falseEnv);
+        auto [evaluatedl, lvar] = FixWithVariable(move(e->f), falseEnv);
         auto [evaluatedr, rvar] = FixWithVariable(move(r), falseEnv);
         DebugPrint(std::string("unapply ne, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
         DebugPrint(std::string("unapply ne, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
@@ -235,7 +235,7 @@ unapply_result Unapply(expression&& pattern,
         // new stuff
         [&env, &valueToMatch](rec<equals_to>&& pattern) -> unapply_result {
             auto element = GetElement(move(valueToMatch), env);
-            auto intersection = Unapply(move(pattern.get().x), move(element), env);
+            auto intersection = Unapply(move(pattern->x), move(element), env);
             return intersection;
             // return Unapply(move(intersection), move(element), env);
             // if (std::get_if<identifier>(&intersection))
@@ -246,23 +246,23 @@ unapply_result Unapply(expression&& pattern,
 
         // something wrong with associativity in parser and this doesn't work as expected
         // [&env, &valueToMatch](rec<addition_with>&& pattern) -> unapply_result {
-        //     auto wrapped = make_operation<subtraction_with>(move(valueToMatch), move(pattern.get().x));
+        //     auto wrapped = make_operation<subtraction_with>(move(valueToMatch), move(pattern->x));
         //     DebugPrint("moved addition", wrapped, env);
-        //     return Unapply(move(pattern.get().function), move(wrapped), env);
+        //     return Unapply(move(pattern->function), move(wrapped), env);
         // },
 
         [&env, &valueToMatch](rec<application>&& pattern) -> unapply_result {
-            auto functionCopy = pattern.get().function;
+            auto functionCopy = pattern->function;
             if (auto inversed = Inverse(move(functionCopy), env)) {
                 auto wrapped = application{move(*inversed), valueToMatch};
                 DebugPrint("got inverse", wrapped, env);
-                return Unapply(move(pattern.get().argument), move(wrapped), env);
+                return Unapply(move(pattern->argument), move(wrapped), env);
             } else {
                 // {
                 //     auto envCopy = env;
-                //     auto search = Unapply(copy(pattern.get().argument), copy(valueToMatch), envCopy);
+                //     auto search = Unapply(copy(pattern->argument), copy(valueToMatch), envCopy);
                 //     if (search && !search.outerVariable.empty()) {
-                //         auto applied = Apply(copy(pattern.get().function), identifier{search.outerVariable}, envCopy);
+                //         auto applied = Apply(copy(pattern->function), identifier{search.outerVariable}, envCopy);
                 //         if (!std::get_if<nothing>(&applied)) {
                 //             return search;
                 //         }
@@ -271,13 +271,13 @@ unapply_result Unapply(expression&& pattern,
 
 
 
-                auto wrapped = abstraction{copy(pattern.get().argument), copy(valueToMatch)};
+                auto wrapped = abstraction{copy(pattern->argument), copy(valueToMatch)};
                 DebugPrint("moved abstraction", wrapped, env);
-                auto result = Unapply(copy(pattern.get().function), move(wrapped), env);
+                auto result = Unapply(copy(pattern->function), move(wrapped), env);
                 // if (result)
                 //     return result;
-                // auto intersected = make_operation<intersection_with>(move(pattern.get().function), move(valueToMatch));
-                // auto result2 = Unapply(move(pattern.get().argument), move(intersected), env);
+                // auto intersected = make_operation<intersection_with>(move(pattern->function), move(valueToMatch));
+                // auto result2 = Unapply(move(pattern->argument), move(intersected), env);
                 // if (result2)
                 //     return result2;
                 return result;
@@ -290,16 +290,16 @@ unapply_result Unapply(expression&& pattern,
             DebugPrint("unapply closure", valueToMatch, env);
             env.increaseDebugIndentation();
 
-            function.get().env.debugIndentation = env.debugIndentation;
+            function->env.debugIndentation = env.debugIndentation;
 
-            auto lArgument = SubstituteVariables(move(function.get().argument), function.get().env);
+            auto lArgument = SubstituteVariables(move(function->argument), function->env);
 
             if (std::get_if<nothing>(&lArgument)) {
                 DebugPrint("incorrect function argument", lArgument, env);
                 return {}; 
             }
 
-            auto l = SubstituteVariables(move(function.get().body), function.get().env);
+            auto l = SubstituteVariables(move(function->body), function->env);
 
             // todo: what if the output is an id?
 
@@ -325,7 +325,7 @@ unapply_result Unapply(expression&& pattern,
             DebugPrint("unapply closure - uapply", rElement, env);
             env.increaseDebugIndentation();
             defer { env.decreaseDebugIndentation(); };
-            // auto argument = Unapply(move(function.get().argument), move(rElement), env);
+            // auto argument = Unapply(move(function->argument), move(rElement), env);
             return Unapply(move(lArgument), move(rElement), envCopy);
 
             // if (std::get_if<nothing>(&argument)) {
@@ -336,7 +336,7 @@ unapply_result Unapply(expression&& pattern,
             // return {true, ""};
 
         //     if (auto rightClosure = std::get_if<rec<closure>>(&set)) {
-        //         auto unappliedArgument = Unapply(move(function.get().argument), 
+        //         auto unappliedArgument = Unapply(move(function->argument), 
         //                                          move(rightClosure->get().argument),
         //                                          env);
         //         if (!unappliedArgument.success) {
@@ -347,7 +347,7 @@ unapply_result Unapply(expression&& pattern,
 
         //     // return match(move(set),
         //     //     [](rec<closure>&& e) { 
-        //     //         return e.get().x; 
+        //     //         return e->x; 
         //     //     },
         //     //     [&env](auto&& e) -> expression { 
         //     //         return GetElement(move(e), env); 
@@ -355,12 +355,12 @@ unapply_result Unapply(expression&& pattern,
         //     // );
         }, //*/
         [&env, &valueToMatch](rec<then>&& e) -> unapply_result {
-            auto from = Eval(move(e.get().from), env);
+            auto from = Eval(move(e->from), env);
             DebugPrint("then unapply", from, env);
             return match(move(from),
                 [](nothing&&) -> unapply_result { return {}; },
                 [&valueToMatch, &e, &env](auto&&) -> unapply_result {
-                    return Unapply(move(e.get().to), move(valueToMatch), env); 
+                    return Unapply(move(e->to), move(valueToMatch), env); 
                 }
             );
         },

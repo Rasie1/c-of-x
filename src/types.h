@@ -3,7 +3,7 @@
 #include <utility>
 #include <variant>
 #include <optional>
-#include <boost/variant/recursive_wrapper.hpp>
+#include "recursive_wrapper.h"
 #include "util.h"
 
 namespace cx {
@@ -50,14 +50,6 @@ struct show { bool operator==(show const&) const = default; };
 struct read { bool operator==(read const&) const = default; };
 struct print { bool operator==(print const&) const = default; };
 struct set_trace_enabled { bool operator==(set_trace_enabled const&) const = default; };
-
-template <typename T>
-using rec = boost::recursive_wrapper<T>;
-
-template<class T>
-bool operator==(rec<T> const& l, rec<T> const& r) {
-    return l.get() == r.get();
-}
 
 using expression = std::variant<
     nothing,

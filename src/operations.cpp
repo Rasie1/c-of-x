@@ -17,8 +17,8 @@ struct intersect_for_datatype {
             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, move(v)); },
             [this, &l](rec<application>&& rApplication) -> expression { 
                 auto lCopy = l;
-                auto rCopy = rApplication.get();
-                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{lCopy, env}.template operator()<true>(rApplication.get());
+                auto rCopy = *rApplication;
+                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{lCopy, env}.template operator()<true>(*rApplication);
                 return mapped;
             },
             [this, &l](auto&& r) -> expression { 
@@ -33,7 +33,7 @@ expression GetElement(expression&& set, environment& env) {
     DebugPrint("get element", set, env);
     set = Eval(move(set), env);
     return match(move(set),
-        [](rec<equals_to>&& e) { return e.get().x; },
+        [](rec<equals_to>&& e) { return e->x; },
         [&env](int&& e) -> expression {
             env.errors.push_back(Show(move(e)) + " doesn't contain values");
             return nothing{};
@@ -56,7 +56,7 @@ expression Negate(expression&& f, environment& env) {
         // [](unit&&) -> expression { return nothing{}; },
         [](nothing&&) -> expression { return any{}; },
         [](identifier&& e) -> expression { return negated{move(e)}; },
-        [](rec<negated>&& e) -> expression { return e.get().f; },
+        [](rec<negated>&& e) -> expression { return e->f; },
         unmapped<equals_to, negated>(env),
         // [](auto&& e) -> expression { return make_operation<intersection_with>(any{}, negated{move(e)}); }
         [](auto&& e) -> expression { return negated{move(e)}; }
@@ -79,7 +79,7 @@ std::optional<expression> IntersectFind(
         [&](rec<equals_to>&& e) -> std::optional<expression> {
             // todo: make it fully recursive
             // DebugPrint("intersect-find eq", e, env);
-            return match(move(e.get().x),
+            return match(move(e->x),
                 [](nothing&&) -> std::optional<expression> { return {}; },
                 [](auto&& e) -> std::optional<expression> { return {equals_to{move(e)}}; }
             );
@@ -128,7 +128,7 @@ expression Intersect(expression&& l,
         intersect_for_datatype<basic_type<std::string>>{r, env},
         [&r, &env](rec<equals_to>&& l) -> expression {
             return match(move(r),
-                [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(move(l.get().x), move(r.get().x), env)}; },
+                [&l, &env](rec<equals_to>&& r) -> expression { return equals_to{Intersect(move(l->x), move(r->x), env)}; },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(move(l), move(v)); },
                 [&env](auto&& e) -> expression { 
@@ -140,7 +140,7 @@ expression Intersect(expression&& l,
         [&r, &env](rec<intersection_with>&& l) -> expression {
             return match(move(r),
                 [&l, &env](rec<intersection_with>&& r) -> expression { 
-                    return intersection_with{Intersect(move(l.get().x), move(r.get().x), env)}; 
+                    return intersection_with{Intersect(move(l->x), move(r->x), env)}; 
                 },
                 [&l](any&&) -> expression { return l; },
                 [&l](identifier&& v) -> expression { return make_operation<intersection_with>(move(l), move(v)); },
@@ -152,8 +152,8 @@ expression Intersect(expression&& l,
         },
         [&r, &env](rec<application>&& lApplication) -> expression {
             auto rCopy = r;
-            auto lCopy = lApplication.get();
-            auto mapped = map_union_l{rCopy, env, Intersect}.operator()<true>(move(lApplication.get()));
+            auto lCopy = *lApplication;
+            auto mapped = map_union_l{rCopy, env, Intersect}.operator()<true>(move(*lApplication));
             return mapped;
         },
         [&r, &env](rec<closure>&& l) -> expression {

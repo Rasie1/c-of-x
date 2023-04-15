@@ -19,26 +19,26 @@ std::string Show(expression&& e) {
         [](identifier&& e) { return e.name; },
         [](rec<application>&& e) {
             return std::string("(")
-                 + Show(move(e.get().function)) + " "
-                 + Show(move(e.get().argument)) + ")"; 
+                 + Show(move(e->function)) + " "
+                 + Show(move(e->argument)) + ")"; 
         },
         [](rec<then>&& e) {
-            return Show(move(e.get().from)) + "; "
-                 + Show(move(e.get().to)); 
+            return Show(move(e->from)) + "; "
+                 + Show(move(e->to)); 
         },
         [](rec<closure>&& e) {
             std::stringstream out;
             out << "("
-                << Show(move(e.get().argument))
+                << Show(move(e->argument))
                 << " ->' "
-                << Show(move(e.get().body))
+                << Show(move(e->body))
                 << ")";
-            if (!e.get().env.variables.empty()) {
+            if (!e->env.variables.empty()) {
                 out << " [";
-                int i = e.get().env.variables.size() - 1;
+                int i = e->env.variables.size() - 1;
                 int lastVariableToPrint = std::max(0, i - 1);
                 for (; i >= lastVariableToPrint; --i) {
-                    auto& var = e.get().env.variables[i];
+                    auto& var = e->env.variables[i];
                     auto copy = var.second;
                     out << var.first << ": " << Show(move(copy));
                     if (i != lastVariableToPrint)
@@ -52,36 +52,36 @@ std::string Show(expression&& e) {
         },
         [](rec<abstraction>&& e) {
             return std::string("(")
-                 + Show(move(e.get().argument)) + " -> "
-                 + Show(move(e.get().body))
+                 + Show(move(e->argument)) + " -> "
+                 + Show(move(e->body))
                  + ")"; 
         },
         // [](rec<set>&& e) {
-        //     return std::string("{") + Show(move(e.get().x)) + std::string("}"); 
+        //     return std::string("{") + Show(move(e->x)) + std::string("}"); 
         // },
         [](rec<intersection_with>&& e) {
-            return Show(move(e.get().x)) + std::string(" &"); 
+            return Show(move(e->x)) + std::string(" &"); 
         },
         [](rec<equals_to>&& e) {
-            return std::string("{") + Show(move(e.get().x)) + std::string("}"); 
+            return std::string("{") + Show(move(e->x)) + std::string("}"); 
         },
         [](rec<negated>&& e) {
-            return std::string("!(") + Show(move(e.get().f)) + ")"; 
+            return std::string("!(") + Show(move(e->f)) + ")"; 
         },
         [](rec<addition_with>&& e) {
-            return Show(move(e.get().x)) + std::string(" +"); 
+            return Show(move(e->x)) + std::string(" +"); 
         },
         [](rec<subtraction_with>&& e) {
-            return Show(move(e.get().x)) + std::string(" -"); 
+            return Show(move(e->x)) + std::string(" -"); 
         },
         [](rec<multiplication_with>&& e) {
-            return Show(move(e.get().x)) + std::string(" *"); 
+            return Show(move(e->x)) + std::string(" *"); 
         },
         [](rec<union_with>&& e) {
-            return Show(move(e.get().x)) + std::string(" |"); 
+            return Show(move(e->x)) + std::string(" |"); 
         },
         [](rec<implication_with>&& e) {
-            return Show(move(e.get().x)) + std::string(";"); 
+            return Show(move(e->x)) + std::string(";"); 
         },
         [](addition&&) -> std::string { return "+"; },
         [](equality&&) -> std::string { return "="; },

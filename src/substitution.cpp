@@ -11,12 +11,12 @@ expression map_union(operation&& op, expression&& e, environment& env) {
     DebugPrint("mapping union", e, env);
     return match(move(e),
         [&](rec<application>&& lApplication) -> expression {
-            auto& rUnion = lApplication.get().argument;
-            return match(move(lApplication.get().function),
+            auto& rUnion = lApplication->argument;
+            return match(move(lApplication->function),
                 [&env, &rUnion, &op](rec<union_with>&& lUnion) -> expression {
                     env.increaseDebugIndentation();
                     defer { env.decreaseDebugIndentation(); };
-                    auto lCalculated = map_union(op, move(lUnion.get().x), env);
+                    auto lCalculated = map_union(op, move(lUnion->x), env);
                     auto rCalculated = map_union(op, move(rUnion),         env);
                     return Union(move(lCalculated), move(rCalculated));
                 },
@@ -26,12 +26,12 @@ expression map_union(operation&& op, expression&& e, environment& env) {
                     defer { env.decreaseDebugIndentation(); };
                     auto applied = op(move(e), env);
                     DebugPrint("union variant result", applied, env);
-                    return application{move(applied), move(lApplication.get().argument)};
+                    return application{move(applied), move(lApplication->argument)};
                 }
             );
         },
         [&](rec<equals_to>&& e) -> expression {
-            return equals_to{map_union(move(op), move(e.get().x), env)};
+            return equals_to{map_union(move(op), move(e->x), env)};
         },
         [&](auto&& e) -> expression {
             DebugPrint("union variant", e, env);
@@ -75,46 +75,46 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
             return e;
         },
         [&env, &seen](rec<equals_to>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
+            function->x = SubstituteVariables(move(function->x), env, seen);
             return function;
         },
         [&env, &seen](rec<negated>&& function) -> expression {
-            function.get().f = SubstituteVariables(move(function.get().f), env, seen);
+            function->f = SubstituteVariables(move(function->f), env, seen);
             return function;
         },
         [&env, &seen](rec<intersection_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
+            function->x = SubstituteVariables(move(function->x), env, seen);
             return function;
         },
         [&env, &seen](rec<union_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
+            function->x = SubstituteVariables(move(function->x), env, seen);
             return function;
         },
         [&env, &seen](rec<addition_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
+            function->x = SubstituteVariables(move(function->x), env, seen);
             return function;
         },
         [&env, &seen](rec<subtraction_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
+            function->x = SubstituteVariables(move(function->x), env, seen);
             return function;
         },
         [&env, &seen](rec<multiplication_with>&& function) -> expression {
-            function.get().x = SubstituteVariables(move(function.get().x), env, seen);
+            function->x = SubstituteVariables(move(function->x), env, seen);
             return function;
         },
         [&env, &seen](rec<application>&& e) -> expression {
-            e.get().function = SubstituteVariables(move(e.get().function), env, seen);
-            e.get().argument = SubstituteVariables(move(e.get().argument), env, seen);
+            e->function = SubstituteVariables(move(e->function), env, seen);
+            e->argument = SubstituteVariables(move(e->argument), env, seen);
             return e;
         },
         [&env, &seen](rec<then>&& e) -> expression {
-            e.get().from = SubstituteVariables(move(e.get().from), env, seen);
-            e.get().to = SubstituteVariables(move(e.get().to), env, seen);
+            e->from = SubstituteVariables(move(e->from), env, seen);
+            e->to = SubstituteVariables(move(e->to), env, seen);
 
             if (!env.isExecuting) {
-                return then{move(e.get().from), move(e.get().to)};
+                return then{move(e->from), move(e->to)};
             } else {
-                return e.get().to;
+                return e->to;
             }
         },
         [](auto&& e) -> expression { return e; }

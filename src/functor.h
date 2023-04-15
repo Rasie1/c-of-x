@@ -12,17 +12,17 @@ struct map_union_l {
     template<bool failOnUnknown = false>
     auto operator()(rec<application>&& lApplication) -> expression {
         DebugPrint("map_union_l, r", r, env);
-        auto& rUnion = lApplication.get().argument;
-        return match(move(lApplication.get().function),
+        auto& rUnion = lApplication->argument;
+        return match(move(lApplication->function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
                 env.increaseDebugIndentation();
                 defer { env.decreaseDebugIndentation(); };
-                auto lCalculated = operation(move(lUnion.get().x), copy(r),     env);
+                auto lCalculated = operation(move(lUnion->x), copy(r),     env);
                 auto rCalculated = operation(move(rUnion),         move(r), env);
                 return Union(move(lCalculated), move(rCalculated));
             },
             [&lApplication, this](auto&& e) -> expression {
-                auto applied = application{e, move(lApplication.get().argument)};
+                auto applied = application{e, move(lApplication->argument)};
                 if constexpr (failOnUnknown) {
                     env.errors.push_back(
                         "can't correlate " + Show(move(r)) + " and " + Show(move(applied))
@@ -43,12 +43,12 @@ struct map_union_r {
     template<bool failOnUnknown = false>
     auto operator()(rec<application>&& rApplication) -> expression { 
         DebugPrint("map_union_r, l", l, env);
-        auto& rUnion = rApplication.get().argument;
-        return match(move(rApplication.get().function),
+        auto& rUnion = rApplication->argument;
+        return match(move(rApplication->function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
                 DebugPrint("map_union_r, union_with, l", lUnion, env);
                 env.increaseDebugIndentation();
-                auto lCalculated = operation_for_datatype{lUnion.get().x, env}(copy(l));
+                auto lCalculated = operation_for_datatype{lUnion->x, env}(copy(l));
                 env.decreaseDebugIndentation();
                 DebugPrint("map_union_r, union_with, r", rUnion, env);
                 env.increaseDebugIndentation();
@@ -57,7 +57,7 @@ struct map_union_r {
                 return Union(move(lCalculated), move(rCalculated));
             },
             [&rApplication, this](auto&& e) -> expression {
-                auto applied = application{e, move(rApplication.get().argument)};
+                auto applied = application{e, move(rApplication->argument)};
                 if constexpr (failOnUnknown) {
                     env.errors.push_back(
                         "can't correlate " + Show(move(l)) + " and " + Show(move(applied))
@@ -75,7 +75,7 @@ template <typename container, typename F>
 struct unmapped {
     environment& env;
     expression operator()(rec<container>&& e) {
-        auto wrapped = wrap(move(e.get()));
+        auto wrapped = wrap(move(*e));
         return Eval(move(wrapped), env);
     }
 private:

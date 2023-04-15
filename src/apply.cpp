@@ -55,7 +55,7 @@ struct check_datatype {
                 ExtendEnvironment(basic_type<datatype>{}, v, env);
                 return v;
             },
-            [this](auto&& e) -> expression { 
+            [this](auto&& e) -> expression {
                 env.errors.push_back(
                     std::string("expecting ") + Show(basic_type<datatype>{}) + ", got " + Show(move(e))
                 );
@@ -65,13 +65,37 @@ struct check_datatype {
     }
 };
 
+struct check_function_datatype {
+    environment& env;
+    closure& type;
+    expression operator()(closure&& value) {
+        DebugPrint("checking function type", type, env);
+        auto envCopy = env;
+        auto unappliedL = Unapply(move(type.argument), move(value.argument), envCopy);
+        if (!unappliedL) {
+            env.errors.push_back(
+                std::string("can't match function type")
+            );
+            return nothing{};
+        }
+        auto unappliedR = Unapply(move(type.body), move(value.body), envCopy);
+        if (!unappliedR) {
+            env.errors.push_back(
+                std::string("can't match function type")
+            );
+            return nothing{};
+        }
+        return value;
+    }
+};
+
 expression GetSet(expression&& e, environment& env) {
     DebugPrint("getset", e, env);
     auto ret = match(move(e),
         [&env](rec<application>&& app) -> expression {
-            return match(move(app.get().function),
+            return match(move(app->function),
                 // todo: generalize and check function signatures
-                [&app](read&&) -> expression { return app.get().argument; },
+                [&app](read&&) -> expression { return app->argument; },
                 [&app](show&&) -> expression { return basic_type<std::string>{}; },
                 [&app](print&&) -> expression { return cx::unit{}; },
                 [](auto&&) -> expression { return cx::any{}; }
@@ -104,22 +128,21 @@ expression Apply(expression&& function,
                     }
                     auto argumentValue = *maybeValue;
                     argumentValue = GetElement(move(argumentValue), env);
-                    return ApplyToClosure(env, move(function.get()), move(argumentValue));
+                    return ApplyToClosure(env, move(*function), move(argumentValue));
                 },
                 [&env, &function](rec<application>&& app) -> expression {
-                    if (auto unionWith = std::get_if<rec<union_with>>(&app.get().function)) {
+                    if (auto unionWith = std::get_if<rec<union_with>>(&app->function)) {
                         auto l = Eval(move(unionWith->get().x), env);
-                        auto r = Eval(move(app.get().argument), env);
-                        auto functionCopy = function;
+                        auto r = Eval(move(app->argument), env);
 
                         DebugPrint("apply closure $ application l", l, env);
                         env.increaseDebugIndentation();
-                        auto lApplied = Apply(move(function), move(l), env);
+                        auto lApplied = Apply(copy(function), move(l), env);
                         env.decreaseDebugIndentation();
 
                         DebugPrint("apply closure $ application r", r, env);
                         env.increaseDebugIndentation();
-                        auto rApplied = Apply(move(functionCopy), move(r), env);
+                        auto rApplied = Apply(move(function), move(r), env);
                         env.decreaseDebugIndentation();
 
                         return Union(move(lApplied), move(rApplied));
@@ -136,45 +159,46 @@ expression Apply(expression&& function,
                             env.errors.push_back("can't apply application to closure");
                             return nothing{};
                         } else {
-                            return app.get();
+                            return *app;
                         }
                     }
                 },
+                check_function_datatype{env, *function},
                 [&env, &function](auto&& argument) -> expression {
-                    return ApplyToClosure(env, move(function.get()), move(argument));
+                    return ApplyToClosure(env, move(*function), move(argument));
                 }
             );
         },
         [&env, &argument](addition&&) -> expression { return addition_with{Eval(move(argument), env)}; },
         [&env, &argument](rec<addition_with>&& function) -> expression {
-            return Calculate<addition_for_datatype, addition_with>(move(function.get().x), move(argument), env);
+            return Calculate<addition_for_datatype, addition_with>(move(function->x), move(argument), env);
         },
         [&env, &argument](subtraction&&) -> expression { return subtraction_with{Eval(move(argument), env)}; },
         [&env, &argument](rec<subtraction_with>&& function) -> expression {
-            return Calculate<subtraction_for_datatype, subtraction_with>(move(function.get().x), move(argument), env);
+            return Calculate<subtraction_for_datatype, subtraction_with>(move(function->x), move(argument), env);
         },
         [&env, &argument](multiplication&&) -> expression { return multiplication_with{Eval(move(argument), env)}; },
         [&env, &argument](rec<multiplication_with>&& function) -> expression {
-            return Calculate<multiplication_for_datatype, multiplication_with>(move(function.get().x), move(argument), env);
+            return Calculate<multiplication_for_datatype, multiplication_with>(move(function->x), move(argument), env);
         },
         check_datatype<int>{env, argument},
         check_datatype<std::string>{env, argument},
         [&env, &argument](implication&&) -> expression { return implication_with{Eval(move(argument), env)}; },
         [&env, &argument](rec<implication_with>&& function) -> expression {
-            return Eval(then{move(function.get().x), move(argument)}, env);
+            return Eval(then{move(function->x), move(argument)}, env);
         },
         [&env, &argument](equality&&) -> expression { return equals_to{ Eval(move(argument), env) }; },
         [&env, &argument](inequality&&) -> expression { return negated{ equals_to{Eval(move(argument), env)} }; },
         [&env, &argument](rec<application>&& e) -> expression {
-            return match(copy(e.get().function),
+            return match(copy(e->function),
                 [&](rec<intersection_with>&& lApplication) -> expression {
                     DebugPrint("matched application intersection l", lApplication, env);
                     env.increaseDebugIndentation();
-                    auto l = Apply(move(lApplication.get().x), copy(argument), env); // todo: copy envs?
+                    auto l = Apply(move(lApplication->x), copy(argument), env); // todo: copy envs?
                     env.decreaseDebugIndentation();
-                    DebugPrint("matched application intersection r", e.get().argument, env);
+                    DebugPrint("matched application intersection r", e->argument, env);
                     env.increaseDebugIndentation();
-                    auto r = Apply(move(e.get().argument), move(argument), env);
+                    auto r = Apply(move(e->argument), move(argument), env);
                     env.decreaseDebugIndentation();
                     return Intersect(move(l), move(r), env);
                 },
@@ -187,18 +211,18 @@ expression Apply(expression&& function,
         [&env, &argument](print&&) -> expression { return Print(move(argument), env); },
         [&env, &argument](read&&) -> expression { return Read(move(argument), env); },
         [&env, &argument](set_trace_enabled&&) -> expression { return SetTraceEnabled(move(argument), env); },
-        [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(move(e.get().x), move(argument), env); },
+        [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(move(e->x), move(argument), env); },
         [&env, &argument](rec<negated>&& e) -> expression {
-            return Apply(Negate(move(e.get().f), env), move(argument), env);
+            return Apply(Negate(move(e->f), env), move(argument), env);
         },
         [&env, &argument](rec<intersection_with>&& function) -> expression {
-            auto l = Eval(move(function.get().x), env);
+            auto l = Eval(move(function->x), env);
             auto r = Eval(move(argument), env);
            
             return Intersect(move(l), move(r), env);
         },
         [&env, &argument](rec<union_with>&& function) -> expression {
-            auto l = Eval(move(function.get().x), env);
+            auto l = Eval(move(function->x), env);
             auto r = Eval(move(argument), env);
 
             // DebugPrint("union l", l, env);

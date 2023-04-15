@@ -8,9 +8,9 @@ struct equals_with_negated {
     expression& r;
     environment& env;
     inline auto operator()(rec<negated>&& e) -> expression { 
-        DebugPrint("eq with negated", e.get().f, env);
+        DebugPrint("eq with negated", e->f, env);
         auto falseEnv = env;
-        auto [evaluatedl, lvar] = FixWithVariable(move(move(e.get().f)), falseEnv);
+        auto [evaluatedl, lvar] = FixWithVariable(move(move(e->f)), falseEnv);
         auto [evaluatedr, rvar] = FixWithVariable(move(r), falseEnv);
         DebugPrint(std::string("eq with negated, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
         DebugPrint(std::string("eq with negated, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
@@ -65,20 +65,20 @@ expression IsEqual(expression&& l,
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(move(v), move(r)); },
         // map_union_l{r, env, IsEqual},
         [&r, &env](rec<application>&& lApplication) -> expression {
-            auto mapped = map_union_l{r, env, IsEqual}.operator()<false>(move(lApplication.get()));
+            auto mapped = map_union_l{r, env, IsEqual}.operator()<false>(move(*lApplication));
             return mapped;
         },
         equals_with_negated{r, env},
         [&r, &env](rec<equals_to>&& e) -> expression {
             auto element = GetElement(move(r), env);
-            auto result = IsEqual(move(e.get().x), move(element), env);
+            auto result = IsEqual(move(e->x), move(element), env);
             if (std::get_if<nothing>(&result))
                 return result;
             else
                 return equals_to{move(result)};
         },
         [&r, &env](rec<then>&& e) -> expression {
-            auto from = Eval(move(e.get().from), env);
+            auto from = Eval(move(e->from), env);
             DebugPrint("then in is equal", 0, env, 2);
             return match(move(from),
                 [&env](nothing&&) -> expression {
@@ -86,7 +86,7 @@ expression IsEqual(expression&& l,
                     return nothing{}; 
                 },
                 [&e, &r, &env](auto&&) -> expression {
-                    return IsEqual(move(e.get().to), move(r), env);
+                    return IsEqual(move(e->to), move(r), env);
                 }
             );
         },

@@ -9,47 +9,47 @@ void traverse(expression& e, f&& function) {
     
     return match(e,
         [&function](rec<intersection_with>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<union_with>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<equals_to>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<closure>& e) {
-            traverse(e.get().argument, function);
-            traverse(e.get().body, function);
+            traverse(e->argument, function);
+            traverse(e->body, function);
         },
         [&function](rec<addition_with>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<multiplication_with>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<subtraction_with>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<implication_with>& e) {
-            traverse(e.get().x, function);
+            traverse(e->x, function);
         },
         [&function](rec<application>& e) {
-            traverse(e.get().function, function);
-            traverse(e.get().argument, function);
+            traverse(e->function, function);
+            traverse(e->argument, function);
         },
         [&function](rec<then>& e) {
-            traverse(e.get().from, function);
-            traverse(e.get().to, function);
+            traverse(e->from, function);
+            traverse(e->to, function);
         },
         [&function](rec<negated>& e) { 
-            traverse(e.get().f, function);
+            traverse(e->f, function);
         },
         [&function](rec<abstraction>& e) {
-            traverse(e.get().argument, function);
-            traverse(e.get().body, function);
+            traverse(e->argument, function);
+            traverse(e->body, function);
         },
         [&function](rec<set>& e) { 
-            for (auto& x: e.get().x) {
+            for (auto& x: e->x) {
                 traverse(x, function);
             }
         },
@@ -76,7 +76,7 @@ expression Eval(expression&& e,
     env.increaseDebugIndentation();
     auto ret = match(move(e),
         [&env](rec<application>&& e) {
-            DebugPrint("apply", e.get(), env, 2);
+            DebugPrint("apply", *e, env, 2);
             env.increaseDebugIndentation();
             defer { env.decreaseDebugIndentation(); }; 
 
@@ -85,9 +85,9 @@ expression Eval(expression&& e,
             {
                 stash executionState(env.isExecuting, false);
                 
-                // function = SubstituteVariables(move(e.get().function), env);
-                function = Eval(move(e.get().function), env);
-                argument = Eval(move(e.get().argument), env);
+                // function = SubstituteVariables(move(e->function), env);
+                function = Eval(move(e->function), env);
+                argument = Eval(move(e->argument), env);
             }
 
             auto applied = Apply(move(function), move(argument), env);
@@ -95,7 +95,7 @@ expression Eval(expression&& e,
             return applied;
         },
         [&env](rec<then>&& e) {
-            auto from = SubstituteVariables(move(e.get().from), env);
+            auto from = SubstituteVariables(move(e->from), env);
             DebugPrint("then", 0, env, 2);
             return match(move(from),
                 [&env](nothing&&) -> expression { 
@@ -105,7 +105,7 @@ expression Eval(expression&& e,
                 [&e, &env](auto&& from) -> expression {
                     // bool wasExecuting = env.isExecuting;
                     // stash executionState(env.isExecuting, false);
-                    // auto to = Eval(move(e.get().to), env); 
+                    // auto to = Eval(move(e->to), env); 
                     // if (!wasExecuting) {
                     //     return then{move(from), move(to)};
                     // } else {
@@ -113,17 +113,17 @@ expression Eval(expression&& e,
                     // }
                     if (!env.isExecuting) {
                         stash executionState(env.isExecuting, false);
-                        auto to = Eval(move(e.get().to), env); 
+                        auto to = Eval(move(e->to), env); 
                         return then{move(from), move(to)};
                     } else {
-                        auto to = Eval(move(e.get().to), env); 
+                        auto to = Eval(move(e->to), env); 
                         return to;
                     }
                 }
             );
         },
         [&env](rec<negated>&& e) -> expression { 
-            auto function = Eval(move(e.get().f), env);
+            auto function = Eval(move(e->f), env);
             return Negate(move(function), env); 
         },
         [&env](rec<abstraction>&& e) -> expression {
@@ -134,19 +134,19 @@ expression Eval(expression&& e,
             auto newEnv = env;
             newEnv.isExecuting = false;
 
-            auto pattern = Eval(move(e.get().argument), newEnv);
+            auto pattern = Eval(move(e->argument), newEnv);
 
             if (auto id = std::get_if<identifier>(&pattern)) {
                 for (auto& [variable, value]: newEnv.variables) {
                     if (variable == id->name) {
                         shadowVariable(pattern, variable);
-                        shadowVariable(e.get().body, variable);
+                        shadowVariable(e->body, variable);
                         break;
                     }
                 }
             }
 
-            return closure{pattern, move(e.get().body), newEnv}; 
+            return closure{pattern, move(e->body), newEnv}; 
         },
         [](auto&& e) -> expression { return e; }
     );
