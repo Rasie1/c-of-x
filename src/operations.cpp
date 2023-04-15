@@ -16,9 +16,7 @@ struct intersect_for_datatype {
             [&l](any&&) -> expression { return l; },
             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, move(v)); },
             [this, &l](rec<application>&& rApplication) -> expression { 
-                auto lCopy = l;
-                auto rCopy = *rApplication;
-                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{lCopy, env}.template operator()<true>(*rApplication);
+                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{l, env}.template operator()<true>(move(rApplication));
                 return mapped;
             },
             [this, &l](auto&& r) -> expression { 
@@ -151,9 +149,7 @@ expression Intersect(expression&& l,
             );
         },
         [&r, &env](rec<application>&& lApplication) -> expression {
-            auto rCopy = r;
-            auto lCopy = *lApplication;
-            auto mapped = map_union_l{rCopy, env, Intersect}.operator()<true>(move(*lApplication));
+            auto mapped = map_union_l{r, env, Intersect}.operator()<true>(move(*lApplication));
             return mapped;
         },
         [&r, &env](rec<closure>&& l) -> expression {

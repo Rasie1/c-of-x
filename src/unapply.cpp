@@ -39,29 +39,25 @@ struct unapply_for_datatype {
                 auto added = env.add(valueToMatch.name, equals_to{move(pattern)});
                 return {added != environment::extension_result::Void, valueToMatch.name};
             },
-            [&pattern, this](rec<abstraction>&& e) -> unapply_result { // shouldn't this apply to above as well?
-                auto a = *e;
-                auto bodyCopy = a.body;
+            [&pattern, this](rec<abstraction>&& function) -> unapply_result { // shouldn't this apply to above as well?
                 DebugPrint("apply in {datatype}", pattern, env);
                 env.increaseDebugIndentation();
-                auto applied = Apply(move(pattern), move(a.body), env);
+                auto applied = Apply(move(pattern), copy(function->body), env);
                 env.decreaseDebugIndentation();
                 DebugPrint("typechecking apply result", applied, env);
                 env.increaseDebugIndentation();
                 defer { env.decreaseDebugIndentation(); };
-                if (applied == bodyCopy)
-                    return Unapply(move(a.argument), move(applied), env);
+                if (applied == function->body)
+                    return Unapply(move(function->argument), move(applied), env);
                 else 
                     return {};
             },
-            [&pattern, this](rec<closure>&& e) -> unapply_result { 
-                auto a = *e;
-                auto bodyCopy = a.body;
+            [&pattern, this](rec<closure>&& function) -> unapply_result { 
                 // TODO: something could wrong with env. Should they be merged?
-                auto applied = Apply(move(pattern), move(a.body), env);
+                auto applied = Apply(move(pattern), copy(function->body), env);
                 DebugPrint("typechecking apply result", applied, env);
-                if (applied == bodyCopy)
-                    return Unapply(move(a.argument), move(applied), env);
+                if (applied == function->body)
+                    return Unapply(move(function->argument), move(applied), env);
                 else 
                     return {};
             },
@@ -131,11 +127,10 @@ struct map_unapply_union_l {
         auto& rUnion = lApplication->argument;
         return match(move(move(lApplication->function)),
             [this, &rUnion](rec<union_with>&& lUnion) -> unapply_result {
-                auto rCopy = r;
                 auto lCalculated = Unapply(
-                    move(lUnion->x), move(r), env);
+                    move(lUnion->x), copy(r), env);
                 auto rCalculated = Unapply(
-                    move(rUnion), move(rCopy), env);
+                    move(rUnion), move(r), env);
                 return {lCalculated.success || rCalculated.success, 
                         lCalculated.outerVariable.empty() ? rCalculated.outerVariable : lCalculated.outerVariable 
                 };
@@ -194,15 +189,14 @@ unapply_result Unapply(expression&& pattern,
 
             auto newEnv = env;
             auto oldEvaluated = Eval(move(valueToMatch), newEnv);
-            auto oldCopy = oldEvaluated;
-            auto evaluated = SubstituteVariables(move(oldEvaluated), newEnv); // danger
+            auto evaluated = SubstituteVariables(copy(oldEvaluated), newEnv); // danger
             if (IsError(evaluated))
                 return {};
             expression newVariable;
-            if (oldCopy == evaluated)
+            if (oldEvaluated == evaluated)
                 newVariable = move(evaluated);
             else
-                newVariable = make_operation<intersection_with>(move(oldCopy), move(evaluated));
+                newVariable = make_operation<intersection_with>(move(oldEvaluated), move(evaluated));
             DebugPrint(std::string("defining variable ") + pattern.name, newVariable, env, 2);
             // define only tries to add new data and it works
             // add also adds checks about all calculations
@@ -252,8 +246,7 @@ unapply_result Unapply(expression&& pattern,
         // },
 
         [&env, &valueToMatch](rec<application>&& pattern) -> unapply_result {
-            auto functionCopy = pattern->function;
-            if (auto inversed = Inverse(move(functionCopy), env)) {
+            if (auto inversed = Inverse(copy(pattern->function), env)) {
                 auto wrapped = application{move(*inversed), valueToMatch};
                 DebugPrint("got inverse", wrapped, env);
                 return Unapply(move(pattern->argument), move(wrapped), env);
@@ -273,7 +266,7 @@ unapply_result Unapply(expression&& pattern,
 
                 auto wrapped = abstraction{copy(pattern->argument), copy(valueToMatch)};
                 DebugPrint("moved abstraction", wrapped, env);
-                auto result = Unapply(copy(pattern->function), move(wrapped), env);
+                auto result = Unapply(move(pattern->function), move(wrapped), env);
                 // if (result)
                 //     return result;
                 // auto intersected = make_operation<intersection_with>(move(pattern->function), move(valueToMatch));
