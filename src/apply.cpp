@@ -68,18 +68,19 @@ struct check_datatype {
 struct check_function_datatype {
     environment& env;
     closure& type;
-    expression operator()(closure&& value) {
+    expression operator()(rec<closure>&& value) {
         DebugPrint("checking function type", type, env);
         auto envCopy = env;
-        auto unappliedL = Unapply(move(type.argument), move(value.argument), envCopy);
-        if (!unappliedL) {
+        auto appliedL = Apply(move(type.argument), move(value->argument), envCopy);
+        // this is incorrect, because these might not fail when needed. Probably should substitute too
+        if (std::get_if<nothing>(&appliedL)) {
             env.errors.push_back(
                 std::string("can't match function type")
             );
             return nothing{};
         }
-        auto unappliedR = Unapply(move(type.body), move(value.body), envCopy);
-        if (!unappliedR) {
+        auto appliedR = Apply(move(type.body), move(value->body), envCopy);
+        if (std::get_if<nothing>(&appliedR)) {
             env.errors.push_back(
                 std::string("can't match function type")
             );

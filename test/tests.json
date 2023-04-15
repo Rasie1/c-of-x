@@ -379,16 +379,16 @@
     {
         "name": "Function type 1",
         "expr": "(Int -> Int) (\"1\" -> 1)",
-        "result": "Compile error"
+        "result": "Compile error:\ncan't match function type"
     },
     {
         "name": "Function type 2",
         "expr": "(Int -> Int) (1 -> \"1\")",
-        "result": "Compile error"
+        "result": "Compile error:\ncan't match function type"
     },
     {
         "name": "Function type 3",
         "expr": "(1 -> 1) (Int -> Int)",
-        "result": "Compile error"
+        "result": "Compile error:\ncan't match function type"
     }
 ]
