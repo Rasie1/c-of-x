@@ -40,9 +40,11 @@ struct environment {
                 if (oldValue == value)
                     return extension_result::Match;
                 // oldValue = make_operation<intersection_with>(move(oldValue), move(value));
-                if (auto intersected = IntersectFind(copy(oldValue), move(value), *this))
+                if (auto intersected = IntersectFind(copy(oldValue), move(value), *this)) {
+                    if (oldValue == *intersected)
+                        return extension_result::Match;
                     oldValue = *intersected;
-                else
+                } else
                     return extension_result::Void;
                     
                 return extension_result::NotAdded;

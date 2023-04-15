@@ -6,6 +6,29 @@
 
 namespace cx {
 
+template<typename datatype>
+struct intersect_for_datatype {
+    expression& r;
+    environment& env;
+    expression operator()(datatype&& l) {
+        return match(move(r),
+            [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
+            [&l](any&&) -> expression { return l; },
+            [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, move(v)); },
+            [this, &l](rec<application>&& rApplication) -> expression { 
+                auto lCopy = l;
+                auto rCopy = rApplication.get();
+                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{lCopy, env}.template operator()<true>(rApplication.get());
+                return mapped;
+            },
+            [this, &l](auto&& r) -> expression { 
+                env.errors.push_back("can't intersect " + Show(move(l)) + " with " + Show(move(r)));
+                return nothing{}; 
+            }
+        );
+    }
+};
+
 expression GetElement(expression&& set, environment& env) {
     DebugPrint("get element", set, env);
     set = Eval(move(set), env);
@@ -78,6 +101,10 @@ expression Intersect(expression&& l,
     r = Eval(move(r), env);
     if (l == r)
         return r;
+    if (std::get_if<any>(&l))
+        return r;
+    if (std::get_if<any>(&r))
+        return l;
     {
         DebugPrint("intersect unapply l", l, env);
         env.increaseDebugIndentation();

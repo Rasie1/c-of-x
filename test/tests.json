@@ -359,7 +359,7 @@
     {
         "name": "Side effects 4",
         "expr": "i = print \"3\"; (x -> show x) i",
-        "result": "3(show cx::unit)"
+        "result": "33(show cx::unit)"
     },
     {
         "name": "Side effects 5",

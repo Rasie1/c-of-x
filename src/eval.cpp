@@ -85,6 +85,7 @@ expression Eval(expression&& e,
             {
                 stash executionState(env.isExecuting, false);
                 
+                // function = SubstituteVariables(move(e.get().function), env);
                 function = Eval(move(e.get().function), env);
                 argument = Eval(move(e.get().argument), env);
             }
@@ -94,7 +95,7 @@ expression Eval(expression&& e,
             return applied;
         },
         [&env](rec<then>&& e) {
-            auto from = Eval(move(e.get().from), env);
+            auto from = SubstituteVariables(move(e.get().from), env);
             DebugPrint("then", 0, env, 2);
             return match(move(from),
                 [&env](nothing&&) -> expression { 

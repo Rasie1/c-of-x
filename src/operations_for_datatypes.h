@@ -4,29 +4,6 @@
 
 namespace cx {
 
-template<typename datatype>
-struct intersect_for_datatype {
-    expression& r;
-    environment& env;
-    expression operator()(datatype&& l) {
-        return match(move(r),
-            [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
-            [&l](any&&) -> expression { return l; },
-            [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, move(v)); },
-            [this, &l](rec<application>&& rApplication) -> expression { 
-                auto lCopy = l;
-                auto rCopy = rApplication.get();
-                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{lCopy, env}.template operator()<true>(rApplication.get());
-                return mapped;
-            },
-            [this, &l](auto&& r) -> expression { 
-                env.errors.push_back("can't intersect " + Show(move(l)) + " with " + Show(move(r)));
-                return nothing{}; 
-            }
-        ); 
-    }
-};
-
 template<typename datatype, typename calculation, typename calculation_function> 
 struct calculation_for_datatype {
     expression& r;

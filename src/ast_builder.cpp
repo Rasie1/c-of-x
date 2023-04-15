@@ -21,6 +21,7 @@ inline int getOperatorPriority(const cx::expression& e) {
         [](const cx::equality&) { return 1; },
         [](const cx::inequality&) { return 1; },
         [](const cx::multiplication&) { return 9; },
+        [](const cx::implication&) { return 0; },
         [](const auto&) { return 99; }
     );
 }

@@ -63,7 +63,11 @@ expression IsEqual(expression&& l,
         equals_for_datatype<std::string>{r, env},
         equals_for_datatype<basic_type<std::string>>{r, env},
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(move(v), move(r)); },
-        map_union_l{r, env, IsEqual},
+        // map_union_l{r, env, IsEqual},
+        [&r, &env](rec<application>&& lApplication) -> expression {
+            auto mapped = map_union_l{r, env, IsEqual}.operator()<false>(move(lApplication.get()));
+            return mapped;
+        },
         equals_with_negated{r, env},
         [&r, &env](rec<equals_to>&& e) -> expression {
             auto element = GetElement(move(r), env);

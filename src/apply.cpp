@@ -25,6 +25,7 @@ expression Calculate(expression&& l,
 inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue) {
     DebugPrint("in closure", function, env);
     auto& pattern = function.argument;
+    function.env.debugIndentation = env.debugIndentation;
     auto [unapplied, outerVariable] = Unapply(move(pattern), move(argumentValue), function.env);
 
     if (!unapplied) {
@@ -92,7 +93,16 @@ expression Apply(expression&& function,
         [&env, &argument](rec<closure>&& function) -> expression {
             return match(move(argument),
                 [&env, &function](identifier&& id) -> expression {
-                    auto argumentValue = *env.get(id.name);
+                    auto maybeValue = env.get(id.name);
+                    if (!maybeValue) {
+                        if (env.isExecuting) {
+                            env.errors.push_back("unknown variable \"" + id.name + "\"");
+                            return nothing{};
+                        } else {
+                            return application{move(function), move(id)};
+                        }
+                    }
+                    auto argumentValue = *maybeValue;
                     argumentValue = GetElement(move(argumentValue), env);
                     return ApplyToClosure(env, move(function.get()), move(argumentValue));
                 },
@@ -101,8 +111,17 @@ expression Apply(expression&& function,
                         auto l = Eval(move(unionWith->get().x), env);
                         auto r = Eval(move(app.get().argument), env);
                         auto functionCopy = function;
-                        auto lApplied = Apply(move(function),     move(l), env);
+
+                        DebugPrint("apply closure $ application l", l, env);
+                        env.increaseDebugIndentation();
+                        auto lApplied = Apply(move(function), move(l), env);
+                        env.decreaseDebugIndentation();
+
+                        DebugPrint("apply closure $ application r", r, env);
+                        env.increaseDebugIndentation();
                         auto rApplied = Apply(move(functionCopy), move(r), env);
+                        env.decreaseDebugIndentation();
+
                         return Union(move(lApplied), move(rApplied));
                     } else {
                         // DebugPrint("======================", app, env);
@@ -149,9 +168,14 @@ expression Apply(expression&& function,
         [&env, &argument](rec<application>&& e) -> expression {
             return match(copy(e.get().function),
                 [&](rec<intersection_with>&& lApplication) -> expression {
-                    DebugPrint("matched application intersection", lApplication, env);
+                    DebugPrint("matched application intersection l", lApplication, env);
+                    env.increaseDebugIndentation();
                     auto l = Apply(move(lApplication.get().x), copy(argument), env); // todo: copy envs?
+                    env.decreaseDebugIndentation();
+                    DebugPrint("matched application intersection r", e.get().argument, env);
+                    env.increaseDebugIndentation();
                     auto r = Apply(move(e.get().argument), move(argument), env);
+                    env.decreaseDebugIndentation();
                     return Intersect(move(l), move(r), env);
                 },
                 [&](auto&&) -> expression { return application{move(e), move(argument)}; }
@@ -182,7 +206,13 @@ expression Apply(expression&& function,
 
             return Union(move(l), move(r));
         },
-        [&argument](identifier&& f) -> expression { return application{move(f), move(argument)}; },
+        [&argument, &env](identifier&& f) -> expression { 
+            auto substituted = SubstituteVariables(move(f), env);
+            if (std::get_if<identifier>(&substituted))
+                return application{move(substituted), move(argument)}; 
+            
+            return Apply(move(substituted), move(argument), env);
+        },
         [&argument](nothing&& n) -> expression { return n; },
         [&env, &argument](auto&& e) -> expression {
             env.errors.push_back(

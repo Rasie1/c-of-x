@@ -42,8 +42,13 @@ struct unapply_for_datatype {
             [&pattern, this](rec<abstraction>&& e) -> unapply_result { // shouldn't this apply to above as well?
                 auto a = e.get();
                 auto bodyCopy = a.body;
+                DebugPrint("apply in {datatype}", pattern, env);
+                env.increaseDebugIndentation();
                 auto applied = Apply(move(pattern), move(a.body), env);
+                env.decreaseDebugIndentation();
                 DebugPrint("typechecking apply result", applied, env);
+                env.increaseDebugIndentation();
+                defer { env.decreaseDebugIndentation(); };
                 if (applied == bodyCopy)
                     return Unapply(move(a.argument), move(applied), env);
                 else 
@@ -206,21 +211,19 @@ unapply_result Unapply(expression&& pattern,
             if (isEnvironmentExtended == environment::extension_result::Added) {
                 return {true, pattern.name};
             } else if (isEnvironmentExtended == environment::extension_result::Match) {
-                return {true, pattern.name};
+                return {true, ""}; // don't return variable because it's possible that it's not
+                                   // an identity transformation in equality
+
+                                   // or return inner variable? Yes, should try that!
             } else if (isEnvironmentExtended == environment::extension_result::Void) {
                 return {};
             } else {
                 DebugPrint("already defined", pattern, env, 2);
 
                 auto fromEnv = *env.get(pattern.name);
-                // todo: use variable instead of any? it's getting lost
-                // probably no. But we just unpacked it! anyway, it's not getting sent out
-                // auto value = Apply(move(fromEnv), any{}, env);
                 auto value = Apply(move(fromEnv), identifier{pattern.name}, env);
                 auto unapplied = Unapply(move(value), move(newVariable), env);
 
-                // if (unapplied.outerVariable.empty())
-                //     unapplied.outerVariable = pattern.name;
                 unapplied.outerVariable = pattern.name;
 
                 DebugPrint("unapplied variable", unapplied.outerVariable, env);
@@ -255,6 +258,19 @@ unapply_result Unapply(expression&& pattern,
                 DebugPrint("got inverse", wrapped, env);
                 return Unapply(move(pattern.get().argument), move(wrapped), env);
             } else {
+                // {
+                //     auto envCopy = env;
+                //     auto search = Unapply(copy(pattern.get().argument), copy(valueToMatch), envCopy);
+                //     if (search && !search.outerVariable.empty()) {
+                //         auto applied = Apply(copy(pattern.get().function), identifier{search.outerVariable}, envCopy);
+                //         if (!std::get_if<nothing>(&applied)) {
+                //             return search;
+                //         }
+                //     }
+                // }
+
+
+
                 auto wrapped = abstraction{copy(pattern.get().argument), copy(valueToMatch)};
                 DebugPrint("moved abstraction", wrapped, env);
                 auto result = Unapply(copy(pattern.get().function), move(wrapped), env);
@@ -270,19 +286,55 @@ unapply_result Unapply(expression&& pattern,
             }
         },
         
+        [&env, &valueToMatch](rec<closure>&& function) -> unapply_result {
+            DebugPrint("unapply closure", valueToMatch, env);
+            env.increaseDebugIndentation();
 
-        // [&env, &valueToMatch](rec<closure>&& function) -> unapply_result {
+            function.get().env.debugIndentation = env.debugIndentation;
 
-        //     auto combinedEnv = env;
-        //     for (auto& v: function.get().env.variables)
-        //         combinedEnv.variables.push_back(move(v));
-            
-        //     auto evaluated = SubstituteVariables(move(function.get().body), combinedEnv);
+            auto lArgument = SubstituteVariables(move(function.get().argument), function.get().env);
 
-        //     // todo: what if the output is an id?
+            if (std::get_if<nothing>(&lArgument)) {
+                DebugPrint("incorrect function argument", lArgument, env);
+                return {}; 
+            }
 
+            auto l = SubstituteVariables(move(function.get().body), function.get().env);
 
-        //     auto set = Eval(copy(valueToMatch), env);
+            // todo: what if the output is an id?
+
+            auto envCopy = env;
+
+            auto rFunction = SubstituteVariables(copy(valueToMatch), envCopy);
+
+            env.decreaseDebugIndentation();
+            DebugPrint("unapply closure - apply", valueToMatch, envCopy);
+            env.increaseDebugIndentation();
+
+            auto body = Apply(move(rFunction), move(l), envCopy);
+
+            if (std::get_if<nothing>(&body)) {
+                DebugPrint("couldn't intersect closure with", valueToMatch, env);
+                return {}; 
+            }
+
+            auto rElement = GetElement(move(valueToMatch), envCopy);
+            rElement = Eval(move(rElement), envCopy);
+
+            env.decreaseDebugIndentation();
+            DebugPrint("unapply closure - uapply", rElement, env);
+            env.increaseDebugIndentation();
+            defer { env.decreaseDebugIndentation(); };
+            // auto argument = Unapply(move(function.get().argument), move(rElement), env);
+            return Unapply(move(lArgument), move(rElement), envCopy);
+
+            // if (std::get_if<nothing>(&argument)) {
+            //     DebugPrint("couldn't intersect closure", body, env);
+            //     return {}; 
+            // }
+
+            // return {true, ""};
+
         //     if (auto rightClosure = std::get_if<rec<closure>>(&set)) {
         //         auto unappliedArgument = Unapply(move(function.get().argument), 
         //                                          move(rightClosure->get().argument),
@@ -301,8 +353,7 @@ unapply_result Unapply(expression&& pattern,
         //     //         return GetElement(move(e), env); 
         //     //     }
         //     // );
-        // },
-
+        }, //*/
         [&env, &valueToMatch](rec<then>&& e) -> unapply_result {
             auto from = Eval(move(e.get().from), env);
             DebugPrint("then unapply", from, env);
@@ -313,7 +364,7 @@ unapply_result Unapply(expression&& pattern,
                 }
             );
         },
-        [&env](auto&& e) -> unapply_result { 
+        [&env](auto&& e) -> unapply_result {
             DebugPrint("couldn't unapply", e, env);
             return {}; 
         }

@@ -6,6 +6,7 @@ import os
 f = open('../test/tests.json')
   
 data = json.load(f)
+fails = 0
 
   
 for test_config in data:
@@ -22,6 +23,8 @@ for test_config in data:
         print("Result:      " + output)
         print("Command:") 
         print("./main '" + test_config["expr"] + "' -log")
+        global fails
+        fails = fails + 1
     if "result" in test_config and output[:-1] != test_config["result"]:
         fail()
     else:
@@ -31,3 +34,7 @@ for test_config in data:
         fail()
   
 f.close()
+
+if fails > 0:
+    print("Fails: ")
+    print(fails)
