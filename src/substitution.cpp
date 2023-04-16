@@ -58,12 +58,8 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
             seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
                 DebugPrint("substituting in id, got from env", *expr, env);
-                // return map_union([&seen, &e](expression&& expr, environment& env){
-                //     auto newEnv = env;
-                //     *newEnv.get(e.name) = move(expr);
-                //     return GetElement(SubstituteVariables(move(expr), newEnv, seen), newEnv);
-                // }, copy(*expr), env);
-                // return GetElement(SubstituteVariables(copy(*expr), env, seen), env);
+                auto exprCopy = *expr;
+                // auto element = GetElement(move(exprCopy), env);
                 auto element = GetElement(copy(*expr), env);
                 return map_union([&seen, &e](expression&& expr, environment& env){
                     auto newEnv = env;

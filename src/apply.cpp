@@ -124,6 +124,8 @@ expression Apply(expression&& function,
                             env.errors.push_back("unknown variable \"" + id.name + "\"");
                             return nothing{};
                         } else {
+                            // ExtendEnvironment(move(function), id, env);
+                            // return id;
                             return application{move(function), move(id)};
                         }
                     }

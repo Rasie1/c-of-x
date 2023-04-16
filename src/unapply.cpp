@@ -17,12 +17,9 @@ struct unapply_for_datatype {
     unapply_result operator()(datatype&& pattern) {
         return match(move(valueToMatch),
             [&pattern](datatype&& v) -> unapply_result { return {pattern == v, {}}; },
-            [&pattern, this](identifier&& v) -> unapply_result { 
-                auto defined = ExtendEnvironment(equals_to{move(v)}, move(pattern), env);
-                if (defined)
-                    return {true, {}};
-                else
-                    return {false, v.name};
+            [&pattern, this](identifier&& valueToMatch) -> unapply_result {
+                auto added = env.add(valueToMatch.name, equals_to{move(pattern)});
+                return {added != environment::extension_result::Void, valueToMatch.name};
             },
             // [](any&&) -> unapply_result { return {true, {}}; },
             [](auto&&) -> unapply_result { return {}; }
@@ -192,6 +189,9 @@ unapply_result Unapply(expression&& pattern,
             auto evaluated = SubstituteVariables(copy(oldEvaluated), newEnv); // danger
             if (IsError(evaluated))
                 return {};
+            if (std::get_if<any>(&evaluated)) {
+                return {true, ""};
+            }
             expression newVariable;
             if (oldEvaluated == evaluated)
                 newVariable = move(evaluated);

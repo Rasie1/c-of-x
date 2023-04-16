@@ -87,7 +87,19 @@ expression Eval(expression&& e,
                 
                 // function = SubstituteVariables(move(e->function), env);
                 function = Eval(move(e->function), env);
-                argument = Eval(move(e->argument), env);
+
+                // only one variable definition is possible in each application chain
+                if (auto idFunction = std::get_if<identifier>(&function); idFunction && !env.get(idFunction->name)) {
+                    auto envCopy = env;
+                    argument = Eval(move(e->argument), envCopy);
+                    if (auto idArgument = std::get_if<identifier>(&argument)) {
+                        auto newVariable = envCopy.get(idArgument->name);
+                        if (newVariable)
+                            argument = application{move(*newVariable), move(argument)};
+                    }
+                } else {
+                    argument = Eval(move(e->argument), env);
+                }
             }
 
             auto applied = Apply(move(function), move(argument), env);
@@ -127,24 +139,33 @@ expression Eval(expression&& e,
             return Negate(move(function), env); 
         },
         [&env](rec<abstraction>&& e) -> expression {
-            DebugPrint("-- Constructing closure", 0, env, 2);
-            for (auto& [k, v]: env.variables) 
-                DebugPrint(k, v, env);
+            DebugPrint("abstraction", 0, env, 2);
 
             auto newEnv = env;
             newEnv.isExecuting = false;
 
             auto pattern = Eval(move(e->argument), newEnv);
 
-            if (auto id = std::get_if<identifier>(&pattern)) {
-                for (auto& [variable, value]: newEnv.variables) {
-                    if (variable == id->name) {
-                        shadowVariable(pattern, variable);
-                        shadowVariable(e->body, variable);
-                        break;
-                    }
-                }
-            }
+            DebugPrint("new argument in abstraction", pattern, newEnv);
+
+            // shadowing
+            // if (auto id = std::get_if<identifier>(&pattern)) {
+            //     for (auto& [variable, value]: newEnv.variables) {
+            //         if (variable == id->name) {
+            //             auto thisVariableInPreviousEnv = env.get(variable);
+            //             if (thisVariableInPreviousEnv) {
+            //                 shadowVariable(pattern, variable);
+            //                 shadowVariable(e->body, variable);
+            //                 variable += "'";
+
+            //                 // if (*newlyDefinedVariable != value) {
+            //                 // pattern = application{value, pattern};
+            //                 // }
+            //             }
+            //             break;
+            //         }
+            //     }
+            // }
 
             return closure{pattern, move(e->body), newEnv}; 
         },

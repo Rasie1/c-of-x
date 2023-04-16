@@ -64,8 +64,16 @@ struct environment {
         return true;
     }
 
-    // inline bool remove(const std::string& key) {
-    // }
+    inline bool remove(const std::string& key) {
+        for (auto it = variables.begin(); it != variables.end(); ++it) {
+            if (it->first == key) {
+                variables.erase(it);
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     bool operator==(environment const&) const = default;
 

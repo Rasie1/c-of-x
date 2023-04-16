@@ -47,6 +47,11 @@
         "result": "3"
     },
     {
+        "name": "Shadowing is not allowed",
+        "expr": "x = 4; id = x -> x; id 3",
+        "result": "Compile error:\ncouldn't apply argument"
+    },
+    {
         "name": "Lambda",
         "expr": "id = x -> (x + 2); id 1 = 3",
         "result": "3"
@@ -158,8 +163,8 @@
     },
     {
         "name": "any 2",
-        "expr": "x = 2; f x = x + 3; f any",
-        "result": "void"
+        "expr": "x = 2; f x = x + 1; f any",
+        "result": "3"
     },
     {
         "name": "Inequality 3",
@@ -302,6 +307,16 @@
         "result": "3"
     },
     {
+        "name": "Shadowing is not allowed 2",
+        "expr": "x = 4; id = (Int x) -> x; id 3",
+        "result": "Compile error:\ncouldn't apply argument"
+    },
+    {
+        "name": "Int function wrong type",
+        "expr": "f (x: Int) = x; f \"2\"",
+        "result": "Compile error:\ncouldn't apply argument"
+    },
+    {
         "name": "Type alias",
         "expr": "integer = Int; integer x = 3",
         "result": "3"
@@ -390,5 +405,20 @@
         "name": "Function type 3",
         "expr": "(1 -> 1) (Int -> Int)",
         "result": "Compile error:\ncan't match function type"
+    },
+    {
+        "name": "Function type 4",
+        "expr": "(Int -> Int) f; f x = 3; f 2",
+        "result": "3"
+    },
+    {
+        "name": "Function type 5",
+        "expr": "(Int -> Int) f; f x = 3; f \"2\"",
+        "result": "Compile error:\ncouldn't apply argument\nincorrect implication"
+    },
+    {
+        "name": "Function type 6",
+        "expr": "(Int -> Int) f; f x = \"2\"",
+        "result": "Compile error:\ncouldn't apply argument\nincorrect implication"
     }
 ]
