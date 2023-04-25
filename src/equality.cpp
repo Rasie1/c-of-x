@@ -27,7 +27,7 @@ struct equals_with_negated {
             },
             [](identifier&& e) -> expression { return e; },
             [this, &evaluatedl, &evaluatedr](auto&&) -> expression { 
-                env.errors.push_back(Show(move(evaluatedl)) + " is equals to " + Show(move(evaluatedr)));
+                env.errors.push_back(Show(move(evaluatedl)) + " is equal to " + Show(move(evaluatedr)));
                 return nothing{}; 
             }
         );
@@ -40,7 +40,12 @@ struct equals_for_datatype {
     environment& env;
     expression operator()(datatype&& l) {
         return match(move(r),
-            [&l](datatype&& r) -> expression { return l == r ? expression(r) : expression(nothing{}); },
+            [this, &l](datatype&& r) -> expression { 
+                if (l == r)
+                    return r;
+                env.errors.push_back(Show(move(l)) + " is not equal to " + Show(move(r)));
+                return nothing{};
+            },
             [&l](identifier&& v) -> expression { return make_operation<equals_to>(l, move(v)); },
             map_union_r<equals_for_datatype<datatype>, datatype>{l, env},
             [&l](any&&) -> expression { return l; },
@@ -65,7 +70,7 @@ expression IsEqual(expression&& l,
         [&r](identifier&& v) -> expression { return make_operation<intersection_with>(move(v), move(r)); },
         // map_union_l{r, env, IsEqual},
         [&r, &env](rec<application>&& lApplication) -> expression {
-            auto mapped = map_union_l{r, env, IsEqual}.operator()<false>(move(*lApplication));
+            auto mapped = map_union_l<equals_to>{r, env, IsEqual}.operator()<false>(move(*lApplication));
             return mapped;
         },
         equals_with_negated{r, env},

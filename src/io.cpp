@@ -84,10 +84,12 @@ std::string Show(expression&& e) {
             return Show(move(e->x)) + std::string(";"); 
         },
         [](addition&&) -> std::string { return "+"; },
+        [](subtraction&&) -> std::string { return "-"; },
         [](equality&&) -> std::string { return "="; },
         [](multiplication&&) -> std::string { return "*"; },
         [](implication&&) -> std::string { return ";"; },
         [](union_&&) -> std::string { return "|"; },
+        [](arrow&&) -> std::string { return "->"; },
         [](any&&) -> std::string { return "any"; },
         [](print&&) -> std::string { return "print"; },
         [](show&&) -> std::string { return "show"; },

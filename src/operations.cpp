@@ -149,7 +149,7 @@ expression Intersect(expression&& l,
             );
         },
         [&r, &env](rec<application>&& lApplication) -> expression {
-            auto mapped = map_union_l{r, env, Intersect}.operator()<true>(move(*lApplication));
+            auto mapped = map_union_l<intersection_with>{r, env, Intersect}.operator()<true>(move(*lApplication));
             return mapped;
         },
         [&r, &env](rec<closure>&& l) -> expression {

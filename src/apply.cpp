@@ -14,7 +14,7 @@ expression Calculate(expression&& l,
         operation_for_datatype<int>{r, env},
         // operation_for_datatype<std::string>{r},
         [&r](identifier&& v) -> expression { return make_operation<functor>(move(v), move(r)); },
-        map_union_l{r, env, Calculate<operation_for_datatype, functor>},
+        map_union_l<operation_for_datatype>{r, env, Calculate<operation_for_datatype, functor>},
         [&env](auto&& e) -> expression {
             env.errors.push_back(std::string("can't do arithmetic with ") + Show(e));
             return nothing{};
@@ -124,6 +124,7 @@ expression Apply(expression&& function,
                             env.errors.push_back("unknown variable \"" + id.name + "\"");
                             return nothing{};
                         } else {
+                            // check if it's a type and only then add?
                             // ExtendEnvironment(move(function), id, env);
                             // return id;
                             return application{move(function), move(id)};

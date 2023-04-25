@@ -75,6 +75,9 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
         [](rec<addition_with>&& f) -> std::optional<expression> { 
             return subtraction_with{move(f->x)}; 
         },
+        [](rec<subtraction_with>&& f) -> std::optional<expression> { 
+            return addition_with{move(f->x)}; 
+        },
         [&env](rec<application>&& app) -> std::optional<expression> {
             DebugPrint("inverting application", *app, env);
             return match(move(move(app->function)),

@@ -1,6 +1,11 @@
 [
     {
         "name": "Parsing",
+        "expr": "10 - 3 + 2",
+        "result" : "9"
+    },
+    {
+        "name": "Parsing 2",
         "expr": "15 = 1 + 2 + 3 * 4; 103 = 3 + 10 * 5 + (5 + 5) * 5",
         "result" : "103"
     },
@@ -19,7 +24,12 @@
     {
         "name": "Inequality failed",
         "expr": "2 != 2",
-        "result": "Compile error:\n2 is equals to 2"
+        "result": "Compile error:\n2 is equal to 2"
+    },
+    {
+        "name": "Equality failed",
+        "expr": "2 = 3",
+        "result": "Compile error:\n2 is not equal to 3"
     },
     {
         "name": "Datatypes",
@@ -78,6 +88,11 @@
     },
     {
         "name": "Addition unapplication",
+        "expr": "f (1 + x) = x; f 4",
+        "result": "3"
+    },
+    {
+        "name": "Addition unapplication 2",
         "expr": "f (x + 1) = x; f 4",
         "result": "3"
     },
@@ -194,7 +209,7 @@
     {
         "name": "Set - wrong",
         "expr": "2: {3}",
-        "result": "void"
+        "result": "Compile error:\n3 is not equal to 2"
     },
     {
         "name": "Set 2",
@@ -209,7 +224,7 @@
     {
         "name": "Set 3 - wrong",
         "expr": "4: {3} & {3|4}",
-        "result": "void"
+        "result": "Compile error:\n3 is not equal to 4"
     },
     {
         "name": "Set 4",
@@ -219,7 +234,7 @@
     {
         "name": "Set 4 - wrong",
         "expr": "5: {3|5} & {3}",
-        "result": "void"
+        "result": "Compile error:\n3 is not equal to 5"
     },
     {
         "name": "Set 5",
@@ -229,7 +244,7 @@
     {
         "name": "Set 5",
         "expr": "1: {3|5} & {3|1|2}",
-        "result": "void"
+        "result": "Compile error:\n3 is not equal to 1"
     },
     {
         "name": "Set 6",

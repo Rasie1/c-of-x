@@ -25,6 +25,8 @@ struct subtraction_with;
 struct multiplication_with;
 struct implication_with;
 struct abstraction;
+struct arrow;
+struct application_operator;
 struct set;
 
 struct unit { bool operator==(unit const&) const = default; };
@@ -42,6 +44,8 @@ struct addition { bool operator==(addition const&) const = default; };
 struct multiplication { bool operator==(multiplication const&) const = default; };
 struct subtraction { bool operator==(subtraction const&) const = default; };
 struct implication { bool operator==(implication const&) const = default; };
+struct arrow { bool operator==(arrow const&) const = default; };
+struct application_operator { bool operator==(application_operator const&) const = default; };
 
 template<typename datatype>
 struct basic_type { bool operator==(basic_type<datatype> const&) const = default; };
@@ -66,6 +70,8 @@ using expression = std::variant<
     subtraction,
     multiplication,
     implication,
+    arrow,
+    application_operator,
 
     rec<application>,
     rec<intersection_with>,

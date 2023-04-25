@@ -160,7 +160,7 @@ struct operators_9 : tao::pegtl::sor<tao::pegtl::one<'/'>,
                                      tao::pegtl::one<'%'>> {};
 struct expr_9 : left_assoc<operation_apply, operators_9> {};
 struct operators_8 : tao::pegtl::sor<tao::pegtl::one<'+'>,
-                                     tao::pegtl::one<'~'>> {};
+                                     tao::pegtl::string<'-', ' '>> {};
 struct expr_8 : left_assoc<expr_9, operators_8> {};
 struct operators_7 : tao::pegtl::one<'|'> {};
 struct expr_7 : left_assoc<expr_8, operators_7> {};
