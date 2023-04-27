@@ -73,10 +73,13 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
     env.increaseDebugIndentation();
     auto result = match(move(e),
         [](rec<addition_with>&& f) -> std::optional<expression> { 
-            return subtraction_with{move(f->x)}; 
+            // return subtraction_with{move(f->x)}; 
+            // todo: typed
+            return addition_with{application{multiplication_with{-1}, move(f->x)}}; 
         },
         [](rec<subtraction_with>&& f) -> std::optional<expression> { 
-            return addition_with{move(f->x)}; 
+            // return addition_with{move(f->x)}; 
+            return subtraction_with{application{multiplication_with{-1}, move(f->x)}}; 
         },
         [&env](rec<application>&& app) -> std::optional<expression> {
             DebugPrint("inverting application", *app, env);
@@ -172,6 +175,63 @@ struct equals_with_negated {
     }
 };
 
+inline auto flipCommutativeOperation(application&& app) -> std::optional<application> {
+    // todo: this is usually not an application, but a struct with one value (like, addition_with)
+    return match(move(app.function),
+        [&argument = app.argument](rec<addition_with>&& f) -> std::optional<application> {
+            return make_operation<addition_with>(move(argument), move(f->x));
+        },
+        [&argument = app.argument](rec<subtraction_with>&& f) -> std::optional<application> {
+            return make_operation<subtraction_with>(move(argument), move(f->x));
+        },
+        [](auto&&) -> std::optional<application> { return {}; }
+    );
+}
+
+inline auto flipInverse(application&& app, environment& env) -> std::optional<expression> {
+    env.increaseDebugIndentation();
+    defer { env.decreaseDebugIndentation(); };
+    DebugPrint("trying to flip", app, env);
+    if (auto flipped = flipCommutativeOperation(move(app))) {
+        DebugPrint("flipped", *flipped, env);
+        return flipped;
+        // if (auto inverted = Inverse(move(flipped->function), env))
+        //     return application{*inverted, flipped->argument};
+        // else
+        //     return {};
+    }
+    else
+        return {};
+}
+
+inline cx::expression toUnion(std::vector<expression>& variants) {
+    if (variants.size() == 0)
+        return nothing{};
+
+    if (variants.size() == 1)
+        return variants[0];
+
+    expression ret;
+
+    for (auto it = ++variants.begin(); it != variants.end(); ++it) {
+        ret = application{union_with{move(ret)}, move(*it)};
+    }
+
+    return ret;
+}
+
+bool combineResults(unapply_result& l, const unapply_result& r) {
+    l.success |= r.success;
+    if (l.outerVariable.empty()) {
+        if (r.outerVariable.empty())
+            return false;
+
+        l.outerVariable = r.outerVariable;
+    }
+
+    return true;
+}
+
 unapply_result Unapply(expression&& pattern, 
                        expression&& valueToMatch, 
                        environment& env) {
@@ -249,37 +309,31 @@ unapply_result Unapply(expression&& pattern,
         // },
 
         [&env, &valueToMatch](rec<application>&& pattern) -> unapply_result {
+            unapply_result result = {};
+
             if (auto inversed = Inverse(copy(pattern->function), env)) {
                 auto wrapped = application{move(*inversed), valueToMatch};
-                DebugPrint("got inverse", wrapped, env);
-                return Unapply(move(pattern->argument), move(wrapped), env);
-            } else {
-                // {
-                //     auto envCopy = env;
-                //     auto search = Unapply(copy(pattern->argument), copy(valueToMatch), envCopy);
-                //     if (search && !search.outerVariable.empty()) {
-                //         auto applied = Apply(copy(pattern->function), identifier{search.outerVariable}, envCopy);
-                //         if (!std::get_if<nothing>(&applied)) {
-                //             return search;
-                //         }
-                //     }
-                // }
-
-
-
+                DebugPrint("got l inverse", wrapped, env);
+                if (combineResults(result, Unapply(move(pattern->argument), move(wrapped), env)))
+                    return result;
+            }
+            if (auto flipped = flipInverse(copy(*pattern), env)) {
+                // auto wrapped = application{move(*flipped), valueToMatch};
+                DebugPrint("got r inverse", *flipped, env);
+                if (combineResults(result, Unapply(move(*flipped), move(valueToMatch), env)))
+                    return result;
+            }
+            {
                 auto wrapped = abstraction{copy(pattern->argument), copy(valueToMatch)};
                 DebugPrint("moved abstraction", wrapped, env);
-                auto result = Unapply(move(pattern->function), move(wrapped), env);
-                // if (result)
-                //     return result;
-                // auto intersected = make_operation<intersection_with>(move(pattern->function), move(valueToMatch));
-                // auto result2 = Unapply(move(pattern->argument), move(intersected), env);
-                // if (result2)
-                //     return result2;
-                return result;
-                // try to create something in env if it's application?
-                // or perhaps closure arg will become integer
+                combineResults(result, Unapply(move(pattern->function), move(wrapped), env));
             }
+
+            return result;
+
+            // if (result.success) {
+            //     env.errors.clear();
+            // }
         },
         
         [&env, &valueToMatch](rec<closure>&& function) -> unapply_result {

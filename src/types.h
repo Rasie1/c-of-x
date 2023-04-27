@@ -103,11 +103,11 @@ struct application {
 };
 
 template <typename Op>
-expression make_operation(expression&& l, expression&& r) {
+application make_operation(expression&& l, expression&& r) {
     return application{Op{move(l)}, move(r)};
 }
 template <typename Op>
-expression make_operation_binary(expression&& l, expression&& r) {
+application make_operation_binary(expression&& l, expression&& r) {
     return application{application{Op{}, move(l)}, move(r)};
 }
 

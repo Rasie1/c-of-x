@@ -4,7 +4,7 @@
 
 namespace cx {
 
-template <template<typename datatype> typename operation_for_datatype, typename functor>
+template <template<typename datatype> typename operation_for_datatype, typename function>
 expression Calculate(expression&& l,
                      expression&& r,
                      environment& env) {
@@ -13,8 +13,8 @@ expression Calculate(expression&& l,
     return match(move(l),
         operation_for_datatype<int>{r, env},
         // operation_for_datatype<std::string>{r},
-        [&r](identifier&& v) -> expression { return make_operation<functor>(move(v), move(r)); },
-        map_union_l<operation_for_datatype>{r, env, Calculate<operation_for_datatype, functor>},
+        [&r](identifier&& v) -> expression { return make_operation<function>(move(v), move(r)); },
+        map_union_l<function>{r, env, Calculate<operation_for_datatype, function>},
         [&env](auto&& e) -> expression {
             env.errors.push_back(std::string("can't do arithmetic with ") + Show(e));
             return nothing{};

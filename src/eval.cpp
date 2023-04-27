@@ -115,14 +115,6 @@ expression Eval(expression&& e,
                     return nothing{}; 
                 },
                 [&e, &env](auto&& from) -> expression {
-                    // bool wasExecuting = env.isExecuting;
-                    // stash executionState(env.isExecuting, false);
-                    // auto to = Eval(move(e->to), env); 
-                    // if (!wasExecuting) {
-                    //     return then{move(from), move(to)};
-                    // } else {
-                    //     return to;
-                    // }
                     if (!env.isExecuting) {
                         stash executionState(env.isExecuting, false);
                         auto to = Eval(move(e->to), env); 

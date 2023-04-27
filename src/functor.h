@@ -3,13 +3,15 @@
 #include "environment.h"
 
 namespace cx {
+
+expression Union(expression&& l, expression&& r);
     
-template<typename operation_for_datatype, typename operation_function>
+template<typename operation_for_datatype>
 struct map_union_l {
     expression& r;
     environment& env;
-    operation_function& operation;
-    template<bool failOnUnknown = true>
+    expression (*operation)(expression&&, expression&&, environment&);
+    template<bool failOnUnknown = false>
     auto operator()(rec<application>&& lApplication) -> expression {
         DebugPrint("map_union_l, r", r, env);
         auto& rUnion = lApplication->argument;
@@ -22,16 +24,14 @@ struct map_union_l {
                 return Union(move(lCalculated), move(rCalculated));
             },
             [&lApplication, this](auto&& e) -> expression {
-                auto applied = operation_for_datatype{application{e, move(lApplication->argument)}, move(r)};
-                // auto applied = operation(application{e, move(lApplication->argument)}, move(r), env);
-                // auto applied = application{e, move(lApplication->argument)};
+                auto inner = application{e, move(lApplication->argument)};
                 if constexpr (failOnUnknown) {
                     env.errors.push_back(
-                        "can't correlate " + Show(move(r)) + " and " + Show(move(applied))
+                        "can't correlate " + Show(move(r)) + " and " + Show(move(inner))
                     );
                     return nothing{};
                 } else {
-                    return applied;
+                    return application{operation_for_datatype{inner}, move(r)};
                 }
             }
         );
