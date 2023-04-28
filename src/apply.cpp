@@ -37,7 +37,7 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     for (auto& v: function.env.variables)
         combinedEnv.variables.push_back(move(v));
        
-    return SubstituteVariables(move(function.body), combinedEnv);
+    return SubstituteVariables(move(function.body), combinedEnv, true);
 }
 
 template<typename datatype>
@@ -124,10 +124,9 @@ expression Apply(expression&& function,
                             env.errors.push_back("unknown variable \"" + id.name + "\"");
                             return nothing{};
                         } else {
-                            // check if it's a type and only then add?
-                            // ExtendEnvironment(move(function), id, env);
-                            // return id;
-                            return application{move(function), move(id)};
+                            ExtendEnvironment(move(function), id, env);
+                            return id;
+                            // return application{move(function), move(id)};
                         }
                     }
                     auto argumentValue = *maybeValue;

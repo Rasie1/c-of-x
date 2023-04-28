@@ -10,12 +10,16 @@
 
 namespace cx {
 
-expression SubstituteVariables(expression&& expr, environment& env);
+expression SubstituteVariables(
+    expression&& expr, 
+    environment& env,
+    bool prohibitFreeVariables = false);
+    
 std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env);
 
 std::optional<std::string> ExtendEnvironment(
-        expression&& function, 
-        const expression& argument, 
-        environment& env);
+    expression&& function, 
+    const expression& argument, 
+    environment& env);
 
 }

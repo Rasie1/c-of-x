@@ -44,7 +44,10 @@ expression map_union(operation&& op, expression&& e, environment& env) {
     );
 }
 
-inline expression SubstituteVariables(expression&& expr, environment& env, std::vector<std::string>& seen) {
+inline expression SubstituteVariables(expression&& expr, 
+                                      environment& env, 
+                                      bool prohibitFreeVariables, 
+                                      std::vector<std::string>& seen) {
     // TODO: possibly this should be BFS
     DebugPrint("substitute - evaluating", expr, env);
     env.increaseDebugIndentation();
@@ -53,7 +56,7 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
     DebugPrint("substituting", evaluated, env);
     env.increaseDebugIndentation();
     auto fixed = match(move(evaluated),
-        [&env, &seen](identifier&& e) -> expression {
+        [&env, &seen, &prohibitFreeVariables](identifier&& e) -> expression {
             DebugPrint("substituting in id", e, env);
             seen.push_back(e.name);
             if (auto expr = env.get(e.name)) {
@@ -61,51 +64,53 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
                 auto exprCopy = *expr;
                 // auto element = GetElement(move(exprCopy), env);
                 auto element = GetElement(copy(*expr), env);
-                return map_union([&seen, &e](expression&& expr, environment& env){
+                return map_union([&seen, &e, &prohibitFreeVariables](expression&& expr, environment& env){
                     auto newEnv = env;
                     *newEnv.get(e.name) = copy(expr);
-                    return SubstituteVariables(move(expr), newEnv, seen);
+                    return SubstituteVariables(move(expr), newEnv, prohibitFreeVariables, seen);
                 }, move(element), env);
                 // return element;
+            } else if (prohibitFreeVariables) {
+                return any{};
             }
             return e;
         },
-        [&env, &seen](rec<equals_to>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<equals_to>&& function) -> expression {
+            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<negated>&& function) -> expression {
-            function->f = SubstituteVariables(move(function->f), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<negated>&& function) -> expression {
+            function->f = SubstituteVariables(move(function->f), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<intersection_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<intersection_with>&& function) -> expression {
+            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<union_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<union_with>&& function) -> expression {
+            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<addition_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<addition_with>&& function) -> expression {
+            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<subtraction_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<subtraction_with>&& function) -> expression {
+            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<multiplication_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<multiplication_with>&& function) -> expression {
+            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
             return function;
         },
-        [&env, &seen](rec<application>&& e) -> expression {
-            e->function = SubstituteVariables(move(e->function), env, seen);
-            e->argument = SubstituteVariables(move(e->argument), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<application>&& e) -> expression {
+            e->function = SubstituteVariables(move(e->function), env, prohibitFreeVariables, seen);
+            e->argument = SubstituteVariables(move(e->argument), env, prohibitFreeVariables, seen);
             return e;
         },
-        [&env, &seen](rec<then>&& e) -> expression {
-            e->from = SubstituteVariables(move(e->from), env, seen);
-            e->to = SubstituteVariables(move(e->to), env, seen);
+        [&env, &seen, &prohibitFreeVariables](rec<then>&& e) -> expression {
+            e->from = SubstituteVariables(move(e->from), env, prohibitFreeVariables, seen);
+            e->to = SubstituteVariables(move(e->to), env, prohibitFreeVariables, seen);
 
             if (!env.isExecuting) {
                 return then{move(e->from), move(e->to)};
@@ -123,15 +128,15 @@ inline expression SubstituteVariables(expression&& expr, environment& env, std::
     return ret;
 }
 
-expression SubstituteVariables(expression&& expr, environment& env) {
+expression SubstituteVariables(expression&& expr, environment& env, bool prohibitFreeVariables) {
     std::vector<std::string> seen;
-    return SubstituteVariables(move(expr), env, seen);
+    return SubstituteVariables(move(expr), env, prohibitFreeVariables, seen);
 }
 
 std::pair<expression, std::optional<std::string>> FixWithVariable(expression&& expr, environment& env) {
     std::vector<std::string> seen;
     std::optional<std::string> variable;
-    auto fixed = SubstituteVariables(move(expr), env, seen);
+    auto fixed = SubstituteVariables(move(expr), env, false, seen);
     if (!seen.empty())
         variable = seen.back();
     return {move(fixed), variable};

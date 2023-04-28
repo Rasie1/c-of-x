@@ -75,11 +75,11 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
         [](rec<addition_with>&& f) -> std::optional<expression> { 
             // return subtraction_with{move(f->x)}; 
             // todo: typed
-            return addition_with{application{multiplication_with{-1}, move(f->x)}}; 
+            return addition_with{make_operation<multiplication_with>(-1, move(f->x))}; 
         },
         [](rec<subtraction_with>&& f) -> std::optional<expression> { 
             // return addition_with{move(f->x)}; 
-            return subtraction_with{application{multiplication_with{-1}, move(f->x)}}; 
+            return subtraction_with{make_operation<multiplication_with>(-1, move(f->x))}; 
         },
         [&env](rec<application>&& app) -> std::optional<expression> {
             DebugPrint("inverting application", *app, env);
@@ -175,33 +175,20 @@ struct equals_with_negated {
     }
 };
 
-inline auto flipCommutativeOperation(application&& app) -> std::optional<application> {
-    // todo: this is usually not an application, but a struct with one value (like, addition_with)
+inline auto flipCommutativeOperation(application&& app, environment& env) -> std::optional<application> {
+    DebugPrint("trying to flip", app, env);
     return match(move(app.function),
         [&argument = app.argument](rec<addition_with>&& f) -> std::optional<application> {
             return make_operation<addition_with>(move(argument), move(f->x));
         },
         [&argument = app.argument](rec<subtraction_with>&& f) -> std::optional<application> {
-            return make_operation<subtraction_with>(move(argument), move(f->x));
+            return make_operation<multiplication_with>(
+                -1,
+                make_operation<subtraction_with>(move(argument), move(f->x))
+            );
         },
         [](auto&&) -> std::optional<application> { return {}; }
     );
-}
-
-inline auto flipInverse(application&& app, environment& env) -> std::optional<expression> {
-    env.increaseDebugIndentation();
-    defer { env.decreaseDebugIndentation(); };
-    DebugPrint("trying to flip", app, env);
-    if (auto flipped = flipCommutativeOperation(move(app))) {
-        DebugPrint("flipped", *flipped, env);
-        return flipped;
-        // if (auto inverted = Inverse(move(flipped->function), env))
-        //     return application{*inverted, flipped->argument};
-        // else
-        //     return {};
-    }
-    else
-        return {};
 }
 
 inline cx::expression toUnion(std::vector<expression>& variants) {
@@ -317,7 +304,7 @@ unapply_result Unapply(expression&& pattern,
                 if (combineResults(result, Unapply(move(pattern->argument), move(wrapped), env)))
                     return result;
             }
-            if (auto flipped = flipInverse(copy(*pattern), env)) {
+            if (auto flipped = flipCommutativeOperation(copy(*pattern), env)) {
                 // auto wrapped = application{move(*flipped), valueToMatch};
                 DebugPrint("got r inverse", *flipped, env);
                 if (combineResults(result, Unapply(move(*flipped), move(valueToMatch), env)))

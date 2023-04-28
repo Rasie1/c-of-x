@@ -55,6 +55,16 @@
         "name": "Identity + variable test",
         "expr": "x = 3; id = x -> x; id x = 3",
         "result": "3"
+    },    
+    {
+        "name": "Nested function call",
+        "expr": "g y = y; f x = g x; f 3",
+        "result": "3"
+    },    
+    {
+        "name": "Closure env is closed",
+        "expr": "(x -> x) any",
+        "result": "any"
     },
     {
         "name": "Shadowing is not allowed",
@@ -87,6 +97,11 @@
         "result": "1"
     },
     {
+        "name": "Equation unapplication",
+        "expr": "2 + x = 5",
+        "result": "3"
+    },
+    {
         "name": "Addition unapplication",
         "expr": "f (1 + x) = x; f 4",
         "result": "3"
@@ -95,6 +110,11 @@
         "name": "Addition unapplication 2",
         "expr": "f (x + 1) = x; f 4",
         "result": "3"
+    },
+    {
+        "name": "Addition unapplication 3",
+        "expr": "2 - x + 1 + 8 = 4",
+        "result": "-7"
     },
     {
         "name": "Non-determinism",
