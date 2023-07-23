@@ -60,6 +60,7 @@ struct equals_for_datatype {
 expression IsEqual(expression&& l,
                    expression&& r,
                    environment& env) {
+    stash variables(env.variables);
     DebugPrint("is equal 1", l, env);
     DebugPrint("is equal 2", r, env);
     auto result = match(move(l),

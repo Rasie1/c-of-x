@@ -141,6 +141,9 @@ class stash {
     T  oldValue;
     T& storedVariable;
 public:
+    stash(T& variable): storedVariable(variable) {
+        this->oldValue = variable;
+    }
     stash(T& variable, T&& newValue): storedVariable(variable) {
         this->oldValue = variable;
         variable = newValue;

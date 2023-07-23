@@ -62,7 +62,10 @@ struct unapply_for_datatype {
                 auto newPattern = application{move(pattern), any{}};
                 return Unapply(move(newPattern), move(e->x), env);
             },
-            // [](any&&) -> unapply_result { return {true, {}}; },
+            [](any&&) -> unapply_result { 
+                // required only for matching any to datatype sets in some cases
+                return {true, {}}; 
+            },
             [](auto&&) -> unapply_result { return {}; }
         ); 
     }
@@ -340,30 +343,30 @@ unapply_result Unapply(expression&& pattern,
 
             // todo: what if the output is an id?
 
-            auto envCopy = env;
+            stash variables(env.variables);
 
-            auto rFunction = SubstituteVariables(copy(valueToMatch), envCopy);
+            auto rFunction = SubstituteVariables(copy(valueToMatch), env);
 
             env.decreaseDebugIndentation();
-            DebugPrint("unapply closure - apply", valueToMatch, envCopy);
+            DebugPrint("unapply closure - apply", valueToMatch, env);
             env.increaseDebugIndentation();
 
-            auto body = Apply(move(rFunction), move(l), envCopy);
+            auto body = Apply(move(rFunction), move(l), env);
 
             if (std::get_if<nothing>(&body)) {
                 DebugPrint("couldn't intersect closure with", valueToMatch, env);
                 return {}; 
             }
 
-            auto rElement = GetElement(move(valueToMatch), envCopy);
-            rElement = Eval(move(rElement), envCopy);
+            auto rElement = GetElement(move(valueToMatch), env);
+            rElement = Eval(move(rElement), env);
 
             env.decreaseDebugIndentation();
             DebugPrint("unapply closure - uapply", rElement, env);
             env.increaseDebugIndentation();
             defer { env.decreaseDebugIndentation(); };
             // auto argument = Unapply(move(function->argument), move(rElement), env);
-            return Unapply(move(lArgument), move(rElement), envCopy);
+            return Unapply(move(lArgument), move(rElement), env);
 
             // if (std::get_if<nothing>(&argument)) {
             //     DebugPrint("couldn't intersect closure", body, env);

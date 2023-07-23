@@ -90,14 +90,23 @@ expression Eval(expression&& e,
 
                 // only one variable definition is possible in each application chain
                 if (auto idFunction = std::get_if<identifier>(&function); idFunction && !env.get(idFunction->name)) {
-                    auto envCopy = env;
-                    argument = Eval(move(e->argument), envCopy);
+                    DebugPrint("id function in apply", *idFunction, env);
+                    stash variables(env.variables);
+                    argument = Eval(move(e->argument), env);
                     if (auto idArgument = std::get_if<identifier>(&argument)) {
-                        auto newVariable = envCopy.get(idArgument->name);
+                        auto newVariable = env.get(idArgument->name);
                         if (newVariable)
                             argument = application{move(*newVariable), move(argument)};
                     }
+                } else if (std::get_if<rec<equals_to>>(&function)) {
+                    DebugPrint("eq function in apply", e->argument, env);
+                    stash variables(env.variables);
+                    argument = Eval(move(e->argument), env);
+                    // auto applied = Apply(move(function), move(e->argument), env);
+                    // return applied;
                 } else {
+                    DebugPrint("not id function in apply", e->argument, env);
+                    // some additional filter is needed. Env leaks here. It should go upper way i that test
                     argument = Eval(move(e->argument), env);
                 }
             }

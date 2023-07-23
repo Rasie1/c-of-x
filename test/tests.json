@@ -55,12 +55,17 @@
         "name": "Identity + variable test",
         "expr": "x = 3; id = x -> x; id x = 3",
         "result": "3"
-    },    
+    },
     {
         "name": "Nested function call",
         "expr": "g y = y; f x = g x; f 3",
         "result": "3"
-    },    
+    },
+    {
+        "name": "Nested function call 2",
+        "expr": "g y = y + 1; f x = g x; f 2",
+        "result": "3"
+    },
     {
         "name": "Closure env is closed",
         "expr": "(x -> x) any",
@@ -409,7 +414,7 @@
     {
         "name": "Side effects 4",
         "expr": "i = print \"3\"; (x -> show x) i",
-        "result": "33(show cx::unit)"
+        "result": "33cx::unit"
     },
     {
         "name": "Side effects 5",
@@ -429,17 +434,17 @@
     {
         "name": "Function type 1",
         "expr": "(Int -> Int) (\"1\" -> 1)",
-        "result": "Compile error:\ncan't match function type"
+        "result": "Compile error:\nexpecting Int, got \"1\"\ncan't match function type"
     },
     {
         "name": "Function type 2",
         "expr": "(Int -> Int) (1 -> \"1\")",
-        "result": "Compile error:\ncan't match function type"
+        "result": "Compile error:\nexpecting Int, got \"1\"\ncan't match function type"
     },
     {
         "name": "Function type 3",
         "expr": "(1 -> 1) (Int -> Int)",
-        "result": "Compile error:\ncan't match function type"
+        "result": "Compile error:\ncan't apply 1 to Int\ncan't match function type"
     },
     {
         "name": "Function type 4",
@@ -447,8 +452,23 @@
         "result": "3"
     },
     {
+        "name": "Function type 4.1",
+        "expr": "(Int -> Int) f; f (Int x) = 3; f 2",
+        "result": "3"
+    },
+    {
+        "name": "Function type 4.2",
+        "expr": "integer = Int; (Int -> Int) f; f (integer x) = 3; f 2",
+        "result": "3"
+    },
+    {
         "name": "Function type 5",
         "expr": "(Int -> Int) f; f x = 3; f \"2\"",
+        "result": "Compile error:\ncouldn't apply argument\nincorrect implication"
+    },
+    {
+        "name": "Function type 5.1",
+        "expr": "f = (x -> 3); (Int -> Int) f; f \"2\"",
         "result": "Compile error:\ncouldn't apply argument\nincorrect implication"
     },
     {

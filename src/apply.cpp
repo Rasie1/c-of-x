@@ -22,7 +22,7 @@ expression Calculate(expression&& l,
     );
 }
 
-inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue) {
+inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue, bool prohibitFreeVariables) {
     DebugPrint("in closure", function, env);
     auto& pattern = function.argument;
     function.env.debugIndentation = env.debugIndentation;
@@ -37,7 +37,7 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     for (auto& v: function.env.variables)
         combinedEnv.variables.push_back(move(v));
        
-    return SubstituteVariables(move(function.body), combinedEnv, true);
+    return SubstituteVariables(move(function.body), combinedEnv, prohibitFreeVariables);
 }
 
 template<typename datatype>
@@ -70,8 +70,8 @@ struct check_function_datatype {
     closure& type;
     expression operator()(rec<closure>&& value) {
         DebugPrint("checking function type", type, env);
-        auto envCopy = env;
-        auto appliedL = Apply(move(type.argument), move(value->argument), envCopy);
+        stash variables(env.variables);
+        auto appliedL = Apply(move(type.argument), copy(value->argument), env);
         // this is incorrect, because these might not fail when needed. Probably should substitute too
         if (std::get_if<nothing>(&appliedL)) {
             env.errors.push_back(
@@ -79,7 +79,7 @@ struct check_function_datatype {
             );
             return nothing{};
         }
-        auto appliedR = Apply(move(type.body), move(value->body), envCopy);
+        auto appliedR = Apply(move(type.body), copy(value->body), env);
         if (std::get_if<nothing>(&appliedR)) {
             env.errors.push_back(
                 std::string("can't match function type")
@@ -124,14 +124,17 @@ expression Apply(expression&& function,
                             env.errors.push_back("unknown variable \"" + id.name + "\"");
                             return nothing{};
                         } else {
-                            ExtendEnvironment(move(function), id, env);
-                            return id;
-                            // return application{move(function), move(id)};
+                            ExtendEnvironment(copy(function), id, env);
+                            // return id;
+                            return application{move(function), move(id)};
                         }
                     }
                     auto argumentValue = *maybeValue;
                     argumentValue = GetElement(move(argumentValue), env);
-                    return ApplyToClosure(env, move(*function), move(argumentValue));
+                    // should try to do the same thing before going into ApplyToClosure, and not get caught in an endless loop
+                    return Apply(move(*function), move(argumentValue), env);
+                    // old:
+                    // return ApplyToClosure(env, move(*function), move(argumentValue), false);
                 },
                 [&env, &function](rec<application>&& app) -> expression {
                     if (auto unionWith = std::get_if<rec<union_with>>(&app->function)) {
@@ -168,7 +171,7 @@ expression Apply(expression&& function,
                 },
                 check_function_datatype{env, *function},
                 [&env, &function](auto&& argument) -> expression {
-                    return ApplyToClosure(env, move(*function), move(argument));
+                    return ApplyToClosure(env, move(*function), move(argument), true);
                 }
             );
         },
@@ -233,12 +236,30 @@ expression Apply(expression&& function,
 
             return Union(move(l), move(r));
         },
-        [&argument, &env](identifier&& f) -> expression { 
-            auto substituted = SubstituteVariables(move(f), env);
+        [&argument, &env](identifier&& f) -> expression {
+            auto substituted = SubstituteVariables(copy(f), env);
             if (std::get_if<identifier>(&substituted))
                 return application{move(substituted), move(argument)}; 
             
-            return Apply(move(substituted), move(argument), env);
+            auto applied = Apply(move(substituted), copy(argument), env);
+            return applied;
+            // if (applied == argument && get_if<identifier>(&argument))
+            // {
+            //     // auto ret =  application{move(f), move(argument)}; // double application? looks super wrong
+            //                                                     // also, f shouldn't be probably modifier?
+            //     // DebugPrint("Returning both application parts", ret, env);
+
+            //     // return ret;
+
+            //     ExtendEnvironment(move(f), move(applied), env);
+
+            //     // this should be not an env addition, but just a "check". Like "x: if (a -> a) x"
+                
+            //     return argument;
+            // } else {
+            //     DebugPrint("Returning only identifier", applied, env);
+            //     return applied;
+            // }
         },
         [&argument](nothing&& n) -> expression { return n; },
         [&env, &argument](auto&& e) -> expression {
