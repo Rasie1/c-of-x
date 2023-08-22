@@ -48,16 +48,24 @@ struct map_union_r {
         auto& rUnion = rApplication->argument;
         return match(move(rApplication->function),
             [this, &rUnion](rec<union_with>&& lUnion) -> expression {
+                expression lCalculated, rCalculated;
+
                 DebugPrint("map_union_r, union_with, l", lUnion, env);
                 env.increaseDebugIndentation();
-                auto newEnv1 = env;
-                auto lCalculated = operation_for_datatype{lUnion->x, newEnv1}(copy(l));
+                {
+                    stash state(env);
+                    lCalculated = operation_for_datatype{lUnion->x, env}(copy(l));
+                }
                 env.decreaseDebugIndentation();
+
                 DebugPrint("map_union_r, union_with, r", rUnion, env);
                 env.increaseDebugIndentation();
-                auto newEnv2 = env;
-                auto rCalculated = operation_for_datatype{rUnion, newEnv2}(move(l));
+                {
+                    stash state(env);
+                    rCalculated = operation_for_datatype{rUnion, env}(move(l));
+                }
                 env.decreaseDebugIndentation();
+
                 return Union(move(lCalculated), move(rCalculated));
             },
             [&rApplication, this](auto&& e) -> expression {

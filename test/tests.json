@@ -67,6 +67,16 @@
         "result": "3"
     },
     {
+        "name": "Nested function call 3",
+        "expr": "g y = y; ((i -> i) f) x = g x; f 3",
+        "result": "3"
+    },
+    {
+        "name": "Nested function call 4",
+        "expr": "g y = y; (g f) x = g x; f 3",
+        "result": "3"
+    },
+    {
         "name": "Closure env is closed",
         "expr": "(x -> x) any",
         "result": "any"
@@ -317,6 +327,16 @@
         "result": "3"
     },
     {
+        "name": "Int variable intersection 3",
+        "expr": "integer = Int; integer x & 3",
+        "result": "3"
+    },
+    {
+        "name": "Int variable intersection 4",
+        "expr": "integer = Int; 3 & integer x",
+        "result": "3"
+    },
+    {
         "name": "String variable intersection",
         "expr": "String x & 3",
         "result": "Compile error:\ncan't correlate 3 and (String any)"
@@ -324,6 +344,16 @@
     {
         "name": "String variable intersection 2",
         "expr": "3 & String x",
+        "result": "Compile error:\ncan't correlate 3 and (String any)"
+    },
+    {
+        "name": "String variable intersection 3",
+        "expr": "str = String; str x & 3",
+        "result": "Compile error:\ncan't correlate 3 and (String any)"
+    },
+    {
+        "name": "String variable intersection 4",
+        "expr": "str = String; 3 & str x",
         "result": "Compile error:\ncan't correlate 3 and (String any)"
     },
     {

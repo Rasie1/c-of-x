@@ -90,7 +90,7 @@ expression Eval(expression&& e,
 
                 // only one variable definition is possible in each application chain
                 if (auto idFunction = std::get_if<identifier>(&function); idFunction && !env.get(idFunction->name)) {
-                    DebugPrint("id function in apply", *idFunction, env);
+                    DebugPrint("id function in eval apply", *idFunction, env);
                     stash variables(env.variables);
                     argument = Eval(move(e->argument), env);
                     if (auto idArgument = std::get_if<identifier>(&argument)) {
@@ -99,21 +99,24 @@ expression Eval(expression&& e,
                             argument = application{move(*newVariable), move(argument)};
                     }
                 } else if (std::get_if<rec<equals_to>>(&function)) {
-                    DebugPrint("eq function in apply", e->argument, env);
+                    DebugPrint("eq function in eval apply", e->argument, env);
                     stash variables(env.variables);
                     argument = Eval(move(e->argument), env);
                     // auto applied = Apply(move(function), move(e->argument), env);
                     // return applied;
                 } else {
-                    DebugPrint("not id function in apply", e->argument, env);
+                    DebugPrint("not id function in eval apply", e->argument, env);
                     // some additional filter is needed. Env leaks here. It should go upper way i that test
                     argument = Eval(move(e->argument), env);
+                    // if (std::get_if<identifier>(&argument))
+                    // {
+                    //     stash variables(env.variables);
+                    //     return Apply(move(function), move(argument), env);
+                    // }
                 }
             }
 
-            auto applied = Apply(move(function), move(argument), env);
-
-            return applied;
+            return Apply(move(function), move(argument), env);
         },
         [&env](rec<then>&& e) {
             auto from = SubstituteVariables(move(e->from), env);
@@ -142,16 +145,16 @@ expression Eval(expression&& e,
         [&env](rec<abstraction>&& e) -> expression {
             DebugPrint("abstraction", 0, env, 2);
 
-            auto newEnv = env;
-            newEnv.isExecuting = false;
+            stash variables(env.variables);
+            stash isExecuting(env.isExecuting, false);
 
-            auto pattern = Eval(move(e->argument), newEnv);
+            auto pattern = Eval(move(e->argument), env);
 
-            DebugPrint("new argument in abstraction", pattern, newEnv);
+            DebugPrint("new argument in abstraction", pattern, env);
 
             // shadowing
             // if (auto id = std::get_if<identifier>(&pattern)) {
-            //     for (auto& [variable, value]: newEnv.variables) {
+            //     for (auto& [variable, value]: env.variables) {
             //         if (variable == id->name) {
             //             auto thisVariableInPreviousEnv = env.get(variable);
             //             if (thisVariableInPreviousEnv) {
@@ -168,7 +171,7 @@ expression Eval(expression&& e,
             //     }
             // }
 
-            return closure{pattern, move(e->body), newEnv}; 
+            return closure{pattern, move(e->body), env}; 
         },
         [](auto&& e) -> expression { return e; }
     );

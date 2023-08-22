@@ -65,9 +65,9 @@ inline expression SubstituteVariables(expression&& expr,
                 // auto element = GetElement(move(exprCopy), env);
                 auto element = GetElement(copy(*expr), env);
                 return map_union([&seen, &e, &prohibitFreeVariables](expression&& expr, environment& env){
-                    auto newEnv = env;
-                    *newEnv.get(e.name) = copy(expr);
-                    return SubstituteVariables(move(expr), newEnv, prohibitFreeVariables, seen);
+                    stash variables(env.variables);
+                    *env.get(e.name) = copy(expr);
+                    return SubstituteVariables(move(expr), env, prohibitFreeVariables, seen);
                 }, move(element), env);
                 // return element;
             } else if (prohibitFreeVariables) {

@@ -107,6 +107,8 @@ expression Intersect(expression&& l,
         DebugPrint("intersect unapply l", l, env);
         env.increaseDebugIndentation();
         defer { env.decreaseDebugIndentation(); };
+        // if (get_if<identifier>(&l))
+        //     l = SubstituteVariables(move(l), env);
         if (Unapply(copy(l), copy(r), env))
             return r;
         env.errors.clear();
@@ -115,6 +117,8 @@ expression Intersect(expression&& l,
         DebugPrint("intersect unapply r", r, env);
         env.increaseDebugIndentation();
         defer { env.decreaseDebugIndentation(); };
+        // if (get_if<identifier>(&r))
+        //     r = SubstituteVariables(move(r), env);
         if (Unapply(copy(r), copy(l), env))
             return l;
         env.errors.clear();

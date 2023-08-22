@@ -343,30 +343,30 @@ unapply_result Unapply(expression&& pattern,
 
             // todo: what if the output is an id?
 
-            stash variables(env.variables);
+            auto envCopy = env;
 
-            auto rFunction = SubstituteVariables(copy(valueToMatch), env);
+            auto rFunction = SubstituteVariables(copy(valueToMatch), envCopy);
 
             env.decreaseDebugIndentation();
-            DebugPrint("unapply closure - apply", valueToMatch, env);
+            DebugPrint("unapply closure - apply", valueToMatch, envCopy);
             env.increaseDebugIndentation();
 
-            auto body = Apply(move(rFunction), move(l), env);
+            auto body = Apply(move(rFunction), move(l), envCopy);
 
             if (std::get_if<nothing>(&body)) {
                 DebugPrint("couldn't intersect closure with", valueToMatch, env);
                 return {}; 
             }
 
-            auto rElement = GetElement(move(valueToMatch), env);
-            rElement = Eval(move(rElement), env);
+            auto rElement = GetElement(move(valueToMatch), envCopy);
+            rElement = Eval(move(rElement), envCopy);
 
             env.decreaseDebugIndentation();
             DebugPrint("unapply closure - uapply", rElement, env);
             env.increaseDebugIndentation();
             defer { env.decreaseDebugIndentation(); };
             // auto argument = Unapply(move(function->argument), move(rElement), env);
-            return Unapply(move(lArgument), move(rElement), env);
+            return Unapply(move(lArgument), move(rElement), envCopy);
 
             // if (std::get_if<nothing>(&argument)) {
             //     DebugPrint("couldn't intersect closure", body, env);
