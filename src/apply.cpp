@@ -124,9 +124,18 @@ expression Apply(expression&& function,
                             env.errors.push_back("unknown variable \"" + id.name + "\"");
                             return nothing{};
                         } else {
-                            ExtendEnvironment(copy(function), id, env);
-                            // return id;
-                            return application{move(function), move(id)};
+                            DebugPrint("unknown variable when applying to closure, extending with", function, env);
+                            // halting problem here, TODO: go multiple levels down, because
+                            //                             user can make it so that function will be alternating between N values
+                            //                             each application
+                            auto untouched = application{copy(function), copy(id)};
+                            auto applied = ApplyToClosure(env, copy(*function), copy(id), false);
+                            if (expression{untouched} == applied) {
+                                ExtendEnvironment(copy(function), id, env);
+                                return application{move(function), move(id)};
+                            } else {
+                                return applied;
+                            }
                         }
                     }
                     auto argumentValue = *maybeValue;

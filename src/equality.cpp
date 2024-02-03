@@ -117,6 +117,16 @@ expression Equals(expression&& l,
     defer { env.decreaseDebugIndentation(); };
 
     stash executionState(env.isExecuting, false);
+
+    // auto oldVariablesSize = env.variables.size();
+    // defer { 
+    //     if (oldVariablesSize < env.variables.size()) {
+    //         for (auto i = oldVariablesSize + 1; i < env.variables.size(); ++i)
+    //             DebugPrint("discarding variable", env.variables[i].first, env);
+    //         // breaks linear types, should keep track of first new variable explicitly
+    //         env.variables.resize(oldVariablesSize + 1);
+    //     }
+    // };
     
     l = move(Eval(move(l), env)); 
     r = move(Eval(move(r), env));
@@ -134,6 +144,7 @@ expression Equals(expression&& l,
         return r;
     }
     env.errors.clear();
+
 
     auto ret = IsEqual(move(l), move(r), env);
     DebugPrint("equality result", ret, env);

@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Named call",
+        "expr": "f x = x; f with x = 3",
+        "result" : "3"
+    },
+    {
+        "name": "Named call with multiple arguments",
+        "expr": "f x y = x + y; f with x = 1 and y = 2",
+        "result" : "3"
+    },
+    {
+        "name": "Object",
+        "expr": "MyStruct = has x; a = MyStruct 3; a:x",
+        "result" : "3"
+    },
+    {
+        "name": "Simple object",
+        "expr": "MyStruct x; (MyStruct 3):x",
+        "result" : "3"
+    },
+    {
+        "name": "Definition and instantiation",
+        "expr": "MyStruct x; MyStruct y; y:x = 3; y:x",
+        "result" : "3"
+    },
+    {
+        "name": "Definition and instantiation hard mode",
+        "expr": "MyStruct x; MyStruct x; x:x = 3; x:x",
+        "result" : "3"
+    },
+    {
+        "name": "Struct with types",
+        "expr": "MyStruct (x: Int); MyStruct \"2\"",
+        "result" : "Compile error: ..."
+    },
+    {
+        "name": "Object uniqueness",
+        "expr": "A x; B y; a = A 1; f (B y) = 3",
+        "result" : "Compile error: ..."
+    },
+]
