@@ -32,6 +32,7 @@ struct unapply_for_datatype {
         return match(move(valueToMatch),
             [&pattern](basic_type<datatype>&& valueToMatch) -> unapply_result { return {pattern == valueToMatch, {}}; },
             [&pattern, this](identifier&& valueToMatch) -> unapply_result {
+                return {};
                 DebugPrint("type and identifier", pattern, env);
                 auto added = env.add(valueToMatch.name, equals_to{move(pattern)});
                 return {added != environment::extension_result::Void, valueToMatch.name};

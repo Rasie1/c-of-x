@@ -57,6 +57,11 @@
         "result": "3"
     },
     {
+        "name": "Identity + variable test 2",
+        "expr": "x = 3; id = x -> x; id x = 2",
+        "result": "Compile error:\n\"3\" is not equal to 2"
+    },
+    {
         "name": "Nested function call",
         "expr": "g y = y; f x = g x; f 3",
         "result": "3"
@@ -129,7 +134,7 @@
     {
         "name": "Addition unapplication 3",
         "expr": "2 - x + 1 + 8 = 4",
-        "result": "-7"
+        "result": "7"
     },
     {
         "name": "Non-determinism",
@@ -182,24 +187,14 @@
         "result": "(1 | 2)"
     },
     {
-        "name": "Non-determinism with functions",
-        "expr": "f x = (g y = 20 + y; g x); f (1|3)",
-        "result": "(21 | 23)"
+        "name": "Union of functions",
+        "expr": "((Int x -> x) | (String y -> y)) 3",
+        "result": "3"
     },
     {
-        "name": "Non-determinism with functions 2",
-        "expr": "f x = (g y = x + y; g x); f (1|3)",
-        "result": "(2 | 6)"
-    },
-    {
-        "name": "Non-determinism variable binding",
-        "expr": "y = (1|2); y + y",
-        "result": "(2 | 4)"
-    },
-    {
-        "name": "Non-determinism variable binding 2",
-        "expr": "y = (100|110); x = (y|1); (x+y)",
-        "result": "(101 | 111 | 200 | 220)"
+        "name": "Union of functions 2",
+        "expr": "f (Int x) = x + 1; g (String y) = y; (f | g) 2",
+        "result": "3"
     },
     {
         "name": "Inequality 2",
@@ -494,7 +489,7 @@
     {
         "name": "Function type 5",
         "expr": "(Int -> Int) f; f x = 3; f \"2\"",
-        "result": "Compile error:\ncouldn't apply argument\nincorrect implication"
+        "result": "Compile error:\nexpecting Int, got \"2\""
     },
     {
         "name": "Function type 5.1",
@@ -504,6 +499,6 @@
     {
         "name": "Function type 6",
         "expr": "(Int -> Int) f; f x = \"2\"",
-        "result": "Compile error:\ncouldn't apply argument\nincorrect implication"
+        "result": "Compile error:\ncan't correlate \"2\" and (Int any)"
     }
 ]

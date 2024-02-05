@@ -172,14 +172,20 @@ expression Intersect(expression&& l,
     return result;
 }
 
-expression Union(expression&& l, expression&& r) {
+expression Union(expression&& l, expression&& r, environment& env) {
     return match(move(l),
-        [&r](nothing&&) -> expression { return r; },
+        [&r, &env](nothing&&) -> expression { 
+            env.errors.clear(); // unsafe?
+            return r; 
+        },
         [](any&& e) -> expression { return e; },
-        [&r](auto&& l) -> expression { 
+        [&r, &env](auto&& l) -> expression { 
             return match(move(r),
                 [](any&& e) -> expression { return e; },
-                [&l](nothing&&) -> expression { return l; },
+                [&l, &env](nothing&&) -> expression { 
+                    env.errors.clear(); // unsafe?
+                    return l; 
+                },
                 [&l](auto&& r) -> expression { return make_operation<union_with>(move(l), move(r)); }
             ); 
         }

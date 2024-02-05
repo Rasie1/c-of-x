@@ -15,6 +15,6 @@ expression GetElement(expression&& set, environment& env);
 expression Intersect(expression&& l, expression&& r, environment& env);
 bool IsError(expression& e);
 expression Negate(expression&& f, environment& env);
-expression Union(expression&& l, expression&& r);
+expression Union(expression&& l, expression&& r, environment& env);
 
 }

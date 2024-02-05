@@ -22,8 +22,11 @@ expression Calculate(expression&& l,
     );
 }
 
-inline expression ApplyToClosure(environment& env, closure&& function, expression&& argumentValue, bool prohibitFreeVariables) {
-    DebugPrint("in closure", function, env);
+inline expression ApplyToClosure(environment& env, 
+                                 closure&& function, 
+                                 expression&& argumentValue, 
+                                 bool prohibitFreeVariables) {
+    DebugPrint("in ApplyToClosure", function, env);
     auto& pattern = function.argument;
     function.env.debugIndentation = env.debugIndentation;
     auto [unapplied, outerVariable] = Unapply(move(pattern), move(argumentValue), function.env);
@@ -36,8 +39,29 @@ inline expression ApplyToClosure(environment& env, closure&& function, expressio
     auto combinedEnv = env;
     for (auto& v: function.env.variables)
         combinedEnv.variables.push_back(move(v));
-       
     return SubstituteVariables(move(function.body), combinedEnv, prohibitFreeVariables);
+}
+
+inline expression ApplyToClosure2(environment& env, 
+                                 closure&& function, 
+                                 expression&& argumentValue, 
+                                 bool prohibitFreeVariables) {
+    DebugPrint("in ApplyToClosure2", function, env);
+    auto& pattern = function.argument;
+    function.env.debugIndentation = env.debugIndentation;
+    auto [unapplied, outerVariable] = Unapply(copy(pattern), move(argumentValue), function.env);
+
+    if (!unapplied)
+        return function;
+
+    auto combinedEnv = env;
+    for (auto& v: function.env.variables)
+        combinedEnv.variables.push_back(move(v));
+    return SubstituteVariables(move(function.body), combinedEnv, prohibitFreeVariables);
+
+    // for (auto& v: function.env.variables)
+    //     env.variables.push_back(move(v));
+    // return SubstituteVariables(move(function.body), env, prohibitFreeVariables);
 }
 
 template<typename datatype>
@@ -124,17 +148,27 @@ expression Apply(expression&& function,
                             env.errors.push_back("unknown variable \"" + id.name + "\"");
                             return nothing{};
                         } else {
-                            DebugPrint("unknown variable when applying to closure, extending with", function, env);
                             // halting problem here, TODO: go multiple levels down, because
                             //                             user can make it so that function will be alternating between N values
                             //                             each application
-                            auto untouched = application{copy(function), copy(id)};
-                            auto applied = ApplyToClosure(env, copy(*function), copy(id), false);
-                            if (expression{untouched} == applied) {
-                                ExtendEnvironment(copy(function), id, env);
-                                return application{move(function), move(id)};
+                            DebugPrint("apply - closure id eval", function, env);
+                            auto evaluatedFunction = Eval(expression{move(function)}, env);
+                            if (auto evaluatedClosure = std::get_if<rec<closure>>(&evaluatedFunction)) {
+                                closure convertedClosure = copy(evaluatedClosure->get()); 
+                                auto untouched = copy(convertedClosure);
+                                auto applied = ApplyToClosure2(env, move(convertedClosure), copy(id), false);
+                                if (expression{untouched} == applied) {
+                                    DebugPrint("unknown variable when applying to closure, extending with", evaluatedFunction, env);
+                                    ExtendEnvironment(copy(evaluatedFunction), id, env);
+                                    return application{move(evaluatedFunction), move(id)};
+                                } else {
+                                    DebugPrint("unknown variable when applying to closure, not extending with", evaluatedFunction, env);
+                                    return applied;
+                                }
                             } else {
-                                return applied;
+                                DebugPrint("unknown variable when applying to closure, extending with (2)", evaluatedFunction, env);
+                                ExtendEnvironment(copy(evaluatedFunction), id, env);
+                                return application{move(evaluatedFunction), move(id)};
                             }
                         }
                     }
@@ -160,7 +194,7 @@ expression Apply(expression&& function,
                         auto rApplied = Apply(move(function), move(r), env);
                         env.decreaseDebugIndentation();
 
-                        return Union(move(lApplied), move(rApplied));
+                        return Union(move(lApplied), move(rApplied), env);
                     } else {
                         // DebugPrint("======================", app, env);
                         // extra typecheck can happen here. It tries to apply application that
@@ -217,6 +251,17 @@ expression Apply(expression&& function,
                     env.decreaseDebugIndentation();
                     return Intersect(move(l), move(r), env);
                 },
+                [&](rec<union_with>&& lApplication) -> expression {
+                    DebugPrint("matched application intersection l", lApplication, env);
+                    env.increaseDebugIndentation();
+                    auto l = Apply(move(lApplication->x), copy(argument), env); // todo: copy envs?
+                    env.decreaseDebugIndentation();
+                    DebugPrint("matched application intersection r", e->argument, env);
+                    env.increaseDebugIndentation();
+                    auto r = Apply(move(e->argument), move(argument), env);
+                    env.decreaseDebugIndentation();
+                    return Union(move(l), move(r), env);
+                },
                 [&](auto&&) -> expression { return application{move(e), move(argument)}; }
             );
         },
@@ -243,7 +288,7 @@ expression Apply(expression&& function,
             // DebugPrint("union l", l, env);
             // DebugPrint("union r", r, env);
 
-            return Union(move(l), move(r));
+            return Union(move(l), move(r), env);
         },
         [&argument, &env](identifier&& f) -> expression {
             auto substituted = SubstituteVariables(copy(f), env);

@@ -84,8 +84,6 @@ expression Eval(expression&& e,
 
             {
                 stash executionState(env.isExecuting, false);
-                
-                // function = SubstituteVariables(move(e->function), env);
                 function = Eval(move(e->function), env);
 
                 // only one variable definition is possible in each application chain
@@ -93,26 +91,27 @@ expression Eval(expression&& e,
                     DebugPrint("id function in eval apply", *idFunction, env);
                     stash variables(env.variables);
                     argument = Eval(move(e->argument), env);
-                    if (auto idArgument = std::get_if<identifier>(&argument)) {
-                        auto newVariable = env.get(idArgument->name);
-                        if (newVariable)
+                    if (auto idArgument = std::get_if<identifier>(&argument))
+                        if (auto newVariable = env.get(idArgument->name))
                             argument = application{move(*newVariable), move(argument)};
-                    }
+                } else if (std::get_if<equality>(&function)) {
+                    DebugPrint("wrapping equality in eval", e->argument, env);
+                    // argument = Eval(move(e->argument), env);
+                    auto unapplied = Unapply(copy(function), copy(argument), env);
+                    return expression{equals_to(move(e->argument))};
                 } else if (std::get_if<rec<equals_to>>(&function)) {
                     DebugPrint("eq function in eval apply", e->argument, env);
-                    stash variables(env.variables);
-                    argument = Eval(move(e->argument), env);
-                    // auto applied = Apply(move(function), move(e->argument), env);
-                    // return applied;
-                } else {
-                    DebugPrint("not id function in eval apply", e->argument, env);
-                    // some additional filter is needed. Env leaks here. It should go upper way i that test
-                    argument = Eval(move(e->argument), env);
-                    // if (std::get_if<identifier>(&argument))
-                    // {
-                    //     stash variables(env.variables);
+                    {
+                        stash variables(env.variables);
+                        argument = Eval(move(e->argument), env);
+                    }
+                    // if (Unapply(copy(function), expression{equals_to{copy(argument)}}, env))
+                    //     return expression{application{move(function), move(argument)}};
+                    // else
                     //     return Apply(move(function), move(argument), env);
-                    // }
+                } else {
+                    DebugPrint("not id function in eval apply ------------------------", e->argument, env);
+                    argument = Eval(move(e->argument), env);
                 }
             }
 

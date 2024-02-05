@@ -5,10 +5,12 @@
 #include <optional>
 #include <boost/range/adaptor/reversed.hpp>
 #include "types.h"
+#include "io.h"
 
 namespace cx {
 
 std::optional<expression> IntersectFind(expression&& l, expression&& r, environment& env);
+void DebugPrint(const std::string& msg, expression e, environment& env, int color);
 
 struct environment {
     std::vector<std::pair<std::string, expression>> variables;
@@ -31,6 +33,7 @@ struct environment {
         Match,
         NotAdded,
         Added,
+        Extended,
         Void,
     };
     
@@ -43,6 +46,7 @@ struct environment {
                 if (auto intersected = IntersectFind(copy(oldValue), move(value), *this)) {
                     if (oldValue == *intersected)
                         return extension_result::Match;
+                    DebugPrint("tried to extend env variable", *intersected, *this, 0);
                     oldValue = *intersected;
                 } else
                     return extension_result::Void;

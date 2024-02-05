@@ -4,7 +4,7 @@
 
 namespace cx {
 
-expression Union(expression&& l, expression&& r);
+expression Union(expression&& l, expression&& r, environment& env);
     
 template<typename operation_for_datatype>
 struct map_union_l {
@@ -21,7 +21,7 @@ struct map_union_l {
                 defer { env.decreaseDebugIndentation(); };
                 auto lCalculated = operation(move(lUnion->x), copy(r), env);
                 auto rCalculated = operation(move(rUnion),    move(r), env);
-                return Union(move(lCalculated), move(rCalculated));
+                return Union(move(lCalculated), move(rCalculated), env);
             },
             [&lApplication, this](auto&& e) -> expression {
                 auto inner = application{e, move(lApplication->argument)};
@@ -66,7 +66,7 @@ struct map_union_r {
                 }
                 env.decreaseDebugIndentation();
 
-                return Union(move(lCalculated), move(rCalculated));
+                return Union(move(lCalculated), move(rCalculated), env);
             },
             [&rApplication, this](auto&& e) -> expression {
                 auto applied = application{e, move(rApplication->argument)}; // TODO: l is forgotten

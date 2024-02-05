@@ -17,8 +17,8 @@ expression map_union(operation&& op, expression&& e, environment& env) {
                     env.increaseDebugIndentation();
                     defer { env.decreaseDebugIndentation(); };
                     auto lCalculated = map_union(op, move(lUnion->x), env);
-                    auto rCalculated = map_union(op, move(rUnion),         env);
-                    return Union(move(lCalculated), move(rCalculated));
+                    auto rCalculated = map_union(op, move(rUnion), env);
+                    return Union(move(lCalculated), move(rCalculated), env);
                 },
                 [&lApplication, &env, &op](auto&& e) -> expression {
                     DebugPrint("union variant", e, env);
