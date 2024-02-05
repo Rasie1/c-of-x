@@ -44,6 +44,17 @@ expression map_union(operation&& op, expression&& e, environment& env) {
     );
 }
 
+template<typename operation_function>
+struct substitute_in_function {
+    environment& env;
+    std::vector<std::string>& seen;
+    bool& prohibitFreeVariables;
+    expression operator()(rec<operation_function>&& function) {
+        function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
+        return function;
+    }
+};
+
 inline expression SubstituteVariables(expression&& expr, 
                                       environment& env, 
                                       bool prohibitFreeVariables, 
@@ -75,34 +86,14 @@ inline expression SubstituteVariables(expression&& expr,
             }
             return e;
         },
-        [&env, &seen, &prohibitFreeVariables](rec<equals_to>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
-            return function;
-        },
-        [&env, &seen, &prohibitFreeVariables](rec<negated>&& function) -> expression {
-            function->f = SubstituteVariables(move(function->f), env, prohibitFreeVariables, seen);
-            return function;
-        },
-        [&env, &seen, &prohibitFreeVariables](rec<intersection_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
-            return function;
-        },
-        [&env, &seen, &prohibitFreeVariables](rec<union_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
-            return function;
-        },
-        [&env, &seen, &prohibitFreeVariables](rec<addition_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
-            return function;
-        },
-        [&env, &seen, &prohibitFreeVariables](rec<subtraction_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
-            return function;
-        },
-        [&env, &seen, &prohibitFreeVariables](rec<multiplication_with>&& function) -> expression {
-            function->x = SubstituteVariables(move(function->x), env, prohibitFreeVariables, seen);
-            return function;
-        },
+        substitute_in_function<equals_to>{env, seen, prohibitFreeVariables},
+        substitute_in_function<negated>{env, seen, prohibitFreeVariables},
+        substitute_in_function<intersection_with>{env, seen, prohibitFreeVariables},
+        substitute_in_function<union_with>{env, seen, prohibitFreeVariables},
+        substitute_in_function<addition_with>{env, seen, prohibitFreeVariables},
+        substitute_in_function<subtraction_with>{env, seen, prohibitFreeVariables},
+        substitute_in_function<multiplication_with>{env, seen, prohibitFreeVariables},
+        substitute_in_function<division_with>{env, seen, prohibitFreeVariables},
         [&env, &seen, &prohibitFreeVariables](rec<application>&& e) -> expression {
             e->function = SubstituteVariables(move(e->function), env, prohibitFreeVariables, seen);
             e->argument = SubstituteVariables(move(e->argument), env, prohibitFreeVariables, seen);

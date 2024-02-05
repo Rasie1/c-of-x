@@ -8,9 +8,9 @@ struct equals_with_negated {
     expression& r;
     environment& env;
     inline auto operator()(rec<negated>&& e) -> expression { 
-        DebugPrint("eq with negated", e->f, env);
+        DebugPrint("eq with negated", e->x, env);
         auto falseEnv = env;
-        auto [evaluatedl, lvar] = FixWithVariable(move(move(e->f)), falseEnv);
+        auto [evaluatedl, lvar] = FixWithVariable(move(move(e->x)), falseEnv);
         auto [evaluatedr, rvar] = FixWithVariable(move(r), falseEnv);
         DebugPrint(std::string("eq with negated, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
         DebugPrint(std::string("eq with negated, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);
@@ -47,7 +47,7 @@ struct equals_for_datatype {
                 return nothing{};
             },
             [&l](identifier&& v) -> expression { return make_operation<equals_to>(l, move(v)); },
-            map_union_r<equals_for_datatype<datatype>, datatype>{l, env},
+            map_union_r<equals_for_datatype<datatype>, datatype, equals_to>{l, env},
             [&l](any&&) -> expression { return l; },
             [this, &l](auto&& r) -> expression { 
                 env.errors.push_back(Show(move(l)) + " is not equal to " + Show(move(r)));

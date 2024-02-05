@@ -59,7 +59,7 @@
     {
         "name": "Identity + variable test 2",
         "expr": "x = 3; id = x -> x; id x = 2",
-        "result": "Compile error:\n\"3\" is not equal to 2"
+        "result": "Compile error:\n3 is not equal to 2"
     },
     {
         "name": "Nested function call",
@@ -119,6 +119,11 @@
     {
         "name": "Equation unapplication",
         "expr": "2 + x = 5",
+        "result": "3"
+    },
+    {
+        "name": "Equation unapplication 2",
+        "expr": "x + 1 + 2 = 6",
         "result": "3"
     },
     {

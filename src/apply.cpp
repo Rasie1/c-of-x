@@ -4,24 +4,6 @@
 
 namespace cx {
 
-template <template<typename datatype> typename operation_for_datatype, typename function>
-expression Calculate(expression&& l,
-                     expression&& r,
-                     environment& env) {
-    r = Eval(move(r), env);
-    l = Eval(move(l), env);
-    return match(move(l),
-        operation_for_datatype<int>{r, env},
-        // operation_for_datatype<std::string>{r},
-        [&r](identifier&& v) -> expression { return make_operation<function>(move(v), move(r)); },
-        map_union_l<function>{r, env, Calculate<operation_for_datatype, function>},
-        [&env](auto&& e) -> expression {
-            env.errors.push_back(std::string("can't do arithmetic with ") + Show(e));
-            return nothing{};
-        }
-    );
-}
-
 inline expression ApplyToClosure(environment& env, 
                                  closure&& function, 
                                  expression&& argumentValue, 
@@ -132,6 +114,36 @@ expression GetSet(expression&& e, environment& env) {
     return ret;
 }
 
+template <template<typename datatype> typename operation_for_datatype, typename function>
+expression Calculate(expression&& l,
+                     expression&& r,
+                     environment& env) {
+    r = Eval(move(r), env);
+    l = Eval(move(l), env);
+    return match(move(l),
+        operation_for_datatype<int>{r, env},
+        // operation_for_datatype<std::string>{r},
+        [&r](identifier&& v) -> expression { return make_operation<function>(move(v), move(r)); },
+        map_union_l<function>{r, env, Calculate<operation_for_datatype, function>},
+        [&env](auto&& e) -> expression {
+            env.errors.push_back(std::string("can't do arithmetic with ") + Show(e));
+            return nothing{};
+        }
+    );
+}
+
+template <class operation, template<typename datatype> typename operation_impl, class operation_function>
+struct apply_calculation {
+    environment& env;
+    expression& argument;
+    expression operator()(operation&&) {
+        return operation_function{ Eval(move(argument), env)};
+    }
+    expression operator()(rec<operation_function>&& function) {
+        return Calculate<operation_impl, operation_function>(move(function->x), move(argument), env);
+    }
+};
+
 expression Apply(expression&& function,
                  expression&& argument,
                  environment& env) {
@@ -218,18 +230,10 @@ expression Apply(expression&& function,
                 }
             );
         },
-        [&env, &argument](addition&&) -> expression { return addition_with{Eval(move(argument), env)}; },
-        [&env, &argument](rec<addition_with>&& function) -> expression {
-            return Calculate<addition_for_datatype, addition_with>(move(function->x), move(argument), env);
-        },
-        [&env, &argument](subtraction&&) -> expression { return subtraction_with{Eval(move(argument), env)}; },
-        [&env, &argument](rec<subtraction_with>&& function) -> expression {
-            return Calculate<subtraction_for_datatype, subtraction_with>(move(function->x), move(argument), env);
-        },
-        [&env, &argument](multiplication&&) -> expression { return multiplication_with{Eval(move(argument), env)}; },
-        [&env, &argument](rec<multiplication_with>&& function) -> expression {
-            return Calculate<multiplication_for_datatype, multiplication_with>(move(function->x), move(argument), env);
-        },
+        apply_calculation<addition, addition_for_datatype, addition_with>{env, argument},
+        apply_calculation<subtraction, subtraction_for_datatype, subtraction_with>{env, argument},
+        apply_calculation<multiplication, multiplication_for_datatype, multiplication_with>{env, argument},
+        apply_calculation<division, division_for_datatype, division_with>{env, argument},
         check_datatype<int>{env, argument},
         check_datatype<std::string>{env, argument},
         [&env, &argument](implication&&) -> expression { return implication_with{Eval(move(argument), env)}; },
@@ -273,7 +277,7 @@ expression Apply(expression&& function,
         [&env, &argument](set_trace_enabled&&) -> expression { return SetTraceEnabled(move(argument), env); },
         [&env, &argument](rec<equals_to>&& e) -> expression { return Equals(move(e->x), move(argument), env); },
         [&env, &argument](rec<negated>&& e) -> expression {
-            return Apply(Negate(move(e->f), env), move(argument), env);
+            return Apply(Negate(move(e->x), env), move(argument), env);
         },
         [&env, &argument](rec<intersection_with>&& function) -> expression {
             auto l = Eval(move(function->x), env);

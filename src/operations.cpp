@@ -16,7 +16,7 @@ struct intersect_for_datatype {
             [&l](any&&) -> expression { return l; },
             [&l](identifier&& v) -> expression { return make_operation<intersection_with>(l, move(v)); },
             [this, &l](rec<application>&& rApplication) -> expression { 
-                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype>{l, env}.template operator()<true>(move(rApplication));
+                auto mapped = map_union_r<intersect_for_datatype<datatype>, datatype, intersection_with>{l, env}.template operator()<true>(move(rApplication));
                 return mapped;
             },
             [this, &l](auto&& r) -> expression { 
@@ -54,7 +54,7 @@ expression Negate(expression&& f, environment& env) {
         // [](unit&&) -> expression { return nothing{}; },
         [](nothing&&) -> expression { return any{}; },
         [](identifier&& e) -> expression { return negated{move(e)}; },
-        [](rec<negated>&& e) -> expression { return e->f; },
+        [](rec<negated>&& e) -> expression { return e->x; },
         unmapped<equals_to, negated>(env),
         // [](auto&& e) -> expression { return make_operation<intersection_with>(any{}, negated{move(e)}); }
         [](auto&& e) -> expression { return negated{move(e)}; }

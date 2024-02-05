@@ -24,10 +24,13 @@ void traverse(expression& e, f&& function) {
         [&function](rec<addition_with>& e) {
             traverse(e->x, function);
         },
+        [&function](rec<subtraction_with>& e) {
+            traverse(e->x, function);
+        },
         [&function](rec<multiplication_with>& e) {
             traverse(e->x, function);
         },
-        [&function](rec<subtraction_with>& e) {
+        [&function](rec<division_with>& e) {
             traverse(e->x, function);
         },
         [&function](rec<implication_with>& e) {
@@ -42,7 +45,7 @@ void traverse(expression& e, f&& function) {
             traverse(e->to, function);
         },
         [&function](rec<negated>& e) { 
-            traverse(e->f, function);
+            traverse(e->x, function);
         },
         [&function](rec<abstraction>& e) {
             traverse(e->argument, function);
@@ -138,7 +141,7 @@ expression Eval(expression&& e,
             );
         },
         [&env](rec<negated>&& e) -> expression { 
-            auto function = Eval(move(e->f), env);
+            auto function = Eval(move(e->x), env);
             return Negate(move(function), env); 
         },
         [&env](rec<abstraction>&& e) -> expression {

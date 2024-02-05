@@ -77,13 +77,16 @@ std::optional<expression> Inverse(expression&& e, environment& env) {
     env.increaseDebugIndentation();
     auto result = match(move(e),
         [](rec<addition_with>&& f) -> std::optional<expression> { 
-            // return subtraction_with{move(f->x)}; 
-            // todo: typed
-            return addition_with{make_operation<multiplication_with>(-1, move(f->x))}; 
+            return subtraction_with{move(f->x)}; 
         },
         [](rec<subtraction_with>&& f) -> std::optional<expression> { 
-            // return addition_with{move(f->x)}; 
-            return subtraction_with{make_operation<multiplication_with>(-1, move(f->x))}; 
+            return addition_with{move(f->x)}; 
+        },
+        [](rec<multiplication_with>&& f) -> std::optional<expression> { 
+            return division_with{move(f->x)}; 
+        },
+        [](rec<division_with>&& f) -> std::optional<expression> { 
+            return multiplication_with{move(f->x)}; 
         },
         [&env](rec<application>&& app) -> std::optional<expression> {
             DebugPrint("inverting application", *app, env);
@@ -153,9 +156,9 @@ struct equals_with_negated {
     expression& r;
     environment& env;
     inline auto operator()(rec<negated>&& e) -> unapply_result { 
-        DebugPrint("is equal with negated", e->f, env);
+        DebugPrint("is equal with negated", e->x, env);
         auto falseEnv = env;
-        auto [evaluatedl, lvar] = FixWithVariable(move(e->f), falseEnv);
+        auto [evaluatedl, lvar] = FixWithVariable(move(e->x), falseEnv);
         auto [evaluatedr, rvar] = FixWithVariable(move(r), falseEnv);
         DebugPrint(std::string("unapply ne, l(") + (lvar?(*lvar):std::string("-")) + ")", evaluatedl, env);
         DebugPrint(std::string("unapply ne, r(") + (rvar?(*rvar):std::string("-")) + ")", evaluatedr, env);

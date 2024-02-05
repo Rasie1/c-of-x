@@ -23,6 +23,7 @@ struct tuple;
 struct addition_with;
 struct subtraction_with;
 struct multiplication_with;
+struct division_with;
 struct implication_with;
 struct abstraction;
 struct arrow;
@@ -42,6 +43,7 @@ struct intersection { bool operator==(intersection const&) const = default; };
 struct union_ { bool operator==(union_ const&) const = default; };
 struct addition { bool operator==(addition const&) const = default; };
 struct multiplication { bool operator==(multiplication const&) const = default; };
+struct division { bool operator==(division const&) const = default; };
 struct subtraction { bool operator==(subtraction const&) const = default; };
 struct implication { bool operator==(implication const&) const = default; };
 struct arrow { bool operator==(arrow const&) const = default; };
@@ -69,6 +71,7 @@ using expression = std::variant<
     addition,
     subtraction,
     multiplication,
+    division,
     implication,
     arrow,
     application_operator,
@@ -83,6 +86,7 @@ using expression = std::variant<
     rec<negated>,
     rec<addition_with>,
     rec<multiplication_with>,
+    rec<division_with>,
     rec<subtraction_with>,
     rec<implication_with>,
     rec<set>,
@@ -144,6 +148,10 @@ struct multiplication_with {
     expression x;
     bool operator==(multiplication_with const&) const = default;
 };
+struct division_with {
+    expression x;
+    bool operator==(division_with const&) const = default;
+};
 struct implication_with {
     expression x;
     bool operator==(implication_with const&) const = default;
@@ -166,7 +174,7 @@ struct equals_to {
 };
 
 struct negated {
-    expression f;
+    expression x;
     bool operator==(negated const&) const = default;
 };
 

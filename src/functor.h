@@ -38,7 +38,7 @@ struct map_union_l {
     }
 };
 
-template<typename operation_for_datatype, typename datatype>
+template<typename operation_for_datatype, typename datatype, typename operation_function>
 struct map_union_r {
     datatype& l;
     environment& env;
@@ -68,15 +68,15 @@ struct map_union_r {
 
                 return Union(move(lCalculated), move(rCalculated), env);
             },
-            [&rApplication, this](auto&& e) -> expression {
-                auto applied = application{e, move(rApplication->argument)}; // TODO: l is forgotten
+            [&rUnion, this](auto&& e) -> expression {
+                auto applied = expression{application{e, move(rUnion)}}; // TODO: l is forgotten
                 if constexpr (failOnUnknown) {
                     env.errors.push_back(
                         "can't correlate " + Show(move(l)) + " and " + Show(move(applied))
                     );
                     return nothing{};
                 } else {
-                    return applied;
+                    return application{operation_function{move(l)}, move(applied)};
                 }
             }
         );

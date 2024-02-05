@@ -66,16 +66,19 @@ std::string Show(expression&& e) {
             return std::string("{") + Show(move(e->x)) + std::string("}"); 
         },
         [](rec<negated>&& e) {
-            return std::string("!(") + Show(move(e->f)) + ")"; 
+            return std::string("!(") + Show(move(e->x)) + std::string(")"); 
         },
         [](rec<addition_with>&& e) {
-            return Show(move(e->x)) + std::string(" +"); 
+            return std::string("+(") + Show(move(e->x)) + std::string(")"); 
         },
         [](rec<subtraction_with>&& e) {
-            return Show(move(e->x)) + std::string(" -"); 
+            return std::string("-(") + Show(move(e->x)) + std::string(")"); 
         },
         [](rec<multiplication_with>&& e) {
-            return Show(move(e->x)) + std::string(" *"); 
+            return std::string("*(") + Show(move(e->x)) + std::string(")"); 
+        },
+        [](rec<division_with>&& e) {
+            return std::string("/(") + Show(move(e->x)) + std::string(")"); 
         },
         [](rec<union_with>&& e) {
             return Show(move(e->x)) + std::string(" |"); 
@@ -87,6 +90,7 @@ std::string Show(expression&& e) {
         [](subtraction&&) -> std::string { return "-"; },
         [](equality&&) -> std::string { return "="; },
         [](multiplication&&) -> std::string { return "*"; },
+        [](division&&) -> std::string { return "/"; },
         [](implication&&) -> std::string { return ";"; },
         [](union_&&) -> std::string { return "|"; },
         [](arrow&&) -> std::string { return "->"; },

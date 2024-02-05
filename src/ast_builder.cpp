@@ -20,6 +20,7 @@ inline bool isFirstChildOperator(const tao::pegtl::parse_tree::node& child) {
 inline int getOperatorPriority(const cx::expression& e) {
     return match(e,
         [](const cx::multiplication&) { return 9; },
+        [](const cx::division&) { return 9; },
         [](const cx::intersection&) { return 9; },
         [](const cx::addition&) { return 8; },
         [](const cx::subtraction&) { return 8; },
@@ -52,6 +53,10 @@ cx::expression makeOperation(cx::expression&& l, cx::expression&& op, cx::expres
     return cx::match(cx::move(op),
         [&l, &r](cx::arrow&&) -> cx::expression { return cx::abstraction{cx::move(l), cx::move(r)}; },
         [&l, &r](cx::application_operator&&) -> cx::expression { return cx::application{cx::move(r), cx::move(l)}; },
+        [&l, &r](cx::addition&&) -> cx::expression { return cx::application{cx::addition_with(r), cx::move(l)}; },
+        [&l, &r](cx::subtraction&&) -> cx::expression { return cx::application{cx::subtraction_with(r), cx::move(l)}; },
+        [&l, &r](cx::multiplication&&) -> cx::expression { return cx::application{cx::multiplication_with(r), cx::move(l)}; },
+        [&l, &r](cx::division&&) -> cx::expression { return cx::application{cx::division_with(r), cx::move(l)}; },
         [&l, &r](auto&& op) -> cx::expression { return cx::application{cx::application{cx::move(op), cx::move(l)}, cx::move(r)}; }
     );
 }
@@ -107,7 +112,7 @@ cx::expression build(const tao::pegtl::parse_tree::node& node) {
         if (node.string() == "*")
             return cx::multiplication{};
         else if (node.string() == "/")
-            return cx::multiplication{};
+            return cx::division{};
         else if (node.string() == "&")
             return cx::intersection{};
         else if (node.string() == "%")
