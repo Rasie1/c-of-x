@@ -1,10 +1,14 @@
 # Welcome
 
-This is an experimental programming language inspired by Haskell / C++ template metaprogramming.
+This is an experimental programming language with refinement types and full unification of types and functions.
 
-**This is an in-progress rewrite**
+## 2026 update
+
+Time has come to write a proper compiler for this. I'm working on this in a private repo for now, but you can follow the development [here](https://x.com/_rasie1). Expect this to be updated soon.
 
 ## Build & Run
+
+**This is an in-progress rewrite so many things don't work**
 
 ### How to build
 
@@ -38,7 +42,7 @@ Clear Haskell-like syntax with heavier usage of indentation and absolute lack of
 
 ### Gradual Refinement Types
 Which let you to construct predicates with dynamic variables and put them **instead of types**.
-```scala
+```fsharp
 main = a <- read Int
        myFunc arg:(>a) = arg + 100 // f takes anything more than a
        myFunc _        = 0
@@ -51,7 +55,7 @@ main = a <- read Int
 
 ### Intersection and Union
 Which enable you to easily combine types and predicates.
-```haskell
+```fsharp
 0 < x < 10
 myVariable0 : {x} | (>100) | String
 myVariable1 = x + 10|11|12
@@ -59,7 +63,7 @@ myVariable1 = x + 10|11|12
 
 ### Function and First Class Types
 You can even put an anonymous function instead of type.
-```
+```fsharp
 Even x = (x % 2 = 0)
 myFunction x:Even = 9
 
@@ -69,7 +73,7 @@ myVariable : (a, b, c) => a + b + c > 10
 
 ### Inverse Functions
 A system for unapplying functions
-```
+```fsharp
 myDecrement (x + 1) = x
 print myDecrement(2)
 
